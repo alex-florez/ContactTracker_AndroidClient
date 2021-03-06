@@ -5,6 +5,9 @@
     <string name="bottom_menu_item_1">Opción 1</string>
     <string name="bottom_menu_item_2">Opción 2</string>
     <string name="bottom_menu_item_3">Opción 3</string>
+    <string name="bottom_menu_item_4">Opción 4</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

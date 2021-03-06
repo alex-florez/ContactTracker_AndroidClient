@@ -13,4 +13,8 @@
         android:id="@+id/bottomMenuOption3"
         android:title="@string/bottom_menu_item_3"
         android:icon="@drawable/ic_launcher_foreground"/>
+    <item
+        android:id="@+id/bottomMenuOption4"
+        android:title="@string/bottom_menu_item_4"
+        android:icon="@drawable/ic_launcher_foreground"/>
 </menu>
