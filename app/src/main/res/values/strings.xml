@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Contact Tracker</string>
+
+    <!-- Bottom Navigation Menu -->
+    <string name="bottom_menu_item_1">Opción 1</string>
+    <string name="bottom_menu_item_2">Opción 2</string>
+    <string name="bottom_menu_item_3">Opción 3</string>
+
 </resources>
