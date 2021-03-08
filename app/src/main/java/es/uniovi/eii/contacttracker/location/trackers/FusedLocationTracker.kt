@@ -20,51 +20,33 @@ import es.uniovi.eii.contacttracker.util.PermissionUtils
  */
 class FusedLocationTracker(
         private val ctx: Context
-) : LocationTracker {
+) : AbstractLocationTracker(ctx) {
 
     /**
-     * Petición de localización
+     * API Fused
      */
-    private var locationRequest: LocationRequest
+    private val fusedLocationProvider: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ctx)
 
     /**
      * Callback de llamada
      */
     private var locationCallback: LocationCallback
 
-    /**
-     * Pending Intent de llamada
-     */
-    private var locationPendingIntent: PendingIntent? = null
-
-    /**
-     * API Fused
-     */
-    private var fusedLocationProvider: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ctx)
-
-
     init {
-        // Petición de ubicación por defecto
-        locationRequest = LocationRequest()
-        locationRequest.interval = defaultMinInterval
-        locationRequest.fastestInterval = defaultFastestInterval
-        locationRequest.smallestDisplacement = defaultSmallestDisplacement
-        locationRequest.priority = defaultPriority
-
         // Callback por defecto
         locationCallback = object : LocationCallback(){
-            override fun onLocationResult(p0: LocationResult?) {
-                super.onLocationResult(p0)
+            override fun onLocationResult(result: LocationResult?) {
+                super.onLocationResult(result)
             }
         }
     }
 
-    override fun setLocationRequest(request: LocationTrackRequest) {
-       locationRequest = LocationRequest()
-        locationRequest.priority = request.priority
-        locationRequest.interval = request.minInterval
-        locationRequest.smallestDisplacement = request.smallestDisplacement
-    }
+//    override fun setLocationRequest(request: LocationTrackRequest) {
+//       locationRequest = LocationRequest()
+//        locationRequest.priority = request.priority
+//        locationRequest.interval = request.minInterval
+//        locationRequest.smallestDisplacement = request.smallestDisplacement
+//    }
 
     override fun setCallback(callback: LocationUpdateCallback) {
        locationCallback = object : LocationCallback(){
@@ -76,76 +58,100 @@ class FusedLocationTracker(
        }
     }
 
-    override fun setIntentCallback(pendingIntent: PendingIntent) {
-        locationPendingIntent = pendingIntent
-    }
-
-    override fun setLocationProvider(provider: String) {
-        // En el Fused Provider no se selecciona el provider.
-    }
-
+//
+//    @SuppressLint("MissingPermission")
+//    override fun start(mode: LocationUpdateMode): Boolean {
+//        if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
+//            if(LocationUtils.checkGPS(ctx)){ // Ubicación activada
+//                when(mode){
+//                    LocationUpdateMode.CALLBACK_MODE -> {
+//                        fusedLocationProvider.requestLocationUpdates(
+//                                locationRequest,
+//                                locationCallback,
+//                                Looper.myLooper()
+//                        )
+//                        Log.d(TAG, "Rastreo de ubicación iniciado. (Modo: ${mode.name})")
+//                        return true;
+//                    }
+//                    LocationUpdateMode.PENDING_INTENT_MODE -> {
+//                        fusedLocationProvider.requestLocationUpdates(
+//                                locationRequest,
+//                                locationPendingIntent
+//                        )
+//                        Log.d(TAG, "Rastreo de ubicacion iniciado. (Modo: ${mode.name})")
+//                        return true
+//                    }
+//                    else -> {
+//
+//                    }
+//                }
+//            }
+//        }
+//       return false
+//    }
+//
+//    override fun stop(mode: LocationUpdateMode): Boolean {
+//        when(mode){
+//            LocationUpdateMode.CALLBACK_MODE -> {
+//                fusedLocationProvider.removeLocationUpdates(locationCallback)
+//                Log.d(TAG, "Rastreo de ubicación detenido. (Modo: ${mode.name})")
+//                return true
+//            }
+//            LocationUpdateMode.PENDING_INTENT_MODE -> {
+//                fusedLocationProvider.removeLocationUpdates(locationPendingIntent)
+//                Log.d(TAG, "Rastreo de ubicación detenido. (Modo: ${mode.name})")
+//                return true
+//            }
+//            else -> {
+//
+//            }
+//        }
+//        return false
+//    }
 
     @SuppressLint("MissingPermission")
-    override fun start(mode: LocationUpdateMode): Boolean {
-        if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
-            if(LocationUtils.checkGPS(ctx)){ // Ubicación activada
-                when(mode){
-                    LocationUpdateMode.CALLBACK_MODE -> {
-                        fusedLocationProvider.requestLocationUpdates(
+    override fun startLocationUpdates(mode: LocationUpdateMode): Boolean {
+        val locationRequest = LocationRequest()
+        locationRequest.priority = locationTrackRequest.priority
+        locationRequest.interval = locationTrackRequest.minInterval
+        locationRequest.fastestInterval = locationTrackRequest.fastestInterval
+        locationRequest.smallestDisplacement = locationTrackRequest.smallestDisplacement
+        return when(mode){
+            LocationUpdateMode.CALLBACK_MODE -> {
+                fusedLocationProvider.requestLocationUpdates(
                                 locationRequest,
                                 locationCallback,
-                                Looper.myLooper()
-                        )
-                        Log.d(TAG, "Rastreo de ubicación iniciado. (Modo: ${mode.name})")
-                        return true;
-                    }
-                    LocationUpdateMode.PENDING_INTENT_MODE -> {
-                        fusedLocationProvider.requestLocationUpdates(
+                                Looper.myLooper())
+                true
+            }
+            LocationUpdateMode.PENDING_INTENT_MODE -> {
+                fusedLocationProvider.requestLocationUpdates(
                                 locationRequest,
-                                locationPendingIntent
-                        )
-                        Log.d(TAG, "Rastreo de ubicacion iniciado. (Modo: ${mode.name})")
-                        return true
-                    }
-                    else -> {
-
-                    }
-                }
-            } else {
-                LocationUtils.createLocationSettingsAlertDialog(ctx).show() // Abrir diálogo para los ajustes de localización.
+                                locationPendingIntent)
+                true
             }
         }
-       return false
     }
 
-    override fun stop(mode: LocationUpdateMode): Boolean {
-        when(mode){
+    override fun stopLocationUpdates(mode: LocationUpdateMode): Boolean {
+        return when(mode){
             LocationUpdateMode.CALLBACK_MODE -> {
                 fusedLocationProvider.removeLocationUpdates(locationCallback)
-                Log.d(TAG, "Rastreo de ubicación detenido. (Modo: ${mode.name})")
-                return true
+                true
             }
             LocationUpdateMode.PENDING_INTENT_MODE -> {
                 fusedLocationProvider.removeLocationUpdates(locationPendingIntent)
-                Log.d(TAG, "Rastreo de ubicación detenido. (Modo: ${mode.name})")
-                return true
-            }
-            else -> {
-
+                true
             }
         }
-        return false
+    }
+
+    override fun getTrackerTag(): String {
+        return TAG
     }
 
 
-
     companion object {
-        // Valores por defecto
-        private const val defaultMinInterval: Long = 3000
-        private const val defaultFastestInterval: Long = 3000
-        private const val defaultSmallestDisplacement: Float = 0f
-        private const val defaultPriority:Int = LocationRequest.PRIORITY_HIGH_ACCURACY
-
         // TAG
         private const val TAG = "FusedLocationTracker"
     }

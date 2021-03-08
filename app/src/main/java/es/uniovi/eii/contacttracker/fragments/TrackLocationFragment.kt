@@ -14,6 +14,7 @@ import es.uniovi.eii.contacttracker.location.LocationTracker
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
+import es.uniovi.eii.contacttracker.location.trackers.LocationManagerTracker
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
 
@@ -39,7 +40,7 @@ class TrackLocationFragment : Fragment() {
     /**
      * LocationTracker.
      */
-    private var locationTracker: LocationTracker? = null
+    private lateinit var locationTracker: LocationTracker
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,44 +58,19 @@ class TrackLocationFragment : Fragment() {
     ): View {
         binding = FragmentTrackLocationBinding.inflate(inflater, container, false)
 
-//        binding.btnPermisos.setOnClickListener {
-//           context?.let {
-//               if(ContextCompat.checkSelfPermission(it, android.Manifest.permission.ACCESS_FINE_LOCATION)
-//                    != PackageManager.PERMISSION_GRANTED){
-//
-//                   requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_ID)
-//               }
-//           }
-//            context?.let {
-//               if(!FusedLocationTracker(it).test()){
-//                   requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_ID)
-//               }
-//            }
-//        }
-
-        locationTracker?.setCallback(object : LocationUpdateCallback {
+        locationTracker.setCallback(object : LocationUpdateCallback {
             override fun onLocationUpdate(location: Location) {
                val stringLoc = LocationUtils.format(location)
-                Log.d("PRUEBA", stringLoc)
+                Log.d("CallBackLocationTracker", stringLoc)
             }
         })
 
         binding.btnStart.setOnClickListener {
-            locationTracker?.let {
-                if(context != null){
-                    if (PermissionUtils.check(context!!, android.Manifest.permission.ACCESS_FINE_LOCATION)){
-                        it.start(LocationUpdateMode.CALLBACK_MODE)
-                    } else {
-                        requestLocationPermissions()
-                    }
-                }
-            }
+           startLocationTracker()
         }
 
         binding.btnStop.setOnClickListener{
-            locationTracker?.let {
-                it.stop(LocationUpdateMode.CALLBACK_MODE)
-            }
+            stopLocationTracker()
         }
 
         return binding.root
@@ -110,15 +86,45 @@ class TrackLocationFragment : Fragment() {
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_ID -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    startLocationTracker()
                     view?.let { Snackbar.make(it, "PERMISO CONCEDIDO", Snackbar.LENGTH_LONG).show() }
                 }
             }
         }
     }
 
+    /**
+     * Método encargado de solicitar los permisos necesarios
+     * para la localización.
+     */
     private fun requestLocationPermissions(){
         val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
         requestPermissions(permissions, LOCATION_PERMISSION_REQUEST_ID)
+    }
+
+    /**
+     * Método para iniciar el rastreador de ubicación, comprobando los permisos
+     * y la configuración necesaria.
+     */
+    private fun startLocationTracker(){
+        context?.let {
+            if(PermissionUtils.check(it, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
+                if(LocationUtils.checkGPS(it)){ // Configuración
+                    locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
+                } else {
+                    LocationUtils.createLocationSettingsAlertDialog(it).show() // Solicitar activación de GPS
+                }
+            } else {
+                requestLocationPermissions() // Solicitar permisos necesarios
+            }
+        }
+    }
+
+    /**
+     * Método encargado de detener el rastreador de ubicación.
+     */
+    private fun stopLocationTracker(){
+        locationTracker.stop(LocationUpdateMode.CALLBACK_MODE)
     }
 
     companion object {
@@ -145,6 +151,7 @@ class TrackLocationFragment : Fragment() {
          */
         private const val LOCATION_PERMISSION_REQUEST_ID: Int = 100
 
+        // TAG
         private const val TAG: String = "TrackLocationFragment"
     }
 }
