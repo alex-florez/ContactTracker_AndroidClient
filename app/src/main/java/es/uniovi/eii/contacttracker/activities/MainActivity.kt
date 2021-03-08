@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
-import es.uniovi.eii.contacttracker.fragments.FirstItemFragment
+import es.uniovi.eii.contacttracker.fragments.TrackLocationFragment
 import es.uniovi.eii.contacttracker.fragments.SecondItemFragment
 import es.uniovi.eii.contacttracker.fragments.ThirdItemFragment
 
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
      * asociada.
      */
     private fun initFragmentsMap(){
-        fragmentsMap[R.id.bottomMenuOption1] = FirstItemFragment()
+        fragmentsMap[R.id.bottomMenuOption1] = TrackLocationFragment()
         fragmentsMap[R.id.bottomMenuOption2] = SecondItemFragment()
         fragmentsMap[R.id.bottomMenuOption3] = ThirdItemFragment()
     }
