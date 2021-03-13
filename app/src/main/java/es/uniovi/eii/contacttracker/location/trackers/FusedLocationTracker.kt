@@ -52,64 +52,13 @@ class FusedLocationTracker(
        }
     }
 
-//
-//    @SuppressLint("MissingPermission")
-//    override fun start(mode: LocationUpdateMode): Boolean {
-//        if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
-//            if(LocationUtils.checkGPS(ctx)){ // Ubicación activada
-//                when(mode){
-//                    LocationUpdateMode.CALLBACK_MODE -> {
-//                        fusedLocationProvider.requestLocationUpdates(
-//                                locationRequest,
-//                                locationCallback,
-//                                Looper.myLooper()
-//                        )
-//                        Log.d(TAG, "Rastreo de ubicación iniciado. (Modo: ${mode.name})")
-//                        return true;
-//                    }
-//                    LocationUpdateMode.PENDING_INTENT_MODE -> {
-//                        fusedLocationProvider.requestLocationUpdates(
-//                                locationRequest,
-//                                locationPendingIntent
-//                        )
-//                        Log.d(TAG, "Rastreo de ubicacion iniciado. (Modo: ${mode.name})")
-//                        return true
-//                    }
-//                    else -> {
-//
-//                    }
-//                }
-//            }
-//        }
-//       return false
-//    }
-//
-//    override fun stop(mode: LocationUpdateMode): Boolean {
-//        when(mode){
-//            LocationUpdateMode.CALLBACK_MODE -> {
-//                fusedLocationProvider.removeLocationUpdates(locationCallback)
-//                Log.d(TAG, "Rastreo de ubicación detenido. (Modo: ${mode.name})")
-//                return true
-//            }
-//            LocationUpdateMode.PENDING_INTENT_MODE -> {
-//                fusedLocationProvider.removeLocationUpdates(locationPendingIntent)
-//                Log.d(TAG, "Rastreo de ubicación detenido. (Modo: ${mode.name})")
-//                return true
-//            }
-//            else -> {
-//
-//            }
-//        }
-//        return false
-//    }
-
     @SuppressLint("MissingPermission")
     override fun startLocationUpdates(mode: LocationUpdateMode): Boolean {
         val locationRequest = LocationRequest()
         locationRequest.priority = locationTrackRequest.priority
         locationRequest.interval = locationTrackRequest.minInterval
         locationRequest.fastestInterval = locationTrackRequest.fastestInterval
-        locationRequest.smallestDisplacement = locationTrackRequest.smallestDisplacement
+//        locationRequest.smallestDisplacement = locationTrackRequest.smallestDisplacement
         return when(mode){
             LocationUpdateMode.CALLBACK_MODE -> {
                 fusedLocationProvider.requestLocationUpdates(

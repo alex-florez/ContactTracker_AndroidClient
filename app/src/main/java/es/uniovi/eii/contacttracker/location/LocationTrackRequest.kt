@@ -17,7 +17,7 @@ class LocationTrackRequest(
     companion object {
         // Valores por defecto
         private const val defaultMinInterval: Long = 3000
-        private const val defaultFastestInterval: Long = 3000
+        private const val defaultFastestInterval: Long = 2000
         private const val defaultSmallestDisplacement: Float = 0f
         private const val defaultPriority:Int = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
