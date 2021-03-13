@@ -31,6 +31,13 @@
             android:foregroundServiceType="location"
             android:label="LocationForegroundService"/>
 
+        <service android:name=".location.listeners.intents.LocationReceivedIntentService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <!-- Broadcast Receivers -->
+        <receiver android:name=".location.receivers.LocationUpdateBroadcastReceiver"/>
+
     </application>
 
 </manifest>

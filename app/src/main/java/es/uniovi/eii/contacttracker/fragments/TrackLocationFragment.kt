@@ -1,11 +1,10 @@
 package es.uniovi.eii.contacttracker.fragments
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +12,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationBinding
-import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
-import es.uniovi.eii.contacttracker.location.LocationUpdateMode
-import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
+import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
-import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
 
@@ -40,12 +36,30 @@ class TrackLocationFragment : Fragment() {
      */
     private lateinit var binding: FragmentTrackLocationBinding
 
+    /**
+     * BroadcastReceiver para las actualizaciones de localización.
+     */
+    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Registrar el BroadCastReceiver
+        if(locationReceiver == null)
+            locationReceiver = LocationUpdateBroadcastReceiver(binding)
+        activity?.registerReceiver(locationReceiver, IntentFilter(LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.unregisterReceiver(locationReceiver)
     }
 
     override fun onCreateView(

@@ -3,7 +3,7 @@ package es.uniovi.eii.contacttracker.location.trackers
 import android.app.PendingIntent
 import es.uniovi.eii.contacttracker.location.LocationTrackRequest
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
-import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 
 /**
  * Interfaz que representa la abstracción del rastreador de ubicación.

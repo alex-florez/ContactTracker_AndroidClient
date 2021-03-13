@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Looper
 import com.google.android.gms.location.*
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
-import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 
 /**
  * Implementación concreta de la interfaz LcoationTracker.

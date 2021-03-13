@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.location.callbacks
+package es.uniovi.eii.contacttracker.location.listeners.callbacks
 
 import android.location.Location
 import android.util.Log

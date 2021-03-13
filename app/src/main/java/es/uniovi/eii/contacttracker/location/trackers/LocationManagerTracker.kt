@@ -7,7 +7,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
-import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 
 /**
  * Implementación concreta de rastreador de ubicación, que utiliza la

@@ -11,8 +11,10 @@ import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
-import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
-import es.uniovi.eii.contacttracker.location.callbacks.LogLocationCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.BroadcastLocationCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LogLocationCallback
+import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 
@@ -30,7 +32,7 @@ class LocationForegroundService : Service(){
     /**
      * Callback de localización.
      */
-    private val locationCallback: LocationUpdateCallback = LogLocationCallback()
+    private lateinit var locationCallback: LocationUpdateCallback
 
     /**
      * Objeto Notification que representa la notificación
@@ -40,9 +42,7 @@ class LocationForegroundService : Service(){
 
     override fun onCreate() {
         super.onCreate()
-        locationTracker = FusedLocationTracker(this)
-        notification = createNotification()
-        locationTracker.setCallback(locationCallback)
+        init()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -110,6 +110,21 @@ class LocationForegroundService : Service(){
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setTicker("Ticker!")
                 .build()
+    }
+
+    /**
+     * Método de inicialización que se encarga de instanciar
+     * y configurar los objetos necesarios para este servicio.
+     */
+    private fun init(){
+        locationTracker = FusedLocationTracker(this)
+        locationCallback = BroadcastLocationCallback(this)
+        notification = createNotification()
+        locationTracker.setCallback(locationCallback)
+        val pendingIntent = Intent(this, LocationReceivedIntentService::class.java).let{
+            PendingIntent.getService(this, 0, it, 0)
+        }
+        locationTracker.setIntentCallback(pendingIntent)
     }
 
     companion object {
