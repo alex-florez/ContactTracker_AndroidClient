@@ -1,6 +1,8 @@
-package es.uniovi.eii.contacttracker.location
+package es.uniovi.eii.contacttracker.location.trackers
 
 import android.app.PendingIntent
+import es.uniovi.eii.contacttracker.location.LocationTrackRequest
+import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
 
 /**

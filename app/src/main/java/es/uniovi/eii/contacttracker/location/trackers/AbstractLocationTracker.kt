@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.LocationManager
 import android.util.Log
 import es.uniovi.eii.contacttracker.location.LocationTrackRequest
-import es.uniovi.eii.contacttracker.location.LocationTracker
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils

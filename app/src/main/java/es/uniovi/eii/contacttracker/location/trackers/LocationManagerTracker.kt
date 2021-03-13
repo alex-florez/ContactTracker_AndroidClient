@@ -1,20 +1,13 @@
 package es.uniovi.eii.contacttracker.location.trackers
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
-import com.google.android.gms.location.LocationServices
-import es.uniovi.eii.contacttracker.location.LocationTrackRequest
-import es.uniovi.eii.contacttracker.location.LocationTracker
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.callbacks.LocationUpdateCallback
-import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.PermissionUtils
 
 /**
  * Implementación concreta de rastreador de ubicación, que utiliza la
