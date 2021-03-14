@@ -15,9 +15,13 @@ import es.uniovi.eii.contacttracker.util.LocationUtils
  * Recibe como parámetro en el constructor, el objeto binding
  * para actualizar la UI.
  */
-class LocationUpdateBroadcastReceiver(
-    private val binding: FragmentTrackLocationBinding
-) : BroadcastReceiver() {
+class LocationUpdateBroadcastReceiver() : BroadcastReceiver() {
+
+    private lateinit var binding: FragmentTrackLocationBinding
+
+    constructor(binding: FragmentTrackLocationBinding) : this(){
+        this.binding = binding
+    }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val location: Location? = intent?.getParcelableExtra(EXTRA_LOCATION)

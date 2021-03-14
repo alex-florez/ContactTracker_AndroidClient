@@ -109,4 +109,6 @@ object LocationUtils {
         return "Localización {Lat: ${location.latitude}, Lng: ${location.longitude}" +
                 " Acc: ${location.accuracy}, Date: ${dateFormatter.format(Date(location.time))}}"
     }
+
+
 }

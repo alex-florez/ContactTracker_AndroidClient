@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.fragments
+package es.uniovi.eii.contacttracker.fragments.menu.tracklocation
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -118,7 +118,7 @@ class TrackLocationFragment : Fragment() {
      * en 1er plano para obtener actualizaciones de localización.
      */
     private fun startLocationService(){
-        context?.let {ctx ->
+        activity?.let {ctx ->
             if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
                 if(LocationUtils.checkGPS(ctx)){ // Configuración
                     Intent(context, LocationForegroundService::class.java).let {

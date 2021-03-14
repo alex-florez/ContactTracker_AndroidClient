@@ -32,4 +32,7 @@
         <item name="colorPrimary">@color/teal_200</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>
+
+    <!-- App Bar Style -->
+    <style name="Theme.ContactTracker.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 </resources>

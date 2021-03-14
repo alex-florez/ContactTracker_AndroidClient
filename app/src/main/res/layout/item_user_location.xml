@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/txtLocationLat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lat"/>
+
+    <TextView
+        android:id="@+id/txtLocationLng"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lng"/>
+
+    <TextView
+        android:id="@+id/txtLocationAcc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Accuracy"/>
+
+    <TextView
+        android:id="@+id/txtLocationProvider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Provider"/>
+
+    <TextView
+        android:id="@+id/txtLocationTimestamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timestamp"/>
+</LinearLayout>
