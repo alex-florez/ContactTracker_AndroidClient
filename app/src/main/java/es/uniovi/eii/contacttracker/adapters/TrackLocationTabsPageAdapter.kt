@@ -33,8 +33,8 @@ class TrackLocationTabsPageAdapter(
     override fun getItem(position: Int): Fragment {
         when(position){
             0 -> return TrackerFragment()
-            1 -> return TrackerInfoFragment()
-            2 -> return TrackerConfigurationFragment()
+            1 -> return TrackerConfigurationFragment()
+            2 -> return TrackerInfoFragment()
         }
         return DefaultBlankFragment()
     }

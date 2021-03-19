@@ -26,4 +26,28 @@ data class UserLocation (
          */
         val DIFF_CALLBACK: DiffUtil.ItemCallback<UserLocation> = UserLocationDiffCallback()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UserLocation
+
+        if (lat != other.lat) return false
+        if (lng != other.lng) return false
+        if (accuracy != other.accuracy) return false
+        if (provider != other.provider) return false
+        if (timestamp != other.timestamp) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = lat.hashCode()
+        result = 31 * result + lng.hashCode()
+        result = 31 * result + accuracy.hashCode()
+        result = 31 * result + provider.hashCode()
+        result = 31 * result + timestamp.hashCode()
+        return result
+    }
 }

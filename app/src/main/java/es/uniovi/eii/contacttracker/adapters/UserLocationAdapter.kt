@@ -9,6 +9,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemUserLocationBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Adapter para los objetos UserLocation que almacenan
@@ -17,6 +18,17 @@ import java.text.SimpleDateFormat
 class UserLocationAdapter :
     ListAdapter<UserLocation, UserLocationAdapter.UserLocationViewHolder>(UserLocation.DIFF_CALLBACK){
 
+    /**
+     * Lista auxiliar de localizaciones. La última localización
+     * está en el comienzo de la lista, de forma que se muestre la primera.
+     */
+    private val locations = arrayListOf<UserLocation>()
+
+
+    /**
+     * Referencia al recycler view al que está vinculado este adapter.
+     */
+    var recyclerView: RecyclerView? = null
 
     /**
      * ViewHolder para los objetos UserLocation.
@@ -50,5 +62,25 @@ class UserLocationAdapter :
 
     override fun onBindViewHolder(holder: UserLocationViewHolder, position: Int) {
        holder.bindUserLocation(getItem(position))
+    }
+
+    /**
+     * Método que añade una nueva localización de usuario
+     * en la lista interna del adapter.
+     */
+    fun addUserLocation(location: UserLocation){
+        locations.add(0, location) // Añadir al principio
+        submitList(locations.toList())
+        // Hacer Scroll al principio
+        recyclerView?.smoothScrollToPosition(0)
+    }
+
+    /**
+     * Cuando es invocado, limpia toda
+     * la lista de localizaciones de Usuario.
+     */
+    fun clearLocations(){
+        locations.clear()
+        submitList(locations)
     }
 }

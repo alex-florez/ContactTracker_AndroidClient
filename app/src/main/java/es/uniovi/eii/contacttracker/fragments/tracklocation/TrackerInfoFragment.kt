@@ -1,6 +1,8 @@
 package es.uniovi.eii.contacttracker.fragments.tracklocation
 
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerInfoBinding
+import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.model.UserLocation
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,8 +22,10 @@ private const val ARG_PARAM2 = "param2"
 
 
 /**
- * Fragmento que presenta al usuario la información en
- * tiempo real del rastreo de ubicación.
+ * Fragmento que se utiliza como Log y presenta al
+ * usuario la información en tiempo real del rastreo de ubicación,
+ * mientras el servicio de localización está activo.
+ *
  */
 class TrackerInfoFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -35,6 +41,13 @@ class TrackerInfoFragment : Fragment() {
      * Adapter para los objetos UserLocation.
      */
     private lateinit var userLocationAdapter: UserLocationAdapter
+
+
+    /**
+     * BroadCast Receiver para actualizar el Adapter
+     * con las actualizaciones de localización.
+     */
+    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +67,39 @@ class TrackerInfoFragment : Fragment() {
 
         initRecyclerView() // Inicializar RecyclerView
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Registrar el Broadcast receiver para recibir las actualizaciones
+        registerLocationReceiver()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Desvincular BroadCast receiver
+        Log.d(TAG, "Desvinculando receiver")
+        unregisterLocationReceiver()
+    }
+
+    /**
+     * Método privado para registrar el BroadCast Receiver
+     * para obtener las localizaciones.
+     */
+    private fun registerLocationReceiver(){
+        if(locationReceiver == null)
+            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter)
+        activity?.registerReceiver(locationReceiver,
+                IntentFilter((LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)))
+    }
+
+
+    /**
+     * Método que desvincula el BroadCast Receiver de la Activity
+     * para dejar de recibir actualizaciones de localización.
+     */
+    private fun unregisterLocationReceiver(){
+        activity?.unregisterReceiver(locationReceiver)
     }
 
     /**
@@ -78,8 +124,11 @@ class TrackerInfoFragment : Fragment() {
      */
     private fun initRecyclerView(){
         val manager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        binding.recyclerViewTrackLocationInfo.layoutManager = manager
-        binding.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
+        binding.apply {
+            this.recyclerViewTrackLocationInfo.layoutManager = manager
+            this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
+            userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
+        }
     }
 
     companion object {
@@ -100,5 +149,9 @@ class TrackerInfoFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        private const val TAG = "TrackerInfoFragment"
     }
+
+
 }

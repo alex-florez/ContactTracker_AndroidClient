@@ -54,15 +54,15 @@ class TrackerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Registrar el BroadCastReceiver
-        if(locationReceiver == null)
-            locationReceiver = LocationUpdateBroadcastReceiver(binding)
-        activity?.registerReceiver(locationReceiver, IntentFilter(LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION))
+//        // Registrar el BroadCastReceiver
+//        if(locationReceiver == null)
+//            locationReceiver = LocationUpdateBroadcastReceiver(binding)
+//        activity?.registerReceiver(locationReceiver, IntentFilter(LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION))
     }
 
     override fun onPause() {
         super.onPause()
-        activity?.unregisterReceiver(locationReceiver)
+//        activity?.unregisterReceiver(locationReceiver)
     }
 
     override fun onCreateView(

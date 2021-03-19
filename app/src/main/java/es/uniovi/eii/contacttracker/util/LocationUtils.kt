@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import es.uniovi.eii.contacttracker.activities.MainActivity
+import es.uniovi.eii.contacttracker.model.UserLocation
 import java.lang.Exception
 import java.util.Date
 import java.text.SimpleDateFormat
@@ -108,6 +109,21 @@ object LocationUtils {
         val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         return "Localización {Lat: ${location.latitude}, Lng: ${location.longitude}" +
                 " Acc: ${location.accuracy}, Date: ${dateFormatter.format(Date(location.time))}}"
+    }
+
+    /**
+     * Se encarga de parsear un objeto Location del framework de
+     * localización para convertirlo en un objeto UserLocation
+     * del Dominio.
+     */
+    fun parse(location:Location): UserLocation {
+        return UserLocation(
+                location.latitude,
+                location.longitude,
+                location.accuracy.toDouble(),
+                location.provider,
+                Date(location.time)
+        )
     }
 
 
