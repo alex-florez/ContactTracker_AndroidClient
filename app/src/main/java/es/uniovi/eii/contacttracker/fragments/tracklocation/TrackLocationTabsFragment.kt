@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.TrackLocationTabsPageAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationTabsBinding
 
@@ -56,7 +58,21 @@ class TrackLocationTabsFragment : Fragment() {
             val pageAdapter = TrackLocationTabsPageAdapter(childFragmentManager)
             binding.trackLocationViewPager.adapter = pageAdapter
             binding.trackLocationTabLayout.setupWithViewPager(binding.trackLocationViewPager)
+            // Establecer iconos
+//            setTabIcons()
         }
+    }
+
+    /**
+     * Método encargado de establecer los iconos a las
+     * distintas Tabs del TabLayout.
+     * distintas Tabs del TabLayout.
+     */
+    private fun setTabIcons(){
+        val tabView = layoutInflater.inflate(R.layout.tab_item, null)
+        tabView.findViewById<ImageView>(R.id.tab_icon).setBackgroundResource(R.drawable.ic_launcher_foreground)
+        binding.trackLocationTabLayout.getTabAt(0)?.customView = tabView
+
     }
 
     companion object {

@@ -14,5 +14,6 @@
     <!-- Rastreador de ubicación: Tracker Fragment -->
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="labelStartStop">Iniciar o Detener el rastreador de ubicación</string>
 
 </resources>

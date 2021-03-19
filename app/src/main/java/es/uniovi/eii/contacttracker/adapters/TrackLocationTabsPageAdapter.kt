@@ -42,4 +42,6 @@ class TrackLocationTabsPageAdapter(
     override fun getPageTitle(position: Int): CharSequence {
         return tabTitles[position]
     }
+
+
 }
