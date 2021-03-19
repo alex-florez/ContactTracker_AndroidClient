@@ -2,13 +2,17 @@
     <string name="app_name">Contact Tracker</string>
 
     <!-- Bottom Navigation Menu -->
-    <string name="bottom_menu_item_1">Opción 1</string>
-    <string name="bottom_menu_item_2">Opción 2</string>
-    <string name="bottom_menu_item_3">Opción 3</string>
-    <string name="bottom_menu_item_4">Opción 4</string>
+    <string name="bottom_menu_item_1">Rastreador</string>
+    <string name="bottom_menu_item_2">Notificar</string>
+    <string name="bottom_menu_item_3">Comprobar</string>
 
 
     <!-- Default Blank Fragment -->
     <string name="default_blank_fragment">DEFAULT BLANK FRAGMENT</string>
+
+
+    <!-- Rastreador de ubicación: Tracker Fragment -->
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 
 </resources>

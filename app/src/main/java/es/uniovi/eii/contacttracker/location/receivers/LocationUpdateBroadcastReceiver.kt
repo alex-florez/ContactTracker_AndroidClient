@@ -5,21 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.util.Log
-import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationBinding
+import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.util.LocationUtils
 
 /**
- * Broadcast Receiver que dispara cuando se recibe
+ * Broadcast Receiver que se dispara cuando se recibe
  * una nueva localización, para actualizar la UI.
  *
- * Recibe como parámetro en el constructor, el objeto binding
+ * Recibe como parámetro en el constructor el objeto binding
  * para actualizar la UI.
  */
 class LocationUpdateBroadcastReceiver() : BroadcastReceiver() {
 
-    private lateinit var binding: FragmentTrackLocationBinding
+    private lateinit var binding: FragmentTrackerBinding
 
-    constructor(binding: FragmentTrackLocationBinding) : this(){
+    constructor(binding: FragmentTrackerBinding) : this(){
         this.binding = binding
     }
 

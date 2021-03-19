@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
-import es.uniovi.eii.contacttracker.fragments.menu.tracklocation.TrackLocationInfoFragment
-import es.uniovi.eii.contacttracker.fragments.menu.tracklocation.ThirdItemFragment
-import es.uniovi.eii.contacttracker.fragments.menu.tracklocation.TrackLocationTabsFragment
+import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
+import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
+import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         initFragmentsMap() // Crear fragments
         setListeners() // Listeners
 
-        binding.bottomNavigationView.selectedItemId = R.id.bottomMenuOption1 // Establecer el fragment inicial como seleccionado
+        // Establecer el fragment inicial como seleccionado
+        binding.bottomNavigationView.selectedItemId = R.id.bottomMenuOption1
     }
 
     /**
@@ -59,8 +60,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initFragmentsMap(){
         fragmentsMap[R.id.bottomMenuOption1] = TrackLocationTabsFragment()
-        fragmentsMap[R.id.bottomMenuOption2] = TrackLocationInfoFragment()
-        fragmentsMap[R.id.bottomMenuOption3] = ThirdItemFragment()
+        fragmentsMap[R.id.bottomMenuOption2] = TrackerInfoFragment()
+        fragmentsMap[R.id.bottomMenuOption3] = TrackerConfigurationFragment()
     }
 
     /**

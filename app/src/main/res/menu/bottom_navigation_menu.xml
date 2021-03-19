@@ -4,7 +4,7 @@
     <item
         android:id="@+id/bottomMenuOption1"
         android:title="@string/bottom_menu_item_1"
-        android:icon="@drawable/ic_launcher_foreground"/>
+        android:icon="@drawable/ic_location_tracker"/>
     <item
         android:id="@+id/bottomMenuOption2"
         android:title="@string/bottom_menu_item_2"
@@ -12,9 +12,5 @@
     <item
         android:id="@+id/bottomMenuOption3"
         android:title="@string/bottom_menu_item_3"
-        android:icon="@drawable/ic_launcher_foreground"/>
-    <item
-        android:id="@+id/bottomMenuOption4"
-        android:title="@string/bottom_menu_item_4"
         android:icon="@drawable/ic_launcher_foreground"/>
 </menu>

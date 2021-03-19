@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Tamaño de los iconos de la barra inferior de navegación -->
+    <dimen name="bottom_navigation_icon_size">30dp</dimen>
+    <dimen name="design_bottom_navigation_height" tools:override="true">57dp</dimen>
+    <dimen name="design_bottom_navigation_margin">4dp</dimen>
+</resources>

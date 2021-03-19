@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.fragments.menu.tracklocation
+package es.uniovi.eii.contacttracker.fragments.tracklocation
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
-import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationBinding
+import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
@@ -23,10 +23,13 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 /**
- * Fragment que representa la opción de MENÚ que contiene la
- * funcionalidad para iniciar y pausar el rastreo de ubicación.
+ * Fragment que representa la opción del RASTREADOR DE UBICACIÓN.
+ *
+ * Contiene la funcionalidad para iniciar y pausar el rastreo de ubicación
+ * de manera manual, así como la funcionalidad para programar alarmas de rastreo
+ * de ubicación.
  */
-class TrackLocationFragment : Fragment() {
+class TrackerFragment : Fragment() {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -34,7 +37,7 @@ class TrackLocationFragment : Fragment() {
     /**
      * View Binding
      */
-    private lateinit var binding: FragmentTrackLocationBinding
+    private lateinit var binding: FragmentTrackerBinding
 
     /**
      * BroadcastReceiver para las actualizaciones de localización.
@@ -66,13 +69,13 @@ class TrackLocationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTrackLocationBinding.inflate(inflater, container, false)
+        binding = FragmentTrackerBinding.inflate(inflater, container, false)
 
-        binding.btnStart.setOnClickListener {
+        binding.btnStartTracker.setOnClickListener {
            startLocationService()
         }
 
-        binding.btnStop.setOnClickListener{
+        binding.btnStopTracker.setOnClickListener{
             stopLocationService()
         }
 
@@ -157,7 +160,7 @@ class TrackLocationFragment : Fragment() {
          */
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            TrackLocationFragment().apply {
+            TrackerFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
