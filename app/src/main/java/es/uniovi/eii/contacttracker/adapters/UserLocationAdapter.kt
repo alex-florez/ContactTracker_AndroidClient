@@ -80,7 +80,6 @@ class UserLocationAdapter :
      * la lista de localizaciones de Usuario.
      */
     fun clearLocations(){
-        locations.clear()
-        submitList(locations)
+        submitList(null)
     }
 }

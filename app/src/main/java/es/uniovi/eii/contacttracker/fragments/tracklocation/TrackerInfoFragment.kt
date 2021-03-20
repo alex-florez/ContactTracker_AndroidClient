@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
@@ -40,8 +41,7 @@ class TrackerInfoFragment : Fragment() {
     /**
      * Adapter para los objetos UserLocation.
      */
-    private lateinit var userLocationAdapter: UserLocationAdapter
-
+    lateinit var userLocationAdapter: UserLocationAdapter
 
     /**
      * BroadCast Receiver para actualizar el Adapter
@@ -78,8 +78,8 @@ class TrackerInfoFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         // Desvincular BroadCast receiver
-        Log.d(TAG, "Desvinculando receiver")
         unregisterLocationReceiver()
+        userLocationAdapter.clearLocations()
     }
 
     /**
@@ -88,7 +88,7 @@ class TrackerInfoFragment : Fragment() {
      */
     private fun registerLocationReceiver(){
         if(locationReceiver == null)
-            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter)
+            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter, this)
         activity?.registerReceiver(locationReceiver,
                 IntentFilter((LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)))
     }
@@ -129,6 +129,17 @@ class TrackerInfoFragment : Fragment() {
             this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
             userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
         }
+    }
+
+    /**
+     * Cambia la visibilidad de la etiqueta de texto que indica
+     * que no hay localizaciones si el adapter está vacío.
+     */
+    fun toggleLabelNoLocations(){
+        if(userLocationAdapter.currentList.isEmpty())
+            binding.labelNoLocations.visibility = TextView.VISIBLE
+        else
+            binding.labelNoLocations.visibility = TextView.GONE
     }
 
     companion object {

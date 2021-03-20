@@ -16,6 +16,7 @@ import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastRe
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +41,11 @@ class TrackerFragment : Fragment() {
     private lateinit var binding: FragmentTrackerBinding
 
     /**
+     * ViewModel
+     */
+    private val viewModel = TrackerViewModel()
+
+    /**
      * BroadcastReceiver para las actualizaciones de localización.
      */
     private var locationReceiver: LocationUpdateBroadcastReceiver? = null
@@ -52,33 +58,13 @@ class TrackerFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-//        // Registrar el BroadCastReceiver
-//        if(locationReceiver == null)
-//            locationReceiver = LocationUpdateBroadcastReceiver(binding)
-//        activity?.registerReceiver(locationReceiver, IntentFilter(LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION))
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        activity?.unregisterReceiver(locationReceiver)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTrackerBinding.inflate(inflater, container, false)
 
-        binding.btnStartTracker.setOnClickListener {
-           startLocationService()
-        }
-
-        binding.btnStopTracker.setOnClickListener{
-            stopLocationService()
-        }
-
+        setListeners()
         return binding.root
     }
 
@@ -99,6 +85,19 @@ class TrackerFragment : Fragment() {
                     view?.let { Snackbar.make(it, "PERMISO CONCEDIDO", Snackbar.LENGTH_LONG).show() }
                 }
             }
+        }
+    }
+
+    /**
+     * Establece los listeners para cada componente de la UI.
+     */
+    private fun setListeners(){
+        binding.btnStartTracker.setOnClickListener {
+            startLocationService()
+        }
+
+        binding.btnStopTracker.setOnClickListener{
+            stopLocationService()
         }
     }
 
@@ -124,10 +123,7 @@ class TrackerFragment : Fragment() {
         activity?.let {ctx ->
             if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
                 if(LocationUtils.checkGPS(ctx)){ // Configuración
-                    Intent(context, LocationForegroundService::class.java).let {
-                        it.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
-                        ContextCompat.startForegroundService(ctx, it)
-                    }
+                    viewModel.toggleLocationService(ctx, LocationForegroundService.ACTION_START_LOCATION_SERVICE)
                 } else {
                     LocationUtils.createLocationSettingsAlertDialog(ctx).show() // Solicitar activación de GPS
                 }
@@ -142,11 +138,8 @@ class TrackerFragment : Fragment() {
      */
     private fun stopLocationService(){
         context?.let { ctx ->
-            Intent(context, LocationForegroundService::class.java).let{
-            it.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
-            ContextCompat.startForegroundService(ctx, it)
-        }}
-
+            viewModel.toggleLocationService(ctx, LocationForegroundService.ACTION_STOP_LOCATION_SERVICE)
+        }
     }
 
     companion object {

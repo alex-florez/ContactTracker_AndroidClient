@@ -16,4 +16,7 @@
     <string name="stop">Stop</string>
     <string name="labelStartStop">Iniciar o Detener el rastreador de ubicación</string>
 
+    <!-- Fragment de Información del rastreo de ubicación -->
+    <string name="labelNoLocations">No hay ningún servicio de localización en ejecución. No hay localizaciones que mostrar.</string>
+
 </resources>
