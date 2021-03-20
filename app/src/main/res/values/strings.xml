@@ -5,6 +5,7 @@
     <string name="bottom_menu_item_1">Rastreador</string>
     <string name="bottom_menu_item_2">Notificar</string>
     <string name="bottom_menu_item_3">Comprobar</string>
+    <string name="bottom_menu_item_4">Histórico</string>
 
 
     <!-- Default Blank Fragment -->
@@ -18,5 +19,9 @@
 
     <!-- Fragment de Información del rastreo de ubicación -->
     <string name="labelNoLocations">No hay ningún servicio de localización en ejecución. No hay localizaciones que mostrar.</string>
+
+
+    <!-- Fragment: Histórico de localizaciones -->
+    <string name="btnTxtDeleteAllLocations">Eliminar todas las localizaciones</string>
 
 </resources>

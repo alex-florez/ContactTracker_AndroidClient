@@ -2,6 +2,8 @@ package es.uniovi.eii.contacttracker.model
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.diffutil.UserLocationDiffCallback
 import kotlinx.parcelize.Parcelize
 import java.util.Date
@@ -11,13 +13,16 @@ import java.util.Date
  * de Localización del Usuario.
  */
 @Parcelize
+@Entity(tableName = "user_locations")
 data class UserLocation (
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     val lat: Double,
     val lng: Double,
     val accuracy: Double,
     val provider: String,
-    val timestamp: Date
+    val locationTimestamp: Date
 ) : Parcelable {
+
 
 
     companion object {
@@ -37,7 +42,7 @@ data class UserLocation (
         if (lng != other.lng) return false
         if (accuracy != other.accuracy) return false
         if (provider != other.provider) return false
-        if (timestamp != other.timestamp) return false
+        if (locationTimestamp != other.locationTimestamp) return false
 
         return true
     }
@@ -47,7 +52,11 @@ data class UserLocation (
         result = 31 * result + lng.hashCode()
         result = 31 * result + accuracy.hashCode()
         result = 31 * result + provider.hashCode()
-        result = 31 * result + timestamp.hashCode()
+        result = 31 * result + locationTimestamp.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "UserLocation(id=$id, lat=$lat, lng=$lng, accuracy=$accuracy, provider='$provider', timestamp=$locationTimestamp)"
     }
 }

@@ -50,7 +50,7 @@ class UserLocationAdapter :
             binding.txtLocationLng.text = "Lng: ${location.lng}"
             binding.txtLocationAcc.text = "Acc: ${location.accuracy}"
             binding.txtLocationProvider.text = "Provider: $${location.provider}"
-            binding.txtLocationTimestamp.text = dateFormatter.format(location.timestamp)
+            binding.txtLocationTimestamp.text = dateFormatter.format(location.locationTimestamp)
         }
     }
 

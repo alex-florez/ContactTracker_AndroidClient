@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
+import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         fragmentsMap[R.id.bottomMenuOption1] = TrackLocationTabsFragment()
         fragmentsMap[R.id.bottomMenuOption2] = TrackerInfoFragment()
         fragmentsMap[R.id.bottomMenuOption3] = TrackerConfigurationFragment()
+        fragmentsMap[R.id.bottomMenuOption4] = LocationHistoryFragment()
     }
 
     /**

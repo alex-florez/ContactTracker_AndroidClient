@@ -1,7 +1,6 @@
 package es.uniovi.eii.contacttracker.fragments.tracklocation
 
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,11 +11,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
-import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
-import es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,16 +36,6 @@ class TrackerFragment : Fragment() {
      * View Binding
      */
     private lateinit var binding: FragmentTrackerBinding
-
-    /**
-     * ViewModel
-     */
-    private val viewModel = TrackerViewModel()
-
-    /**
-     * BroadcastReceiver para las actualizaciones de localización.
-     */
-    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,16 +107,14 @@ class TrackerFragment : Fragment() {
      * en 1er plano para obtener actualizaciones de localización.
      */
     private fun startLocationService(){
-        activity?.let {ctx ->
-            if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
-                if(LocationUtils.checkGPS(ctx)){ // Configuración
-                    viewModel.toggleLocationService(ctx, LocationForegroundService.ACTION_START_LOCATION_SERVICE)
-                } else {
-                    LocationUtils.createLocationSettingsAlertDialog(ctx).show() // Solicitar activación de GPS
-                }
+        if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
+            if(LocationUtils.checkGPS(requireContext())){ // Configuración
+                sendCommandToLocationService(LocationForegroundService.ACTION_START_LOCATION_SERVICE)
             } else {
-                requestLocationPermissions() // Solicitar permisos necesarios
+                LocationUtils.createLocationSettingsAlertDialog(requireContext()).show() // Solicitar activación de GPS
             }
+        } else {
+            requestLocationPermissions() // Solicitar permisos necesarios
         }
     }
 
@@ -137,8 +122,20 @@ class TrackerFragment : Fragment() {
      * Método encargado de detener el rastreador de ubicación.
      */
     private fun stopLocationService(){
-        context?.let { ctx ->
-            viewModel.toggleLocationService(ctx, LocationForegroundService.ACTION_STOP_LOCATION_SERVICE)
+        sendCommandToLocationService(LocationForegroundService.ACTION_STOP_LOCATION_SERVICE)
+    }
+
+    /**
+     * Método encargado de iniciar o detener el servicio de localización, que será
+     * ejecutado en segundo plano y hará uso del Tracker de ubicación.
+     * Recibe como parámetro la acción a realizar: START / STOP
+     *
+     * @param acción a realizar por el servicio (START/STOP)
+     */
+    private fun sendCommandToLocationService(action: String){
+        Intent(requireContext(), LocationForegroundService::class.java).let {
+            it.action = action
+            ContextCompat.startForegroundService(requireContext(), it)
         }
     }
 

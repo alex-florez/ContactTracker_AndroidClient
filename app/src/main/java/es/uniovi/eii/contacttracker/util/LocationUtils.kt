@@ -33,6 +33,11 @@ object LocationUtils {
     const val REQUEST_CHECK_LOCATION_SETTINGS: Int = 101
 
     /**
+     * Formateador de fechas
+     */
+    private val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+
+    /**
      * Recibe como parámetro una petición de ubicación y comprueba
      * si las settings del dispositivo permiten llevar a cabo la petición
      * de localización.
@@ -106,9 +111,17 @@ object LocationUtils {
      * @return string formateado
      */
     fun format(location: Location): String {
-        val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         return "Localización {Lat: ${location.latitude}, Lng: ${location.longitude}" +
                 " Acc: ${location.accuracy}, Date: ${dateFormatter.format(Date(location.time))}}"
+    }
+
+    /**
+     * Genera un String formateado a partir del objeto
+     * de localización de usuario pasado como parámetro.
+     */
+    fun format(userLocation: UserLocation): String {
+        return "Localización {ID: ${userLocation.id} Lat: ${userLocation.lat}, Lng: ${userLocation.lng}" +
+                " Acc: ${userLocation.accuracy}, Date: ${dateFormatter.format(userLocation.locationTimestamp)}}"
     }
 
     /**
@@ -118,11 +131,12 @@ object LocationUtils {
      */
     fun parse(location:Location): UserLocation {
         return UserLocation(
-                location.latitude,
-                location.longitude,
-                location.accuracy.toDouble(),
-                location.provider,
-                Date(location.time)
+            null,
+            location.latitude,
+            location.longitude,
+            location.accuracy.toDouble(),
+            location.provider,
+            Date(location.time)
         )
     }
 
