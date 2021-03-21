@@ -16,6 +16,9 @@ interface UserLocationDao {
     @Insert
     suspend fun insert(userLocation: UserLocation): Long
 
+    @Insert
+    fun insertLoc(userLocation: UserLocation)
+
     @Query("SELECT * FROM user_locations ORDER BY locationTimestamp DESC")
     fun getAll(): LiveData<List<UserLocation>>
 
@@ -23,5 +26,5 @@ interface UserLocationDao {
     fun getAllByDateString(date: String): LiveData<List<UserLocation>>
 
     @Query("DELETE FROM user_locations")
-    suspend fun deleteAll(): Int
+    suspend fun deleteAll()
 }

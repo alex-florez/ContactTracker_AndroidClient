@@ -10,15 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * Fragment que representa la opción del RASTREADOR DE UBICACIÓN.
@@ -27,10 +24,8 @@ private const val ARG_PARAM2 = "param2"
  * de manera manual, así como la funcionalidad para programar alarmas de rastreo
  * de ubicación.
  */
+@AndroidEntryPoint
 class TrackerFragment : Fragment() {
-
-    private var param1: String? = null
-    private var param2: String? = null
 
     /**
      * View Binding
@@ -40,8 +35,7 @@ class TrackerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -54,7 +48,6 @@ class TrackerFragment : Fragment() {
         setListeners()
         return binding.root
     }
-
 
     /**
      * Resultado de la solicitud de permisos de localización.
@@ -152,8 +145,6 @@ class TrackerFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             TrackerFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
 

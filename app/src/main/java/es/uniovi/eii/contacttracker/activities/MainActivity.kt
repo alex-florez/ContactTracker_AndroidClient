@@ -3,6 +3,7 @@ package es.uniovi.eii.contacttracker.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
 import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
@@ -10,6 +11,7 @@ import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     /**

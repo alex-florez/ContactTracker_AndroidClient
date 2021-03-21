@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
@@ -18,11 +20,6 @@ import es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * Fragmento para la opción de menú "Histórico".
  *
@@ -30,10 +27,8 @@ private const val ARG_PARAM2 = "param2"
  * historia de los recorridos del usuario, y las coordenadas registradas
  * en el tiempo.
  */
+@AndroidEntryPoint
 class LocationHistoryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     /**
      * ViewBinding
@@ -59,8 +54,6 @@ class LocationHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
         }
 
         userLocationAdapter = UserLocationAdapter()
@@ -73,17 +66,23 @@ class LocationHistoryFragment : Fragment() {
         initRecyclerView()
         setListeners()
 
-        viewModel.insertedUserLocationId.observe(this, {
-            Snackbar.make(binding.root, "Nueva localización insertada: $it", Snackbar.LENGTH_LONG).show()
+//        viewModel.insertedUserLocationId.observe(this, {
+//            Snackbar.make(binding.root, "Nueva localización insertada: $it", Snackbar.LENGTH_LONG).show()
+//        })
+
+//        viewModel.getAllUserLocationsByDate(dateFilter).observe(this, {
+//            userLocationAdapter.submitList(it.toList())
+//        })
+
+        viewModel.getAllUserLocations().observe(viewLifecycleOwner, {
+            Log.d(TAG, "Nuevoo")
+            userLocationAdapter.addLocations(it)
         })
 
-        viewModel.getAllUserLocationsByDate(dateFilter).observe(this, {
-            userLocationAdapter.submitList(it)
-        })
 
-        viewModel.affectedRows.observe(this, {
-            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).show()
-        })
+//        viewModel.deletedRows.observe(this, {
+//            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).show()
+//        })
         return binding.root
     }
 
@@ -121,8 +120,6 @@ class LocationHistoryFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
                 LocationHistoryFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
                     }
                 }
 

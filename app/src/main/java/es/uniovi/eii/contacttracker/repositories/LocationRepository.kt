@@ -10,25 +10,16 @@ import androidx.lifecycle.MutableLiveData
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.room.AppDatabase
+import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
+import javax.inject.Inject
 
 /**
  * Repositorio de Localización, que contiene todas las operaciones
  * y funcionalidades relacionadas con los servicios de ubicación.
  */
-class LocationRepository(
-    private val app: Application
+class LocationRepository @Inject constructor(
+    private val userLocationDao: UserLocationDao
 ) {
-
-    /**
-     * Referencia a la base de datos.
-     */
-    private val db = AppDatabase.getInstance(app)
-
-    /**
-     * UserLocationDao
-     */
-    private val userLocationDao = db.userLocationDao()
-
 
     /**
      * Inserta en la base de datos la localización de
@@ -62,10 +53,16 @@ class LocationRepository(
 
     /**
      * Elimina todas las localizaciones del usuario de
-     * la base de datos.
+     * la base de datos y devuelve el número de filas eliminadas.
+     *
+     * @return nº de filas eliminadas.
      */
-    suspend fun deleteAllUserLocations(): Int{
-       return userLocationDao.deleteAll()
+    suspend fun deleteAllUserLocations() {
+        userLocationDao.deleteAll()
+    }
+
+    fun insert(userLocation: UserLocation){
+        userLocationDao.insertLoc(userLocation)
     }
 
 }

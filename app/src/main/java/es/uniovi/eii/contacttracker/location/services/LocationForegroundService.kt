@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
@@ -14,14 +15,18 @@ import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.BroadcastLocationCallback
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LogLocationCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.RegisterLocationCallback
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
+import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import javax.inject.Inject
 
 /**
  * Servicio en 1er Plano que realiza el rastreo de ubicación,
  * haciendo uso de uno de los trackers de localización.
  */
+@AndroidEntryPoint
 class LocationForegroundService : Service(){
 
     /**
@@ -32,7 +37,8 @@ class LocationForegroundService : Service(){
     /**
      * Callback de localización.
      */
-    private lateinit var locationCallback: LocationUpdateCallback
+    @Inject
+    lateinit var locationCallback: LocationUpdateCallback
 
     /**
      * Objeto Notification que representa la notificación
@@ -118,7 +124,6 @@ class LocationForegroundService : Service(){
      */
     private fun init(){
         locationTracker = FusedLocationTracker(this)
-        locationCallback = BroadcastLocationCallback(this)
         notification = createNotification()
         locationTracker.setCallback(locationCallback)
         val pendingIntent = Intent(this, LocationReceivedIntentService::class.java).let{

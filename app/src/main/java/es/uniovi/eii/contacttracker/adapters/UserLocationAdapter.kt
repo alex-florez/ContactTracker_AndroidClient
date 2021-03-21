@@ -75,6 +75,12 @@ class UserLocationAdapter :
         recyclerView?.smoothScrollToPosition(0)
     }
 
+    fun addLocations(newLocations: List<UserLocation>){
+        locations.clear()
+        locations.addAll(newLocations)
+        submitList(locations.toList())
+    }
+
     /**
      * Cuando es invocado, limpia toda
      * la lista de localizaciones de Usuario.

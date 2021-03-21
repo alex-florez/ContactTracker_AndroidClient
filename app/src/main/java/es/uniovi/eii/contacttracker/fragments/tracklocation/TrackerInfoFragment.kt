@@ -10,17 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerInfoBinding
 import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.util.*
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 
 /**
  * Fragmento que se utiliza como Log y presenta al
@@ -28,10 +23,8 @@ private const val ARG_PARAM2 = "param2"
  * mientras el servicio de localización está activo.
  *
  */
+@AndroidEntryPoint
 class TrackerInfoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     /**
      * ViewBinding
@@ -52,8 +45,6 @@ class TrackerInfoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
         }
 
         createAdapter() // Crear Adapter
@@ -156,13 +147,9 @@ class TrackerInfoFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             TrackerInfoFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
 
         private const val TAG = "TrackerInfoFragment"
     }
-
-
 }

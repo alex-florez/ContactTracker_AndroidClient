@@ -2,25 +2,25 @@ package es.uniovi.eii.contacttracker.viewmodels
 
 import android.app.Application
 import android.content.Context
+import android.location.Location
+import android.util.Log
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
+import javax.inject.Inject
 
 /**
  * View Model para el fragment del Tracker (Rastreador de ubicación).
  */
-class LocationHistoryViewModel(
-    private val app: Application
-) : AndroidViewModel(app) {
-
-    /**
-     * Repository de localización.
-     */
-    private val locationRepository = LocationRepository(app)
-
+@HiltViewModel
+class LocationHistoryViewModel @Inject constructor(
+    private val locationRepository: LocationRepository
+) : ViewModel() {
 
     /**
      * LiveData de inserción
@@ -31,8 +31,8 @@ class LocationHistoryViewModel(
     /**
      * LiveData con el número de filas eliminadas
      */
-    private val _affectedRows = MutableLiveData<Int>()
-    val affectedRows: LiveData<Int> = _affectedRows
+    private val _deletedRows = MutableLiveData<Int>()
+    val deletedRows: LiveData<Int> = _deletedRows
 
     /**
      * Hace uso del repositorio para insertar en la base de datos el
@@ -75,8 +75,9 @@ class LocationHistoryViewModel(
      * del usuario de la base de datos.
      */
     fun deleteAllUserLocations(){
+        Log.d("ViewModel", "borrando...")
         viewModelScope.launch {
-            _affectedRows.value = locationRepository.deleteAllUserLocations()
+          locationRepository.deleteAllUserLocations()
         }
     }
 

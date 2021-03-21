@@ -21,15 +21,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         // Singleton
-        private var instance: AppDatabase? = null
-        private const val DB_NAME = "contacttracker.db"
-
-        fun getInstance(ctx: Context): AppDatabase {
-            return instance ?: Room.databaseBuilder(
-                ctx.applicationContext,
-                AppDatabase::class.java,
-                DB_NAME)
-                .build()
-        }
+        const val DB_NAME = "contacttracker.db"
     }
 }

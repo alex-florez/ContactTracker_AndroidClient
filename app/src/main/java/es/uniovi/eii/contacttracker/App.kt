@@ -4,11 +4,14 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import dagger.hilt.android.HiltAndroidApp
+import es.uniovi.eii.contacttracker.repositories.LocationRepository
 
 /**
  * Clase App que extiende de Application y que engloba
- * al ciclo de vida de la aplicación.
+ * al ciclo de vida completo de la aplicación.
  */
+@HiltAndroidApp
 class App : Application() {
 
     companion object {
