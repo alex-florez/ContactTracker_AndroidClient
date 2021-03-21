@@ -6,6 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.RegisterLocationCallback
+import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
+import es.uniovi.eii.contacttracker.location.trackers.LocationManagerTracker
+import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -15,9 +19,29 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class LocationModule {
 
+    // CALLBACK DE LOCALIZACIÓN
+    // ************************
     @Binds
     @Singleton
     abstract fun bindLocationUpdateCallback(
         registerLocationCallback: RegisterLocationCallback
     ): LocationUpdateCallback
+
+
+    // TRACKERS
+    // ********************************
+    @Binds
+    @Singleton
+    @Named("fused_location")
+    abstract fun bindFusedLocationTracker(
+        fusedLocationTracker: FusedLocationTracker
+    ): LocationTracker
+
+    @Binds
+    @Singleton
+    @Named("location_manager")
+    abstract fun bindLocationManagerTracker(
+        locationManagerTracker: LocationManagerTracker
+    ): LocationTracker
+
 }

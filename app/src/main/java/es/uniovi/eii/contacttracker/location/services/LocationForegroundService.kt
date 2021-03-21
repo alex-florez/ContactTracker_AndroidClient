@@ -21,9 +21,10 @@ import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
- * Servicio en 1er Plano que realiza el rastreo de ubicación,
+ * Servicio Foreground en 1er Plano que realiza el rastreo de ubicación,
  * haciendo uso de uno de los trackers de localización.
  */
 @AndroidEntryPoint
@@ -32,7 +33,9 @@ class LocationForegroundService : Service(){
     /**
      * Rastreador de ubicación (LocationTracker)
      */
-    private lateinit var locationTracker: LocationTracker
+    @Inject
+    @Named("fused_location")
+    lateinit var locationTracker: LocationTracker
 
     /**
      * Callback de localización.
@@ -123,7 +126,6 @@ class LocationForegroundService : Service(){
      * y configurar los objetos necesarios para este servicio.
      */
     private fun init(){
-        locationTracker = FusedLocationTracker(this)
         notification = createNotification()
         locationTracker.setCallback(locationCallback)
         val pendingIntent = Intent(this, LocationReceivedIntentService::class.java).let{

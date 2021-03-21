@@ -6,14 +6,18 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
+import javax.inject.Inject
 
 /**
  * Implementación concreta de rastreador de ubicación, que utiliza la
  * API nativa de Android LocationManager.
  */
-class LocationManagerTracker(private val ctx: Context) : AbstractLocationTracker(ctx) {
+class LocationManagerTracker @Inject constructor(
+    @ApplicationContext private val ctx: Context
+) : AbstractLocationTracker(ctx) {
 
     /**
      * API Location Manager
@@ -32,60 +36,6 @@ class LocationManagerTracker(private val ctx: Context) : AbstractLocationTracker
 
         }
     }
-
-//    @SuppressLint("MissingPermission")
-//    override fun start(mode: LocationUpdateMode): Boolean {
-//        if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)){
-//            if(LocationUtils.checkGPS(ctx)){
-//                when(mode) {
-//                    LocationUpdateMode.CALLBACK_MODE -> {
-//                        locationManager.requestLocationUpdates(locationProvider,
-//                                locationRequest.minInterval,
-//                                locationRequest.smallestDisplacement,
-//                                locationListener)
-//                        Log.d(TAG, "Rastreo de ubicación iniciado (Modo: ${mode.name})")
-//                        return true
-//                    }
-//                    LocationUpdateMode.PENDING_INTENT_MODE -> {
-//                        locationPendingIntent?.let {
-//                            locationManager.requestLocationUpdates(locationProvider,
-//                                    locationRequest.minInterval,
-//                                    locationRequest.smallestDisplacement,
-//                                    it)
-//                        }
-//                        Log.d(TAG, "Rastreo de ubicación iniciado (Modo: ${mode.name})")
-//                        return true
-//                    }
-//                    else -> {
-//
-//                    }
-//                }
-//            }
-//        }
-//        return false
-//    }
-
-//    @SuppressLint("MissingPermission")
-//    override fun stop(mode: LocationUpdateMode): Boolean {
-//        when(mode) {
-//            LocationUpdateMode.CALLBACK_MODE -> {
-//                locationManager.removeUpdates(locationListener)
-//                Log.d(TAG, "Rastreo de ubicación detenido (Modo: ${mode.name})")
-//                return true
-//            }
-//            LocationUpdateMode.PENDING_INTENT_MODE -> {
-//                locationPendingIntent?.let {
-//                    locationManager.removeUpdates(it)
-//                    Log.d(TAG, "Rastreo de ubicación detenido (Modo: ${mode.name})")
-//                    return true
-//                }
-//            }
-//            else -> {
-//
-//            }
-//        }
-//        return false
-//    }
 
     @SuppressLint("MissingPermission")
     override fun startLocationUpdates(mode: LocationUpdateMode): Boolean {

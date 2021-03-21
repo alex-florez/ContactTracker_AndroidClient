@@ -4,16 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import com.google.android.gms.location.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
+import javax.inject.Inject
 
 /**
  * Implementación concreta de la interfaz LcoationTracker.
  * Representa un rastreador de ubicación basado en los servicios de GooglePlay
  * que utiliza un Fused Provider.
  */
-class FusedLocationTracker(
-        ctx: Context
+class FusedLocationTracker @Inject constructor(
+    @ApplicationContext ctx: Context
 ) : AbstractLocationTracker(ctx) {
 
     /**
@@ -35,13 +37,6 @@ class FusedLocationTracker(
         }
     }
 
-//    override fun setLocationRequest(request: LocationTrackRequest) {
-//       locationRequest = LocationRequest()
-//        locationRequest.priority = request.priority
-//        locationRequest.interval = request.minInterval
-//        locationRequest.smallestDisplacement = request.smallestDisplacement
-//    }
-
     override fun setCallback(callback: LocationUpdateCallback) {
        locationCallback = object : LocationCallback(){
            override fun onLocationResult(result: LocationResult?) {
@@ -58,19 +53,20 @@ class FusedLocationTracker(
         locationRequest.priority = locationTrackRequest.priority
         locationRequest.interval = locationTrackRequest.minInterval
         locationRequest.fastestInterval = locationTrackRequest.fastestInterval
-//        locationRequest.smallestDisplacement = locationTrackRequest.smallestDisplacement
+        locationRequest.smallestDisplacement = locationTrackRequest.smallestDisplacement
         return when(mode){
             LocationUpdateMode.CALLBACK_MODE -> {
                 fusedLocationProvider.requestLocationUpdates(
                                 locationRequest,
                                 locationCallback,
-                                Looper.myLooper())
+                                Looper.getMainLooper())
                 true
             }
             LocationUpdateMode.PENDING_INTENT_MODE -> {
-                fusedLocationProvider.requestLocationUpdates(
-                                locationRequest,
-                                locationPendingIntent)
+                locationPendingIntent?.let {
+                    fusedLocationProvider.requestLocationUpdates(
+                    locationRequest,
+                    it)}
                 true
             }
         }
@@ -83,7 +79,9 @@ class FusedLocationTracker(
                 true
             }
             LocationUpdateMode.PENDING_INTENT_MODE -> {
-                fusedLocationProvider.removeLocationUpdates(locationPendingIntent)
+                locationPendingIntent?.let {
+                    fusedLocationProvider.removeLocationUpdates(it)
+                }
                 true
             }
         }
