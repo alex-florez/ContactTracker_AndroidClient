@@ -23,5 +23,8 @@
 
     <!-- Fragment: Histórico de localizaciones -->
     <string name="btnTxtDeleteAllLocations">Eliminar todas las localizaciones</string>
+    <string name="labelHistoryNoLocations">No hay localizaciones que mostrar</string>
+    <string name="date">Fecha</string>
+    <string name="history_date_picker_title">Selecciona una fecha</string>
 
 </resources>

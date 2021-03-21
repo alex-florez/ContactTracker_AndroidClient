@@ -6,16 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
+import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,8 +54,13 @@ class LocationHistoryFragment : Fragment() {
     /**
      * Filtro de fecha seleccionado desde la interfaz.
      */
-    private var dateFilter: Date = Date()
+    private var dateFilter = MutableLiveData<Date>()
 
+    /**
+     * Material DatePicker
+     */
+    private val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
+    private lateinit var datePicker: MaterialDatePicker<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +75,7 @@ class LocationHistoryFragment : Fragment() {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+        setDatePicker()
         setListeners()
 
 //        viewModel.insertedUserLocationId.observe(this, {
@@ -74,11 +86,17 @@ class LocationHistoryFragment : Fragment() {
 //            userLocationAdapter.submitList(it.toList())
 //        })
 
-        viewModel.getAllUserLocations().observe(viewLifecycleOwner, {
-            Log.d(TAG, "Nuevoo")
+//        viewModel.getAllUserLocations().observe(viewLifecycleOwner, {
+//            userLocationAdapter.addLocations(it)
+//            toggleNoLocationsLabel()
+//        })
+        // Llamada al ViewModel para obtener las localizaciones por fecha.
+        Transformations.switchMap(dateFilter){
+            viewModel.getAllUserLocationsByDate(it)
+        }.observe(viewLifecycleOwner, {
             userLocationAdapter.addLocations(it)
+            toggleNoLocationsLabel()
         })
-
 
 //        viewModel.deletedRows.observe(this, {
 //            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).show()
@@ -86,6 +104,10 @@ class LocationHistoryFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateSelectedDate(Date())
+    }
 
     /**
      * Configura e inicializa el RecyclerView con el adapter.
@@ -104,6 +126,53 @@ class LocationHistoryFragment : Fragment() {
         binding.btnDeleteAllLocations.setOnClickListener {
             viewModel.deleteAllUserLocations()
         }
+
+        binding.txtInputEditTextHistoryDate.setOnClickListener {
+            showDatePicker()
+        }
+    }
+
+    /**
+     * Comprueba si hay datos para mostrar en el adapter de
+     * localizaciones y si no hay muestra el label de texto
+     * correspondiente.
+     */
+    private fun toggleNoLocationsLabel(){
+        if(userLocationAdapter.isEmpty())
+            binding.labelHistoryNoLocations.visibility = TextView.VISIBLE
+        else
+            binding.labelHistoryNoLocations.visibility = TextView.GONE
+    }
+
+    /**
+     * Configura e inicializa el Material DatePicker.
+     */
+    private fun setDatePicker(){
+        datePickerBuilder.setTitleText(R.string.history_date_picker_title)
+        datePickerBuilder.setSelection(Date().time)
+
+        datePicker = datePickerBuilder.build()
+        // Listener
+        datePicker.addOnPositiveButtonClickListener {
+            updateSelectedDate(Date(it as Long))
+        }
+    }
+
+    /**
+     * Muestra el DatePicker de Material para seleccionar
+     * una fecha.
+     */
+    private fun showDatePicker(){
+        datePicker.show(requireActivity().supportFragmentManager, datePicker.toString())
+    }
+
+    /**
+     * Se encarga de actualizar el filtro con la fecha
+     * seleccionada mediante el DatePicker.
+     */
+    private fun updateSelectedDate(date: Date){
+        dateFilter.value = date
+        binding.txtInputEditTextHistoryDate.setText(Utils.formatDate(date, "dd/MM/YYYY"))
     }
 
     companion object {

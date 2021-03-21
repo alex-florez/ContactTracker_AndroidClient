@@ -78,7 +78,7 @@ class UserLocationAdapter :
     fun addLocations(newLocations: List<UserLocation>){
         locations.clear()
         locations.addAll(newLocations)
-        submitList(locations.toList())
+        submitList(newLocations.toList())
     }
 
     /**
@@ -87,5 +87,9 @@ class UserLocationAdapter :
      */
     fun clearLocations(){
         submitList(null)
+    }
+
+    fun isEmpty(): Boolean {
+        return locations.isEmpty()
     }
 }
