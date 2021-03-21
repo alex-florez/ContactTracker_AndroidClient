@@ -10,16 +10,15 @@ import java.util.Date
  */
 class DBConverters {
 
-    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-
-
     @TypeConverter
     fun dateFromString(dateString: String): Date {
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return dateFormatter.parse(dateString) ?: Date()
     }
 
     @TypeConverter
     fun dateToString(date: Date): String {
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return dateFormatter.format(date)
     }
 }

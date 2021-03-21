@@ -35,6 +35,12 @@ class LocationHistoryViewModel @Inject constructor(
     val deletedRows: LiveData<Int> = _deletedRows
 
     /**
+     * Filtro de fecha
+     */
+    val dateFilter = MutableLiveData<Date>()
+
+
+    /**
      * Hace uso del repositorio para insertar en la base de datos el
      * objeto UserLocation pasado como parámetro.
      *
@@ -79,6 +85,16 @@ class LocationHistoryViewModel @Inject constructor(
         viewModelScope.launch {
           locationRepository.deleteAllUserLocations()
         }
+    }
+
+    /**
+     * Establece el filtro de fecha al MutableLiveData
+     * con la fecha pasada como parámetro.
+     *
+     * @param date fecha por la que filtrar.
+     */
+    fun setDateFilter(date: Date){
+        dateFilter.value = date
     }
 
 }

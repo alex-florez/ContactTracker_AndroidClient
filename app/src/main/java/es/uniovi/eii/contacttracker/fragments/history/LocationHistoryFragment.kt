@@ -52,11 +52,6 @@ class LocationHistoryFragment : Fragment() {
     private lateinit var userLocationAdapter: UserLocationAdapter
 
     /**
-     * Filtro de fecha seleccionado desde la interfaz.
-     */
-    private var dateFilter = MutableLiveData<Date>()
-
-    /**
      * Material DatePicker
      */
     private val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
@@ -90,8 +85,9 @@ class LocationHistoryFragment : Fragment() {
 //            userLocationAdapter.addLocations(it)
 //            toggleNoLocationsLabel()
 //        })
+
         // Llamada al ViewModel para obtener las localizaciones por fecha.
-        Transformations.switchMap(dateFilter){
+        Transformations.switchMap(viewModel.dateFilter){
             viewModel.getAllUserLocationsByDate(it)
         }.observe(viewLifecycleOwner, {
             userLocationAdapter.addLocations(it)
@@ -127,6 +123,7 @@ class LocationHistoryFragment : Fragment() {
             viewModel.deleteAllUserLocations()
         }
 
+        // Input Text para el filtro de fecha
         binding.txtInputEditTextHistoryDate.setOnClickListener {
             showDatePicker()
         }
@@ -171,7 +168,7 @@ class LocationHistoryFragment : Fragment() {
      * seleccionada mediante el DatePicker.
      */
     private fun updateSelectedDate(date: Date){
-        dateFilter.value = date
+        viewModel.dateFilter.value = date
         binding.txtInputEditTextHistoryDate.setText(Utils.formatDate(date, "dd/MM/YYYY"))
     }
 

@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.util
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -15,7 +16,9 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.activities.MainActivity
+import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.lang.Exception
 import java.util.Date
@@ -138,6 +141,23 @@ object LocationUtils {
             location.provider,
             Date(location.time)
         )
+    }
+
+    /**
+     * Método que comprueba si hay algún servicio foreground de localización
+     * ejecutándose en segundo plano.
+     *
+     * @return true si hay un servicio de localización ejecutándose.
+     */
+    fun isLocationServiceRunning(
+        ctx: Context
+    ): Boolean {
+        val activityManager = ctx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for(service: ActivityManager.RunningServiceInfo in activityManager.getRunningServices(Integer.MAX_VALUE)){
+            if(LocationForegroundService::class.java.name.equals(service.service.className))
+                return service.foreground
+        }
+        return false
     }
 
 

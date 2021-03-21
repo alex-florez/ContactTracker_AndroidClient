@@ -2,8 +2,10 @@ package es.uniovi.eii.contacttracker.fragments.tracklocation
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
@@ -102,7 +105,11 @@ class TrackerFragment : Fragment() {
     private fun startLocationService(){
         if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
             if(LocationUtils.checkGPS(requireContext())){ // Configuración
-                sendCommandToLocationService(LocationForegroundService.ACTION_START_LOCATION_SERVICE)
+               if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
+                   sendCommandToLocationService(LocationForegroundService.ACTION_START_LOCATION_SERVICE)
+               } else {
+                   Log.d(TAG, "Ya se está ejecutando un servicio de localización")
+               }
             } else {
                 LocationUtils.createLocationSettingsAlertDialog(requireContext()).show() // Solicitar activación de GPS
             }
@@ -115,7 +122,13 @@ class TrackerFragment : Fragment() {
      * Método encargado de detener el rastreador de ubicación.
      */
     private fun stopLocationService(){
-        sendCommandToLocationService(LocationForegroundService.ACTION_STOP_LOCATION_SERVICE)
+        if(LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio se esté ejecutando.
+            sendCommandToLocationService(LocationForegroundService.ACTION_STOP_LOCATION_SERVICE)
+            Snackbar.make(binding.root, R.string.labelStoppedService, Snackbar.LENGTH_LONG).let{ // Mostrar Snackbar
+                it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView) // Mostrarlo encima del BottomNavView
+                it.show()
+            }
+        }
     }
 
     /**
