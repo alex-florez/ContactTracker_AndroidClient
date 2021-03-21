@@ -15,6 +15,8 @@ import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerInfoBinding
 import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.util.LocationUtils
+import es.uniovi.eii.contacttracker.util.Utils
 import java.util.*
 
 /**
@@ -98,7 +100,15 @@ class TrackerInfoFragment : Fragment() {
      * para los objetos UserLocation.
      */
     private fun createAdapter(){
-        userLocationAdapter = UserLocationAdapter()
+        userLocationAdapter = UserLocationAdapter(object : UserLocationAdapter.OnUserLocationItemClick{
+            override fun onClick(userLocation: UserLocation) {
+                LocationUtils.showLocationInMaps(
+                    requireContext(),
+                    userLocation,
+                    19,
+                    "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
+            }
+        })
     }
 
     /**

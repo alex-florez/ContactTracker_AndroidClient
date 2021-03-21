@@ -8,6 +8,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.provider.Settings
 import android.view.View
 import com.google.android.gms.common.api.ApiException
@@ -160,5 +161,22 @@ object LocationUtils {
         return false
     }
 
+    /**
+     * Recibe como parámetro una localización y crea un nuevo Intent
+     * para mostrar la localización en un mapa de Google Maps.
+     *
+     * @param location localización a mostrar.
+     */
+    fun showLocationInMaps(
+        ctx: Context,
+        location: UserLocation,
+        zoom: Int,
+        label: String){
+        val query = "${location.lat},${location.lng}(${label})"
+        val uriString = "geo:${location.lat},${location.lng}?q=${query}&z=${zoom}"
+        val uri = Uri.parse(uriString)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        ctx.startActivity(intent)
+    }
 
 }

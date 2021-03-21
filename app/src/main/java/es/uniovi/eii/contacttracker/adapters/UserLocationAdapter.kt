@@ -15,8 +15,17 @@ import java.util.*
  * Adapter para los objetos UserLocation que almacenan
  * información sobre la localización del usuario.
  */
-class UserLocationAdapter :
-    ListAdapter<UserLocation, UserLocationAdapter.UserLocationViewHolder>(UserLocation.DIFF_CALLBACK){
+class UserLocationAdapter(
+   private val onClickListener: OnUserLocationItemClick
+): ListAdapter<UserLocation, UserLocationAdapter.UserLocationViewHolder>(UserLocation.DIFF_CALLBACK){
+
+    /**
+     * Declaración interna de la interfaz para los eventos
+     * de click de los items del adapter.
+     */
+    interface OnUserLocationItemClick {
+        fun onClick(userLocation: UserLocation)
+    }
 
     /**
      * Lista auxiliar de localizaciones. La última localización
@@ -44,13 +53,16 @@ class UserLocationAdapter :
          * Se encarga de enlazar el objeto UserLocation con
          * los componentes de la vista del ViewHolder.
          */
-        fun bindUserLocation(location: UserLocation){
+        fun bindUserLocation(location: UserLocation, onClickListener: OnUserLocationItemClick){
             val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
             binding.txtLocationLat.text = "Lat: ${location.lat}"
             binding.txtLocationLng.text = "Lng: ${location.lng}"
             binding.txtLocationAcc.text = "Acc: ${location.accuracy}"
             binding.txtLocationProvider.text = "Provider: $${location.provider}"
             binding.txtLocationTimestamp.text = dateFormatter.format(location.locationTimestamp)
+            itemView.setOnClickListener{
+                onClickListener.onClick(location)
+            }
         }
     }
 
@@ -61,7 +73,7 @@ class UserLocationAdapter :
     }
 
     override fun onBindViewHolder(holder: UserLocationViewHolder, position: Int) {
-       holder.bindUserLocation(getItem(position))
+       holder.bindUserLocation(getItem(position), onClickListener)
     }
 
     /**

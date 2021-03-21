@@ -1,5 +1,7 @@
 package es.uniovi.eii.contacttracker.fragments.history
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -61,8 +63,17 @@ class LocationHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-
-        userLocationAdapter = UserLocationAdapter()
+        // Adapter
+        userLocationAdapter = UserLocationAdapter(object : UserLocationAdapter.OnUserLocationItemClick {
+            override fun onClick(userLocation: UserLocation) {
+                // Mostrar localización en un mapa
+                LocationUtils.showLocationInMaps(
+                    requireContext(),
+                    userLocation,
+                    19,
+                    "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
+            }
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -171,6 +182,8 @@ class LocationHistoryFragment : Fragment() {
         viewModel.dateFilter.value = date
         binding.txtInputEditTextHistoryDate.setText(Utils.formatDate(date, "dd/MM/YYYY"))
     }
+
+
 
     companion object {
         /**
