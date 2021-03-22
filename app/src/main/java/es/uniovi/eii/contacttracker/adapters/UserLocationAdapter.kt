@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
+import es.uniovi.eii.contacttracker.databinding.ItemCardUserLocationBinding
 import es.uniovi.eii.contacttracker.databinding.ItemUserLocationBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.text.SimpleDateFormat
@@ -47,7 +48,7 @@ class UserLocationAdapter(
         /**
          * ViewBinding
          */
-        private val binding = ItemUserLocationBinding.bind(itemView)
+        private val binding = ItemCardUserLocationBinding.bind(itemView)
 
         /**
          * Se encarga de enlazar el objeto UserLocation con
@@ -68,7 +69,7 @@ class UserLocationAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserLocationViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user_location, parent, false)
+            .inflate(R.layout.item_card_user_location, parent, false)
         return UserLocationViewHolder(itemView)
     }
 
