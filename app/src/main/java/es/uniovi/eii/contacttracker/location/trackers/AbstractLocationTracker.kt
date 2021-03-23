@@ -6,6 +6,8 @@ import android.location.LocationManager
 import android.util.Log
 import es.uniovi.eii.contacttracker.location.LocationTrackRequest
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
+import es.uniovi.eii.contacttracker.location.listeners.callbacks.LogLocationCallback
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
 
@@ -19,6 +21,11 @@ abstract class AbstractLocationTracker(private val ctx: Context) : LocationTrack
      * Petición de localización.
      */
     protected var locationTrackRequest: LocationTrackRequest = LocationTrackRequest()
+
+    /**
+     * Callback de actualización de localización
+     */
+    protected var locationUpdateCallback: LocationUpdateCallback = LogLocationCallback()
 
     /**
      * PendingIntent para las actualizaciones de localización.
@@ -65,6 +72,7 @@ abstract class AbstractLocationTracker(private val ctx: Context) : LocationTrack
         if(isActive){
             if(stopLocationUpdates(mode)){
                 Log.d(getTrackerTag(), "Rastreo de ubicación detenido. (Modo: ${mode.name})")
+                locationUpdateCallback.onLocationStop()
                 isActive = false
                 return true
             }

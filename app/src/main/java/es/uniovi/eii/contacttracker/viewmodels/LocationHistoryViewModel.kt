@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -37,10 +38,9 @@ class LocationHistoryViewModel @Inject constructor(
     val deletedRows: LiveData<Int> = _deletedRows
 
     /**
-     * Filtro de fecha
+     * Filtro de fecha Mutable.
      */
     val dateFilter = MutableLiveData<Date>()
-
 
     /**
      * Hace uso del repositorio para insertar en la base de datos el
@@ -74,8 +74,8 @@ class LocationHistoryViewModel @Inject constructor(
      * @return LiveData con las localizaciones.
      */
     fun getAllUserLocationsByDate(date: Date): LiveData<List<UserLocation>>{
-        val formatter = SimpleDateFormat("yyyy-MM-dd")
-        return locationRepository.getAllUserLocationsByDate(formatter.format(date))
+        val formattedDate = Utils.formatDate(date, "yyyy-MM-dd")
+        return locationRepository.getAllUserLocationsByDate(formattedDate)
     }
 
     /**
@@ -83,30 +83,9 @@ class LocationHistoryViewModel @Inject constructor(
      * del usuario de la base de datos.
      */
     fun deleteAllUserLocations(){
-//        viewModelScope.launch {
-//            Log.d("ViewModel", "borrando...")
-//          locationRepository.deleteAllUserLocations()
-//        }
-        Log.d("ViewModelScope", viewModelScope.isActive.toString())
-        viewModelScope.launch(Dispatchers.IO) {
-            Log.d("ViewModel", "borrando...")
-            locationRepository.deleteAllUserLocations()
+        viewModelScope.launch {
+            _deletedRows.value = locationRepository.deleteAllUserLocations()
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("ViewModelOnCleared", "Limpiando ViewModel...")
-    }
-
-    /**
-     * Establece el filtro de fecha al MutableLiveData
-     * con la fecha pasada como parámetro.
-     *
-     * @param date fecha por la que filtrar.
-     */
-    fun setDateFilter(date: Date){
-        dateFilter.value = date
     }
 
 }

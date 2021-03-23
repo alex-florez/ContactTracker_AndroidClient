@@ -105,9 +105,10 @@ class LocationHistoryFragment : Fragment() {
             toggleNoLocationsLabel()
         })
 
-//        viewModel.deletedRows.observe(this, {
-//            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).show()
-//        })
+        // Observer para la eliminación de localizaciones
+        viewModel.deletedRows.observe(viewLifecycleOwner, {
+            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).show()
+        })
         return binding.root
     }
 

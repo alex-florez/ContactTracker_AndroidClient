@@ -20,4 +20,8 @@ class BroadcastLocationCallback(
         intent.putExtra(LocationUpdateBroadcastReceiver.EXTRA_LOCATION, location)
         ctx.sendBroadcast(intent)
     }
+
+    override fun onLocationStop() {
+
+    }
 }

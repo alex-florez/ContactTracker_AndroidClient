@@ -26,5 +26,5 @@ interface UserLocationDao {
     fun getAllByDateString(date: String): LiveData<List<UserLocation>>
 
     @Query("DELETE FROM user_locations")
-    suspend fun deleteAll()
+    suspend fun deleteAll(): Int
 }

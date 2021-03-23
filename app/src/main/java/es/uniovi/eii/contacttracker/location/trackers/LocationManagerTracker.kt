@@ -77,6 +77,7 @@ class LocationManagerTracker @Inject constructor(
     }
 
     override fun setCallback(callback: LocationUpdateCallback) {
+        locationUpdateCallback = callback // Callback base.
         locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 callback.onLocationUpdate(location)

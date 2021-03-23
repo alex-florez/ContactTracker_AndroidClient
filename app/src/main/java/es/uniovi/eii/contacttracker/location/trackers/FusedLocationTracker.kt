@@ -38,13 +38,14 @@ class FusedLocationTracker @Inject constructor(
     }
 
     override fun setCallback(callback: LocationUpdateCallback) {
-       locationCallback = object : LocationCallback(){
+        locationUpdateCallback = callback // Callback Base
+        locationCallback = object : LocationCallback(){
            override fun onLocationResult(result: LocationResult?) {
                result?.let {
                    callback.onLocationUpdate(it.lastLocation)
                }
            }
-       }
+        }
     }
 
     @SuppressLint("MissingPermission")

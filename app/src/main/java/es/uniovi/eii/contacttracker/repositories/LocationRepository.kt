@@ -57,8 +57,8 @@ class LocationRepository @Inject constructor(
      *
      * @return nº de filas eliminadas.
      */
-    suspend fun deleteAllUserLocations() {
-        userLocationDao.deleteAll()
+    suspend fun deleteAllUserLocations(): Int {
+       return userLocationDao.deleteAll()
     }
 
     fun insert(userLocation: UserLocation){

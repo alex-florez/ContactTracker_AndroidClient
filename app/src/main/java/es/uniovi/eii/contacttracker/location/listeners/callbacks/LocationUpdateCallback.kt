@@ -16,6 +16,9 @@ interface LocationUpdateCallback {
      */
     fun onLocationUpdate(location: Location)
 
-    // TODO cancelar aquí las corrutinas
-//    fun onLocationStop()
+    /**
+     * Método que será invocado cuando se dentenga el rastreador de ubicación,
+     * y por tanto se pause el ForegroundService.
+     */
+    fun onLocationStop()
 }

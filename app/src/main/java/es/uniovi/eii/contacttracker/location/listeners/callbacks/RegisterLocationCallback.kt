@@ -8,10 +8,7 @@ import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastRe
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -28,11 +25,15 @@ class RegisterLocationCallback @Inject constructor(
     private val locationRepository: LocationRepository
 ) : LocationUpdateCallback {
 
-    // Scope para la corrutina
+    /**
+     * Scope para la corrutina.
+     */
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    // ExecutorService
-    private val executorService: ExecutorService = Executors.newCachedThreadPool()
+    /**
+     * Referencia a la corrutina.
+     */
+    private var job: Job? = null
 
     override fun onLocationUpdate(location: Location) {
         // Enviar BROADCAST
@@ -42,7 +43,11 @@ class RegisterLocationCallback @Inject constructor(
         // Insertar localización en ROOM
         // -----------------------------
         insertIntoDB(location)
+    }
 
+    override fun onLocationStop() {
+        // Cancelar el JOB
+        job?.cancel()
     }
 
     /**
@@ -62,13 +67,9 @@ class RegisterLocationCallback @Inject constructor(
      * nueva localización en la base de datos ROOM local de la App.
      */
     private fun insertIntoDB(location: Location){
-        scope.launch {
+        job = scope.launch {
             locationRepository.insertUserLocation(LocationUtils.parse(location))
         }
-
-//        executorService.execute {
-//           locationRepository.insert(LocationUtils.parse(location))
-//        }
     }
 
 }

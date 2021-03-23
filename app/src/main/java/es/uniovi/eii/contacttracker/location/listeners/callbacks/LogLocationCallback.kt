@@ -16,6 +16,10 @@ class LogLocationCallback : LocationUpdateCallback {
         Log.d(TAG, locationString)
     }
 
+    override fun onLocationStop() {
+
+    }
+
     companion object {
         private const val TAG: String = "LogLocationCallback"
     }
