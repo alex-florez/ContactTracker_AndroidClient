@@ -49,6 +49,11 @@ class LocationForegroundService : Service(){
      */
     private lateinit var notification: Notification
 
+    /**
+     * Flag que indica si ya se está ejecutando el servicio.
+     */
+    private var isActive: Boolean = false
+
     override fun onCreate() {
         super.onCreate()
         init()
@@ -81,14 +86,30 @@ class LocationForegroundService : Service(){
         Log.d(TAG, "Destruyendo servicio de localización en 1er plano.")
     }
 
+    /**
+     * Método de inicialización que se encarga de instanciar
+     * y configurar los objetos necesarios para este servicio.
+     */
+    private fun init(){
+        notification = createNotification()
+        locationTracker.setCallback(locationCallback)
+        val pendingIntent = Intent(this, LocationReceivedIntentService::class.java).let{
+            PendingIntent.getService(this, 0, it, 0)
+        }
+        locationTracker.setIntentCallback(pendingIntent)
+    }
 
     /**
-     * Inicializa el servicio de localización en 1er plano.
+     * Inicializa el servicio de localización en 1er plano, si no
+     * ha sido ya inicializado.
      */
     private fun startLocationService(){
-        Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
-        startForeground(SERVICE_ID, notification)
-        locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
+        if(!isActive){
+            Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
+            startForeground(SERVICE_ID, notification)
+            locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
+            isActive = true
+        }
     }
 
     /**
@@ -96,9 +117,12 @@ class LocationForegroundService : Service(){
      * así como también detener el servicio.
      */
     private fun stopLocationService(){
-        locationTracker.stop(LocationUpdateMode.CALLBACK_MODE)
-        stopForeground(true)
-        stopSelf()
+        if(isActive){
+            locationTracker.stop(LocationUpdateMode.CALLBACK_MODE)
+            stopForeground(true)
+            stopSelf()
+            isActive = false
+        }
     }
 
     /**
@@ -121,18 +145,6 @@ class LocationForegroundService : Service(){
                 .build()
     }
 
-    /**
-     * Método de inicialización que se encarga de instanciar
-     * y configurar los objetos necesarios para este servicio.
-     */
-    private fun init(){
-        notification = createNotification()
-        locationTracker.setCallback(locationCallback)
-        val pendingIntent = Intent(this, LocationReceivedIntentService::class.java).let{
-            PendingIntent.getService(this, 0, it, 0)
-        }
-        locationTracker.setIntentCallback(pendingIntent)
-    }
 
     companion object {
         // Constantes

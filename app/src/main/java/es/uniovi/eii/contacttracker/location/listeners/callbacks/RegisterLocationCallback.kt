@@ -62,12 +62,13 @@ class RegisterLocationCallback @Inject constructor(
      * nueva localización en la base de datos ROOM local de la App.
      */
     private fun insertIntoDB(location: Location){
-//        scope.launch {
-//            repository.insertUserLocation(LocationUtils.parse(location))
-//        }
-
-        executorService.execute {
-           locationRepository.insert(LocationUtils.parse(location))
+        scope.launch {
+            locationRepository.insertUserLocation(LocationUtils.parse(location))
         }
+
+//        executorService.execute {
+//           locationRepository.insert(LocationUtils.parse(location))
+//        }
     }
+
 }

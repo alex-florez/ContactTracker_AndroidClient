@@ -31,8 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/bottom_navigation_menu"
-        app:labelVisibilityMode="labeled"
-        app:itemIconSize="@dimen/bottom_navigation_icon_size"/>
+        app:labelVisibilityMode="labeled" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

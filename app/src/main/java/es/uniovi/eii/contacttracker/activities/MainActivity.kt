@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
+import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
 import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
@@ -18,12 +19,6 @@ class MainActivity : AppCompatActivity() {
      * View Binding
      */
     private lateinit var binding: ActivityMainBinding
-
-    /**
-     * Map que contiene los fragments asociados a los items de menú,
-     * y como claves los IDs de los items de menú.
-     */
-    private val fragmentsMap: MutableMap<Int, Fragment> = mutableMapOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +33,6 @@ class MainActivity : AppCompatActivity() {
      * una vez creada la Activity.
      */
     private fun setUp(){
-        initFragmentsMap() // Crear fragments
         setListeners() // Listeners
 
         // Establecer el fragment inicial como seleccionado
@@ -57,18 +51,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Instancia e inicializa los fragments principales asociados
-     * al menú inferior y los almacena en el Map, junto con su clave
-     * asociada.
-     */
-    private fun initFragmentsMap(){
-        fragmentsMap[R.id.bottomMenuOption1] = TrackLocationTabsFragment()
-        fragmentsMap[R.id.bottomMenuOption2] = TrackerInfoFragment()
-        fragmentsMap[R.id.bottomMenuOption3] = TrackerConfigurationFragment()
-        fragmentsMap[R.id.bottomMenuOption4] = LocationHistoryFragment()
-    }
-
-    /**
      * Reemplaza el fragment actual en el contenedor principal de Fragments
      * por el fragment asociado al id del item de menú pasado como parámetro.
      *
@@ -76,10 +58,25 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setFragment(itemId: Int){
         supportFragmentManager.beginTransaction().apply {
-            fragmentsMap[itemId]?.let{
+           getMenuFragment(itemId).let{
                 replace(R.id.main_fragment_container, it)
                 commit()
             }
+        }
+    }
+
+    /**
+     * Recibe como parámetro un id que se corresponde con los
+     * ID's de los items de menú, y devuelve una nueva instancia
+     * del Fragment asociado a dicha opción de menú.
+     */
+    private fun getMenuFragment(id: Int): Fragment {
+        return when(id){
+            R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
+            R.id.bottomMenuOption2 -> TrackerInfoFragment()
+            R.id.bottomMenuOption3 -> TrackerConfigurationFragment()
+            R.id.bottomMenuOption4 -> LocationHistoryFragment()
+            else -> DefaultBlankFragment()
         }
     }
 

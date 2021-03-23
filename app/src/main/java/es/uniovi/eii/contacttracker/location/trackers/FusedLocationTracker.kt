@@ -76,6 +76,7 @@ class FusedLocationTracker @Inject constructor(
         return when(mode){
             LocationUpdateMode.CALLBACK_MODE -> {
                 fusedLocationProvider.removeLocationUpdates(locationCallback)
+//                locationCallback.stop()
                 true
             }
             LocationUpdateMode.PENDING_INTENT_MODE -> {

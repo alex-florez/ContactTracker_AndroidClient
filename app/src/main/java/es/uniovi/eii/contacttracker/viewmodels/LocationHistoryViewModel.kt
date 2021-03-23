@@ -9,6 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -81,10 +83,20 @@ class LocationHistoryViewModel @Inject constructor(
      * del usuario de la base de datos.
      */
     fun deleteAllUserLocations(){
-        Log.d("ViewModel", "borrando...")
-        viewModelScope.launch {
-          locationRepository.deleteAllUserLocations()
+//        viewModelScope.launch {
+//            Log.d("ViewModel", "borrando...")
+//          locationRepository.deleteAllUserLocations()
+//        }
+        Log.d("ViewModelScope", viewModelScope.isActive.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("ViewModel", "borrando...")
+            locationRepository.deleteAllUserLocations()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("ViewModelOnCleared", "Limpiando ViewModel...")
     }
 
     /**

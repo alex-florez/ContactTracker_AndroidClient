@@ -15,4 +15,7 @@ interface LocationUpdateCallback {
      * @param location nueva localización
      */
     fun onLocationUpdate(location: Location)
+
+    // TODO cancelar aquí las corrutinas
+//    fun onLocationStop()
 }
