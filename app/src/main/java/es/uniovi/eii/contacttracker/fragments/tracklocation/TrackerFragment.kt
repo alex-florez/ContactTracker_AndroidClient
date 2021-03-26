@@ -1,23 +1,32 @@
 package es.uniovi.eii.contacttracker.fragments.tracklocation
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
+import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
+import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel
 
 
 /**
@@ -35,11 +44,24 @@ class TrackerFragment : Fragment() {
      */
     private lateinit var binding: FragmentTrackerBinding
 
+    /**
+     * ViewModel
+     */
+    private val viewModel:TrackerViewModel by viewModels()
+
+    /**
+     * TimePickers de Material
+     */
+    private lateinit var startTimePicker: TimePickerFragment
+    private lateinit var endTimePicker: TimePickerFragment
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
+        createTimePickers()
     }
 
     override fun onCreateView(
@@ -47,6 +69,7 @@ class TrackerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTrackerBinding.inflate(inflater, container, false)
+
 
         setListeners()
         return binding.root
@@ -74,7 +97,9 @@ class TrackerFragment : Fragment() {
     /**
      * Establece los listeners para cada componente de la UI.
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(){
+        // Botones de rastreo manual
         binding.btnStartTracker.setOnClickListener {
             startLocationService()
         }
@@ -82,6 +107,25 @@ class TrackerFragment : Fragment() {
         binding.btnStopTracker.setOnClickListener{
             stopLocationService()
         }
+        // Alarma de localización
+        binding.layoutCardLocationAlarm.switchAutomaticTracking
+                .setOnCheckedChangeListener{ btnView, isChecked ->
+                    toggleAutomaticTracking(isChecked)
+        }
+
+        binding.layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
+           startTimePicker.show(requireActivity().supportFragmentManager, "tag")
+        }
+
+        binding.layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
+            endTimePicker.show(requireActivity().supportFragmentManager, "tag")
+        }
+
+
+        binding.layoutCardLocationAlarm.btnApplyAutoTracking.setOnClickListener {
+
+        }
+
     }
 
     /**
@@ -131,6 +175,9 @@ class TrackerFragment : Fragment() {
         }
     }
 
+
+
+
     /**
      * Método encargado de iniciar o detener el servicio de localización, que será
      * ejecutado en segundo plano y hará uso del Tracker de ubicación.
@@ -144,6 +191,78 @@ class TrackerFragment : Fragment() {
             ContextCompat.startForegroundService(requireContext(), it)
         }
     }
+
+    /**
+     * Método invocado cuando se pulsa sobre el Switch de la UI para
+     * activar/desactivar el rastreo automático.
+     */
+    private fun toggleAutomaticTracking(activate: Boolean) {
+        toggleAlarmCardState(activate)
+        if(activate){
+
+        } else {
+
+        }
+    }
+
+    /**
+     * Recibe como parámetro el estado para establecer los
+     * componentes de la UI como activos o deshabilitados dentro
+     * del Card de alarmas de localización.
+     */
+    private fun toggleAlarmCardState(state: Boolean){
+        binding.layoutCardLocationAlarm.txtInputLayoutStartAutoTracking.isEnabled = state
+        binding.layoutCardLocationAlarm.txtInputLayoutEndAutoTracking.isEnabled = state
+        binding.layoutCardLocationAlarm.btnApplyAutoTracking.isEnabled = state
+        binding.layoutCardLocationAlarm.labelCurrentAlarm.isEnabled = state
+        binding.layoutCardLocationAlarm.labelValueCurrentAlarm.isEnabled = state
+    }
+
+    /**
+     * Método que esconde el teclado de Android cuando
+     * se pulsa sobre un EditText.
+     */
+    private fun hideKeyboard(v:View, event: MotionEvent): Boolean{
+        v.onTouchEvent(event)
+        val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(v.windowToken, 0)
+        return true
+    }
+
+    /**
+     * Método que se encarga de crear los TimePickers de Material
+     * para seleccionar las horas.
+     */
+    private fun createTimePickers(){
+        startTimePicker = TimePickerFragment(object : OnTimeSetListener {
+            override fun onTimeSet(hour: Int, minute: Int) {
+                setAlarmStartTime(hour, minute)
+            }
+        }, "Hora de inicio")
+
+        endTimePicker = TimePickerFragment(object : OnTimeSetListener {
+            override fun onTimeSet(hour: Int, minute: Int) {
+                setAlarmEndTime(hour, minute)
+            }
+        }, "Hora de fin")
+    }
+
+    /**
+     * Establece la hora de inicio de la alarma.
+     */
+    private fun setAlarmStartTime(hour: Int, minute: Int){
+        val time = "$hour:$minute"
+        binding.layoutCardLocationAlarm.txtStartAutoTracking.setText(time)
+    }
+
+    /**
+     * Establece la hora de fin de la alarma.
+     */
+    private fun setAlarmEndTime(hour: Int, minute: Int){
+        val time = "$hour:$minute"
+        binding.layoutCardLocationAlarm.txtEndAutoTracking.setText(time)
+    }
+
 
     companion object {
         /**

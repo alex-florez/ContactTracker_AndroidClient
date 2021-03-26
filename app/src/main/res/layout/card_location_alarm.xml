@@ -15,6 +15,13 @@
         android:orientation="vertical"
         android:padding="8dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/locationAlarmsTitle"
+            android:textColor="@color/teal_700"
+            android:textAppearance="?attr/textAppearanceHeadline6"/>
+
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchAutomaticTracking"
             android:layout_width="wrap_content"
@@ -34,7 +41,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:baselineAligned="false">
+
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtInputLayoutStartAutoTracking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -45,24 +54,28 @@
                         android:id="@+id/txtStartAutoTracking"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:maxLines="1"/>
+                        android:editable="false"
+                        android:text="@string/placeholderStart"
+                        android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtInputLayoutEndAutoTracking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/end"
                     app:boxStrokeColor="@color/teal_200"
                     android:layout_marginEnd="6dp">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtEndAutoTracking"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:maxLines="1"/>
+                        android:editable="false"
+                        android:maxLines="1"
+                        android:text="@string/placeholderEnd" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -86,17 +99,18 @@
                 android:id="@+id/labelCurrentAlarm"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:text="@string/labelCurrentAlarm"
                 android:textAppearance="?attr/textAppearanceOverline"/>
 
             <TextView
                 android:id="@+id/labelValueCurrentAlarm"
-                android:textColor="@color/red1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="(15:00 - 16:00)" />
+                android:text="(15:00 - 16:00)"
+                android:textAppearance="?attr/textAppearanceOverline"
+                android:gravity="right"/>
         </LinearLayout>
     </LinearLayout>
 
