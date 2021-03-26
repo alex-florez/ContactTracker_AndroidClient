@@ -28,4 +28,12 @@
     <string name="date">Fecha</string>
     <string name="history_date_picker_title">Selecciona una fecha</string>
 
+    <!-- Alarmas de localización -->
+    <string name="labelActivateAlarm">Programar rastreo automático</string>
+    <string name="init">Inicio</string>
+    <string name="end">Fin</string>
+    <string name="program">Programar</string>
+    <string name="noAlarm">No hay ninguna alarma programada</string>
+    <string name="labelCurrentAlarm">Alarma pendiente</string>
+
 </resources>
