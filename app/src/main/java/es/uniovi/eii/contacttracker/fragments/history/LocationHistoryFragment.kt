@@ -107,7 +107,10 @@ class LocationHistoryFragment : Fragment() {
 
         // Observer para la eliminación de localizaciones
         viewModel.deletedRows.observe(viewLifecycleOwner, {
-            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).let { snack ->
+                snack.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                snack.show()
+            }
         })
         return binding.root
     }

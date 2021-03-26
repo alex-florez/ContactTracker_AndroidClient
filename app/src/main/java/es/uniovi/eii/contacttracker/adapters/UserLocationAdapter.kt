@@ -91,7 +91,7 @@ class UserLocationAdapter(
     fun addLocations(newLocations: List<UserLocation>){
         locations.clear()
         locations.addAll(newLocations)
-        submitList(newLocations.toList())
+        submitList(locations.toList())
     }
 
     /**
