@@ -26,7 +26,9 @@ import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragm
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel
+import java.util.*
 
 
 /**
@@ -69,10 +71,15 @@ class TrackerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTrackerBinding.inflate(inflater, container, false)
-
-
         setListeners()
+        setObservers()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initAlarmEditText()
+        viewModel.retrieveActualAlarm()
     }
 
     /**
@@ -95,6 +102,20 @@ class TrackerFragment : Fragment() {
     }
 
     /**
+     * Método encargado de solicitar los permisos necesarios
+     * para la localización.
+     */
+    private fun requestLocationPermissions(){
+        val permissions = arrayListOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        // Si la versión es Android Q (API 29) soliticar también el permiso de Localización en Background
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            permissions.add(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        }
+
+        requestPermissions(permissions.toTypedArray(), LOCATION_PERMISSION_REQUEST_ID)
+    }
+
+    /**
      * Establece los listeners para cada componente de la UI.
      */
     @SuppressLint("ClickableViewAccessibility")
@@ -109,7 +130,7 @@ class TrackerFragment : Fragment() {
         }
         // Alarma de localización
         binding.layoutCardLocationAlarm.switchAutomaticTracking
-                .setOnCheckedChangeListener{ btnView, isChecked ->
+                .setOnCheckedChangeListener{ _, isChecked ->
                     toggleAutomaticTracking(isChecked)
         }
 
@@ -123,23 +144,38 @@ class TrackerFragment : Fragment() {
 
 
         binding.layoutCardLocationAlarm.btnApplyAutoTracking.setOnClickListener {
-
+            viewModel.saveAlarmsToSharedPrefs() // Guardar alarmas
+            viewModel.retrieveActualAlarm() // Obtener alarmas
         }
 
     }
 
     /**
-     * Método encargado de solicitar los permisos necesarios
-     * para la localización.
+     * Método encargado de configurar los observers
+     * para observar los datos del ViewModel.
      */
-    private fun requestLocationPermissions(){
-        val permissions = arrayListOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        // Si la versión es Android Q (API 29) soliticar también el permiso de Localización en Background
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            permissions.add(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
+    private fun setObservers(){
+        viewModel.starTime.observe(viewLifecycleOwner, {
+            binding.layoutCardLocationAlarm.txtStartAutoTracking
+                    .setText(Utils.formatDate(it, "HH:mm"))
+            startTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
+            startTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
+        })
 
-        requestPermissions(permissions.toTypedArray(), LOCATION_PERMISSION_REQUEST_ID)
+        viewModel.endTime.observe(viewLifecycleOwner, {
+            binding.layoutCardLocationAlarm.txtEndAutoTracking
+                    .setText(Utils.formatDate(it, "HH:mm"))
+            endTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
+            endTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
+        })
+
+        viewModel.actualAlarm.observe(viewLifecycleOwner, {
+            binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = it
+        })
+
+        viewModel.labelActualAlarm.observe(viewLifecycleOwner, {
+            binding.layoutCardLocationAlarm.labelCurrentAlarm.text = it
+        })
     }
 
     /**
@@ -174,8 +210,6 @@ class TrackerFragment : Fragment() {
             }
         }
     }
-
-
 
 
     /**
@@ -236,32 +270,33 @@ class TrackerFragment : Fragment() {
     private fun createTimePickers(){
         startTimePicker = TimePickerFragment(object : OnTimeSetListener {
             override fun onTimeSet(hour: Int, minute: Int) {
-                setAlarmStartTime(hour, minute)
+                viewModel.setStartTime(Utils.getDate(hour, minute))
             }
         }, "Hora de inicio")
 
         endTimePicker = TimePickerFragment(object : OnTimeSetListener {
             override fun onTimeSet(hour: Int, minute: Int) {
-                setAlarmEndTime(hour, minute)
+                viewModel.setEndTime(Utils.getDate(hour, minute))
             }
         }, "Hora de fin")
     }
 
     /**
-     * Establece la hora de inicio de la alarma.
+     * Inicializa los EditText de hora de inicio y fin
+     * para establecer una hora por defecto en función de la
+     * hora actual.
      */
-    private fun setAlarmStartTime(hour: Int, minute: Int){
-        val time = "$hour:$minute"
-        binding.layoutCardLocationAlarm.txtStartAutoTracking.setText(time)
+    private fun initAlarmEditText(){
+        val actualTime = Date()
+        val startText = Utils.formatDate(actualTime, "HH:mm")
+        val cal = Calendar.getInstance()
+        cal.time = actualTime
+        cal.add(Calendar.HOUR_OF_DAY, 1) // Sumar una hora
+        val endText = Utils.formatDate(cal.time, "HH:mm")
+        viewModel.setStartTime(actualTime)
+        viewModel.setEndTime(cal.time)
     }
 
-    /**
-     * Establece la hora de fin de la alarma.
-     */
-    private fun setAlarmEndTime(hour: Int, minute: Int){
-        val time = "$hour:$minute"
-        binding.layoutCardLocationAlarm.txtEndAutoTracking.setText(time)
-    }
 
 
     companion object {

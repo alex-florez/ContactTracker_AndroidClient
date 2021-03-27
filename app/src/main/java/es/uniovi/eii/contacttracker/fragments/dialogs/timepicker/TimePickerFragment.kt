@@ -17,12 +17,15 @@ class TimePickerFragment(
     private val title: String
 ) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val cal = Calendar.getInstance()
-        val hour = cal.get(Calendar.HOUR_OF_DAY)
-        val minute = cal.get(Calendar.MINUTE)
+    /**
+     * Horas y minutos
+     */
+    var hours: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    var minutes: Int = Calendar.getInstance().get(Calendar.MINUTE)
 
-        val timePickerDialog = TimePickerDialog(requireActivity(), this, hour, minute,
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val timePickerDialog = TimePickerDialog(requireActivity(), this, hours, minutes,
             DateFormat.is24HourFormat(requireActivity()))
         timePickerDialog.setTitle(title)
         return timePickerDialog

@@ -1,7 +1,7 @@
 package es.uniovi.eii.contacttracker.util
 
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 /**
  * Clase de utilidades generales
@@ -21,5 +21,29 @@ object Utils {
         return formatter.format(date)
     }
 
+    /**
+     * Devuelve una fecha Date correspondiente a las horas
+     * y minutos pasados como parámetro.
+     *
+     * @param hours horas
+     * @param minutes minutos
+     * @return fecha Date
+     */
+    fun getDate(hours: Int, minutes: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, hours)
+        calendar.set(Calendar.MINUTE, minutes)
+        return calendar.time
+    }
+
+    /**
+     * Devuelve las horas o minutos según se indique
+     * de la fecha pasada como parámetro.
+     */
+    fun getFromDate(date: Date, select: Int): Int {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        return calendar.get(select)
+    }
 
 }

@@ -50,5 +50,25 @@ class AlarmRepository @Inject constructor(
         return Date(longDate)
     }
 
+    /**
+     * Comprueba si existe una entrada en las SharedPreferences
+     * con la clave key pasada como parámetro.
+     *
+     * @param key clave a comprobar.
+     * @return boolean
+     */
+    fun checkKey(key: Int): Boolean {
+        return sharedPrefs.contains(ctx.getString(key))
+    }
+
+    /**
+     * Elimina la Shared Preference de clave pasada como parámetro.
+     */
+    fun remove(key: Int) {
+        with(sharedPrefs.edit()){
+            remove(ctx.getString(key))
+            apply()
+        }
+    }
 
 }
