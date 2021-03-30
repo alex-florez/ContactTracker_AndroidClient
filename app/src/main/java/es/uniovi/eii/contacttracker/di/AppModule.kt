@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.di
 
+import android.app.AlarmManager
 import android.content.Context
 import androidx.room.Room
 import dagger.Module

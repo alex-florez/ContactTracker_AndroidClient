@@ -1,8 +1,12 @@
 package es.uniovi.eii.contacttracker.di
 
+import android.app.AlarmManager
+import android.content.Context
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.RegisterLocationCallback

@@ -38,6 +38,29 @@ class AlarmRepository @Inject constructor(
     }
 
     /**
+     * Guarda en una SharedPreference el flag correspondiente
+     * que indica si el rastreo automático está habilitado o deshabilitado.
+     *
+     * @param flag true si está habilitado.
+     */
+    fun setAutoTracking(flag: Boolean) {
+        with(sharedPrefs.edit()){
+            putBoolean(ctx.getString(R.string.shared_prefs_location_alarm_enabled), flag)
+            apply()
+        }
+    }
+
+    /**
+     * Devuelve el valor de la clave del flag de rastreo
+     * automático.
+     */
+    fun getAutoTracking(): Boolean {
+        return sharedPrefs
+                .getBoolean(ctx.getString(R.string.shared_prefs_location_alarm_enabled), false)
+    }
+
+
+    /**
      * Recibe como parámetro la clave del tipo de fecha y devuelve
      * la fecha de la alarma asociada a la clave.
      *

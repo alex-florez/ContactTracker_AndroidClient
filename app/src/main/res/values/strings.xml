@@ -5,6 +5,7 @@
     <string name="shared_prefs_file_name">es.uniovi.eii.contacttracker.sharedprefs</string>
     <string name="shared_prefs_location_alarm_start">LocationAlarmStart</string>
     <string name="shared_prefs_location_alarm_end">LocationAlarmEnd</string>
+    <string name="shared_prefs_location_alarm_enabled">LocationAlarmEnabled</string>
 
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
