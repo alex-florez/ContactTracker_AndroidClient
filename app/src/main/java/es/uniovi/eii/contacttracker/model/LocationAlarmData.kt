@@ -11,7 +11,6 @@ class LocationAlarmData(
         val endDate: Date
 ) {
 
-
     /**
      * Fecha de creación.
      */

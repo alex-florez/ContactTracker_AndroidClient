@@ -57,12 +57,6 @@ class TrackerFragment : Fragment() {
     private lateinit var startTimePicker: TimePickerFragment
     private lateinit var endTimePicker: TimePickerFragment
 
-    /**
-     * Location Alarm Manager
-     */
-    @Inject
-    lateinit var locationAlarmManager: LocationAlarmManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -181,19 +175,19 @@ class TrackerFragment : Fragment() {
                 binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.noAlarm)
                 binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = ""
             } else {
-                val currentAlarmText = "(${Utils.formatDate(it.startDate, "HH:mm")}) " +
-                        "- (${Utils.formatDate(it.endDate, "HH:mm")})"
+                val currentAlarmText = "(${Utils.formatDate(it.startDate, "dd/MM/yyyy HH:mm")}) " +
+                        "- (${Utils.formatDate(it.endDate, "dd/MM/yyyy HH:mm")})"
                 binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.labelCurrentAlarm)
                 binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = currentAlarmText
             }
         })
-
-        // Estado del rastreo automático: ACTIVADO / DESACTIVADO
-        viewModel.flagAutoTracking.observe(viewLifecycleOwner, {
-            if(it){
-                setLocationAlarm() // Re-schedule alarms
-            } else {
-                locationAlarmManager.cancel() // Cancelar alarmas
+        // Flag de horas no válidas
+        viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
+            if(!validHours){
+                Snackbar.make(binding.root, getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG).let {
+                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                    it.show()
+                }
             }
         })
     }
@@ -235,6 +229,7 @@ class TrackerFragment : Fragment() {
     private fun sendCommandToLocationService(action: String){
         Intent(requireContext(), LocationForegroundService::class.java).let {
             it.action = action
+            it.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, false)
             ContextCompat.startForegroundService(requireContext(), it)
         }
     }
@@ -246,7 +241,9 @@ class TrackerFragment : Fragment() {
     private fun toggleAutomaticTracking(activate: Boolean) {
         doLocationChecks {
             toggleAlarmCardState(activate) // Estado de los componentes del Card.
-            viewModel.toggleAutoTracking(activate)
+            viewModel.toggleAutoTracking(activate) // Activar o desactivar el Auto Tracking
+            if(!activate)
+               stopLocationService() // Desactivar el servicio de localización si está activo.
         }
     }
 
@@ -302,25 +299,12 @@ class TrackerFragment : Fragment() {
     }
 
     /**
-     * Establece los datos de la alarma a partir del LocationAlarmData
-     * del ViewModel.
-     */
-    private fun setLocationAlarm(){
-        viewModel.actualAlarmData.value.apply {
-            if(this != null){
-                locationAlarmManager.set(this)
-            }
-        }
-    }
-
-    /**
      * Listener de Click sobre el botón de aplicar
      * alarmas.
      */
     private fun applyAutoTracking(){
         doLocationChecks {
-            viewModel.saveAlarmsToSharedPrefs() // Guardar alarmas en SharedPreferences
-            setLocationAlarm() // Establecer alarmas
+            viewModel.setLocationAlarm()
         }
     }
 
@@ -342,6 +326,7 @@ class TrackerFragment : Fragment() {
             requestLocationPermissions() // Solicitar permisos necesarios
         }
     }
+
 
     companion object {
         /**

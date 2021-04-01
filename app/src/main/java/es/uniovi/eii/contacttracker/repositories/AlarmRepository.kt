@@ -94,4 +94,16 @@ class AlarmRepository @Inject constructor(
         }
     }
 
+    /**
+     * Elimina de las SharedPreferences las alarmas de inicio y
+     * de fin de rastreo de ubicación.
+     */
+    fun removeAlarms(){
+        with(sharedPrefs.edit()){
+            remove(ctx.getString(R.string.shared_prefs_location_alarm_start))
+            remove(ctx.getString(R.string.shared_prefs_location_alarm_end))
+            apply()
+        }
+    }
+
 }

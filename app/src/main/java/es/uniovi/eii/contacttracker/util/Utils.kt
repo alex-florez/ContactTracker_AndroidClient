@@ -46,4 +46,15 @@ object Utils {
         return calendar.get(select)
     }
 
+    /**
+     * Suma la cantidad indicada como parámetro de horas, minutos
+     * o días a la fecha indicada como parámetro.
+     */
+    fun addToDate(date: Date, field:Int, quantity: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(field, quantity)
+        return calendar.time
+    }
+
 }

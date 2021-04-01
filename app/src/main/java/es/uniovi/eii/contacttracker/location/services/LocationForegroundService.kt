@@ -19,6 +19,7 @@ import es.uniovi.eii.contacttracker.location.listeners.callbacks.RegisterLocatio
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
+import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import javax.inject.Inject
 import javax.inject.Named
@@ -44,6 +45,11 @@ class LocationForegroundService : Service(){
     lateinit var locationCallback: LocationUpdateCallback
 
     /**
+     * Repositorio de alarmas
+     */
+    @Inject lateinit var alarmRepository: AlarmRepository
+
+    /**
      * Objeto Notification que representa la notificación
      * que se mostrará al iniciar el servicio.
      */
@@ -67,12 +73,13 @@ class LocationForegroundService : Service(){
     // *********************
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
+            val comesFromAlarm = it.getBooleanExtra(EXTRA_COMMAND_FROM_ALARM, false)
             when(it.action){
                 ACTION_START_LOCATION_SERVICE -> {
-                    startLocationService()
+                    startLocationService(comesFromAlarm)
                 }
                 ACTION_STOP_LOCATION_SERVICE -> {
-                    stopLocationService()
+                    stopLocationService(comesFromAlarm)
                 }
             }
         }
@@ -101,9 +108,12 @@ class LocationForegroundService : Service(){
 
     /**
      * Inicializa el servicio de localización en 1er plano, si no
-     * ha sido ya inicializado.
+     * ha sido ya inicializado. Recibe como parámetro un flag que indica si
+     * el servicio ha sido iniciado desde una alarma de localización.
+     *
+     * @param comesFromAlarm flag de comando desde alarma.
      */
-    private fun startLocationService(){
+    private fun startLocationService(comesFromAlarm: Boolean){
         if(!isActive){
             Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
             startForeground(SERVICE_ID, notification)
@@ -114,14 +124,18 @@ class LocationForegroundService : Service(){
 
     /**
      * Se encarga de eliminar y detener las actualizaciones de localización,
-     * así como también detener el servicio.
+     * así como también detener el servicio.Recibe como parámetro un flag que indica si
+     * el servicio ha sido iniciado desde una alarma de localización.
+     *
+     * @param comesFromAlarm flag de comando desde alarma.
      */
-    private fun stopLocationService(){
+    private fun stopLocationService(comesFromAlarm: Boolean){
         if(isActive){
             locationTracker.stop(LocationUpdateMode.CALLBACK_MODE)
             stopForeground(true)
             stopSelf()
             isActive = false
+            alarmRepository.removeAlarms() // Eliminar alarmas de las Shared Prefs
         }
     }
 
@@ -158,5 +172,8 @@ class LocationForegroundService : Service(){
         // ACCIONES
         const val ACTION_START_LOCATION_SERVICE = "startLocationService" // Iniciar servicio
         const val ACTION_STOP_LOCATION_SERVICE = "stopLocationService" // Detener servicio
+
+        // EXTRAS
+        const val EXTRA_COMMAND_FROM_ALARM = "commandFromAlarm" // Flag que indica si el comando procede de una alarma
     }
 }

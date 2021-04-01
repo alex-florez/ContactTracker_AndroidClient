@@ -41,6 +41,7 @@
     <string name="end">Fin</string>
     <string name="program">Programar</string>
     <string name="noAlarm">No hay ninguna alarma programada</string>
+    <string name="errorInvalidHours">Las horas especificadas no son válidas</string>
     <string name="labelCurrentAlarm">Alarma pendiente</string>
     <string name="placeholderStart">15:00</string>
     <string name="placeholderEnd">16:00</string>

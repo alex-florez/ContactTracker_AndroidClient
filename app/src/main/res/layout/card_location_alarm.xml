@@ -92,25 +92,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="6dp">
 
             <TextView
                 android:id="@+id/labelCurrentAlarm"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.7"
                 android:text="@string/labelCurrentAlarm"
                 android:textAppearance="?attr/textAppearanceOverline"/>
 
             <TextView
                 android:id="@+id/labelValueCurrentAlarm"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="(15:00 - 16:00)"
-                android:textAppearance="?attr/textAppearanceOverline"
-                android:gravity="right"/>
+                android:textAppearance="?attr/textAppearanceOverline"/>
         </LinearLayout>
     </LinearLayout>
 

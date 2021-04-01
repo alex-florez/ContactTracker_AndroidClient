@@ -8,6 +8,8 @@ import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.LocationAlarmData
+import es.uniovi.eii.contacttracker.util.Utils
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -28,6 +30,7 @@ class LocationAlarmManager @Inject constructor(
         // Alarma de inicio
         val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         startServiceIntent.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
+        startServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 locationAlarmData.startDate.time,
@@ -36,6 +39,7 @@ class LocationAlarmManager @Inject constructor(
         // Alarma de fin
         val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         stopServiceIntent.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
+        startServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 locationAlarmData.endDate.time,
@@ -44,7 +48,7 @@ class LocationAlarmManager @Inject constructor(
     }
 
     /**
-     * Cancela ambas alarmas, de INICIO y de FIN.
+     * Cancela las alarmas de localización.
      */
     fun cancel(){
         val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
@@ -73,5 +77,7 @@ class LocationAlarmManager @Inject constructor(
             PendingIntent.getService(ctx, id, intent, 0)
         }
     }
+
+
 
 }
