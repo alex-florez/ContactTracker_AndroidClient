@@ -1,9 +1,12 @@
 package es.uniovi.eii.contacttracker.fragments.tracklocation
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -57,6 +60,34 @@ class TrackerFragment : Fragment() {
     private lateinit var startTimePicker: TimePickerFragment
     private lateinit var endTimePicker: TimePickerFragment
 
+    /**
+     * Broadcast Receiver para las alarmas de inicio y de fin.
+     */
+    private var locationAlarmBroadCastReceiver: LocationAlarmBroadCastReceiver? = null
+
+    // BROADCAST RECEIVERS
+    /**
+     * Clase interna privada que representa el BroadCast receiver que
+     * es disparado cada vez que se inicia o detiene un servicio de localización
+     * desde una alarma.
+     */
+    inner class LocationAlarmBroadCastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when(intent?.getStringExtra(EXTRA_LOCATION_ALARM_COMMAND)) {
+                LocationForegroundService.ACTION_START_LOCATION_SERVICE -> {
+                    // Activar Switch del Tracker
+                    binding.layoutCardLocationTracker.switchTrackLocation.isChecked = true
+                }
+                LocationForegroundService.ACTION_STOP_LOCATION_SERVICE -> {
+                    // Desactivar Switch del Tracker
+                    binding.layoutCardLocationTracker.switchTrackLocation.isChecked = false
+                }
+            }
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -78,11 +109,19 @@ class TrackerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // Establecer estado de los Switches
-        initLocationAlarmSwitch()
         initLocationTrackSwitch()
+        initLocationAlarmSwitch()
 
         viewModel.initAlarmPlaceHolders()
         viewModel.retrieveActualAlarm()
+
+        registerReceivers()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        unregisterReceivers()
     }
 
     /**
@@ -261,8 +300,6 @@ class TrackerFragment : Fragment() {
         doLocationChecks {
             toggleAlarmCardState(activate) // Estado de los componentes del Card.
             viewModel.toggleAutoTracking(activate) // Activar o desactivar el Auto Tracking
-            if(!activate)
-               stopLocationService() // Desactivar el servicio de localización si está activo.
         }
     }
 
@@ -333,7 +370,11 @@ class TrackerFragment : Fragment() {
      */
     private fun applyAutoTracking(){
         doLocationChecks {
-            viewModel.setLocationAlarm()
+            if(viewModel.setLocationAlarm())
+                Snackbar.make(binding.root, getString(R.string.newAlarm), Snackbar.LENGTH_SHORT).let {
+                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                    it.show()
+                }
         }
     }
 
@@ -356,6 +397,22 @@ class TrackerFragment : Fragment() {
         }
     }
 
+    /**
+     * Registra los BroadCast Receivers en la Activity.
+     */
+    private fun registerReceivers(){
+        if(locationAlarmBroadCastReceiver == null)
+            locationAlarmBroadCastReceiver = LocationAlarmBroadCastReceiver()
+        requireActivity().registerReceiver(locationAlarmBroadCastReceiver,
+        IntentFilter(ACTION_LOCATION_ALARM))
+    }
+
+    /**
+     * Desvincula los BroadCast Receivers de la Activity.
+     */
+    private fun unregisterReceivers(){
+        requireActivity().unregisterReceiver(locationAlarmBroadCastReceiver)
+    }
 
     companion object {
         /**
@@ -380,5 +437,9 @@ class TrackerFragment : Fragment() {
 
         // TAG
         private const val TAG: String = "TrackLocationFragment"
+
+        // Broadcast Receiver
+        const val ACTION_LOCATION_ALARM = "LocationAlarm"
+        const val EXTRA_LOCATION_ALARM_COMMAND = "LocationAlarmCommand"
     }
 }

@@ -11,16 +11,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
+import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
-import es.uniovi.eii.contacttracker.location.listeners.callbacks.BroadcastLocationCallback
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
-import es.uniovi.eii.contacttracker.location.listeners.callbacks.LogLocationCallback
-import es.uniovi.eii.contacttracker.location.listeners.callbacks.RegisterLocationCallback
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
-import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
-import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -73,13 +69,14 @@ class LocationForegroundService : Service(){
     // *********************
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
-            val comesFromAlarm = it.getBooleanExtra(EXTRA_COMMAND_FROM_ALARM, false)
+            // Flag que indica si el comando es enviado desde una alarma de localización.
+            val commandFromAlarm = it.getBooleanExtra(EXTRA_COMMAND_FROM_ALARM, false)
             when(it.action){
                 ACTION_START_LOCATION_SERVICE -> {
-                    startLocationService(comesFromAlarm)
+                    startLocationService(commandFromAlarm)
                 }
                 ACTION_STOP_LOCATION_SERVICE -> {
-                    stopLocationService(comesFromAlarm)
+                    stopLocationService(commandFromAlarm)
                 }
             }
         }
@@ -111,14 +108,17 @@ class LocationForegroundService : Service(){
      * ha sido ya inicializado. Recibe como parámetro un flag que indica si
      * el servicio ha sido iniciado desde una alarma de localización.
      *
-     * @param comesFromAlarm flag de comando desde alarma.
+     * @param commandFromAlarm flag de comando desde alarma.
      */
-    private fun startLocationService(comesFromAlarm: Boolean){
+    private fun startLocationService(commandFromAlarm: Boolean){
         if(!isActive){
             Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
             startForeground(SERVICE_ID, notification)
             locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
             isActive = true
+            if(commandFromAlarm){ // Si es ejecutado desde una alarma
+                sendBroadcast(ACTION_START_LOCATION_SERVICE)
+            }
         }
     }
 
@@ -127,16 +127,19 @@ class LocationForegroundService : Service(){
      * así como también detener el servicio.Recibe como parámetro un flag que indica si
      * el servicio ha sido iniciado desde una alarma de localización.
      *
-     * @param comesFromAlarm flag de comando desde alarma.
+     * @param commandFromAlarm flag de comando desde alarma.
      */
-    private fun stopLocationService(comesFromAlarm: Boolean){
+    private fun stopLocationService(commandFromAlarm: Boolean){
         if(isActive){
             locationTracker.stop(LocationUpdateMode.CALLBACK_MODE)
             stopForeground(true)
             stopSelf()
             isActive = false
-            if(comesFromAlarm)
+            if(commandFromAlarm){ // Si es ejecutado desde una alarma.
                 alarmRepository.removeAlarms() // Eliminar alarmas de las Shared Prefs
+                sendBroadcast(ACTION_STOP_LOCATION_SERVICE)
+            }
+
         }
     }
 
@@ -158,6 +161,19 @@ class LocationForegroundService : Service(){
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setTicker("Ticker!")
                 .build()
+    }
+
+    /**
+     * Método encargado de enviar un Broadcast indicando el
+     * comando de INICIO o de FIN de la alarma de localización.
+     *
+     * @param command Comando de INICIO o de FIN.
+     */
+    private fun sendBroadcast(command: String) {
+        val intent = Intent()
+        intent.action = TrackerFragment.ACTION_LOCATION_ALARM
+        intent.putExtra(TrackerFragment.EXTRA_LOCATION_ALARM_COMMAND, command)
+        sendBroadcast(intent)
     }
 
 

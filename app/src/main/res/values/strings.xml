@@ -27,7 +27,7 @@
     <string name="labelStartStopTracker">Servicio de Rastreo de Ubicación</string>
 
     <!-- Fragment de Información del rastreo de ubicación -->
-    <string name="labelNoLocations">No hay ningún servicio de localización en ejecución. No hay localizaciones que mostrar.</string>
+    <string name="labelNoLocations">No hay localizaciones que mostrar.</string>
 
 
     <!-- Fragment: Histórico de localizaciones -->

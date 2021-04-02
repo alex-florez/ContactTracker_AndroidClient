@@ -72,9 +72,12 @@ class TrackerViewModel @Inject constructor(
 
     /**
      * Método encargado de establecer la alarma de localización, con
-     * las horas de inicio y fin indicadas en los LiveData.
+     * las horas de inicio y fin indicadas en los LiveData. Devuelve True
+     * si la alarma se ha establecido correctamente.
+     *
+     * @return true si hay éxito.
      */
-    fun setLocationAlarm(){
+    fun setLocationAlarm(): Boolean{
         _startTime.value?.let { start->
             _endTime.value?.let { end ->
                 if(checkHours(start, end)){ // Comprobar validez de horas.
@@ -82,10 +85,12 @@ class TrackerViewModel @Inject constructor(
                     saveAlarmsToSharedPrefs(locationAlarmData.startDate, locationAlarmData.endDate) // Guardar en las SharedPrefs
                     _actualAlarm.value?.let {
                         locationAlarmManager.set(locationAlarmData) // Establecer alarma.
+                        return true
                     }
                 }
             }
         }
+        return false
     }
 
 
@@ -106,8 +111,6 @@ class TrackerViewModel @Inject constructor(
         }
     }
 
-
-
     /**
      * Recupera de las SharedPreferences las horas de inicio y de fin
      * de la alarma actual y actualiza los LiveData.
@@ -122,16 +125,6 @@ class TrackerViewModel @Inject constructor(
             _actualAlarm.value = null
         }
     }
-
-    /**
-     * Elimina las alarmas de las SharedPreferences.
-     */
-    fun removeAlarmsFromSharedPrefs(){
-        alarmRepository.remove(R.string.shared_prefs_location_alarm_start)
-        alarmRepository.remove(R.string.shared_prefs_location_alarm_end)
-        alarmRepository.remove(R.string.shared_prefs_location_alarm_enabled)
-    }
-
 
     /**
      * Devuelve true si el rastreo automático está
