@@ -23,6 +23,8 @@
     <string name="stop">Stop</string>
     <string name="labelStartStop">Iniciar o Detener el rastreador de ubicación</string>
     <string name="labelStoppedService">Servicio de localización detenido.</string>
+    <string name="locationTrackerTitle">Rastreo de Ubicación</string>
+    <string name="labelStartStopTracker">Servicio de Rastreo de Ubicación</string>
 
     <!-- Fragment de Información del rastreo de ubicación -->
     <string name="labelNoLocations">No hay ningún servicio de localización en ejecución. No hay localizaciones que mostrar.</string>
@@ -41,6 +43,7 @@
     <string name="end">Fin</string>
     <string name="program">Programar</string>
     <string name="noAlarm">No hay ninguna alarma programada</string>
+    <string name="newAlarm">Nueva alarma programada</string>
     <string name="errorInvalidHours">Las horas especificadas no son válidas</string>
     <string name="labelCurrentAlarm">Alarma pendiente</string>
     <string name="placeholderStart">15:00</string>

@@ -39,7 +39,7 @@ class LocationAlarmManager @Inject constructor(
         // Alarma de fin
         val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         stopServiceIntent.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
-        startServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
+        stopServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 locationAlarmData.endDate.time,

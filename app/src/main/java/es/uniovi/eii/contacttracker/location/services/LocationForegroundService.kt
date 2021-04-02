@@ -135,7 +135,8 @@ class LocationForegroundService : Service(){
             stopForeground(true)
             stopSelf()
             isActive = false
-            alarmRepository.removeAlarms() // Eliminar alarmas de las Shared Prefs
+            if(comesFromAlarm)
+                alarmRepository.removeAlarms() // Eliminar alarmas de las Shared Prefs
         }
     }
 

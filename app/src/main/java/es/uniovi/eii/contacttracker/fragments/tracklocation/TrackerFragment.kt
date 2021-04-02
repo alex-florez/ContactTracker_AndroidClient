@@ -77,7 +77,10 @@ class TrackerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        // Establecer estado de los Switches
         initLocationAlarmSwitch()
+        initLocationTrackSwitch()
+
         viewModel.initAlarmPlaceHolders()
         viewModel.retrieveActualAlarm()
     }
@@ -121,16 +124,20 @@ class TrackerFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(){
         // Botones de rastreo manual
-        binding.btnStartTracker.setOnClickListener {
-            startLocationService()
-        }
-
-        binding.btnStopTracker.setOnClickListener{
-            stopLocationService()
+//        binding.btnStartTracker.setOnClickListener {
+//            startLocationService()
+//        }
+//
+//        binding.btnStopTracker.setOnClickListener{
+//            stopLocationService()
+//        }
+        // Switch para Activar/Desactivar el servicio de localización.
+        binding.layoutCardLocationTracker.switchTrackLocation.setOnCheckedChangeListener{_, isChecked ->
+            toggleLocationService(isChecked)
         }
         // Alarma de localización
         binding.layoutCardLocationAlarm.switchAutomaticTracking.setOnCheckedChangeListener{ _, isChecked ->
-                    toggleAutomaticTracking(isChecked)
+            toggleAutomaticTracking(isChecked)
         }
 
         // TextFields para las horas de Inicio y de Fin.
@@ -191,6 +198,18 @@ class TrackerFragment : Fragment() {
             }
         })
     }
+
+    /**
+     * Método invocado al pulsar sobre el Switch para activar o
+     * desactivar el servicio de localización.
+     */
+    private fun toggleLocationService(toggle: Boolean) {
+        if(toggle)
+            startLocationService()
+        else
+            stopLocationService()
+    }
+
 
     /**
      * Se encarga de inicializar el servicio de localización
@@ -296,6 +315,16 @@ class TrackerFragment : Fragment() {
     private fun initLocationAlarmSwitch(){
         binding.layoutCardLocationAlarm
                 .switchAutomaticTracking.isChecked = viewModel.isAutoTrackingEnabled()
+    }
+
+    /**
+     * Inicializa el Switch de activación del servicio
+     * de rastreo de ubicación, según se esté ejecutando o no
+     * el servicio de localización.
+     */
+    private fun initLocationTrackSwitch(){
+        binding.layoutCardLocationTracker
+                .switchTrackLocation.isChecked = LocationUtils.isLocationServiceRunning(requireContext())
     }
 
     /**
