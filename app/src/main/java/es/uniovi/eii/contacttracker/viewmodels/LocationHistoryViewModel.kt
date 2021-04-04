@@ -88,4 +88,17 @@ class LocationHistoryViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Utiliza el repositorio para eliminar las localizaciones del usuario
+     * cuya fecha coincide con la pasada como parámetro.
+     *
+     * @param date fecha por la cual filtrar.
+     */
+    fun deleteUserLocationsByDate(date: Date) {
+        val formattedDate = Utils.formatDate(date, "yyyy-MM-dd")
+        viewModelScope.launch {
+            _deletedRows.value = locationRepository.deleteUserLocationsByDate(formattedDate)
+        }
+    }
+
 }

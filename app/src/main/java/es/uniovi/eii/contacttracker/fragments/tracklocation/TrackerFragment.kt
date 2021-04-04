@@ -176,7 +176,10 @@ class TrackerFragment : Fragment() {
         }
         // Alarma de localización
         binding.layoutCardLocationAlarm.switchAutomaticTracking.setOnCheckedChangeListener{ _, isChecked ->
-            toggleAutomaticTracking(isChecked)
+            if(isChecked)
+              enableAutomaticTracking()
+            else
+                disableAutomaticTracking()
         }
 
         // TextFields para las horas de Inicio y de Fin.
@@ -255,13 +258,15 @@ class TrackerFragment : Fragment() {
      * en 1er plano para obtener actualizaciones de localización.
      */
     private fun startLocationService(){
-        doLocationChecks {
+        doLocationChecks ({ // Éxito
             if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
                 sendCommandToLocationService(LocationForegroundService.ACTION_START_LOCATION_SERVICE)
             } else {
                 Log.d(TAG, "Ya se está ejecutando un servicio de localización")
             }
-        }
+        }, { // Fracaso
+            binding.layoutCardLocationTracker.switchTrackLocation.isChecked = false
+        })
     }
 
     /**
@@ -293,15 +298,35 @@ class TrackerFragment : Fragment() {
     }
 
     /**
-     * Método invocado cuando se pulsa sobre el Switch de la UI para
-     * activar/desactivar el rastreo automático.
+     * Habilita la programación automática de alarmas de localización.
      */
-    private fun toggleAutomaticTracking(activate: Boolean) {
-        doLocationChecks {
-            toggleAlarmCardState(activate) // Estado de los componentes del Card.
-            viewModel.toggleAutoTracking(activate) // Activar o desactivar el Auto Tracking
-        }
+    private fun enableAutomaticTracking() {
+        doLocationChecks({ // Éxito
+            toggleAlarmCardState(true)
+            viewModel.toggleAutoTracking(true)
+        }, { // Fracaso
+            binding.layoutCardLocationAlarm.switchAutomaticTracking.isChecked = false
+        })
     }
+
+    /**
+     * Desactiva la programación automática de alarmas de localización.
+     */
+    private fun disableAutomaticTracking() {
+        toggleAlarmCardState(false)
+        viewModel.toggleAutoTracking(false)
+    }
+
+//    /**
+//     * Método invocado cuando se pulsa sobre el Switch de la UI para
+//     * activar/desactivar el rastreo automático.
+//     */
+//    private fun toggleAutomaticTracking(activate: Boolean) {
+//        doLocationChecks {
+//            toggleAlarmCardState(activate) // Estado de los componentes del Card.
+//            viewModel.toggleAutoTracking(activate) // Activar o desactivar el Auto Tracking
+//        }
+//    }
 
     /**
      * Recibe como parámetro el estado para establecer los
@@ -369,31 +394,35 @@ class TrackerFragment : Fragment() {
      * alarmas.
      */
     private fun applyAutoTracking(){
-        doLocationChecks {
+        doLocationChecks({ // Éxito
             if(viewModel.setLocationAlarm())
                 Snackbar.make(binding.root, getString(R.string.newAlarm), Snackbar.LENGTH_SHORT).let {
                     it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
                     it.show()
                 }
-        }
+        }, {})
     }
+
 
     /**
      * Método privado que realiza las comprobaciones de PERMISOS y de
      * configuración relativa a la localización. Si las comprobaciones
      * son correctas se ejecuta el callback pasado como parámetro.
      *
-     * @param callback callback de llamada si hay éxito.
+     * @param successCallback callback de llamada si hay éxito.
+     * @param failCallback callback de llamada si hay fracaso.
      */
-    private fun doLocationChecks(callback: () -> Unit) {
+    private fun doLocationChecks(successCallback: () -> Unit, failCallback: () -> Unit) {
         if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
             if(LocationUtils.checkGPS(requireContext())){ // Configuración
-               callback()
+               successCallback()
             } else {
                 LocationUtils.createLocationSettingsAlertDialog(requireContext()).show() // Solicitar activación de GPS
+                failCallback()
             }
         } else {
             requestLocationPermissions() // Solicitar permisos necesarios
+            failCallback()
         }
     }
 

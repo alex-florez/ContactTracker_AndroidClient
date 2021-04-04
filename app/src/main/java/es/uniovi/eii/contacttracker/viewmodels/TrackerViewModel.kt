@@ -47,7 +47,7 @@ class TrackerViewModel @Inject constructor(
     @Inject lateinit var locationAlarmManager:LocationAlarmManager
 
 
-    // SETTERS para los placeholders.
+    // SETTERS para los placeholders de hora de INICIO y FIN.
     fun setStartTime(date: Date){
         _startTime.value = date
     }

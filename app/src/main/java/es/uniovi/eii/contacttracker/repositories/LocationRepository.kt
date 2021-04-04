@@ -61,6 +61,16 @@ class LocationRepository @Inject constructor(
        return userLocationDao.deleteAll()
     }
 
+    /**
+     * Elimina todas las localizaciones de usuario cuya fecha coincide
+     * con la fecha pasada como parámetro.
+     *
+     * @param dateString fecha por la que filtrar.
+     */
+    suspend fun deleteUserLocationsByDate(dateString: String): Int {
+        return userLocationDao.deleteByDate(dateString)
+    }
+
     fun insert(userLocation: UserLocation){
         userLocationDao.insertLoc(userLocation)
     }

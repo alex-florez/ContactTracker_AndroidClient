@@ -84,19 +84,6 @@ class LocationHistoryFragment : Fragment() {
         setDatePicker()
         setListeners()
 
-//        viewModel.insertedUserLocationId.observe(this, {
-//            Snackbar.make(binding.root, "Nueva localización insertada: $it", Snackbar.LENGTH_LONG).show()
-//        })
-
-//        viewModel.getAllUserLocationsByDate(dateFilter).observe(this, {
-//            userLocationAdapter.submitList(it.toList())
-//        })
-
-//        viewModel.getAllUserLocations().observe(viewLifecycleOwner, {
-//            userLocationAdapter.addLocations(it)
-//            toggleNoLocationsLabel()
-//        })
-
         // Llamada al ViewModel para obtener las localizaciones por fecha.
         Transformations.switchMap(viewModel.dateFilter){
             viewModel.getAllUserLocationsByDate(it)
@@ -134,8 +121,8 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun setListeners(){
         // Botón de eliminar
-        binding.btnDeleteAllLocations.setOnClickListener {
-            viewModel.deleteAllUserLocations()
+        binding.btnDeleteLocationsByDate.setOnClickListener {
+            deleteUserLocations()
         }
 
         // Input Text para el filtro de fecha
@@ -176,6 +163,16 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun showDatePicker(){
         datePicker.show(requireActivity().supportFragmentManager, datePicker.toString())
+    }
+
+    /**
+     * Se encarga de eliminar las localizaciones del usuario cuya
+     * fecha coincide con la seleccionada en el EditText.
+     */
+    private fun deleteUserLocations(){
+        viewModel.dateFilter.value?.let {
+            viewModel.deleteUserLocationsByDate(it)
+        }
     }
 
     /**

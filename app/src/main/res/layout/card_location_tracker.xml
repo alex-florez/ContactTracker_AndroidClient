@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:text="@string/locationTrackerTitle"
             android:textColor="@color/teal_700"
-            android:textAppearance="?attr/textAppearanceHeadline6"/>
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:drawableEndCompat="@drawable/ic_location_tracker_2" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchTrackLocation"

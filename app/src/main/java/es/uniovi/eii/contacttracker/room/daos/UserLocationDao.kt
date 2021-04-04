@@ -27,4 +27,7 @@ interface UserLocationDao {
 
     @Query("DELETE FROM user_locations")
     suspend fun deleteAll(): Int
+
+    @Query("DELETE FROM user_locations WHERE date(locationTimestamp) = :dateString")
+    suspend fun deleteByDate(dateString: String): Int
 }
