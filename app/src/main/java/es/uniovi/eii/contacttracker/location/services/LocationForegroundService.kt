@@ -12,13 +12,16 @@ import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
+import es.uniovi.eii.contacttracker.location.LocationTrackRequest
 import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
+import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.min
 
 /**
  * Servicio Foreground en 1er Plano que realiza el rastreo de ubicación,
@@ -44,6 +47,12 @@ class LocationForegroundService : Service(){
      * Repositorio de alarmas
      */
     @Inject lateinit var alarmRepository: AlarmRepository
+
+    /**
+     * Repositorio de parámetros de configuración del Tracker.
+     */
+    @Inject lateinit var trackerSettingsRepository: TrackerSettingsRepository
+
 
     /**
      * Objeto Notification que representa la notificación
@@ -114,6 +123,7 @@ class LocationForegroundService : Service(){
         if(!isActive){
             Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
             startForeground(SERVICE_ID, notification)
+            locationTracker.setLocationRequest(createLocationTrackRequest()) // Construir LocationTrackRequest
             locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
             isActive = true
             if(commandFromAlarm){ // Si es ejecutado desde una alarma
@@ -161,6 +171,20 @@ class LocationForegroundService : Service(){
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setTicker("Ticker!")
                 .build()
+    }
+
+    /**
+     * Obtiene del repositorio de configuración del Tracker,
+     * los parámetros de configuración y construye el objeto
+     * LocationTrackRequest con dichos parámetros.
+     *
+     * @return objeto de solicitud de rastreo de ubicación.
+     */
+    private fun createLocationTrackRequest(): LocationTrackRequest {
+        val minInterval = trackerSettingsRepository.getMinInterval()
+        return LocationTrackRequest(
+                minInterval = minInterval,
+                fastestInterval = minInterval)
     }
 
     /**
