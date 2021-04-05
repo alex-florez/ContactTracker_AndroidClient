@@ -74,6 +74,7 @@ class TrackerFragment : Fragment() {
     inner class LocationAlarmBroadCastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("RECEIVER", "Alarma de localización recibida.")
             when(intent?.getStringExtra(EXTRA_LOCATION_ALARM_COMMAND)) {
                 LocationForegroundService.ACTION_START_LOCATION_SERVICE -> {
                     // Activar Switch del Tracker
@@ -432,8 +433,9 @@ class TrackerFragment : Fragment() {
     private fun registerReceivers(){
         if(locationAlarmBroadCastReceiver == null)
             locationAlarmBroadCastReceiver = LocationAlarmBroadCastReceiver()
-        requireActivity().registerReceiver(locationAlarmBroadCastReceiver,
-        IntentFilter(ACTION_LOCATION_ALARM))
+        requireActivity().registerReceiver(
+                locationAlarmBroadCastReceiver,
+                IntentFilter(ACTION_LOCATION_ALARM))
     }
 
     /**

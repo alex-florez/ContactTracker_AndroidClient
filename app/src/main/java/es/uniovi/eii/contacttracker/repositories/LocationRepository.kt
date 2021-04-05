@@ -14,8 +14,10 @@ import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
 import javax.inject.Inject
 
 /**
- * Repositorio de Localización, que contiene todas las operaciones
- * y funcionalidades relacionadas con los servicios de ubicación.
+ * Repositorio de Localización.
+ *
+ * Contiene todas las operaciones y funcionalidades relacionadas
+ * con los servicios de ubicación y obtención de localizaciones almacenadas.
  */
 class LocationRepository @Inject constructor(
     private val userLocationDao: UserLocationDao

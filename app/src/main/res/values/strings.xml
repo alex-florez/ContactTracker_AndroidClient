@@ -1,11 +1,19 @@
 <resources>
     <string name="app_name">Contact Tracker</string>
 
+    <!-- Strings genéricos -->
+    <string name="apply">Aplicar</string>
+
     <!-- Shared Preferences File -->
     <string name="shared_prefs_file_name">es.uniovi.eii.contacttracker.sharedprefs</string>
+
+    <!-- Preferences: Alarmas de localización -->
     <string name="shared_prefs_location_alarm_start">LocationAlarmStart</string>
     <string name="shared_prefs_location_alarm_end">LocationAlarmEnd</string>
     <string name="shared_prefs_location_alarm_enabled">LocationAlarmEnabled</string>
+
+    <!-- Preferences: Configuración del rastreador -->
+    <string name="shared_prefs_tracker_config_min_interval">TrackerConfigMinInterval</string>
 
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
@@ -48,6 +56,9 @@
     <string name="labelCurrentAlarm">Alarma pendiente</string>
     <string name="placeholderStart">15:00</string>
     <string name="placeholderEnd">16:00</string>
+
+    <!-- Fragment: Configuración del Tracker -->
+    <string name="minIntervalHint">Intervalo de tiempo</string>
 
 
 </resources>

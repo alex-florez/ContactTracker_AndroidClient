@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         return when(id){
             R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
             R.id.bottomMenuOption2 -> TrackerInfoFragment()
-            R.id.bottomMenuOption3 -> TrackerConfigurationFragment()
+            R.id.bottomMenuOption3 -> DefaultBlankFragment()
             R.id.bottomMenuOption4 -> LocationHistoryFragment()
             else -> DefaultBlankFragment()
         }
