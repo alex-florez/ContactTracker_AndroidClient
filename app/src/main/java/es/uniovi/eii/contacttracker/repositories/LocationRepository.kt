@@ -73,7 +73,7 @@ class LocationRepository @Inject constructor(
         return userLocationDao.deleteByDate(dateString)
     }
 
-    fun insert(userLocation: UserLocation){
+    suspend fun insert(userLocation: UserLocation){
         userLocationDao.insertLoc(userLocation)
     }
 
