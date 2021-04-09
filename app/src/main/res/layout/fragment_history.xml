@@ -49,6 +49,10 @@
                 app:icon="@drawable/ic_delete_bin"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"/>
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_delete_bin"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

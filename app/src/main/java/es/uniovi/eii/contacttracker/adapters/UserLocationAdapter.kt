@@ -86,7 +86,14 @@ class UserLocationAdapter(
         submitList(locations.toList())
         // Hacer Scroll al principio
         recyclerView?.smoothScrollToPosition(0)
+
     }
+
+    fun getPosition(id: Long): Int{
+        val item = currentList.filter { i -> i.id == id }[0]
+        return currentList.indexOf(item)
+    }
+
 
     fun addLocations(newLocations: List<UserLocation>){
         locations.clear()
@@ -100,6 +107,10 @@ class UserLocationAdapter(
      */
     fun clearLocations(){
         submitList(null)
+    }
+
+    fun prueba(){
+
     }
 
     fun isEmpty(): Boolean {
