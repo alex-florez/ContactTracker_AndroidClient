@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerInfoBinding
-import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.Utils
@@ -42,7 +41,7 @@ class TrackerInfoFragment : Fragment() {
      * BroadCast Receiver para actualizar el Adapter
      * con las actualizaciones de localización.
      */
-    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
+//    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +81,8 @@ class TrackerInfoFragment : Fragment() {
     private fun registerLocationReceiver(){
 //        if(locationReceiver == null)
 //            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter, this)
-        activity?.registerReceiver(locationReceiver,
-                IntentFilter((LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)))
+//        activity?.registerReceiver(locationReceiver,
+//                IntentFilter((LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)))
     }
 
 
@@ -92,7 +91,7 @@ class TrackerInfoFragment : Fragment() {
      * para dejar de recibir actualizaciones de localización.
      */
     private fun unregisterLocationReceiver(){
-        activity?.unregisterReceiver(locationReceiver)
+//        activity?.unregisterReceiver(locationReceiver)
     }
 
     /**

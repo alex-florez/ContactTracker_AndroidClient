@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import dagger.hilt.android.qualifiers.ApplicationContext
-import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.util.LocationUtils
@@ -57,8 +57,8 @@ class RegisterLocationCallback @Inject constructor(
      */
     private fun sendBroadcast(location: Location){
         val intent = Intent()
-        intent.action = LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION
-        intent.putExtra(LocationUpdateBroadcastReceiver.EXTRA_LOCATION, location)
+        intent.action = Constants.ACTION_GET_LOCATION
+        intent.putExtra(Constants.EXTRA_LOCATION, location)
         ctx.sendBroadcast(intent)
     }
 

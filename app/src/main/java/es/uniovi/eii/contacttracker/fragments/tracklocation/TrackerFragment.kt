@@ -20,13 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
-import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
-import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
@@ -34,15 +33,14 @@ import es.uniovi.eii.contacttracker.util.PermissionUtils
 import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel
 import java.util.*
-import javax.inject.Inject
 
 
 /**
  * Fragment que representa la opción del RASTREADOR DE UBICACIÓN.
  *
  * Contiene la funcionalidad para iniciar y pausar el rastreo de ubicación
- * de manera manual, así como la funcionalidad para programar alarmas de rastreo
- * de ubicación.
+ * de manera manual, así como visualizar información del rastreo de ubicación
+ * en curso.
  */
 @AndroidEntryPoint
 class TrackerFragment : Fragment() {
@@ -103,13 +101,31 @@ class TrackerFragment : Fragment() {
 
     }
 
+    /**
+     * Broadcast Receiver que se dispara cuando se recibe
+     * una nueva localización, para actualizar la UI.
+     */
+    inner class LocationUpdateBroadcastReceiver() : BroadcastReceiver() {
+
+        private val TAG = "LocationUpdateBroadcastReceiver"
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val location: Location? = intent?.getParcelableExtra(Constants.EXTRA_LOCATION)
+            location?.let {
+                Log.d(TAG, LocationUtils.format(it))
+                userLocationAdapter.addUserLocation(LocationUtils.parse(location))
+                toggleLabelNoLocations()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
         createTimePickers()
-        createAdapter()
+        createLocationsAdapter()
     }
 
     override fun onCreateView(
@@ -458,10 +474,10 @@ class TrackerFragment : Fragment() {
 
         // Receiver para las localizaciones registradas.
         if(locationReceiver == null)
-            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter, this)
+            locationReceiver = LocationUpdateBroadcastReceiver()
         requireActivity().registerReceiver(
             locationReceiver,
-            IntentFilter(LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)
+            IntentFilter(Constants.ACTION_GET_LOCATION)
         )
     }
 
@@ -476,7 +492,7 @@ class TrackerFragment : Fragment() {
     /**
      * Se encarga de crear el Adapter para los objetos UserLocation.
      */
-    private fun createAdapter(){
+    private fun createLocationsAdapter(){
         userLocationAdapter = UserLocationAdapter(object : UserLocationAdapter.OnUserLocationItemClick{
             override fun onClick(userLocation: UserLocation) {
                 LocationUtils.showLocationInMaps(
