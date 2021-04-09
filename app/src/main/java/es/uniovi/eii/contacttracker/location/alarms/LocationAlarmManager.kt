@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
+import es.uniovi.eii.contacttracker.location.receivers.LocationAlarmCommandBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.LocationAlarmData
 import es.uniovi.eii.contacttracker.util.Utils
@@ -28,22 +29,40 @@ class LocationAlarmManager @Inject constructor(
      */
     fun set(locationAlarmData: LocationAlarmData){
         // Alarma de inicio
-        val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        startServiceIntent.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
-        startServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
+//        val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
+//        startServiceIntent.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
+//        startServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
+//        alarmManager.setExactAndAllowWhileIdle(
+//                AlarmManager.RTC_WAKEUP,
+//                locationAlarmData.startDate.time,
+//                getPendingIntentService(startServiceIntent, 999)
+//        )
+//        // Alarma de fin
+//        val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
+//        stopServiceIntent.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
+//        stopServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
+//        alarmManager.setExactAndAllowWhileIdle(
+//                AlarmManager.RTC_WAKEUP,
+//                locationAlarmData.endDate.time,
+//                getPendingIntentService(stopServiceIntent, 999)
+//        )
+        val startIntent = Intent(ctx, LocationAlarmCommandBroadcastReceiver::class.java)
+        startIntent.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
+        val startPI = PendingIntent.getBroadcast(ctx, 1999, startIntent, 0)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 locationAlarmData.startDate.time,
-                getPendingIntentService(startServiceIntent, 999)
+                startPI
         )
-        // Alarma de fin
-        val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        stopServiceIntent.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
-        stopServiceIntent.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
+
+        val endIntent = Intent(ctx, LocationAlarmCommandBroadcastReceiver::class.java)
+        endIntent.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
+        val stopPI = PendingIntent.getBroadcast(ctx, 1999, endIntent, 0)
+
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 locationAlarmData.endDate.time,
-                getPendingIntentService(stopServiceIntent, 999)
+                stopPI
         )
     }
 

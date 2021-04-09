@@ -74,6 +74,7 @@ class LocationHistoryFragment : Fragment() {
                     "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
             }
         })
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +92,7 @@ class LocationHistoryFragment : Fragment() {
             userLocationAdapter.addLocations(it)
             toggleNoLocationsLabel()
         })
+
 
         // Observer para la eliminación de localizaciones
         viewModel.deletedRows.observe(viewLifecycleOwner, {
