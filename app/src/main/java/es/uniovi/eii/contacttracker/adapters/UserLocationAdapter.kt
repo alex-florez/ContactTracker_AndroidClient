@@ -109,10 +109,6 @@ class UserLocationAdapter(
         submitList(null)
     }
 
-    fun prueba(){
-
-    }
-
     fun isEmpty(): Boolean {
         return locations.isEmpty()
     }

@@ -80,8 +80,8 @@ class TrackerInfoFragment : Fragment() {
      * para obtener las localizaciones.
      */
     private fun registerLocationReceiver(){
-        if(locationReceiver == null)
-            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter, this)
+//        if(locationReceiver == null)
+//            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter, this)
         activity?.registerReceiver(locationReceiver,
                 IntentFilter((LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)))
     }

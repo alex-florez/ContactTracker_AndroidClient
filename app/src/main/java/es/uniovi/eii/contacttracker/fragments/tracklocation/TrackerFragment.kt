@@ -1,10 +1,7 @@
 package es.uniovi.eii.contacttracker.fragments.tracklocation
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -16,16 +13,22 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
+import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
+import es.uniovi.eii.contacttracker.location.receivers.LocationUpdateBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
+import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
 import es.uniovi.eii.contacttracker.util.Utils
@@ -48,6 +51,17 @@ class TrackerFragment : Fragment() {
      * View Binding
      */
     private lateinit var binding: FragmentTrackerBinding
+
+    /**
+     * Adapter para las localizaciones de Usuario.
+     */
+    lateinit var userLocationAdapter: UserLocationAdapter
+
+    /**
+     * BroadCast Receiver para actualizar el Adapter
+     * con las actualizaciones de localización.
+     */
+    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
 
     /**
      * ViewModel
@@ -95,6 +109,7 @@ class TrackerFragment : Fragment() {
 
         }
         createTimePickers()
+        createAdapter()
     }
 
     override fun onCreateView(
@@ -104,6 +119,7 @@ class TrackerFragment : Fragment() {
         binding = FragmentTrackerBinding.inflate(inflater, container, false)
         setListeners()
         setObservers()
+        initLocationsRecyclerView()
         return binding.root
     }
 
@@ -117,11 +133,11 @@ class TrackerFragment : Fragment() {
         viewModel.retrieveActualAlarm()
 
         registerReceivers()
+        toggleLabelNoLocations()
     }
 
     override fun onPause() {
         super.onPause()
-
         unregisterReceivers()
     }
 
@@ -176,25 +192,25 @@ class TrackerFragment : Fragment() {
             toggleLocationService(isChecked)
         }
         // Alarma de localización
-        binding.layoutCardLocationAlarm.switchAutomaticTracking.setOnCheckedChangeListener{ _, isChecked ->
-            if(isChecked)
-              enableAutomaticTracking()
-            else
-                disableAutomaticTracking()
-        }
-
-        // TextFields para las horas de Inicio y de Fin.
-        binding.layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
-           startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
-        }
-
-        binding.layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
-            endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
-        }
-
-        binding.layoutCardLocationAlarm.btnApplyAutoTracking.setOnClickListener {
-            applyAutoTracking()
-        }
+//        binding.layoutCardLocationAlarm.switchAutomaticTracking.setOnCheckedChangeListener{ _, isChecked ->
+//            if(isChecked)
+//              enableAutomaticTracking()
+//            else
+//                disableAutomaticTracking()
+//        }
+//
+//        // TextFields para las horas de Inicio y de Fin.
+//        binding.layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
+//           startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
+//        }
+//
+//        binding.layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
+//            endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
+//        }
+//
+//        binding.layoutCardLocationAlarm.btnApplyAutoTracking.setOnClickListener {
+//            applyAutoTracking()
+//        }
 
     }
 
@@ -204,33 +220,33 @@ class TrackerFragment : Fragment() {
      */
     private fun setObservers(){
         // PlaceHolder de hora de INICIO
-        viewModel.starTime.observe(viewLifecycleOwner, {
-            binding.layoutCardLocationAlarm
-                    .txtStartAutoTracking.setText(Utils.formatDate(it, "HH:mm"))
-            startTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
-            startTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
-        })
-
-        // PlaceHolder de hora de FIN
-        viewModel.endTime.observe(viewLifecycleOwner, {
-            binding.layoutCardLocationAlarm
-                    .txtEndAutoTracking.setText(Utils.formatDate(it, "HH:mm"))
-            endTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
-            endTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
-        })
-
-        // Alarma establecida actualmente.
-        viewModel.actualAlarmData.observe(viewLifecycleOwner, {
-            if(it == null) { // Sin alarma
-                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.noAlarm)
-                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = ""
-            } else {
-                val currentAlarmText = "(${Utils.formatDate(it.startDate, "dd/MM/yyyy HH:mm")}) " +
-                        "- (${Utils.formatDate(it.endDate, "dd/MM/yyyy HH:mm")})"
-                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.labelCurrentAlarm)
-                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = currentAlarmText
-            }
-        })
+//        viewModel.starTime.observe(viewLifecycleOwner, {
+//            binding.layoutCardLocationAlarm
+//                    .txtStartAutoTracking.setText(Utils.formatDate(it, "HH:mm"))
+//            startTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
+//            startTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
+//        })
+//
+//        // PlaceHolder de hora de FIN
+//        viewModel.endTime.observe(viewLifecycleOwner, {
+//            binding.layoutCardLocationAlarm
+//                    .txtEndAutoTracking.setText(Utils.formatDate(it, "HH:mm"))
+//            endTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
+//            endTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
+//        })
+//
+//        // Alarma establecida actualmente.
+//        viewModel.actualAlarmData.observe(viewLifecycleOwner, {
+//            if(it == null) { // Sin alarma
+//                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.noAlarm)
+//                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = ""
+//            } else {
+//                val currentAlarmText = "(${Utils.formatDate(it.startDate, "dd/MM/yyyy HH:mm")}) " +
+//                        "- (${Utils.formatDate(it.endDate, "dd/MM/yyyy HH:mm")})"
+//                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.labelCurrentAlarm)
+//                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = currentAlarmText
+//            }
+//        })
         // Flag de horas no válidas
         viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
             if(!validHours){
@@ -280,6 +296,8 @@ class TrackerFragment : Fragment() {
                 it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView) // Mostrarlo encima del BottomNavView
                 it.show()
             }
+            userLocationAdapter.clearLocations() // Vaciar Adapter de localizaciones
+            toggleLabelNoLocations() // Mostrar u ocultar label
         }
     }
 
@@ -306,7 +324,7 @@ class TrackerFragment : Fragment() {
             toggleAlarmCardState(true)
             viewModel.toggleAutoTracking(true)
         }, { // Fracaso
-            binding.layoutCardLocationAlarm.switchAutomaticTracking.isChecked = false
+//            binding.layoutCardLocationAlarm.switchAutomaticTracking.isChecked = false
         })
     }
 
@@ -335,11 +353,11 @@ class TrackerFragment : Fragment() {
      * del Card de alarmas de localización.
      */
     private fun toggleAlarmCardState(state: Boolean){
-        binding.layoutCardLocationAlarm.txtInputLayoutStartAutoTracking.isEnabled = state
-        binding.layoutCardLocationAlarm.txtInputLayoutEndAutoTracking.isEnabled = state
-        binding.layoutCardLocationAlarm.btnApplyAutoTracking.isEnabled = state
-        binding.layoutCardLocationAlarm.labelCurrentAlarm.isEnabled = state
-        binding.layoutCardLocationAlarm.labelValueCurrentAlarm.isEnabled = state
+//        binding.layoutCardLocationAlarm.txtInputLayoutStartAutoTracking.isEnabled = state
+//        binding.layoutCardLocationAlarm.txtInputLayoutEndAutoTracking.isEnabled = state
+//        binding.layoutCardLocationAlarm.btnApplyAutoTracking.isEnabled = state
+//        binding.layoutCardLocationAlarm.labelCurrentAlarm.isEnabled = state
+//        binding.layoutCardLocationAlarm.labelValueCurrentAlarm.isEnabled = state
     }
 
     /**
@@ -376,8 +394,8 @@ class TrackerFragment : Fragment() {
      * de la alarma de localización.
      */
     private fun initLocationAlarmSwitch(){
-        binding.layoutCardLocationAlarm
-                .switchAutomaticTracking.isChecked = viewModel.isAutoTrackingEnabled()
+//        binding.layoutCardLocationAlarm
+//                .switchAutomaticTracking.isChecked = viewModel.isAutoTrackingEnabled()
     }
 
     /**
@@ -431,11 +449,20 @@ class TrackerFragment : Fragment() {
      * Registra los BroadCast Receivers en la Activity.
      */
     private fun registerReceivers(){
+        // Receiver para las alarmas
         if(locationAlarmBroadCastReceiver == null)
             locationAlarmBroadCastReceiver = LocationAlarmBroadCastReceiver()
         requireActivity().registerReceiver(
                 locationAlarmBroadCastReceiver,
                 IntentFilter(ACTION_LOCATION_ALARM))
+
+        // Receiver para las localizaciones registradas.
+        if(locationReceiver == null)
+            locationReceiver = LocationUpdateBroadcastReceiver(userLocationAdapter, this)
+        requireActivity().registerReceiver(
+            locationReceiver,
+            IntentFilter(LocationUpdateBroadcastReceiver.ACTION_GET_LOCATION)
+        )
     }
 
     /**
@@ -443,6 +470,46 @@ class TrackerFragment : Fragment() {
      */
     private fun unregisterReceivers(){
         requireActivity().unregisterReceiver(locationAlarmBroadCastReceiver)
+        requireActivity().unregisterReceiver(locationReceiver)
+    }
+
+    /**
+     * Se encarga de crear el Adapter para los objetos UserLocation.
+     */
+    private fun createAdapter(){
+        userLocationAdapter = UserLocationAdapter(object : UserLocationAdapter.OnUserLocationItemClick{
+            override fun onClick(userLocation: UserLocation) {
+                LocationUtils.showLocationInMaps(
+                    requireContext(),
+                    userLocation,
+                    19,
+                    "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
+            }
+        })
+    }
+
+    /**
+     * Se encarga de inicializar el RecyclerView para las localizaciones
+     * con el LayoutManager y el Adapter correspondiente.
+     */
+    private fun initLocationsRecyclerView(){
+        val manager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        binding.apply {
+            this.recyclerViewTrackLocationInfo.layoutManager = manager
+            this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
+            userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
+        }
+    }
+
+    /**
+     * Cambia la visibilidad de la etiqueta de texto que indica
+     * que no hay localizaciones si el adapter está vacío.
+     */
+    fun toggleLabelNoLocations(){
+        if(userLocationAdapter.currentList.isEmpty())
+            binding.labelNoLocations.visibility = TextView.VISIBLE
+        else
+            binding.labelNoLocations.visibility = TextView.GONE
     }
 
     companion object {

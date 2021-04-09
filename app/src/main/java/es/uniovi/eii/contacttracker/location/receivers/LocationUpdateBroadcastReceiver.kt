@@ -6,9 +6,7 @@ import android.content.Intent
 import android.location.Location
 import android.util.Log
 import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
-import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
-import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
-import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
 import es.uniovi.eii.contacttracker.util.LocationUtils
 
 /**
@@ -29,11 +27,11 @@ class LocationUpdateBroadcastReceiver() : BroadcastReceiver() {
     /**
      * Referencia al Fragmento de Información de Log del rastreador.
      */
-    private lateinit var infoFragment:TrackerInfoFragment
+    private lateinit var trackerFragment:TrackerFragment
 
-    constructor(adapter: UserLocationAdapter, infoFragment: TrackerInfoFragment) : this(){
+    constructor(adapter: UserLocationAdapter, trackerFragment: TrackerFragment) : this(){
         this.adapter = adapter
-        this.infoFragment = infoFragment
+        this.trackerFragment = trackerFragment
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -41,8 +39,8 @@ class LocationUpdateBroadcastReceiver() : BroadcastReceiver() {
         location?.let {
             Log.d(TAG, LocationUtils.format(it))
 //            adapter.addUserLocation(LocationUtils.parse(location)) // Añadir la posición al adapter.
-            infoFragment.userLocationAdapter.addUserLocation(LocationUtils.parse(location))
-            infoFragment.toggleLabelNoLocations()
+            trackerFragment.userLocationAdapter.addUserLocation(LocationUtils.parse(location))
+            trackerFragment.toggleLabelNoLocations()
         }
     }
 
