@@ -5,12 +5,16 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.location.receivers.LocationAlarmCommandBroadcastReceiver
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
-import es.uniovi.eii.contacttracker.model.LocationAlarmData
-import es.uniovi.eii.contacttracker.util.Utils
-import java.util.*
+import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.repositories.AlarmRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -18,16 +22,64 @@ import javax.inject.Inject
  */
 class LocationAlarmManager @Inject constructor(
         private val alarmManager: AlarmManager,
+        private val alarmRepository: AlarmRepository,
         @ApplicationContext val ctx: Context
 ) {
+
+    /**
+     * Scope para la corrutina.
+     */
+    val scope = CoroutineScope(Job() + Dispatchers.IO)
+
+    /**
+     * Devuelve un LiveData con la lista de todas
+     * las alarmas de localización.
+     */
+    fun getAllAlarms(): LiveData<List<LocationAlarm>> {
+        return alarmRepository.getAllAlarms()
+    }
+
+    /**
+     * Elimina todas las alarmas de localización.
+     */
+    fun deleteAllAlarms() {
+        scope.launch {
+            alarmRepository.deleteAllAlarms()
+        }
+    }
+
+    /**
+     * Elimina la alarma cuyo ID coincide con el
+     * pasado como parámetro.
+     *
+     * @param alarmID ID de la alarma a eliminar.
+     */
+    fun deleteAlarm(alarmID: Long) {
+        scope.launch {
+            alarmRepository.deleteAlarmByID(alarmID)
+        }
+    }
+
+    /**
+     * Se encarga de establecer una Alarma de Localización.
+     * Se inserta en la base de datos y además se configura una
+     * nueva alarma en Android.
+     *
+     * @param locationAlarm alarma de localización.
+     */
+    fun setAlarm(locationAlarm: LocationAlarm) {
+        scope.launch {
+            alarmRepository.insertLocationAlarm(locationAlarm)
+        }
+    }
 
     /**
      * Establece una alarma de inicio y otra de fin para iniciar
      * el rastreo de ubicación y detenerlo a la hora de fin.
      *
-     * @param locationAlarmData datos de la alarma de localización.
+     * @param locationAlarm datos de la alarma de localización.
      */
-    fun set(locationAlarmData: LocationAlarmData){
+    fun set(locationAlarm: LocationAlarm){
         // Alarma de inicio
 //        val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
 //        startServiceIntent.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
@@ -51,7 +103,7 @@ class LocationAlarmManager @Inject constructor(
         val startPI = PendingIntent.getBroadcast(ctx, 1999, startIntent, 0)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
-                locationAlarmData.startDate.time,
+                locationAlarm.startDate.time,
                 startPI
         )
 
@@ -61,7 +113,7 @@ class LocationAlarmManager @Inject constructor(
 
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
-                locationAlarmData.endDate.time,
+                locationAlarm.endDate.time,
                 stopPI
         )
     }

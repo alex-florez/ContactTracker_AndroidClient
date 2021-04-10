@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
-import es.uniovi.eii.contacttracker.model.LocationAlarmData
+import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.util.Utils
 import java.util.*
@@ -32,8 +32,8 @@ class TrackerViewModel @Inject constructor(
     /**
      * Alarma ACTUAL almacenada en las SharedPreferences.
      */
-    private val _actualAlarm = MutableLiveData<LocationAlarmData?>()
-    val actualAlarmData: LiveData<LocationAlarmData?> = _actualAlarm
+    private val _actualAlarm = MutableLiveData<LocationAlarm?>()
+    val actualAlarm: LiveData<LocationAlarm?> = _actualAlarm
 
     /**
      * Flag de validez de las horas de la alarma.
@@ -81,12 +81,13 @@ class TrackerViewModel @Inject constructor(
         _startTime.value?.let { start->
             _endTime.value?.let { end ->
                 if(checkHours(start, end)){ // Comprobar validez de horas.
-                    val locationAlarmData = getAlarmTime(LocationAlarmData(start, end))
-                    saveAlarmsToSharedPrefs(locationAlarmData.startDate, locationAlarmData.endDate) // Guardar en las SharedPrefs
-                    _actualAlarm.value?.let {
-                        locationAlarmManager.set(locationAlarmData) // Establecer alarma.
-                        return true
-                    }
+//                    val locationAlarmData = getAlarmTime(LocationAlarm(start, end))
+//                    saveAlarmsToSharedPrefs(locationAlarmData.startDate, locationAlarmData.endDate) // Guardar en las SharedPrefs
+//                    _actualAlarm.value?.let {
+//                        locationAlarmManager.set(locationAlarmData) // Establecer alarma.
+//                        return true
+//                    }
+                    return true
                 }
             }
         }
@@ -101,11 +102,11 @@ class TrackerViewModel @Inject constructor(
         alarmRepository.setAutoTracking(autoTracking)
         if(autoTracking) { // Restaurar alarmas
             retrieveActualAlarm()
-            _actualAlarm.value?.let {
-                val locationAlarmData = getAlarmTime(it)
-                saveAlarmsToSharedPrefs(locationAlarmData.startDate, locationAlarmData.endDate)
-                locationAlarmManager.set(locationAlarmData)
-            }
+//            _actualAlarm.value?.let {
+//                val locationAlarmData = getAlarmTime(it)
+//                saveAlarmsToSharedPrefs(locationAlarmData.startDate, locationAlarmData.endDate)
+//                locationAlarmManager.set(locationAlarmData)
+//            }
         } else { // Cancelar alarmas
             locationAlarmManager.cancel()
         }
@@ -120,7 +121,7 @@ class TrackerViewModel @Inject constructor(
         if(alarmRepository.checkKey(R.string.shared_prefs_location_alarm_start) && alarmRepository.checkKey(R.string.shared_prefs_location_alarm_end)){
             val startDate = alarmRepository.getLocationAlarmTime(R.string.shared_prefs_location_alarm_start)
             val endDate = alarmRepository.getLocationAlarmTime(R.string.shared_prefs_location_alarm_end)
-            _actualAlarm.value = LocationAlarmData(startDate, endDate)
+//            _actualAlarm.value = LocationAlarm(startDate, endDate)
         } else {
             _actualAlarm.value = null
         }
@@ -162,14 +163,14 @@ class TrackerViewModel @Inject constructor(
      * alarma de localización, sumándole un día a cada fecha en el caso
      * de que sean anteriores a la fecha actual.
      */
-    private fun getAlarmTime(alarmData: LocationAlarmData): LocationAlarmData {
-        return if(alarmData.startDate.before(Date())){
-            LocationAlarmData(Utils.addToDate(alarmData.startDate, Calendar.DATE, 1),
-                    Utils.addToDate(alarmData.endDate, Calendar.DATE, 1))
-        } else {
-           alarmData
-        }
-    }
+//    private fun getAlarmTime(alarm: LocationAlarm): LocationAlarm {
+//        return if(alarm.startDate.before(Date())){
+//            LocationAlarm(Utils.addToDate(alarm.startDate, Calendar.DATE, 1),
+//                    Utils.addToDate(alarm.endDate, Calendar.DATE, 1))
+//        } else {
+//           alarm
+//        }
+//    }
 
     /**
      * Almacena las horas seleccionadas desde la UI en

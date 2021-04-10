@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import es.uniovi.eii.contacttracker.adapters.diffutil.UserLocationDiffCallback
+import es.uniovi.eii.contacttracker.adapters.locations.UserLocationDiffCallback
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 

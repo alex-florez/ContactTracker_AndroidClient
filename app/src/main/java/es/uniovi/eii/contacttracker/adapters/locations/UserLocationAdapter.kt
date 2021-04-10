@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.adapters
+package es.uniovi.eii.contacttracker.adapters.locations
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardUserLocationBinding
-import es.uniovi.eii.contacttracker.databinding.ItemUserLocationBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Adapter para los objetos UserLocation que almacenan

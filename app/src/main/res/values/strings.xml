@@ -32,7 +32,7 @@
     <string name="labelStartStop">Iniciar o Detener el rastreador de ubicación</string>
     <string name="labelStoppedService">Servicio de localización detenido.</string>
     <string name="locationTrackerTitle">Rastreo de Ubicación</string>
-    <string name="labelStartStopTracker">Servicio de Rastreo de Ubicación</string>
+    <string name="labelStartStopTracker">Servicio para rastrear la ubicación</string>
 
     <!-- Fragment de Información del rastreo de ubicación -->
     <string name="labelNoLocations">No hay localizaciones que mostrar.</string>
@@ -50,17 +50,18 @@
     <string name="init">Inicio</string>
     <string name="end">Fin</string>
     <string name="program">Programar</string>
-    <string name="noAlarm">No hay ninguna alarma programada</string>
+    <string name="noAlarm">No tienes alarmas programadas</string>
     <string name="newAlarm">Nueva alarma programada</string>
     <string name="errorInvalidHours">Las horas especificadas no son válidas</string>
     <string name="labelCurrentAlarm">Alarma pendiente</string>
     <string name="placeholderStart">15:00</string>
     <string name="placeholderEnd">16:00</string>
+    <string name="contentDescriptionBtnRemoveAlarm">Eliminar alarma de localización</string>
 
     <!-- Fragment: Configuración del Tracker -->
     <string name="minIntervalHint">Intervalo de tiempo</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 
 </resources>

@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.adapters.diffutil
+package es.uniovi.eii.contacttracker.adapters.locations
 
 import androidx.recyclerview.widget.DiffUtil
 import es.uniovi.eii.contacttracker.model.UserLocation

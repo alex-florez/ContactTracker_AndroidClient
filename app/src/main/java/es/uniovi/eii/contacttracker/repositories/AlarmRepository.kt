@@ -1,8 +1,11 @@
 package es.uniovi.eii.contacttracker.repositories
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
+import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.room.daos.LocationAlarmDao
 import java.util.Date
 import javax.inject.Inject
 
@@ -13,7 +16,8 @@ import javax.inject.Inject
  * rastreo automático de ubicación.
  */
 class AlarmRepository @Inject constructor(
-    @ApplicationContext private val ctx: Context
+    @ApplicationContext private val ctx: Context,
+    private val locationAlarmDao: LocationAlarmDao
 ) {
 
     /**
@@ -22,6 +26,42 @@ class AlarmRepository @Inject constructor(
     private val sharedPrefs = ctx.getSharedPreferences(
         ctx.getString(R.string.shared_prefs_file_name), Context.MODE_PRIVATE)
 
+
+    /**
+     * Inserta en la BDD una nueva alarma de localización. Devuelve
+     * el ID de la alarma insertada.
+     *
+     * @param locationAlarm alarma de localización.
+     * @return ID de la alarma insertada.
+     */
+    suspend fun insertLocationAlarm(locationAlarm: LocationAlarm): Long {
+        return locationAlarmDao.insert(locationAlarm)
+    }
+
+    /**
+     * Devuelve un LiveData con la lista de todas las alarmas
+     * programadas por el usuario.
+     */
+    fun getAllAlarms(): LiveData<List<LocationAlarm>> {
+        return locationAlarmDao.getAll()
+    }
+
+    /**
+     * Elimina todas las alarmas programadas
+     * por el usuario y devuelve el nº de alarmas eliminadas.
+     */
+    suspend fun deleteAllAlarms(): Int {
+        return locationAlarmDao.deleteAll()
+    }
+
+    /**
+     * Elimina la alarma de ID pasado como parámetro.
+     *
+     * @param ID de la alarma a eliminar.
+     */
+    suspend fun deleteAlarmByID(id: Long) {
+        locationAlarmDao.deleteById(id)
+    }
 
     /**
      * Establece la fecha pasada como parámetro en las shared

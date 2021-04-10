@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.adapters.UserLocationAdapter
+import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
@@ -53,13 +53,7 @@ class TrackerFragment : Fragment() {
     /**
      * Adapter para las localizaciones de Usuario.
      */
-    lateinit var userLocationAdapter: UserLocationAdapter
-
-    /**
-     * BroadCast Receiver para actualizar el Adapter
-     * con las actualizaciones de localización.
-     */
-    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
+    private lateinit var userLocationAdapter: UserLocationAdapter
 
     /**
      * ViewModel
@@ -76,6 +70,12 @@ class TrackerFragment : Fragment() {
      * Broadcast Receiver para las alarmas de inicio y de fin.
      */
     private var locationAlarmBroadCastReceiver: LocationAlarmBroadCastReceiver? = null
+
+    /**
+     * BroadCast Receiver para actualizar el Adapter
+     * con las actualizaciones de localización.
+     */
+    private var locationReceiver: LocationUpdateBroadcastReceiver? = null
 
     // BROADCAST RECEIVERS
     /**
@@ -170,7 +170,6 @@ class TrackerFragment : Fragment() {
             LOCATION_PERMISSION_REQUEST_ID -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     startLocationService()
-                    view?.let { Snackbar.make(it, "PERMISO CONCEDIDO", Snackbar.LENGTH_LONG).show() }
                 }
             }
         }

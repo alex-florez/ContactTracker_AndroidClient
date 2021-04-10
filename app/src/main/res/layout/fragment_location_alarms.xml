@@ -7,6 +7,7 @@
     tools:context=".fragments.tracklocation.LocationAlarmsFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -23,13 +24,22 @@
             android:layout_margin="10dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewTrackLocationInfo"
+            android:id="@+id/recyclerViewLocationAlarms"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp" />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/txtLabelNoAlarms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/noAlarm"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 
