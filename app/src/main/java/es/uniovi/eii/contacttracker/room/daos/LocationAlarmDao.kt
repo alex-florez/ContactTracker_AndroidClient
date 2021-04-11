@@ -19,6 +19,12 @@ interface LocationAlarmDao {
     @Query("SELECT * FROM location_alarms ORDER BY creationDate DESC")
     fun getAll(): LiveData<List<LocationAlarm>>
 
+    @Query("SELECT * FROM location_alarms WHERE id = :alarmID")
+    suspend fun getByID(alarmID: Long): LocationAlarm?
+
+    @Query("UPDATE location_alarms SET active = :enable WHERE id = :alarmID")
+    suspend fun toggleState(alarmID: Long, enable: Boolean): Int
+
     @Query("DELETE FROM location_alarms")
     suspend fun deleteAll(): Int
 

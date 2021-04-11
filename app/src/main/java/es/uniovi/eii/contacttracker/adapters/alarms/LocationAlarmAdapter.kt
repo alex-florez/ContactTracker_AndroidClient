@@ -15,9 +15,9 @@ import es.uniovi.eii.contacttracker.util.Utils
  * Adapter de tipo lista para las alarmas de localización.
  */
 class LocationAlarmAdapter(
-        private val onRemoveListener: OnRemoveAlarmClickListener
+        private val onRemoveListener: OnRemoveAlarmClickListener,
+        private val onAlarmStateChangedListener: OnAlarmStateChangedListener
 ) : ListAdapter<LocationAlarm, LocationAlarmAdapter.LocationAlarmViewHolder>(LocationAlarm.DIFF_CALLBACK) {
-
 
     /**
      * Listener para el botón de eliminar una
@@ -27,6 +27,13 @@ class LocationAlarmAdapter(
         fun onRemove(locationAlarm: LocationAlarm)
     }
 
+    /**
+     * Interfaz Listener para el cambio de estado de
+     * la alarma de localización.
+     */
+    interface OnAlarmStateChangedListener {
+        fun onChanged(locationAlarm: LocationAlarm, isChecked: Boolean)
+    }
 
     /**
      * View Holder para los objetos de alarmas de localización.
@@ -41,12 +48,19 @@ class LocationAlarmAdapter(
          * Enlaza el objeto de alarma de localización, con
          * los componentes de la vista.
          */
-        fun bindLocationAlarm(alarm: LocationAlarm, onRemoveListener: OnRemoveAlarmClickListener) {
+        fun bindLocationAlarm(alarm: LocationAlarm,
+                              onRemoveListener: OnRemoveAlarmClickListener,
+                              onAlarmStateChangedListener: OnAlarmStateChangedListener
+        ) {
             binding.startHour.text = Utils.formatDate(alarm.startDate, "HH:mm")
             binding.endHour.text = Utils.formatDate(alarm.endDate, "HH:mm")
+            binding.switchLocationAlarm.isChecked = alarm.active
             // Listeners
-            binding.btnRemoveAlarm.setOnClickListener{
+            binding.btnRemoveAlarm.setOnClickListener{ // Eliminar alarma
                 onRemoveListener.onRemove(alarm)
+            }
+            binding.switchLocationAlarm.setOnCheckedChangeListener { _, isChecked ->
+                onAlarmStateChangedListener.onChanged(alarm, isChecked)
             }
         }
     }
@@ -58,7 +72,7 @@ class LocationAlarmAdapter(
     }
 
     override fun onBindViewHolder(holder: LocationAlarmViewHolder, position: Int) {
-        holder.bindLocationAlarm(getItem(position), onRemoveListener)
+        holder.bindLocationAlarm(getItem(position), onRemoveListener, onAlarmStateChangedListener)
     }
 
     override fun getItemId(position: Int): Long {

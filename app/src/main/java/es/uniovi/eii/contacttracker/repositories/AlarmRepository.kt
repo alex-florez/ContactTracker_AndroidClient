@@ -47,6 +47,17 @@ class AlarmRepository @Inject constructor(
     }
 
     /**
+     * Devuelve la alarma de localización cuyo ID coincide
+     * con el ID pasado como parámetro. Devuelve NULL si no existe.
+     *
+     * @param id ID de la alarma de localización.
+     * @return alarma de localización o NULL si no existe.
+     */
+    suspend fun getAlarmByID(id: Long): LocationAlarm? {
+        return locationAlarmDao.getByID(id)
+    }
+
+    /**
      * Elimina todas las alarmas programadas
      * por el usuario y devuelve el nº de alarmas eliminadas.
      */
@@ -61,6 +72,19 @@ class AlarmRepository @Inject constructor(
      */
     suspend fun deleteAlarmByID(id: Long) {
         locationAlarmDao.deleteById(id)
+    }
+
+    /**
+     * Actualiza el estado de la alarma pasada como
+     * parámetro para activarla o desactivarla.
+     *
+     * @param alarm Alarma de localización.
+     * @param enable flag para activar o desactivar.
+     * @return Nº de filas modificadas.
+     */
+    suspend fun toggleAlarm(alarm: LocationAlarm, enable: Boolean): Int {
+        val alarmID = alarm.id ?: return 0
+        return locationAlarmDao.toggleState(alarmID, enable)
     }
 
     /**

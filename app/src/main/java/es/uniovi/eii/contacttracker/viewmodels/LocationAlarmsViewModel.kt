@@ -65,26 +65,37 @@ class LocationAlarmsViewModel @Inject constructor(
      * el Fragment.
      */
     fun addNewAlarm() {
-//        locationAlarmManager.deleteAllAlarms()
         val startDate = _startTime.value ?: return
         val endDate = _endTime.value ?: return
-        val alarm = LocationAlarm(
-                null,
+        val alarm = LocationAlarm( // Instancia de la Alarma
+                null, // ID autogenerado por ROOM
                 startDate,
                 endDate,
-                true
+                true // Activada por defecto
         )
         locationAlarmManager.setAlarm(alarm)
     }
 
     /**
      * Invoca al Manager para eliminar y cancelar la alarma
-     * de ID pasado como parámetro.
+     * de localización pasada como parámetro.
      *
-     * @param alarmID ID de la alarma a eliminar.
+     * @param locationAlarm alarma de localización a eliminar.
      */
-    fun deleteAlarm(alarmID: Long) {
-        locationAlarmManager.deleteAlarm(alarmID)
+    fun deleteAlarm(locationAlarm: LocationAlarm) {
+        locationAlarmManager.deleteAlarm(locationAlarm)
+    }
+
+    /**
+     * Activa o desactiva una alarma de localización pasada como
+     * parámetro, según el flag indicado. Para ello, utiliza el
+     * manager correspondiente a las alarmas de localización.
+     *
+     * @param locationAlarm Alarma de localización.
+     * @param enable flag para modificar el estado de la alarma de localización.
+     */
+    fun toggleAlarmState(locationAlarm: LocationAlarm, enable: Boolean) {
+        locationAlarmManager.toggleAlarm(locationAlarm, enable)
     }
 
 }

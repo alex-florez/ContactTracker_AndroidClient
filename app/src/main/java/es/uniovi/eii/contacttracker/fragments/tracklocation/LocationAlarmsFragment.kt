@@ -88,7 +88,6 @@ class LocationAlarmsFragment : Fragment() {
         viewModel.addNewAlarm()
     }
 
-
     /**
      * Método que se encarga de crear los TimePickers de Material
      * para seleccionar las horas.
@@ -112,11 +111,13 @@ class LocationAlarmsFragment : Fragment() {
      * de localización.
      */
     private fun createAlarmsAdapter(){
-        locationAlarmsAdapter = LocationAlarmAdapter(object : LocationAlarmAdapter.OnRemoveAlarmClickListener{
+        locationAlarmsAdapter = LocationAlarmAdapter(object : LocationAlarmAdapter.OnRemoveAlarmClickListener {
             override fun onRemove(locationAlarm: LocationAlarm) { // ELIMINAR Alarma
-                locationAlarm.id?.let {
-                    alarmID -> viewModel.deleteAlarm(alarmID)
-                }
+                locationAlarm.id?.let { viewModel.deleteAlarm(locationAlarm) }
+            }
+        }, object : LocationAlarmAdapter.OnAlarmStateChangedListener {
+            override fun onChanged(locationAlarm: LocationAlarm, isChecked: Boolean) { // Activar/Desactivar alarma
+                locationAlarm.id?.let { viewModel.toggleAlarmState(locationAlarm, isChecked) }
             }
         })
         // IDs estables para reutilizar ViewHolders.

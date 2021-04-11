@@ -43,6 +43,6 @@ class TrackerSettingsRepository @Inject constructor(
      * @return intervalo de tiempo en milisegundos o -1 si no existe.
      */
     fun getMinInterval(): Long {
-        return sharedPrefs.getLong(ctx.getString(R.string.shared_prefs_tracker_config_min_interval), -1L)
+        return sharedPrefs.getLong(ctx.getString(R.string.shared_prefs_tracker_config_min_interval), 3000L)
     }
 }

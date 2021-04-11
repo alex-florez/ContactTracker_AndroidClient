@@ -38,7 +38,6 @@
             android:exported="false"/>
 
         <!-- Broadcast Receivers -->
-        <receiver android:name=".location.receivers.LocationUpdateBroadcastReceiver"/>
         <receiver android:name=".location.receivers.LocationAlarmCommandBroadcastReceiver"/>
 
     </application>

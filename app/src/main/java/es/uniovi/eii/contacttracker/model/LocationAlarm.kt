@@ -1,22 +1,25 @@
 package es.uniovi.eii.contacttracker.model
 
+import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.alarms.LocationAlarmDiffCallback
 import es.uniovi.eii.contacttracker.util.Utils
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 /**
  * Clase que representa una alarma de localización.
  */
+@Parcelize
 @Entity(tableName = "location_alarms")
-class LocationAlarm(
+data class LocationAlarm(
         @PrimaryKey(autoGenerate = true) val id: Long?,
         var startDate: Date,
         var endDate: Date,
         var active: Boolean
-) {
+) : Parcelable {
 
     /**
      * Fecha de creación.

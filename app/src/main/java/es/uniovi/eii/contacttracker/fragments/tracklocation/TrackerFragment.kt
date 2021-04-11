@@ -88,11 +88,11 @@ class TrackerFragment : Fragment() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d("RECEIVER", "Alarma de localización recibida.")
             when(intent?.getStringExtra(EXTRA_LOCATION_ALARM_COMMAND)) {
-                LocationForegroundService.ACTION_START_LOCATION_SERVICE -> {
+                Constants.ACTION_START_LOCATION_SERVICE -> {
                     // Activar Switch del Tracker
                     binding.layoutCardLocationTracker.switchTrackLocation.isChecked = true
                 }
-                LocationForegroundService.ACTION_STOP_LOCATION_SERVICE -> {
+                Constants.ACTION_STOP_LOCATION_SERVICE -> {
                     // Desactivar Switch del Tracker
                     binding.layoutCardLocationTracker.switchTrackLocation.isChecked = false
                 }
@@ -292,7 +292,7 @@ class TrackerFragment : Fragment() {
     private fun startLocationService(){
         doLocationChecks ({ // Éxito
             if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
-                sendCommandToLocationService(LocationForegroundService.ACTION_START_LOCATION_SERVICE)
+                sendCommandToLocationService(Constants.ACTION_START_LOCATION_SERVICE)
             } else {
                 Log.d(TAG, "Ya se está ejecutando un servicio de localización")
             }
@@ -306,7 +306,7 @@ class TrackerFragment : Fragment() {
      */
     private fun stopLocationService(){
         if(LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio se esté ejecutando.
-            sendCommandToLocationService(LocationForegroundService.ACTION_STOP_LOCATION_SERVICE)
+            sendCommandToLocationService(Constants.ACTION_STOP_LOCATION_SERVICE)
             Snackbar.make(binding.root, R.string.labelStoppedService, Snackbar.LENGTH_LONG).let{ // Mostrar Snackbar
                 it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView) // Mostrarlo encima del BottomNavView
                 it.show()
@@ -326,7 +326,7 @@ class TrackerFragment : Fragment() {
     private fun sendCommandToLocationService(action: String){
         Intent(requireContext(), LocationForegroundService::class.java).let {
             it.action = action
-            it.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, false)
+            it.putExtra(Constants.EXTRA_COMMAND_FROM_ALARM, false)
             ContextCompat.startForegroundService(requireContext(), it)
         }
     }

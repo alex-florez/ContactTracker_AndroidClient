@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 
 class LocationAlarmCommandBroadcastReceiver : BroadcastReceiver(){
@@ -18,7 +19,7 @@ class LocationAlarmCommandBroadcastReceiver : BroadcastReceiver(){
                 it.action?.let { action ->
                     Intent(ctx, LocationForegroundService::class.java).let { service ->
                         service.action = action
-                        service.putExtra(LocationForegroundService.EXTRA_COMMAND_FROM_ALARM, true)
+                        service.putExtra(Constants.EXTRA_COMMAND_FROM_ALARM, true)
                         ContextCompat.startForegroundService(ctx, service)
                     }
                 }
