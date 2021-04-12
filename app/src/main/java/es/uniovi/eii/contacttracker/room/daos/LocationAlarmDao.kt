@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 
 /**
@@ -15,6 +16,9 @@ interface LocationAlarmDao {
 
     @Insert
     suspend fun insert(locationAlarm: LocationAlarm): Long
+
+    @Update
+    suspend fun update(locationAlarm: LocationAlarm): Int
 
     @Query("SELECT * FROM location_alarms ORDER BY creationDate DESC")
     fun getAll(): LiveData<List<LocationAlarm>>

@@ -95,7 +95,7 @@ class LocationAlarmsViewModel @Inject constructor(
      * @param enable flag para modificar el estado de la alarma de localización.
      */
     fun toggleAlarmState(locationAlarm: LocationAlarm, enable: Boolean) {
-        locationAlarmManager.toggleAlarm(locationAlarm, enable)
+        locationAlarm.id?.let {locationAlarmManager.toggleAlarm(it, enable)}
     }
 
 }

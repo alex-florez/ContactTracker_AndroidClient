@@ -39,6 +39,17 @@ class AlarmRepository @Inject constructor(
     }
 
     /**
+     * Actualiza los campos de la alarma cuyo ID coincide con el ID de
+     * la alarma pasada como parámetro.
+     *
+     * @param alarma con los datos a actualizar.
+     * @return nº de filas modificadas.
+     */
+    suspend fun updateLocationAlarm(locationAlarm: LocationAlarm): Int {
+        return locationAlarmDao.update(locationAlarm)
+    }
+
+    /**
      * Devuelve un LiveData con la lista de todas las alarmas
      * programadas por el usuario.
      */

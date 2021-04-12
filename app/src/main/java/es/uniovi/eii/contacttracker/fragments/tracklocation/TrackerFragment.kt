@@ -136,6 +136,7 @@ class TrackerFragment : Fragment() {
         setListeners()
         setObservers()
         initLocationsRecyclerView()
+
         return binding.root
     }
 

@@ -33,6 +33,7 @@ object Utils {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, hours)
         calendar.set(Calendar.MINUTE, minutes)
+        calendar.set(Calendar.SECOND, 0)
         return calendar.time
     }
 

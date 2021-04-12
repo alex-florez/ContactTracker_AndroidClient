@@ -19,8 +19,6 @@ import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
-import es.uniovi.eii.contacttracker.model.LocationAlarm
-import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,11 +54,6 @@ class LocationForegroundService : Service(){
     lateinit var locationCallback: LocationUpdateCallback
 
     /**
-     * Repositorio de alarmas
-     */
-    @Inject lateinit var alarmRepository: AlarmRepository
-
-    /**
      * Repositorio de parámetros de configuración del Tracker.
      */
     @Inject lateinit var trackerSettingsRepository: TrackerSettingsRepository
@@ -94,15 +87,14 @@ class LocationForegroundService : Service(){
     // *********************
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
-            // Flag que indica si el comando es enviado desde una alarma de localización.
-            val commandFromAlarm = it.getBooleanExtra(Constants.EXTRA_COMMAND_FROM_ALARM, false)
+            // ID de la alarma que inició el servicio (-1 si es inicio manual)
             val alarmID = it.getLongExtra(Constants.EXTRA_LOCATION_ALARM_ID, -1L)
             when(it.action){
                 Constants.ACTION_START_LOCATION_SERVICE -> {
-                    startLocationService(commandFromAlarm)
+                    startLocationService(alarmID)
                 }
                 Constants.ACTION_STOP_LOCATION_SERVICE -> {
-                    stopLocationService(commandFromAlarm, alarmID)
+                    stopLocationService(alarmID)
                 }
             }
         }
@@ -131,53 +123,39 @@ class LocationForegroundService : Service(){
 
     /**
      * Inicializa el servicio de localización en 1er plano, si no
-     * ha sido ya inicializado. Recibe como parámetro un flag que indica si
-     * el servicio ha sido iniciado desde una alarma de localización.
+     * ha sido ya inicializado. Recibe como parámetro el ID de la alarma
+     * de localización que inició el servicio o -1 si es manual.
      *
-     * @param commandFromAlarm flag de comando desde alarma.
+     * @param alarmID ID de la alarma de localización o -1.
      */
-    private fun startLocationService(commandFromAlarm: Boolean){
+    private fun startLocationService(alarmID: Long){
         if(!isActive){
             Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
             startForeground(SERVICE_ID, notification)
             locationTracker.setLocationRequest(createLocationTrackRequest()) // Construir LocationTrackRequest
             locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
             isActive = true
-            if(commandFromAlarm){ // Si es ejecutado desde una alarma
-                sendBroadcast(Constants.ACTION_START_LOCATION_SERVICE)
+            if(alarmID != -1L){ // Si es ejecutado desde una alarma de localización
+                sendBroadcast(Constants.ACTION_START_LOCATION_SERVICE) // Broadcast para actualizar la UI.
             }
         }
     }
 
     /**
      * Se encarga de eliminar y detener las actualizaciones de localización,
-     * así como también detener el servicio.Recibe como parámetro un flag que indica si
-     * el servicio ha sido iniciado desde una alarma de localización.
-     *
-     * @param commandFromAlarm flag de comando desde alarma.
-     * @param locationAlarm alarma de localización desde la que se inició el servicio o null si se inició manualmente.
+     * así como también detener el servicio.
+
+     * @param alarmID ID de la alarma de localización o -1 si es manual.
      */
-    private fun stopLocationService(commandFromAlarm: Boolean, alarmID: Long){
+    private fun stopLocationService(alarmID: Long){
         if(isActive){
             locationTracker.stop(LocationUpdateMode.CALLBACK_MODE)
             stopForeground(true)
             stopSelf()
             isActive = false
-            if(commandFromAlarm){ // Si es ejecutado desde una alarma.
-                if(alarmID != -1L){
-                    scope.launch {
-                        val alarm = alarmRepository.getAlarmByID(alarmID)
-                        alarm?.let {
-                            a -> locationAlarmManager.toggleAlarm(a, false)
-                        }
-                    }
-
-                }
-//                locationAlarm?.let {
-//                    locationAlarmManager.toggleAlarm(it, false) // Desactivar esta alarma
-//                }
-
-                sendBroadcast(Constants.ACTION_STOP_LOCATION_SERVICE)
+            if(alarmID != -1L){ // Si es ejecutado desde una alarma.
+                sendBroadcast(Constants.ACTION_STOP_LOCATION_SERVICE) // Enviar broadcast a la UI.
+                locationAlarmManager.toggleAlarm(alarmID, false) // Desactivar la alarma
             }
         }
     }

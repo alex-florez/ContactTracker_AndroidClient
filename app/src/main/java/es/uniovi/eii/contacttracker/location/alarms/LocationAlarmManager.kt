@@ -13,10 +13,12 @@ import es.uniovi.eii.contacttracker.location.receivers.LocationAlarmCommandBroad
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
+import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -39,6 +41,16 @@ class LocationAlarmManager @Inject constructor(
      */
     fun getAllAlarms(): LiveData<List<LocationAlarm>> {
         return alarmRepository.getAllAlarms()
+    }
+
+    /**
+     * Devuelve una alarma de localización a partir de su ID.
+     *
+     * @param id ID de la alarma de localización.
+     * @return alarma de localización.
+     */
+    suspend fun getAlarmByID(id: Long): LocationAlarm? {
+        return alarmRepository.getAlarmByID(id)
     }
 
     /**
@@ -75,8 +87,10 @@ class LocationAlarmManager @Inject constructor(
      */
     fun setAlarm(locationAlarm: LocationAlarm) {
         scope.launch {
+            // Procesar alarma
+            val processedAlarm = processAlarmHours(locationAlarm) // Alarma procesada.
             // Insertar alarma en el repositorio
-            val alarmID = alarmRepository.insertLocationAlarm(locationAlarm)
+            val alarmID = alarmRepository.insertLocationAlarm(processedAlarm)
             // Configurar alarma en Android
             val insertedAlarm = alarmRepository.getAlarmByID(alarmID)
             insertedAlarm?.let { setAndroidAlarm(it) }
@@ -84,20 +98,26 @@ class LocationAlarmManager @Inject constructor(
     }
 
     /**
-     * Activa o Desactiva la alarma de localización pasada como parámetro,
+     * Activa o Desactiva la alarma de localización de ID pasado como parámetro,
      * según el flag indicado.
-     * @param locationAlarm Alarma de localización a modificar.
+     * @param alarmID ID de la alarma a modificar.
      * @param enable flag para habilitar/deshabilitar la alarma de localización.
      */
-    fun toggleAlarm(locationAlarm: LocationAlarm, enable: Boolean){
-        // Activar o Desactivar alarma en Android.
-        if(enable)
-            setAndroidAlarm(locationAlarm) // Programar alarma
-        else
-            cancelAndroidAlarm(locationAlarm) // Cancelar alarma
+    fun toggleAlarm(alarmID: Long, enable: Boolean){
         scope.launch {
-            // Modificar campo en la BDD
-            alarmRepository.toggleAlarm(locationAlarm, enable)
+            // Obtener la alarma de localización
+            val alarm = alarmRepository.getAlarmByID(alarmID)
+            alarm?.let {
+                // Actualizar la alarma de localización
+                val processedAlarm = processAlarmHours(alarm)
+                processedAlarm.active = enable
+                alarmRepository.updateLocationAlarm(processedAlarm)
+                // Activar o Desactivar alarma en Android.
+                if(enable)
+                    setAndroidAlarm(processedAlarm) // Programar alarma
+                else
+                    cancelAndroidAlarm(processedAlarm) // Cancelar alarma
+            }
         }
     }
 
@@ -144,7 +164,6 @@ class LocationAlarmManager @Inject constructor(
         val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         startServiceIntent.action = Constants.ACTION_START_LOCATION_SERVICE
         startServiceIntent.putExtra(Constants.EXTRA_LOCATION_ALARM_ID, alarmID)
-        startServiceIntent.putExtra(Constants.EXTRA_COMMAND_FROM_ALARM, true)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 locationAlarm.startDate.time,
@@ -153,7 +172,6 @@ class LocationAlarmManager @Inject constructor(
         // Alarma de fin
         val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         stopServiceIntent.action = Constants.ACTION_STOP_LOCATION_SERVICE
-        stopServiceIntent.putExtra(Constants.EXTRA_COMMAND_FROM_ALARM, true)
         stopServiceIntent.putExtra(Constants.EXTRA_LOCATION_ALARM_ID, alarmID)
         alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
@@ -181,4 +199,20 @@ class LocationAlarmManager @Inject constructor(
         alarmManager.cancel(getPendingIntentService(stopServiceIntent, alarmID.toInt()))
     }
 
+    /**
+     * Comprueba las horas de INICIO y de FIN de la alarma pasada como parámetro. Si
+     * las horas están desfasadas con respecto la fecha actual, las actualiza para que
+     * pasen a ser programadas un día más tarde.
+     *
+     * @param locationAlarm alarma de localización a procesar.
+     * @return alarma de localización ya procesada.
+     */
+    private fun processAlarmHours(locationAlarm: LocationAlarm): LocationAlarm {
+        val startDate = locationAlarm.startDate
+        if(startDate.before(Date())){ // alarma desfasada
+            locationAlarm.startDate = Utils.addToDate(locationAlarm.startDate, Calendar.DATE, 1)
+            locationAlarm.endDate = Utils.addToDate(locationAlarm.endDate, Calendar.DATE, 1)
+        }
+        return locationAlarm
+    }
 }
