@@ -6,6 +6,10 @@ package es.uniovi.eii.contacttracker
  */
 object Constants {
 
+    // API Rest
+    // URL base
+    val BASE_URL = ""
+
     // BROADCAST RECEIVER ACTIONS
     val ACTION_GET_LOCATION = "Get Location"
 
