@@ -23,14 +23,12 @@
             android:textAppearance="?attr/textAppearanceHeadline6"
             app:drawableEndCompat="@drawable/ic_alarm"/>
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchAutomaticTracking"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:text="@string/labelActivateAlarm"
-            app:switchPadding="16dp"
-            android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addNewAlarm"
+            android:paddingTop="4dp"
+            android:paddingBottom="6dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,27 +84,6 @@
                     android:backgroundTint="@color/addGreen"
                     android:contentDescription="@string/contentDescriptionBtnAddAlarm" />
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="6dp">
-
-            <TextView
-                android:id="@+id/labelCurrentAlarm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/labelCurrentAlarm"
-                android:textAppearance="?attr/textAppearanceOverline"/>
-
-            <TextView
-                android:id="@+id/labelValueCurrentAlarm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="(15:00 - 16:00)"
-                android:textAppearance="?attr/textAppearanceOverline"/>
         </LinearLayout>
     </LinearLayout>
 

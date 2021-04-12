@@ -29,6 +29,12 @@ class LocationAlarmsViewModel @Inject constructor(
     private val _endTime = MutableLiveData<Date>()
     val endTime: LiveData<Date> = _endTime
 
+    /**
+     * Flag de validez de las horas de INICIO y de FIN.
+     */
+    private val _flagValidHours = MutableLiveData(true)
+    val flagValidHours: LiveData<Boolean> = _flagValidHours
+
     // SETTERS para los placeholders de hora de INICIO y FIN.
     fun setStartTime(date: Date){
         _startTime.value = date
@@ -73,7 +79,12 @@ class LocationAlarmsViewModel @Inject constructor(
                 endDate,
                 true // Activada por defecto
         )
-        locationAlarmManager.setAlarm(alarm)
+        if(alarm.isValid()){ // Comprobar que la alarma es válida.
+            locationAlarmManager.setAlarm(alarm)
+            _flagValidHours.value = true
+        } else {
+            _flagValidHours.value = false
+        }
     }
 
     /**

@@ -87,10 +87,10 @@ class LocationAlarmManager @Inject constructor(
      */
     fun setAlarm(locationAlarm: LocationAlarm) {
         scope.launch {
-            // Procesar alarma
-            val processedAlarm = processAlarmHours(locationAlarm) // Alarma procesada.
+            // Actualizar horas de la alarma (si es necesario)
+            locationAlarm.updateHours()
             // Insertar alarma en el repositorio
-            val alarmID = alarmRepository.insertLocationAlarm(processedAlarm)
+            val alarmID = alarmRepository.insertLocationAlarm(locationAlarm)
             // Configurar alarma en Android
             val insertedAlarm = alarmRepository.getAlarmByID(alarmID)
             insertedAlarm?.let { setAndroidAlarm(it) }
@@ -109,14 +109,14 @@ class LocationAlarmManager @Inject constructor(
             val alarm = alarmRepository.getAlarmByID(alarmID)
             alarm?.let {
                 // Actualizar la alarma de localización
-                val processedAlarm = processAlarmHours(alarm)
-                processedAlarm.active = enable
-                alarmRepository.updateLocationAlarm(processedAlarm)
+                alarm.updateHours()
+                alarm.active = enable
+                alarmRepository.updateLocationAlarm(alarm)
                 // Activar o Desactivar alarma en Android.
                 if(enable)
-                    setAndroidAlarm(processedAlarm) // Programar alarma
+                    setAndroidAlarm(alarm) // Programar alarma
                 else
-                    cancelAndroidAlarm(processedAlarm) // Cancelar alarma
+                    cancelAndroidAlarm(alarm) // Cancelar alarma
             }
         }
     }
@@ -197,22 +197,5 @@ class LocationAlarmManager @Inject constructor(
         val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         stopServiceIntent.action = Constants.ACTION_STOP_LOCATION_SERVICE
         alarmManager.cancel(getPendingIntentService(stopServiceIntent, alarmID.toInt()))
-    }
-
-    /**
-     * Comprueba las horas de INICIO y de FIN de la alarma pasada como parámetro. Si
-     * las horas están desfasadas con respecto la fecha actual, las actualiza para que
-     * pasen a ser programadas un día más tarde.
-     *
-     * @param locationAlarm alarma de localización a procesar.
-     * @return alarma de localización ya procesada.
-     */
-    private fun processAlarmHours(locationAlarm: LocationAlarm): LocationAlarm {
-        val startDate = locationAlarm.startDate
-        if(startDate.before(Date())){ // alarma desfasada
-            locationAlarm.startDate = Utils.addToDate(locationAlarm.startDate, Calendar.DATE, 1)
-            locationAlarm.endDate = Utils.addToDate(locationAlarm.endDate, Calendar.DATE, 1)
-        }
-        return locationAlarm
     }
 }

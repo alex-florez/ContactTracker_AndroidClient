@@ -44,6 +44,29 @@ data class LocationAlarm(
                 Utils.getFromDate(endDate, Calendar.MINUTE))
     }
 
+
+    /**
+     * Comprueba las horas de INICIO y de FIN de la alarma. Si
+     * las horas están desfasadas con respecto la fecha actual, las actualiza para que
+     * pasen a ser programadas un día más tarde.
+     */
+    fun updateHours() {
+        if(startDate.before(Date())){ // alarma desfasada
+            startDate = Utils.addToDate(startDate, Calendar.DATE, 1)
+            endDate = Utils.addToDate(endDate, Calendar.DATE, 1)
+        }
+    }
+
+    /**
+     * Comprueba la validez de las horas de inicio
+     * y de fin de la alarma.
+     *
+     * @return true si la alarma de localización es válida.
+     */
+    fun isValid(): Boolean {
+        return startDate.before(endDate)
+    }
+
     override fun toString(): String {
         return "LocationAlarm(id=$id, startDate=$startDate, endDate=$endDate, active=$active, creationDate=$creationDate)"
     }

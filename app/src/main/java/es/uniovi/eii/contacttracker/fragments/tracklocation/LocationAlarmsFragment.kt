@@ -168,11 +168,20 @@ class LocationAlarmsFragment : Fragment() {
         viewModel.endTime.observe(viewLifecycleOwner, {
             updateEndHour(it)
         })
-
         // Lista de todas las alarmas programadas
         viewModel.getAllAlarms().observe(viewLifecycleOwner, {
             updateAlarmsAdapter(it)
         })
+        // Flag de validez de horas de INICIO y de FIN
+        viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
+            if(!validHours){
+                Snackbar.make(binding.root, getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG).let {
+                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                    it.show()
+                }
+            }
+        })
+
 //        // Alarma establecida actualmente.
 //        viewModel.actualAlarmData.observe(viewLifecycleOwner, {
 //            if(it == null) { // Sin alarma

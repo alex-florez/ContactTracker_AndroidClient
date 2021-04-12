@@ -58,6 +58,7 @@
     <string name="placeholderEnd">16:00</string>
     <string name="contentDescriptionBtnRemoveAlarm">Eliminar alarma de localización</string>
     <string name="contentDescriptionBtnAddAlarm">Añadir alarma de localización</string>
+    <string name="addNewAlarm">Agregar una nueva alarma de localización</string>
 
     <!-- Fragment: Configuración del Tracker -->
     <string name="minIntervalHint">Intervalo de tiempo</string>
