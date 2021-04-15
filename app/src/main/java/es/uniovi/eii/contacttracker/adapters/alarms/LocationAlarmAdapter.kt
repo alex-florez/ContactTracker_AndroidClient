@@ -80,6 +80,7 @@ class LocationAlarmAdapter(
         return alarm.id ?: 0
     }
 
+
     /**
      * Se encarga de añadir una nueva alarma de localización
      * a la lista gestionada por el Adapter.
