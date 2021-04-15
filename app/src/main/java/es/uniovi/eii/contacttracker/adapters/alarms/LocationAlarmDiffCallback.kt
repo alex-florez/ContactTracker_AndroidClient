@@ -11,9 +11,10 @@ import es.uniovi.eii.contacttracker.model.LocationAlarm
 class LocationAlarmDiffCallback : DiffUtil.ItemCallback<LocationAlarm>() {
 
     override fun areItemsTheSame(oldItem: LocationAlarm, newItem: LocationAlarm): Boolean {
-        val oldID = oldItem.id ?: return false
-        val newID = newItem.id ?: return false
-        return oldID == newID // Igualdad por ID
+//        val oldID = oldItem.id ?: return false
+//        val newID = newItem.id ?: return false
+//        return oldID == newID // Igualdad por ID
+        return oldItem === newItem
     }
 
     override fun areContentsTheSame(oldItem: LocationAlarm, newItem: LocationAlarm): Boolean {
