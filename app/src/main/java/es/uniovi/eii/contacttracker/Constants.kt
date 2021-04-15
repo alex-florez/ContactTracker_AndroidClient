@@ -7,8 +7,12 @@ package es.uniovi.eii.contacttracker
 object Constants {
 
     // API Rest
-    // URL base
-    val BASE_URL = ""
+    // ********
+    // URL base localhost
+    val BASE_URL_LOCALHOST = "http://10.0.2.2:8080"
+
+    // URL base deploy
+    val BASE_URL_DEPLOY = "https://contacttrackerbackend.azurewebsites.net"
 
     // BROADCAST RECEIVER ACTIONS
     val ACTION_GET_LOCATION = "Get Location"

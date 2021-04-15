@@ -23,7 +23,7 @@ object NetworkModule {
     @Singleton
     fun providePositiveAPI(): PositiveAPI {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(Constants.BASE_URL_DEPLOY)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PositiveAPI::class.java)

@@ -8,6 +8,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
 import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
 import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
+import es.uniovi.eii.contacttracker.fragments.notifypositive.NotifyPositiveFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private fun getMenuFragment(id: Int): Fragment {
         return when(id){
             R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
-            R.id.bottomMenuOption2 -> TrackerInfoFragment()
+            R.id.bottomMenuOption2 -> NotifyPositiveFragment()
             R.id.bottomMenuOption3 -> DefaultBlankFragment()
             R.id.bottomMenuOption4 -> LocationHistoryFragment()
             else -> DefaultBlankFragment()

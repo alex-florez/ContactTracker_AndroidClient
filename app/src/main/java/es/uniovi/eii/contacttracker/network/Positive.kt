@@ -15,4 +15,8 @@ data class Positive(
     @Expose
     @SerializedName("prueba")
     var prueba: String
-)
+) {
+    override fun toString(): String {
+        return "Positive(id=$id, prueba='$prueba')"
+    }
+}

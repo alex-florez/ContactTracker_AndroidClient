@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.network
 
 import retrofit2.http.GET
+import retrofit2.http.Headers
 
 /**
  * Cliente de la API Rest proporcionada por el backend, para
@@ -8,6 +9,7 @@ import retrofit2.http.GET
  */
 interface PositiveAPI {
 
-    @GET("/prueba")
+    @Headers("Content-Type:application/json")
+    @GET("/getPositivo")
     suspend fun getPrueba(): Positive
 }
