@@ -1,6 +1,6 @@
-package es.uniovi.eii.contacttracker.network
+package es.uniovi.eii.contacttracker.network.api
 
-import retrofit2.Response
+import es.uniovi.eii.contacttracker.network.Positive
 import retrofit2.http.GET
 import retrofit2.http.Headers
 

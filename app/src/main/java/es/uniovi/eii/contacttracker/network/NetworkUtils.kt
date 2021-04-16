@@ -1,8 +1,13 @@
 package es.uniovi.eii.contacttracker.network
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import es.uniovi.eii.contacttracker.network.model.ResponseError
+import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 
 /**
@@ -21,11 +26,13 @@ suspend fun <T> apiCall(dispatcher: CoroutineDispatcher, call: suspend () -> T):
             when (throwable) {
                 is IOException -> ResultWrapper.NetworkError // Error de RED
                 is HttpException -> { // Excepción Genérica
+                    // Parsear datos del error al objeto de Dominio
                     val code = throwable.code()
-                    ResultWrapper.GenericError(code)
+                    val responseError = Gson().fromJson(throwable.response()?.errorBody()?.charStream(), ResponseError::class.java)
+                    ResultWrapper.GenericError(code, responseError)
                 }
                 else -> {
-                    ResultWrapper.GenericError(null)
+                    ResultWrapper.GenericError(null, null)
                 }
             }
         }
