@@ -181,6 +181,15 @@ class LocationAlarmsFragment : Fragment() {
                 }
             }
         })
+        // Flag de colisión de alarmas.
+        viewModel.flagAlarmCollision.observe(viewLifecycleOwner, { collisions ->
+            if(collisions){
+                Snackbar.make(binding.root, getString(R.string.errorAlarmCollision), Snackbar.LENGTH_LONG).let {
+                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                    it.show()
+                }
+            }
+        })
 
 //        // Alarma establecida actualmente.
 //        viewModel.actualAlarmData.observe(viewLifecycleOwner, {

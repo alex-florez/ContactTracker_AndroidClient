@@ -78,6 +78,10 @@ class LocationAlarmManager @Inject constructor(
         }
     }
 
+    suspend fun checkAlarmCollisions(locationAlarm: LocationAlarm): List<LocationAlarm> {
+        return alarmRepository.getAlarmCollisions(locationAlarm)
+    }
+
     /**
      * Se encarga de establecer una Alarma de Localización.
      * Se inserta en la base de datos y además se configura una

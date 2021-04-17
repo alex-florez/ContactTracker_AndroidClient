@@ -3,9 +3,11 @@ package es.uniovi.eii.contacttracker.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.model.LocationAlarm
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -34,6 +36,12 @@ class LocationAlarmsViewModel @Inject constructor(
      */
     private val _flagValidHours = MutableLiveData(true)
     val flagValidHours: LiveData<Boolean> = _flagValidHours
+
+    /**
+     * Flag de COLISIONES entre alarmas de localización.
+     */
+    private val _flagAlarmCollision = MutableLiveData(false)
+    val flagAlarmCollision: LiveData<Boolean> = _flagAlarmCollision
 
     // SETTERS para los placeholders de hora de INICIO y FIN.
     fun setStartTime(date: Date){
@@ -71,17 +79,27 @@ class LocationAlarmsViewModel @Inject constructor(
      * el Fragment.
      */
     fun addNewAlarm() {
+        // Comprobar valores no nulos.
         val startDate = _startTime.value ?: return
         val endDate = _endTime.value ?: return
-        val alarm = LocationAlarm( // Instancia de la Alarma
+        val alarm = LocationAlarm( // Instancia de la Alarma de Localización
                 null, // ID autogenerado por ROOM
                 startDate,
                 endDate,
                 true // Activada por defecto
         )
-        if(alarm.isValid()){ // Comprobar que la alarma es válida.
-            locationAlarmManager.setAlarm(alarm)
+        // Comprobar que la alarma es válida.
+        if(alarm.isValid()){
             _flagValidHours.value = true
+            viewModelScope.launch {
+                // Comprobar colisiones
+                if(locationAlarmManager.checkAlarmCollisions(alarm).isNotEmpty()){
+                    _flagAlarmCollision.value = true
+                } else {
+                    locationAlarmManager.setAlarm(alarm)
+                    _flagAlarmCollision.value = false
+                }
+            }
         } else {
             _flagValidHours.value = false
         }

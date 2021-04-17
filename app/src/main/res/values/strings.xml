@@ -59,6 +59,7 @@
     <string name="noAlarm">No tienes alarmas programadas</string>
     <string name="newAlarm">Nueva alarma programada</string>
     <string name="errorInvalidHours">Las horas especificadas no son válidas</string>
+    <string name="errorAlarmCollision">Ya existen alarmas programadas para ese rango de horas</string>
     <string name="labelCurrentAlarm">Alarma pendiente</string>
     <string name="placeholderStart">15:00</string>
     <string name="placeholderEnd">16:00</string>
