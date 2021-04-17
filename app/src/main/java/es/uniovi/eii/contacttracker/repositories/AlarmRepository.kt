@@ -86,6 +86,13 @@ class AlarmRepository @Inject constructor(
         locationAlarmDao.deleteById(id)
     }
 
+    /**
+     * Devuelve una lista con las alarmas de localización que generan
+     * colisión en el tiempo con la alarma pasada como parámetro.
+     *
+     * @param alarm nueva alarma de localización.
+     * @return lista de alarmas de localización que generan colisión.
+     */
     suspend fun getAlarmCollisions(alarm: LocationAlarm): List<LocationAlarm> {
         val stringStartDate = Utils.formatDate(alarm.startDate, "yyyy-MM-dd HH:mm:ss")
         val stringEndDate = Utils.formatDate(alarm.endDate, "yyyy-MM-dd HH:mm:ss")

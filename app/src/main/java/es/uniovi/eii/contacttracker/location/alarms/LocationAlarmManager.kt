@@ -78,6 +78,13 @@ class LocationAlarmManager @Inject constructor(
         }
     }
 
+    /**
+     * Comprueba si existen colisiones entre las alarmas de localización
+     * almacenadas y la alarma pasada como parámetro.
+     *
+     * @param locationAlarm alarma de localización.
+     * @return lista con las alarmas con las que existe colisión.
+     */
     suspend fun checkAlarmCollisions(locationAlarm: LocationAlarm): List<LocationAlarm> {
         return alarmRepository.getAlarmCollisions(locationAlarm)
     }

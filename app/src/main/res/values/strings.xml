@@ -73,6 +73,9 @@
     <string name="minIntervalNumberPickerTitle">Seleccionar intervalo mínimo</string>
     <string name="contentDescriptionDeleteLocationsByDate">Eliminar localizaciones por fecha</string>
 
+    <!-- Fragment para Notificar POSITIVOS -->
+    <string name="btnNotifyPositive">Notificar un positivo</string>
+
 
 
 </resources>

@@ -1,11 +1,13 @@
 package es.uniovi.eii.contacttracker.fragments.notifypositive
 
+import android.opengl.Visibility
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
@@ -53,8 +55,9 @@ class NotifyPositiveFragment : Fragment() {
      */
     private fun setListeners(){
         binding.apply {
-            btnGET.setOnClickListener{
-                viewModel.getPositive()
+            btnNotifyPositive.setOnClickListener{
+                viewModel.notifyPositive()
+                notifyPositiveProgress.visibility = View.VISIBLE
             }
         }
     }
@@ -67,6 +70,16 @@ class NotifyPositiveFragment : Fragment() {
         viewModel.apply {
             positive.observe(viewLifecycleOwner, {
                 binding.txtGET.text = it.toString()
+            })
+
+            notifyPositiveResult.observe(viewLifecycleOwner, {
+                if(it != null){
+                    binding.notifyPositiveProgress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Subidas ${it.uploadedLocations} localizaciones.", Snackbar.LENGTH_LONG).let { s ->
+                        s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                        s.show()
+                    }
+                }
             })
         }
     }

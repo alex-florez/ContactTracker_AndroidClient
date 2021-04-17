@@ -73,6 +73,16 @@ class LocationRepository @Inject constructor(
         return userLocationDao.deleteByDate(dateString)
     }
 
+    /**
+     * Devuelve todas las localizaciones del usuario registradas en
+     * el día de HOY.
+     *
+     * @return lista con las localizaciones de hoy.
+     */
+    suspend fun getTodayUserLocations(): List<UserLocation> {
+        return userLocationDao.getToday()
+    }
+
     suspend fun insert(userLocation: UserLocation){
         userLocationDao.insertLoc(userLocation)
     }

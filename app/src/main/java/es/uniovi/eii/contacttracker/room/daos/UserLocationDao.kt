@@ -19,6 +19,8 @@ interface UserLocationDao {
     @Insert
     fun insertLoc(userLocation: UserLocation)
 
+    // QUERY'S
+    // *********************************************************************************************
     @Query("SELECT * FROM user_locations ORDER BY locationTimestamp DESC")
     fun getAll(): LiveData<List<UserLocation>>
 
@@ -30,4 +32,7 @@ interface UserLocationDao {
 
     @Query("DELETE FROM user_locations WHERE date(locationTimestamp) = :dateString")
     suspend fun deleteByDate(dateString: String): Int
+
+    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = date('now') ORDER BY locationTimestamp DESC")
+    suspend fun getToday(): List<UserLocation>
 }

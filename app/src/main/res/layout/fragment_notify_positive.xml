@@ -7,17 +7,30 @@
     tools:context=".fragments.notifypositive.NotifyPositiveFragment">
 
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGET"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="get"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.237" />
+        app:layout_constraintVertical_bias="0.139">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNotifyPositive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btnNotifyPositive" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/notifyPositiveProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indeterminateAnimationType="disjoint"
+            android:visibility="gone"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txtGET"
@@ -28,5 +41,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
