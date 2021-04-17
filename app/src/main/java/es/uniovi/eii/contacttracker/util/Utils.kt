@@ -58,4 +58,30 @@ object Utils {
         return calendar.time
     }
 
+    /**
+     * Devuelve un array con los minutos y segundos equivalentes
+     * a los milisegundos pasados como parámetro.
+     *
+     * @param millis milisegundos a transformar.
+     * @return array de enteros con los minutos y segundos.
+     */
+    fun getMinuteSecond(millis: Long): Array<Int> {
+        val seconds = millis / 1000
+        val formattedMinutes = (seconds / 60).toInt()
+        val formattedSeconds = (seconds % 60).toInt()
+        return arrayOf(formattedMinutes, formattedSeconds)
+    }
+
+    /**
+     * Devuelve los milisegundos equivalentes a partir de los minutos
+     * y segundos pasados como parámetro.
+     *
+     * @param minutes minutos
+     * @param seconds segundos
+     * @return milisegundos
+     */
+    fun getMillis(minutes: Int, seconds: Int): Long {
+        val minsToSecs = minutes * 60
+        return ((minsToSecs + seconds) * 1000).toLong()
+    }
 }

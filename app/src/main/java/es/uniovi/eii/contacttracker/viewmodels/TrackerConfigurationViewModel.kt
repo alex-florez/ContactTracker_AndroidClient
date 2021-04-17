@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
+import es.uniovi.eii.contacttracker.util.Utils
 import javax.inject.Inject
 
 /**
@@ -32,15 +33,23 @@ class TrackerConfigurationViewModel @Inject constructor(
     }
 
     /**
+     * Devuelve el valor actual del intervalo mínimo transformado
+     * a minutos y segundos.
+     */
+    fun getMinIntervalMinSecs(): Array<Int> {
+        _minInterval.value?.let{ return Utils.getMinuteSecond(it) }
+        return arrayOf()
+    }
+
+    /**
      * Actualiza el intervalo de tiempo mínimo con los
-     * segundos pasados como parámetro, y modifica el valor
+     * milisegundos pasados como parámetro, y modifica el valor
      * del LiveData para mantenerlo actualizado.
      *
      * @param seconds segundos del intervalo de tiempo.
      */
-    fun updateMinInterval(seconds: Int) {
-        val millis = seconds * 1000L
+    fun updateMinInterval(millis: Long) {
         trackerSettingsRepository.setMinInterval(millis)
-        getMinInterval()
+        getMinInterval() // Actualizar LiveData.s
     }
 }
