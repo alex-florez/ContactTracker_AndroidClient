@@ -1,6 +1,5 @@
 package es.uniovi.eii.contacttracker.fragments.notifypositive
 
-import android.opengl.Visibility
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -68,14 +67,30 @@ class NotifyPositiveFragment : Fragment() {
      */
     private fun setObservers(){
         viewModel.apply {
-            positive.observe(viewLifecycleOwner, {
-                binding.txtGET.text = it.toString()
+            // Error de RED
+            networkError.observe(viewLifecycleOwner, {
+                Snackbar.make(binding.root, getString(R.string.network_error), Snackbar.LENGTH_LONG).let { s ->
+                    s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                    s.show()
+                }
+                binding.notifyPositiveProgress.visibility = View.GONE
             })
 
+            // Error GENÉRICO al notificar positivo
+            notifyError.observe(viewLifecycleOwner, {
+                it.responseError
+                Snackbar.make(binding.root, getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG).let { s ->
+                    s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                    s.show()
+                }
+                binding.notifyPositiveProgress.visibility = View.GONE
+            })
+
+            // Resultado de NOTIFICAR POSITIVO
             notifyPositiveResult.observe(viewLifecycleOwner, {
+                binding.notifyPositiveProgress.visibility = View.GONE
                 if(it != null){
-                    binding.notifyPositiveProgress.visibility = View.GONE
-                    Snackbar.make(binding.root, "Subidas ${it.uploadedLocations} localizaciones.", Snackbar.LENGTH_LONG).let { s ->
+                    Snackbar.make(binding.root, "Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG).let { s ->
                         s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
                         s.show()
                     }

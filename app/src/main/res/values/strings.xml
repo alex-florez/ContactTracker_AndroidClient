@@ -9,6 +9,10 @@
     <string name="seconds">Segundos</string>
     <string name="meters">Metros</string>
 
+    <!-- Errores genéricos -->
+    <string name="network_error">Ha habido un error de red en la solicitud.</string>
+    <string name="request_error">Error en la solicitud</string>
+
     <!-- Shared Preferences File -->
     <string name="shared_prefs_file_name">es.uniovi.eii.contacttracker.sharedprefs</string>
 
@@ -75,6 +79,7 @@
 
     <!-- Fragment para Notificar POSITIVOS -->
     <string name="btnNotifyPositive">Notificar un positivo</string>
+    <string name="genericErrorNotifyPositive">Ha habido un error al notificar el positivo. No ha sido posible subir las localizaciones a la nube.</string>
 
 
 

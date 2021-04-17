@@ -1,12 +1,10 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.uniovi.eii.contacttracker.network.Positive
 import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
@@ -34,20 +32,15 @@ class NotifyPositiveViewModel @Inject constructor(
     /**
      * Error de RED
      */
+    private val _networkError = MutableLiveData<ResultWrapper.NetworkError>()
+    val networkError: LiveData<ResultWrapper.NetworkError> = _networkError
 
     /**
-     * Error GENÉRICO enviado desde el Servidor
+     * Error GENÉRICO enviado desde el Servidor al notificar un positivo
      */
+    private val _notifyError = MutableLiveData<ResultWrapper.GenericError>()
+    val notifyError: LiveData<ResultWrapper.GenericError> = _notifyError
 
-    fun getPositive() {
-        viewModelScope.launch {
-            when (val response = positiveRepository.getPrueba()) {
-                is ResultWrapper.NetworkError -> Log.d("APIRESULT", "NetworkError")
-                is ResultWrapper.GenericError -> Log.d("APIRESULT", response.responseError.toString())
-                is ResultWrapper.Success -> _positive.value = response.value!!
-            }
-        }
-    }
 
     /**
      * Notifica un nuevo positivo en el sistema. Esto implica subir todas las
@@ -61,11 +54,14 @@ class NotifyPositiveViewModel @Inject constructor(
             // Subirlas al servidor
             val result = positiveRepository.notifyPositive(todayLocations)
             when(result) {
-                is ResultWrapper.NetworkError -> {Log.d("APIRESULT", "NetworkError")}
-                is ResultWrapper.GenericError -> Log.d("APIRESULT", result.responseError.toString())
-                is ResultWrapper.Success -> _notifyPositiveResult.postValue(result.value!!)
+                is ResultWrapper.NetworkError -> { _networkError.postValue(result) }
+                is ResultWrapper.GenericError -> { _notifyError.postValue(result) }
+                is ResultWrapper.Success -> {
+                    result.value.let { _notifyPositiveResult.postValue(it) }
+                }
             }
         }
     }
+
 
 }
