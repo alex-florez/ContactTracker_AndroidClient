@@ -45,4 +45,25 @@ class TrackerSettingsRepository @Inject constructor(
     fun getMinInterval(): Long {
         return sharedPrefs.getLong(ctx.getString(R.string.shared_prefs_tracker_config_min_interval), 3000L)
     }
+
+    /**
+     * Establece el desplazamiento mínimo para que se registren
+     * coordenadas.
+     * @param displacement desplazamiento mínimo en metros.
+     */
+    fun setSmallestDisplacement(displacement: Float) {
+        with(sharedPrefs.edit()) {
+            putFloat(ctx.getString(R.string.shared_prefs_tracker_config_smallest_displacement), displacement)
+            apply()
+        }
+    }
+
+    /**
+     * Devuelve el desplazamiento mínimo almacenado en las
+     * SharedPreferences.
+     */
+    fun getSmallestDisplacement(): Float {
+        return sharedPrefs.getFloat(
+                ctx.getString(R.string.shared_prefs_tracker_config_smallest_displacement), 0f)
+    }
 }

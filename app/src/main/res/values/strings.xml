@@ -7,6 +7,7 @@
     <string name="cancel">Cancelar</string>
     <string name="minutes">Minutos</string>
     <string name="seconds">Segundos</string>
+    <string name="meters">Metros</string>
 
     <!-- Shared Preferences File -->
     <string name="shared_prefs_file_name">es.uniovi.eii.contacttracker.sharedprefs</string>
@@ -18,6 +19,7 @@
 
     <!-- Preferences: Configuración del rastreador -->
     <string name="shared_prefs_tracker_config_min_interval">TrackerConfigMinInterval</string>
+    <string name="shared_prefs_tracker_config_smallest_displacement">TrackerConfigSmallestDisplacement</string>
 
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>

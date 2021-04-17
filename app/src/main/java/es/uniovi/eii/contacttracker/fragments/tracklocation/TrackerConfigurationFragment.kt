@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackerConfigurationBinding
 import es.uniovi.eii.contacttracker.util.Utils
@@ -55,6 +56,7 @@ class TrackerConfigurationFragment : Fragment() {
         super.onResume()
         // Recuperar valores almacenados.
         viewModel.getMinInterval()
+        viewModel.getSmallestDisplacement()
     }
 
     /**
@@ -62,13 +64,21 @@ class TrackerConfigurationFragment : Fragment() {
      * del ViewModel.
      */
     private fun setObservers(){
-        viewModel.minInterval.observe(viewLifecycleOwner, {
-            val minuteSeconds = viewModel.getMinIntervalMinSecs()
-            if(minuteSeconds.isNotEmpty()) {
-                val minIntervalText = "${minuteSeconds[0]} m ${minuteSeconds[1]} s"
-                binding.txtInputMinInterval.setText(minIntervalText)
-            }
-        })
+        viewModel.apply {
+            // Intervalo mínimo
+            minInterval.observe(viewLifecycleOwner, {
+                val minuteSeconds = viewModel.getMinIntervalMinSecs()
+                if(minuteSeconds.isNotEmpty()) {
+                    val minIntervalText = "${minuteSeconds[0]} min ${minuteSeconds[1]} secs"
+                    binding.txtInputMinInterval.setText(minIntervalText)
+                }
+            })
+            // Desplazamiento mínimo
+            smallestDisplacement.observe(viewLifecycleOwner, {
+                val metersText = "$it m"
+                binding.txtInputMinDisplacement.setText(metersText)
+            })
+        }
     }
 
     /**
@@ -77,20 +87,16 @@ class TrackerConfigurationFragment : Fragment() {
      */
     private fun setListeners(){
         binding.apply {
+            // Input intervalo mínimo
             txtInputMinInterval.setOnClickListener{
                 createMinIntervalNumberPicker().show()
             }
+            // Input desplazamiento mínimo
+            txtInputMinDisplacement.setOnClickListener{
+                createMinDisplacementNumberPicker().show()
+            }
         }
     }
-
-    /**
-     * Método invocado cuando se pulsa sobre el Botón
-     * para aplicar los cambios en la configuración del tracker.
-     */
-//    private fun applyConfig(){
-//        val seconds = binding.txtInputMinInterval.text.toString().toInt()
-//        viewModel.updateMinInterval(seconds)
-//    }
 
     /**
      * Crea y configura el NumberPicker para seleccionar el intervalo
@@ -116,9 +122,8 @@ class TrackerConfigurationFragment : Fragment() {
         }
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(view)
-        builder.setTitle(getString(R.string.minIntervalNumberPickerTitle))
         // Aceptar
-        builder.setPositiveButton(getString(R.string.accept)) { dialog, which ->
+        builder.setPositiveButton(getString(R.string.accept)) { _, _ ->
             updateMinInterval(arrayOf(minutePicker.value, secondsPicker.value))
         }
         // Cancelar
@@ -126,6 +131,29 @@ class TrackerConfigurationFragment : Fragment() {
             dialog.dismiss()
         }
 
+        return builder.create()
+    }
+
+    /**
+     * Crea y configura el NumberPicker para seleccionar los metros mínimos
+     * de desplazamiento.
+     */
+    private fun createMinDisplacementNumberPicker(): AlertDialog {
+        val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.meters_number_picker, binding.root, false)
+        val metersPicker = view.findViewById<NumberPicker>(R.id.numberPickerMeters)
+
+        metersPicker.minValue = 0
+        metersPicker.maxValue = Constants.MAX_DISPLACEMENT
+        metersPicker.value = viewModel.smallestDisplacement.value?.toInt() ?: 0
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(view)
+        builder.setPositiveButton(getText(R.string.accept)) { _, _ ->
+            updateSmallestDisplacement(metersPicker.value)
+        }
+        builder.setNegativeButton(getText(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
         return builder.create()
     }
 
@@ -143,6 +171,16 @@ class TrackerConfigurationFragment : Fragment() {
         }
     }
 
+    /**
+     * Invoca al ViewModel para actualizar el parámetro del
+     * desplazamiento mínimo con el nuevo valor seleccionado desde
+     * el NumberPicker.
+     *
+     * @param meters metros de desplazamiento.
+     */
+    private fun updateSmallestDisplacement(meters: Int) {
+        viewModel.updateSmallestDisplacement(meters.toFloat())
+    }
 
     companion object {
         /**

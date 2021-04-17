@@ -25,6 +25,12 @@ class TrackerConfigurationViewModel @Inject constructor(
     val minInterval: LiveData<Long> = _minInterval
 
     /**
+     * SmallestDisplacement: Desplazamiento mínimo.
+     */
+    private val _smallestDisplacement = MutableLiveData<Float>()
+    val smallestDisplacement: LiveData<Float> = _smallestDisplacement
+
+    /**
      * Invoca al repositorio de configuración de localización
      * para obtener el nº de segundos de intervalo de tiempo mínimo.
      */
@@ -50,6 +56,26 @@ class TrackerConfigurationViewModel @Inject constructor(
      */
     fun updateMinInterval(millis: Long) {
         trackerSettingsRepository.setMinInterval(millis)
-        getMinInterval() // Actualizar LiveData.s
+        getMinInterval() // Actualizar LiveData
+    }
+
+    /**
+     * Actualiza el valor del LiveData con el
+     * valor del desplazamiento mínimo almacenado en las
+     * SharedPrefs.
+     */
+    fun getSmallestDisplacement(){
+        _smallestDisplacement.value = trackerSettingsRepository.getSmallestDisplacement()
+    }
+
+    /**
+     * Actualiza el parámetro del desplazamiento mínimo almacenado
+     * en las SharedPreferences con el nuevo valor pasado como parámetro.
+     *
+     * @param meters metros de desplazamiento.
+     */
+    fun updateSmallestDisplacement(meters: Float) {
+        trackerSettingsRepository.setSmallestDisplacement(meters)
+        getSmallestDisplacement() // Actualizar LiveData
     }
 }

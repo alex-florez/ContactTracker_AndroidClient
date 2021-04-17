@@ -189,9 +189,11 @@ class LocationForegroundService : Service(){
      */
     private fun createLocationTrackRequest(): LocationTrackRequest {
         val minInterval = trackerSettingsRepository.getMinInterval()
+        val smallestDisplacement = trackerSettingsRepository.getSmallestDisplacement()
         return LocationTrackRequest(
                 minInterval = minInterval,
-                fastestInterval = minInterval)
+                fastestInterval = minInterval,
+                smallestDisplacement = smallestDisplacement)
     }
 
     /**
