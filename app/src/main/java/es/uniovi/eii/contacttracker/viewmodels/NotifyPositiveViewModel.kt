@@ -33,6 +33,13 @@ class NotifyPositiveViewModel @Inject constructor(
     val notifyPositiveResult: LiveData<NotifyPositiveResult> = _notifyPositiveResult
 
     /**
+     * Flag para adjuntar los datos personales.
+     */
+    private val _flagAddPersonalData = MutableLiveData(false)
+    val flagAddPersonalData: LiveData<Boolean> = _flagAddPersonalData
+
+
+    /**
      * Error de RED
      */
     private val _networkError = MutableLiveData<ResultWrapper.NetworkError>()
@@ -69,6 +76,15 @@ class NotifyPositiveViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    /**
+     * Establece el valor para el flag que indica si se añaden
+     * o no los datos personales del usuario.
+     * @param isChecked valor true o false según el estado del Checkbox.
+     */
+    fun setAddPersonalData (isChecked: Boolean){
+        _flagAddPersonalData.value = isChecked
     }
 
 

@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.fragments.notifypositive
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
+import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
 
 
@@ -54,9 +56,13 @@ class NotifyPositiveFragment : Fragment() {
      */
     private fun setListeners(){
         binding.apply {
+            // Botón de notificar un positivo
             btnNotifyPositive.setOnClickListener{
-                viewModel.notifyPositive()
-                notifyPositiveProgress.visibility = View.VISIBLE
+                notifyPositive()
+            }
+            // Checkbox para adjuntar los datos personales
+            checkBoxAddPersonalData.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.setAddPersonalData(isChecked)
             }
         }
     }
@@ -97,6 +103,30 @@ class NotifyPositiveFragment : Fragment() {
                 }
             })
         }
+    }
+
+    /**
+     * Método invocado cuando se pulsa sobre el botón
+     * de notificar un positivo.
+     */
+    private fun notifyPositive(){
+        viewModel.flagAddPersonalData.value?.let { addPersonalData ->
+            if(addPersonalData){
+                createPersonalDataDialog().show(parentFragmentManager, "Personal Data")
+            } else {
+                viewModel.notifyPositive()
+                binding.notifyPositiveProgress.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    /**
+     * Construye y configura el diálogo modal que contiene un
+     * formulario para agregar los datos personales del usuario
+     * al positivo notificado.
+     */
+    private fun createPersonalDataDialog(): PersonalDataDialog {
+        return PersonalDataDialog()
     }
 
     companion object {
