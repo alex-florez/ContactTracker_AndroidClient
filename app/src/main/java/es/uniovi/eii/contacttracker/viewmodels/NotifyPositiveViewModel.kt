@@ -6,11 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.network.model.PositiveLocations
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
+import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -49,10 +52,15 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     fun notifyPositive() {
         viewModelScope.launch(Dispatchers.IO) {
-            // Obtener localizaciones
-            val todayLocations = locationRepository.getTodayUserLocations()
-            // Subirlas al servidor
-            val result = positiveRepository.notifyPositive(todayLocations)
+            // Obtener localizaciones desde los últimos X días
+            val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -5), "yyyy-MM-dd")// 3 días atrás por defecto.
+            val locations = locationRepository.getLastLocationsSince(startDate)
+            // Obtener fechas a las que se corresponden las localizaciones.
+            val locationDates = locationRepository.getLastLocationDatesSince(startDate)
+            // Crear el objeto con las localizaciones del positivo
+            val positiveLocations = PositiveLocations(locations, locationDates)
+            // Subir los datos al servidor
+            val result = positiveRepository.notifyPositive(positiveLocations)
             when(result) {
                 is ResultWrapper.NetworkError -> { _networkError.postValue(result) }
                 is ResultWrapper.GenericError -> { _notifyError.postValue(result) }

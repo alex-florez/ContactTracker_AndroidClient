@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import es.uniovi.eii.contacttracker.model.UserLocation
+import java.util.Date
 
 /**
  * Data Access Object para acceder a los datos de localización
@@ -35,4 +36,10 @@ interface UserLocationDao {
 
     @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = date('now') ORDER BY locationTimestamp DESC")
     suspend fun getToday(): List<UserLocation>
+
+    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) >= :startDate AND date(locationTimestamp) <= :endDate")
+    suspend fun getLocationsBetween(startDate: String, endDate: String): List<UserLocation>
+
+    @Query("SELECT DISTINCT(date(locationTimestamp)) FROM user_locations WHERE date(locationTimestamp) >= :startDate AND date(locationTimestamp) <= :endDate")
+    suspend fun getLocationDatesBetween(startDate: String, endDate: String): List<String>
 }

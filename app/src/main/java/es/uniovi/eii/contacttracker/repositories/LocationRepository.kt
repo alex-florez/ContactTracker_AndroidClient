@@ -1,16 +1,12 @@
 package es.uniovi.eii.contacttracker.repositories
 
-import android.app.Application
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import androidx.core.content.ContextCompat
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
-import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
+import es.uniovi.eii.contacttracker.util.Utils
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -83,8 +79,31 @@ class LocationRepository @Inject constructor(
         return userLocationDao.getToday()
     }
 
-    suspend fun insert(userLocation: UserLocation){
-        userLocationDao.insertLoc(userLocation)
+    /**
+     * Devuelve las localizaciones del usuario registradas desde la fecha pasada
+     * como parámetro hasta el día de hoy.
+     *
+     * @param dateString string formateado con la fecha de inicio.
+     * @return lista con las localizaciones.
+     */
+    suspend fun getLastLocationsSince(dateString: String): List<UserLocation>{
+        return userLocationDao.getLocationsBetween(dateString, Utils.formatDate(Date(), "yyyy-MM-dd"))
+    }
+
+    /**
+     * Devuelve una lista de fechas sin repeticiones que se corresponden
+     * con las fechas de las últimas localizaciones registradas desde la fecha
+     * pasada como parámetro hasta el día de hoy.
+     *
+     * @param dateString String con la fecha formateada.
+     * @return lista con las distintas fechas.
+     */
+    @SuppressLint("SimpleDateFormat")
+    suspend fun getLastLocationDatesSince(dateString: String): List<Date> {
+        val stringDates = userLocationDao.getLocationDatesBetween(dateString,  Utils.formatDate(Date(), "yyyy-MM-dd"))
+        return stringDates.map { stringDate ->
+            SimpleDateFormat("yyyy-MM-dd").parse(stringDate)
+        }
     }
 
 }

@@ -78,9 +78,11 @@
     <string name="contentDescriptionDeleteLocationsByDate">Eliminar localizaciones por fecha</string>
 
     <!-- Fragment para Notificar POSITIVOS -->
-    <string name="btnNotifyPositive">Notificar un positivo</string>
+    <string name="notifyAPositive">Notificar un positivo</string>
     <string name="genericErrorNotifyPositive">Ha habido un error al notificar el positivo. No ha sido posible subir las localizaciones a la nube.</string>
-
-
+    <string name="notifyExplanation1">Registra que has dado positivo en la aplicación para que tus localizaciones se suban a la nube.</string>
+    <string name="notifyExplanation2">Por defecto, se subirán a la nube todas las localizaciones de los últimos 3 días. Puedes cambiar este valor desde los ajustes de la App.</string>
+    <string name="btnNotifyPositive">He dado positivo</string>
+    <string name="addPersonalData">Adjuntar mis datos personales</string>
 
 </resources>
