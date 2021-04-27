@@ -1,7 +1,7 @@
 package es.uniovi.eii.contacttracker.fragments.notifypositive
 
-import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
+import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
 
 
@@ -58,7 +59,7 @@ class NotifyPositiveFragment : Fragment() {
         binding.apply {
             // Botón de notificar un positivo
             btnNotifyPositive.setOnClickListener{
-                notifyPositive()
+                notifyPositiveClick()
             }
             // Checkbox para adjuntar los datos personales
             checkBoxAddPersonalData.setOnCheckedChangeListener { _, isChecked ->
@@ -84,7 +85,6 @@ class NotifyPositiveFragment : Fragment() {
 
             // Error GENÉRICO al notificar positivo
             notifyError.observe(viewLifecycleOwner, {
-                it.responseError
                 Snackbar.make(binding.root, getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG).let { s ->
                     s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
                     s.show()
@@ -109,16 +109,25 @@ class NotifyPositiveFragment : Fragment() {
      * Método invocado cuando se pulsa sobre el botón
      * de notificar un positivo.
      */
-    private fun notifyPositive(){
+    private fun notifyPositiveClick(){
         viewModel.flagAddPersonalData.value?.let { addPersonalData ->
-            if(addPersonalData){
-                createPersonalDataDialog().show(parentFragmentManager, "Personal Data")
-            } else {
-                viewModel.notifyPositive()
-                binding.notifyPositiveProgress.visibility = View.VISIBLE
+            if(addPersonalData){ // Agregar datos personales
+                createPersonalDataDialog().show(requireActivity().supportFragmentManager, "Personal Data")
+            } else { // Notificar sin aportar datos personales
+                notifyPositive()
             }
         }
     }
+
+    /**
+     * Se encarga de invocar al viewModel para notificar
+     * un positivo y hacer visible la barra de progreso.
+     */
+    private fun notifyPositive() {
+        viewModel.notifyPositive()
+        binding.notifyPositiveProgress.visibility = View.VISIBLE
+    }
+    
 
     /**
      * Construye y configura el diálogo modal que contiene un
@@ -126,7 +135,13 @@ class NotifyPositiveFragment : Fragment() {
      * al positivo notificado.
      */
     private fun createPersonalDataDialog(): PersonalDataDialog {
-        return PersonalDataDialog()
+        // Crear diálogo y pasarle listener de Accept.
+        return PersonalDataDialog(object : PersonalDataDialog.PersonalDataListener {
+            override fun onAccept(personalData: PersonalData) {
+                viewModel.personalData.value = personalData // Añadir los datos personales
+                notifyPositive() // Notificar positivo
+            }
+        })
     }
 
     companion object {

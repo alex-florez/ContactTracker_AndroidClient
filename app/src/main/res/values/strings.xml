@@ -85,4 +85,17 @@
     <string name="btnNotifyPositive">He dado positivo</string>
     <string name="addPersonalData">Adjuntar mis datos personales</string>
 
+    <!-- Formulario de Datos Personales -->
+    <string name="personalDataTitle">Introduce tus datos personales</string>
+    <string name="personalDataExplanation">Al introducir tus datos estás facilitando las actividades de rastreo de COVID-19. Tus datos personales quedarán asociados a las localizaciones que se suban a la nube. </string>
+    <string name="name">Nombre</string>
+    <string name="surname">Apellidos</string>
+    <string name="dni">DNI</string>
+    <string name="phoneNumber">Número de teléfono</string>
+    <string name="city">Localidad</string>
+    <string name="cp">Código Postal</string>
+
+
+
+
 </resources>

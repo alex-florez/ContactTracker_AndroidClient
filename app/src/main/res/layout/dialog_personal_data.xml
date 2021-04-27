@@ -1,18 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
-    <EditText
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/personalDataTitle"
+        android:textAppearance="?attr/textAppearanceHeadline6"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/personalDataExplanation" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nombre"/>
+        android:orientation="horizontal">
 
-    <EditText
+        <!-- Nombre -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtNameLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:hint="@string/name"
+            app:boxStrokeColor="@color/teal_200">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Apellidos -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtSurnameLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/surname"
+            app:boxStrokeColor="@color/teal_200">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtSurnameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- DNI -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtDNILayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Apellidos"/>
+        android:layout_marginTop="6dp"
+        android:hint="@string/dni"
+        app:boxStrokeColor="@color/teal_200">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtDNIEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Nº de teléfono -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtPhoneNumberLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:hint="@string/phoneNumber"
+        app:boxStrokeColor="@color/teal_200">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtPhoneNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Localidad -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtCityLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:hint="@string/city"
+            app:boxStrokeColor="@color/teal_200">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtCityEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Código Postal -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtCPLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="6dp"
+            android:hint="@string/cp"
+            app:boxStrokeColor="@color/teal_200">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtCPEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -1,11 +1,10 @@
 package es.uniovi.eii.contacttracker.repositories
 
-import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.network.apiCall
 import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
-import es.uniovi.eii.contacttracker.network.model.PositiveLocations
+import es.uniovi.eii.contacttracker.model.Positive
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -28,7 +27,7 @@ class PositiveRepository @Inject constructor(
      * @param positive datos del positivo.
      * @return result wrapper con los datos del servidor.
      */
-    suspend fun notifyPositive(positive: PositiveLocations): ResultWrapper<NotifyPositiveResult> {
+    suspend fun notifyPositive(positive: Positive): ResultWrapper<NotifyPositiveResult> {
         return apiCall(Dispatchers.IO) {
             positiveAPI.notifyPositive(positive)
         }

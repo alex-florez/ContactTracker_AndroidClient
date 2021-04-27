@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
-import es.uniovi.eii.contacttracker.network.model.PositiveLocations
+import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
@@ -38,6 +39,10 @@ class NotifyPositiveViewModel @Inject constructor(
     private val _flagAddPersonalData = MutableLiveData(false)
     val flagAddPersonalData: LiveData<Boolean> = _flagAddPersonalData
 
+    /**
+     * Datos personales (pueden ser NULL).
+     */
+    val personalData = MutableLiveData<PersonalData?>()
 
     /**
      * Error de RED
@@ -64,8 +69,8 @@ class NotifyPositiveViewModel @Inject constructor(
             val locations = locationRepository.getLastLocationsSince(startDate)
             // Obtener fechas a las que se corresponden las localizaciones.
             val locationDates = locationRepository.getLastLocationDatesSince(startDate)
-            // Crear el objeto con las localizaciones del positivo
-            val positiveLocations = PositiveLocations(locations, locationDates)
+            // Crear el objeto con las localizaciones del positivo, incluyendo los datos personales
+            val positiveLocations = Positive(locations, locationDates, personalData.value)
             // Subir los datos al servidor
             val result = positiveRepository.notifyPositive(positiveLocations)
             when(result) {
