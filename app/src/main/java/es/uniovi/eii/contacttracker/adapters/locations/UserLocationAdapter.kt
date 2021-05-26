@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardUserLocationBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.util.Utils
 import java.text.SimpleDateFormat
 
 /**
@@ -53,12 +54,15 @@ class UserLocationAdapter(
          * los componentes de la vista del ViewHolder.
          */
         fun bindUserLocation(location: UserLocation, onClickListener: OnUserLocationItemClick){
-            val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-            binding.txtLocationLat.text = "Lat: ${location.lat}"
-            binding.txtLocationLng.text = "Lng: ${location.lng}"
-            binding.txtLocationAcc.text = "Acc: ${location.accuracy}"
-            binding.txtLocationProvider.text = "Provider: $${location.provider}"
-            binding.txtLocationTimestamp.text = dateFormatter.format(location.locationTimestamp)
+            val formattedDate = Utils.formatDate(location.locationTimestamp, "dd/MM/yyyy")
+            val formattedHour = Utils.formatDate(location.locationTimestamp, "HH:mm:ss")
+            binding.apply {
+                txtLocationLat.text = location.lat.toString()
+                txtLocationLng.text = location.lng.toString()
+                txtLocationAccuracy.text = location.accuracy.toString()
+                txtLocationDate.text = formattedDate
+                txtLocationHour.text = formattedHour
+            }
             itemView.setOnClickListener{
                 onClickListener.onClick(location)
             }

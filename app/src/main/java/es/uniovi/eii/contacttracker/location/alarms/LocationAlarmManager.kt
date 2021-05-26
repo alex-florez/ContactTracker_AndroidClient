@@ -22,7 +22,8 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * Clase que representa el Manager para las alarmas de localización.
+ * Clase que representa el Manager para gestionar
+ * las alarmas de localización.
  */
 class LocationAlarmManager @Inject constructor(
         private val alarmManager: AlarmManager,

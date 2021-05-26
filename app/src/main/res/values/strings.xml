@@ -8,6 +8,10 @@
     <string name="minutes">Minutos</string>
     <string name="seconds">Segundos</string>
     <string name="meters">Metros</string>
+    <string name="lat">Latitud</string>
+    <string name="lng">Longitud</string>
+    <string name="hour">Hora</string>
+    <string name="accuracy">Precisión</string>
 
     <!-- Errores genéricos -->
     <string name="network_error">Ha habido un error de red en la solicitud.</string>
