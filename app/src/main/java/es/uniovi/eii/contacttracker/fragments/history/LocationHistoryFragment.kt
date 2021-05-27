@@ -79,13 +79,13 @@ class LocationHistoryFragment : Fragment() {
         setListeners()
 
         // Llamada al ViewModel para obtener las localizaciones por fecha.
-        Transformations.switchMap(viewModel.dateFilter){
-            viewModel.getAllUserLocationsByDate(it)
-        }.observe(viewLifecycleOwner, {
-            userLocationAdapter.addLocations(it)
-            toggleNoLocationsLabel()
+        Transformations.switchMap(viewModel.dateFilter){date ->
+            viewModel.getAllUserLocationsByDate(date)
+        }.observe(viewLifecycleOwner, { locationList ->
+            userLocationAdapter.addLocations(locationList)
+            binding.recyclerViewUserLocations.smoothScrollToPosition(0) // Hacer scroll en el recycler
+            toggleNoLocationsLabel(locationList)
         })
-
 
         // Observer para la eliminación de localizaciones
         viewModel.deletedRows.observe(viewLifecycleOwner, {
@@ -130,9 +130,11 @@ class LocationHistoryFragment : Fragment() {
      * Comprueba si hay datos para mostrar en el adapter de
      * localizaciones y si no hay muestra el label de texto
      * correspondiente.
+     *
+     * @param locationList lista de localizaciones.
      */
-    private fun toggleNoLocationsLabel(){
-        if(userLocationAdapter.isEmpty())
+    private fun toggleNoLocationsLabel(locationList: List<UserLocation>){
+        if(locationList.isEmpty())
             binding.labelHistoryNoLocations.visibility = TextView.VISIBLE
         else
             binding.labelHistoryNoLocations.visibility = TextView.GONE

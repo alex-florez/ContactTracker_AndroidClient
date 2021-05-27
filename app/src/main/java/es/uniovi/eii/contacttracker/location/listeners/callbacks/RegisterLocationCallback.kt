@@ -5,6 +5,7 @@ import android.content.Intent
 import android.location.Location
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.Constants
+import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.util.LocationUtils
@@ -36,10 +37,6 @@ class RegisterLocationCallback @Inject constructor(
     private var job: Job? = null
 
     override fun onLocationUpdate(location: Location) {
-        // Enviar BROADCAST
-        // ----------------
-        sendBroadcast(location)
-
         // Insertar localización en ROOM
         // -----------------------------
         insertIntoDB(location)
@@ -55,10 +52,10 @@ class RegisterLocationCallback @Inject constructor(
      * sea recibido por todos los BroadcastReceivers que estén
      * interesados en esta acción.
      */
-    private fun sendBroadcast(location: Location){
+    private fun sendBroadcast(userLocation: UserLocation){
         val intent = Intent()
         intent.action = Constants.ACTION_GET_LOCATION
-        intent.putExtra(Constants.EXTRA_LOCATION, location)
+        intent.putExtra(Constants.EXTRA_LOCATION, userLocation)
         ctx.sendBroadcast(intent)
     }
 
@@ -68,7 +65,12 @@ class RegisterLocationCallback @Inject constructor(
      */
     private fun insertIntoDB(location: Location){
         job = scope.launch {
-            locationRepository.insertUserLocation(LocationUtils.parse(location))
+            val userLocation = (LocationUtils.parse(location))
+            val id = locationRepository.insertUserLocation(LocationUtils.parse(location))
+            // Enviar BROADCAST
+            // ----------------
+            userLocation.id = id
+            sendBroadcast(userLocation)
         }
     }
 

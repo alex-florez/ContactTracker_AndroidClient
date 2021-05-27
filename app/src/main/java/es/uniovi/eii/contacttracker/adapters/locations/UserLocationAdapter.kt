@@ -98,9 +98,7 @@ class UserLocationAdapter(
 
 
     fun addLocations(newLocations: List<UserLocation>){
-        locations.clear()
-        locations.addAll(newLocations)
-        submitList(locations.toList())
+        submitList(newLocations.toList())
     }
 
     /**
@@ -112,6 +110,6 @@ class UserLocationAdapter(
     }
 
     fun isEmpty(): Boolean {
-        return locations.isEmpty()
+        return currentList.isEmpty()
     }
 }

@@ -110,10 +110,10 @@ class TrackerFragment : Fragment() {
         private val TAG = "LocationUpdateBroadcastReceiver"
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            val location: Location? = intent?.getParcelableExtra(Constants.EXTRA_LOCATION)
+            val location: UserLocation? = intent?.getParcelableExtra(Constants.EXTRA_LOCATION)
             location?.let {
                 Log.d(TAG, LocationUtils.format(it))
-                userLocationAdapter.addUserLocation(LocationUtils.parse(location))
+                userLocationAdapter.addUserLocation(location)
                 toggleLabelNoLocations()
             }
         }

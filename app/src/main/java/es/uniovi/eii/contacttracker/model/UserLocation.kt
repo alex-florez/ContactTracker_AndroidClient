@@ -15,7 +15,7 @@ import java.util.Date
 @Parcelize
 @Entity(tableName = "user_locations")
 data class UserLocation (
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) var id: Long?,
     val lat: Double,
     val lng: Double,
     val accuracy: Double,
