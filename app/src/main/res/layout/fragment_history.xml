@@ -49,19 +49,72 @@
                 android:src="@drawable/ic_delete_bin"
                 android:contentDescription="@string/contentDescriptionDeleteLocationsByDate" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="10dp"
-            android:baselineAligned="false">
+            android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/numberOfLocationsBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/showInMap"
-                app:icon="@android:drawable/ic_dialog_map" />
+                android:gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
+                <TextView
+                    android:id="@+id/txtNumberOfLocations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="10"
+                    android:textColor="@color/red1"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="localizaciones"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_marginEnd="10dp"
+                android:baselineAligned="false">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="@string/showInMap" />
+
+                <ImageButton
+                    android:id="@+id/btnShowMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/deepBlue"
+                    android:contentDescription="@string/showInMapContentDescription"
+                    android:src="@android:drawable/ic_dialog_map" />
+
+                <!--            <com.google.android.material.button.MaterialButton-->
+                <!--                android:id="@+id/btnShowMap"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:backgroundTint="@color/addGreen"-->
+                <!--                android:text="@string/showInMap"-->
+                <!--                app:icon="@android:drawable/ic_dialog_map" />-->
+
+            </LinearLayout>
         </LinearLayout>
 
 

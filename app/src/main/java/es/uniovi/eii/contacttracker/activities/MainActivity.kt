@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
 import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
+import es.uniovi.eii.contacttracker.fragments.history.HistoryPlaceholderFragment
 import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
 import es.uniovi.eii.contacttracker.fragments.notifypositive.NotifyPositiveFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
             R.id.bottomMenuOption2 -> NotifyPositiveFragment()
             R.id.bottomMenuOption3 -> DefaultBlankFragment()
-            R.id.bottomMenuOption4 -> LocationHistoryFragment()
+            R.id.bottomMenuOption4 -> HistoryPlaceholderFragment()
             else -> DefaultBlankFragment()
         }
     }

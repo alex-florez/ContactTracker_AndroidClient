@@ -12,5 +12,6 @@
     <color name="red1">#FF3100</color>
     <color name="disabledRed">#FF6461</color>
     <color name="addGreen">#2CEA1F</color>
+    <color name="deepBlue">#064DFF</color>
 
 </resources>

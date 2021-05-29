@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,6 +86,7 @@ class LocationHistoryFragment : Fragment() {
             userLocationAdapter.addLocations(locationList)
             binding.recyclerViewUserLocations.smoothScrollToPosition(0) // Hacer scroll en el recycler
             toggleNoLocationsLabel(locationList)
+            showNumberOfLocations(locationList.size)
         })
 
         // Observer para la eliminación de localizaciones
@@ -124,6 +126,11 @@ class LocationHistoryFragment : Fragment() {
         binding.txtInputEditTextHistoryDate.setOnClickListener {
             showDatePicker()
         }
+
+        // Botón para mostrar el mapa
+        binding.btnShowMap.setOnClickListener{
+            showMap()
+        }
     }
 
     /**
@@ -138,6 +145,19 @@ class LocationHistoryFragment : Fragment() {
             binding.labelHistoryNoLocations.visibility = TextView.VISIBLE
         else
             binding.labelHistoryNoLocations.visibility = TextView.GONE
+    }
+
+    /**
+     * Muestra el número de localizaciones registradas
+     * hasta el momento.
+     */
+    private fun showNumberOfLocations(number: Int){
+        if(number == 0){
+            binding.numberOfLocationsBox.visibility = View.INVISIBLE
+        } else {
+            binding.numberOfLocationsBox.visibility = View.VISIBLE
+            binding.txtNumberOfLocations.text = number.toString()
+        }
     }
 
     /**
@@ -181,6 +201,17 @@ class LocationHistoryFragment : Fragment() {
         binding.txtInputEditTextHistoryDate.setText(Utils.formatDate(date, "dd/MM/YYYY"))
     }
 
+    /**
+     * Método invocado para mostrar un mapa de Google Maps
+     * con las localizaciones.
+     */
+    private fun showMap(){
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.historyPlaceholder, MapsFragment())
+            .addToBackStack("MapsFragment")
+            .commit()
+    }
 
 
     companion object {

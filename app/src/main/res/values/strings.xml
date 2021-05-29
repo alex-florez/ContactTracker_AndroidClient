@@ -38,9 +38,6 @@
     <string name="shared_prefs_personal_data_cp">PersonalDataCp</string>
 
 
-
-
-
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
     <string name="bottom_menu_item_2">Positivo</string>
@@ -111,8 +108,15 @@
     <string name="phoneNumber">Número de teléfono</string>
     <string name="city">Localidad</string>
     <string name="cp">Código Postal</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <!-- Fragment: Map -->
+    <string name="fabMapTypeDescription">FAB para desplegar tipos de mapa</string>
+    <string name="fabMapNormalDescription">FAB para seleccionar tipo normal de mapa</string>
+    <string name="fabMapSatelliteDescription">FAB para seleccionar tipo satélite de mapa</string>
+    <string name="showInMapContentDescription">Visualizar en el mapa</string>
 
 
 </resources>
