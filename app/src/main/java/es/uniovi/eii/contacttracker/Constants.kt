@@ -35,4 +35,10 @@ object Constants {
     const val MAX_DISPLACEMENT = 100
 
 
+    // PARÁMETROS DEL MAPA
+    // *******************
+
+    // Zoom por Defecto
+    const val DEFAULT_ZOOM = 18f
+
 }

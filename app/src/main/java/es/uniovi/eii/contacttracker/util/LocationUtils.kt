@@ -14,6 +14,7 @@ import android.view.View
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -177,6 +178,17 @@ object LocationUtils {
         val uri = Uri.parse(uriString)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         ctx.startActivity(intent)
+    }
+
+    /**
+     * Transforma la localización de usuario a un objeto
+     * LatLng que entiende Google Maps.
+     *
+     * @param location localización de usuario.
+     * @return LatLng con la localización convertida.
+     */
+    fun toLatLng(location: UserLocation): LatLng {
+        return LatLng(location.lat, location.lng)
     }
 
 }

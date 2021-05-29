@@ -1,5 +1,9 @@
 package es.uniovi.eii.contacttracker.fragments.history
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,15 +17,20 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentMapsBinding
+import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.model.UserLocationList
+import es.uniovi.eii.contacttracker.util.LocationUtils
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+
+// Parámetro del fragmento.
+private const val LOCATIONS = "userLocations"
 
 /**
  * Fragmento que contiene un mapa de Google Maps
@@ -52,13 +61,37 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     /* Flag para los FABs */
     private var fabClicked: Boolean = false
 
+    /**
+     * Listado de localizaciones.
+     */
+    private var locations: UserLocationList? = null
+
+    /**
+     * Broadcast receiver para las coordenadas
+     * en tiempo real.
+     */
+    private var newLocationBroadcastReceiver: NewLocationBroadcastReceiver? = null
+
+    /**
+     * Broadcast receiver para las localizaciones obtenidas
+     * mediante el servicio de localización activo.
+     */
+    inner class NewLocationBroadcastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            // Recuperar nueva localización
+            val userLocation: UserLocation? = intent?.getParcelableExtra(Constants.EXTRA_LOCATION)
+            userLocation?.let { addNewLocation(it) }
+        }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentMapsBinding.inflate(inflater, container, false)
-
         // Inicializar Map Fragment
         val mapFragment: SupportMapFragment = childFragmentManager
             .findFragmentById(R.id.map_fragment) as SupportMapFragment
@@ -66,8 +99,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         // Notificar cuando el mapa esté listo.
         mapFragment.getMapAsync(this)
 
+        // Recuperar localizaciones
+        locations = arguments?.getParcelable(LOCATIONS)
+
         setListeners()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver()
     }
 
     /**
@@ -153,20 +199,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     companion object {
         /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
+         * FactoryMethod para crear el fragment.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MapsFragment.
+         * @param userLocations lista con las localizaciones del usuario.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(userLocations: UserLocationList) =
             MapsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putParcelable(LOCATIONS, userLocations)
                 }
             }
     }
@@ -178,7 +219,77 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         map.mapType = GoogleMap.MAP_TYPE_NORMAL
         // Establecer posisición inicial
-        val aviles = LatLng(43.5580, -5.9247)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(aviles, 14f))
+        setInitialLocation()
+        // Añadir marcadores
+        addMarkers()
+    }
+
+    /**
+     * Mueve la cámara hasta la posición inicial.
+     */
+    private fun setInitialLocation(){
+        val start = locations?.getInitialLocation()
+        start?.apply {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), Constants.DEFAULT_ZOOM))
+        }
+    }
+
+    /**
+     * Agrega marcadores al mapa, uno para cada localización
+     * registrada.
+     */
+    private fun addMarkers(){
+        locations?.let {
+            it.locations?.forEach { location ->
+                val latLng = LocationUtils.toLatLng(location)
+                val marker = map.addMarker(MarkerOptions()
+                    .title(location.locationTimestamp.toString())
+                    .position(latLng))
+            }
+        }
+    }
+
+    /**
+     * Método invocado cada vez que se recibe una nueva localización
+     * en el broadcast receiver en tiempo real, procedente del
+     * servicio de localización.
+     */
+    private fun addNewLocation(location: UserLocation) {
+        val latLng = LocationUtils.toLatLng(location)
+        val newMarker = map.addMarker(MarkerOptions()
+            .title(location.locationTimestamp.toString())
+            .position(latLng)
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)))
+        // Mover la cámara a la nueva posición.
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.DEFAULT_ZOOM))
+    }
+
+    /**
+     * Se encarga de mover la camára a la posición
+     * especificada por LatLng.
+     *
+     * @param latLng Latitud y Longitud
+     */
+    private fun moveCameraTo(latLng: LatLng) {
+
+    }
+
+    /**
+     * Vincula el broadcast receiver para recibir localizaciones
+     * en tiempo real.
+     */
+    private fun registerReceiver(){
+        if(newLocationBroadcastReceiver == null)
+            newLocationBroadcastReceiver = NewLocationBroadcastReceiver()
+        requireActivity()
+            .registerReceiver(newLocationBroadcastReceiver,
+                IntentFilter(Constants.ACTION_GET_LOCATION))
+    }
+
+    /**
+     * Desvincula el receiver de coordenadas
+     */
+    private fun unregisterReceiver(){
+        requireActivity().unregisterReceiver(newLocationBroadcastReceiver)
     }
 }

@@ -17,6 +17,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.model.UserLocationList
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel
@@ -46,6 +47,12 @@ class LocationHistoryFragment : Fragment() {
      * Adapter para las localizaciones
      */
     private lateinit var userLocationAdapter: UserLocationAdapter
+
+    /**
+     * Fecha seleccionada.
+     */
+    private lateinit var selectedDate: Date
+
 
     /**
      * Material DatePicker
@@ -81,6 +88,7 @@ class LocationHistoryFragment : Fragment() {
 
         // Llamada al ViewModel para obtener las localizaciones por fecha.
         Transformations.switchMap(viewModel.dateFilter){date ->
+            selectedDate = date
             viewModel.getAllUserLocationsByDate(date)
         }.observe(viewLifecycleOwner, { locationList ->
             userLocationAdapter.addLocations(locationList)
@@ -164,8 +172,10 @@ class LocationHistoryFragment : Fragment() {
      * Configura e inicializa el Material DatePicker.
      */
     private fun setDatePicker(){
+        val actualDate = Date()
         datePickerBuilder.setTitleText(R.string.history_date_picker_title)
-        datePickerBuilder.setSelection(Date().time)
+        datePickerBuilder.setSelection(actualDate.time)
+        selectedDate = actualDate
 
         datePicker = datePickerBuilder.build()
         // Listener
@@ -206,11 +216,14 @@ class LocationHistoryFragment : Fragment() {
      * con las localizaciones.
      */
     private fun showMap(){
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.historyPlaceholder, MapsFragment())
-            .addToBackStack("MapsFragment")
-            .commit()
+        // Recuperar las localizaciones de la fecha seleccionada
+        viewModel.getAllUserLocationsByDate(selectedDate).observe(viewLifecycleOwner) { locations ->
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.historyPlaceholder, MapsFragment.newInstance(UserLocationList(locations)))
+                .addToBackStack("MapsFragment")
+                .commit()
+        }
     }
 
 
