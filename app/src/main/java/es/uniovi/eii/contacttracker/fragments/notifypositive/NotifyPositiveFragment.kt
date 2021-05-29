@@ -138,10 +138,10 @@ class NotifyPositiveFragment : Fragment() {
         // Crear diálogo y pasarle listener de Accept.
         return PersonalDataDialog(object : PersonalDataDialog.PersonalDataListener {
             override fun onAccept(personalData: PersonalData) {
-                viewModel.personalData.value = personalData // Añadir los datos personales
+                viewModel.savePersonalData(personalData) // Añadir los datos personales
                 notifyPositive() // Notificar positivo
             }
-        })
+        }, viewModel.getPersonalData())
     }
 
     companion object {

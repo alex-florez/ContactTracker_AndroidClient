@@ -10,6 +10,7 @@ import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NotifyPositiveViewModel @Inject constructor(
     private val positiveRepository: PositiveRepository,
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val personalDataRepository: PersonalDataRepository
 ) : ViewModel() {
 
     /**
@@ -70,10 +72,9 @@ class NotifyPositiveViewModel @Inject constructor(
             // Obtener fechas a las que se corresponden las localizaciones.
             val locationDates = locationRepository.getLastLocationDatesSince(startDate)
             // Crear el objeto con las localizaciones del positivo, incluyendo los datos personales
-            val positiveLocations = Positive(locations, locationDates, personalData.value)
+            val positiveLocations = Positive(locations, locationDates, getPersonalData())
             // Subir los datos al servidor
-            val result = positiveRepository.notifyPositive(positiveLocations)
-            when(result) {
+            when(val result = positiveRepository.notifyPositive(positiveLocations)) {
                 is ResultWrapper.NetworkError -> { _networkError.postValue(result) }
                 is ResultWrapper.GenericError -> { _notifyError.postValue(result) }
                 is ResultWrapper.Success -> {
@@ -92,5 +93,22 @@ class NotifyPositiveViewModel @Inject constructor(
         _flagAddPersonalData.value = isChecked
     }
 
+    /**
+     * Almacena los datos personales en las SharedPreferences.
+     *
+     * @param personalData datos personales.
+     */
+    fun savePersonalData(personalData: PersonalData){
+        personalDataRepository.save(personalData)
+    }
+
+    /**
+     * Recupera los datos personales de las SharedPreferences.
+     *
+     * @return datos personales.
+     */
+    fun getPersonalData(): PersonalData {
+        return personalDataRepository.get()
+    }
 
 }

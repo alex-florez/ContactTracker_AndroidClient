@@ -29,6 +29,18 @@
     <string name="shared_prefs_tracker_config_min_interval">TrackerConfigMinInterval</string>
     <string name="shared_prefs_tracker_config_smallest_displacement">TrackerConfigSmallestDisplacement</string>
 
+    <!-- Preferences: Datos Personales -->
+    <string name="shared_prefs_personal_data_name">PersonalDataName</string>
+    <string name="shared_prefs_personal_data_surname">PersonalDataSurname</string>
+    <string name="shared_prefs_personal_data_dni">PersonalDataDni</string>
+    <string name="shared_prefs_personal_data_phoneNumber">PersonalDataPhoneNumber</string>
+    <string name="shared_prefs_personal_data_city">PersonalDataCity</string>
+    <string name="shared_prefs_personal_data_cp">PersonalDataCp</string>
+
+
+
+
+
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
     <string name="bottom_menu_item_2">Positivo</string>

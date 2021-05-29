@@ -16,7 +16,8 @@ import es.uniovi.eii.contacttracker.model.PersonalData
  * datos personales del usuario.
  */
 class PersonalDataDialog(
-        val listener: PersonalDataListener
+    val listener: PersonalDataListener,
+    private val defaultPersonalData: PersonalData?
 ) : DialogFragment() {
 
     /**
@@ -43,6 +44,7 @@ class PersonalDataDialog(
                     dialog.cancel()
                 })
 
+        setPersonalData()
         return builder.create()
     }
 
@@ -60,6 +62,23 @@ class PersonalDataDialog(
                     it.txtPhoneNumberEditText.text.toString(),
                     it.txtCityEditText.text.toString(),
                     it.txtCPEditText.text.toString())
+        }
+    }
+
+    /**
+     * Establece los datos personales por defecto pasado
+     * como parámetro en los campos del diálogo.
+     */
+    private fun setPersonalData() {
+        defaultPersonalData?.apply {
+            binding.apply {
+                txtDNIEditText.setText(dni)
+                txtNameEditText.setText(name)
+                txtSurnameEditText.setText(surname)
+                txtPhoneNumberEditText.setText(phoneNumber)
+                txtCityEditText.setText(city)
+                txtCPEditText.setText(cp)
+            }
         }
     }
 
