@@ -57,6 +57,7 @@
     <string name="labelHistoryNoLocations">No hay localizaciones que mostrar</string>
     <string name="date">Fecha</string>
     <string name="history_date_picker_title">Selecciona una fecha</string>
+    <string name="showInMap">Visualizar en el mapa</string>
 
     <!-- Alarmas de localización -->
     <string name="locationAlarmsTitle">Alarmas de localización</string>

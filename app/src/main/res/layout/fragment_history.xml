@@ -51,33 +51,24 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp"
-            android:gravity="left">
+            android:paddingStart="10dp"
+            android:baselineAligned="false">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:text="@string/showInMap"
+                app:icon="@android:drawable/ic_dialog_map" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Visualizar en el mapa" />
-
-            </LinearLayout>
         </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewUserLocations"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="match_parent"
             android:padding="10dp" />
     </LinearLayout>
 
