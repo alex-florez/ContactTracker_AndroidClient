@@ -13,5 +13,7 @@
     <color name="disabledRed">#FF6461</color>
     <color name="addGreen">#2CEA1F</color>
     <color name="deepBlue">#064DFF</color>
+    <color name="yellow1">#FBEF00</color>
+    <color name="grey2">#9FC0C0C0</color>
 
 </resources>

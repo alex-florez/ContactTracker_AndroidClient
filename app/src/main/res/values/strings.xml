@@ -117,6 +117,7 @@
     <string name="fabMapNormalDescription">FAB para seleccionar tipo normal de mapa</string>
     <string name="fabMapSatelliteDescription">FAB para seleccionar tipo satélite de mapa</string>
     <string name="showInMapContentDescription">Visualizar en el mapa</string>
+    <string name="ocultar_marcadores">Ocultar marcadores</string>
 
 
 </resources>

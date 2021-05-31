@@ -11,15 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
-import androidx.fragment.app.findFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
@@ -65,6 +61,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
      * Listado de localizaciones.
      */
     private var locations: UserLocationList? = null
+
+    /**
+     * Listado de marcadores de Google Maps.
+     */
+    private val markers = mutableListOf<Marker>()
+
+    /**
+     * Polyline que representa el PATH
+     */
+    private lateinit var path: Polyline
 
     /**
      * Broadcast receiver para las coordenadas
@@ -134,6 +140,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             fabTypeSatellite.setOnClickListener{
                changeMapType(GoogleMap.MAP_TYPE_SATELLITE)
             }
+            // Checkbox para ocultar marcadores
+            checkboxHideMarkers.setOnCheckedChangeListener { _, isChecked ->
+                toggleMarkers(!isChecked)
+            }
         }
     }
 
@@ -145,6 +155,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         setFabAnimation(fabClicked)
         setFabClickable(fabClicked)
         fabClicked = !fabClicked
+    }
+
+    /**
+     * Alterna entre activar o desactivar los marcadores
+     * del mapa.
+     */
+    private fun toggleMarkers(flag: Boolean) {
+        markers.forEach {marker -> marker.isVisible = flag}
     }
 
     /**
@@ -222,6 +240,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         setInitialLocation()
         // Añadir marcadores
         addMarkers()
+        // Dibujar PATH
+        drawPath()
     }
 
     /**
@@ -239,14 +259,39 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
      * registrada.
      */
     private fun addMarkers(){
+        var sortedLocations = listOf<UserLocation>()
         locations?.let {
-            it.locations?.forEach { location ->
+            it.locations?.apply {
+                sortedLocations = sortedBy { location ->
+                    location.locationTimestamp
+                }
+            }
+           sortedLocations.forEach { location ->
                 val latLng = LocationUtils.toLatLng(location)
                 val marker = map.addMarker(MarkerOptions()
                     .title(location.locationTimestamp.toString())
                     .position(latLng))
+                marker?.let { markers.add(marker) } // Guardar marcador
             }
         }
+    }
+
+    /**
+     * Traza la ruta mediante una línea uniendo las localizaciones
+     * señaladas con marcadores.
+     */
+    private fun drawPath(){
+        // Obtener lista de puntos LatLng
+        var points = listOf<LatLng>()
+        locations?.let {
+            points = it.getAsLatLng()
+        }
+        // Crear la polilínea
+        path = map.addPolyline(PolylineOptions()
+            .addAll(points))
+        // Estilo de la polilínea.
+        path.width = 12f
+        path.color = requireContext().getColor(R.color.red1)
     }
 
     /**
@@ -260,18 +305,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             .title(location.locationTimestamp.toString())
             .position(latLng)
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)))
+        // Dibujar línea
+        if(markers.isNotEmpty()){
+            val polyline = map.addPolyline(PolylineOptions()
+                .add(
+                    markers[markers.size-1].position, // Última posición
+                    latLng)) // Posición actual.
+            polyline.color = requireContext().getColor(R.color.deepBlue)
+        }
+        // Guardar marcador
+        newMarker?.let { markers.add(it) }
         // Mover la cámara a la nueva posición.
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.DEFAULT_ZOOM))
-    }
-
-    /**
-     * Se encarga de mover la camára a la posición
-     * especificada por LatLng.
-     *
-     * @param latLng Latitud y Longitud
-     */
-    private fun moveCameraTo(latLng: LatLng) {
-
+        map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
     }
 
     /**
