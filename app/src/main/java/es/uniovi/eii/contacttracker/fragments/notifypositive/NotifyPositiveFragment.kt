@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,7 +81,6 @@ class NotifyPositiveFragment : Fragment() {
                     s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
                     s.show()
                 }
-                binding.notifyPositiveProgress.visibility = View.GONE
             })
 
             // Error GENÉRICO al notificar positivo
@@ -89,12 +89,10 @@ class NotifyPositiveFragment : Fragment() {
                     s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
                     s.show()
                 }
-                binding.notifyPositiveProgress.visibility = View.GONE
             })
 
             // Resultado de NOTIFICAR POSITIVO
             notifyPositiveResult.observe(viewLifecycleOwner, {
-                binding.notifyPositiveProgress.visibility = View.GONE
                 if(it != null){
                     Snackbar.make(binding.root, "Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG).let { s ->
                         s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
@@ -102,6 +100,21 @@ class NotifyPositiveFragment : Fragment() {
                     }
                 }
             })
+
+            // Icono de carga
+            isLoading.observe(viewLifecycleOwner) {isLoading ->
+                if(isLoading){
+                    binding.notifyPositiveProgress.visibility = View.VISIBLE
+                    binding.notifyPositiveLoadingPlaceholder.visibility = View.VISIBLE
+                    binding.btnNotifyPositive.isEnabled = false
+                    binding.btnNotifyPositive.setBackgroundColor(getColor(requireContext(), R.color.disabledOrange))
+                } else {
+                    binding.notifyPositiveProgress.visibility = View.GONE
+                    binding.notifyPositiveLoadingPlaceholder.visibility = View.GONE
+                    binding.btnNotifyPositive.isEnabled = true
+                    binding.btnNotifyPositive.setBackgroundColor(getColor(requireContext(), R.color.orange))
+                }
+            }
         }
     }
 
@@ -125,7 +138,6 @@ class NotifyPositiveFragment : Fragment() {
      */
     private fun notifyPositive() {
         viewModel.notifyPositive()
-        binding.notifyPositiveProgress.visibility = View.VISIBLE
     }
     
 

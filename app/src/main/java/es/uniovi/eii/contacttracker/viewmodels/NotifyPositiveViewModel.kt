@@ -60,11 +60,19 @@ class NotifyPositiveViewModel @Inject constructor(
 
 
     /**
+     * LiveData para el icono de Carga.
+     */
+    private val _isLoading = MutableLiveData(false)
+    val isLoading : LiveData<Boolean> = _isLoading
+
+
+    /**
      * Notifica un nuevo positivo en el sistema. Esto implica subir todas las
      * localizaciones del usuario registradas en el dispositivo en los últimos
      * días.
      */
     fun notifyPositive() {
+        _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             // Obtener localizaciones desde los últimos X días
             val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -5), "yyyy-MM-dd")// 3 días atrás por defecto.
@@ -82,6 +90,7 @@ class NotifyPositiveViewModel @Inject constructor(
                     result.value.let { _notifyPositiveResult.postValue(it) }
                 }
             }
+            _isLoading.postValue(false)
         }
     }
 

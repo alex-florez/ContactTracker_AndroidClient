@@ -12,8 +12,14 @@
     <color name="red1">#FF3100</color>
     <color name="disabledRed">#FF6461</color>
     <color name="addGreen">#2CEA1F</color>
+<<<<<<< HEAD
     <color name="deepBlue">#064DFF</color>
     <color name="yellow1">#FBEF00</color>
     <color name="grey2">#9FC0C0C0</color>
 
+=======
+    <color name="orange">#EDCF35</color>
+    <color name="disabledOrange">#D8D2B3</color>
+    <color name="orangeText">#7A4A03</color>
+>>>>>>> ui
 </resources>

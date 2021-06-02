@@ -98,6 +98,7 @@
     <string name="notifyExplanation2">Por defecto, se subirán a la nube todas las localizaciones de los últimos 3 días. Puedes cambiar este valor desde los ajustes de la App.</string>
     <string name="btnNotifyPositive">He dado positivo</string>
     <string name="addPersonalData">Adjuntar mis datos personales</string>
+    <string name="loadingPlaceholderNotifyPositive">Subiendo tus localizaciones a la nube...</string>
 
     <!-- Formulario de Datos Personales -->
     <string name="personalDataTitle">Introduce tus datos personales</string>

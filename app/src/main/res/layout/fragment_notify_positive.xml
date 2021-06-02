@@ -76,15 +76,28 @@
             android:id="@+id/btnNotifyPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btnNotifyPositive" />
+            android:text="@string/btnNotifyPositive"
+            android:textColor="@color/orangeText"
+            android:backgroundTint="@color/orange"
+            android:layout_gravity="center"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/notifyPositiveProgress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="gone"
+            android:visibility="visible"
+            app:indicatorColor="@color/teal_700"
             app:indeterminateAnimationType="disjoint" />
+
+        <TextView
+            android:id="@+id/notifyPositiveLoadingPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/loadingPlaceholderNotifyPositive"/>
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
