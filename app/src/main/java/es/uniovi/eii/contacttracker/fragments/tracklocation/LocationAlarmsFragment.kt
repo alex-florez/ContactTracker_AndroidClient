@@ -1,7 +1,11 @@
 package es.uniovi.eii.contacttracker.fragments.tracklocation
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +23,8 @@ import es.uniovi.eii.contacttracker.databinding.FragmentLocationAlarmsBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
 import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.util.LocationUtils
+import es.uniovi.eii.contacttracker.util.PermissionUtils
 import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.LocationAlarmsViewModel
 import org.w3c.dom.Text
@@ -78,6 +84,9 @@ class LocationAlarmsFragment : Fragment() {
         binding.layoutCardLocationAlarm.txtStartAutoTracking.requestFocus()
         toggleLabelNoAlarms()
         viewModel.initAlarmPlaceHolders()
+
+        // Comprobar ajustes de localizacion
+        checkLocationSettings()
     }
 
     /**
@@ -190,28 +199,6 @@ class LocationAlarmsFragment : Fragment() {
                 }
             }
         })
-
-//        // Alarma establecida actualmente.
-//        viewModel.actualAlarmData.observe(viewLifecycleOwner, {
-//            if(it == null) { // Sin alarma
-//                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.noAlarm)
-//                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = ""
-//            } else {
-//                val currentAlarmText = "(${Utils.formatDate(it.startDate, "dd/MM/yyyy HH:mm")}) " +
-//                        "- (${Utils.formatDate(it.endDate, "dd/MM/yyyy HH:mm")})"
-//                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.labelCurrentAlarm)
-//                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = currentAlarmText
-//            }
-//        })
-        // Flag de horas no válidas
-//        viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
-//            if(!validHours){
-//                Snackbar.make(binding.root, getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG).let {
-//                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-//                    it.show()
-//                }
-//            }
-//        })
     }
 
     /**
@@ -264,6 +251,41 @@ class LocationAlarmsFragment : Fragment() {
         else
             binding.txtLabelNoAlarms.visibility = TextView.GONE
     }
+
+    /**
+     * Comprueba la configuración de la localización del
+     * dispositivo. Comprueba que el GPS esté activado, y
+     * también que se disponga de los permisos adecuados.
+     */
+    private fun checkLocationSettings(){
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        if(!PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){
+            dialogBuilder.setTitle("Permiso de localización")
+            dialogBuilder.setMessage("Recuerda que debes conceder los permisos de localización para poder obtener tu ubicación. De otro modo las alarmas programadas no funcionarán.")
+            dialogBuilder.setPositiveButton("Ajustes de ubicación") { dialog, which ->
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + requireContext().packageName)).let {
+                    it.addCategory(Intent.CATEGORY_DEFAULT)
+                    startActivity(it)
+                }
+            }
+            dialogBuilder.setNegativeButton("Cancelar") { dialog, which ->
+                dialog.cancel()
+            }
+            dialogBuilder.create().show()
+        } else if (!LocationUtils.checkGPS(requireContext())){
+            dialogBuilder.setTitle("Activar GPS")
+            dialogBuilder.setMessage("Recuerda activar el GPS para poder rastrear tu ubicación. De otro modo las alarmas programadas no funcionarán.")
+            dialogBuilder.setPositiveButton("Ajustes de ubicación") { dialog, which ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+
+            dialogBuilder.setNegativeButton("Cancelar") { dialog, which ->
+                dialog.cancel()
+            }
+            dialogBuilder.create().show()
+        }
+    }
+
 
     companion object {
         /**

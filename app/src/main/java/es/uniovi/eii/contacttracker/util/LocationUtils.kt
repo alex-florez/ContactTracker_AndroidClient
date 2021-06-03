@@ -4,25 +4,19 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
-import android.view.View
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
-import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
-import java.lang.Exception
 import java.util.Date
 import java.text.SimpleDateFormat
 
@@ -103,6 +97,24 @@ object LocationUtils {
         }
         // Botón de cancelar
         dialogBuilder.setNegativeButton("Cancelar") { dialog, which ->
+            dialog.cancel()
+        }
+        return dialogBuilder.create()
+    }
+
+    fun createBackgroundLocationAlertDialog(ctx: Context,
+                                            positiveCallback: () -> Unit,
+                                            dismissCallback: () -> Unit): AlertDialog {
+        val dialogBuilder = AlertDialog.Builder(ctx)
+        dialogBuilder.setTitle("Localización en segundo plano")
+        dialogBuilder.setMessage("Activa la ubicación en segundo plano para que tu localización se registre también mientras la aplicación no está activa")
+        // Botón de Aceptar
+        dialogBuilder.setPositiveButton("Ajustes de ubicación") { dialog, which ->
+            positiveCallback()
+        }
+        // Botón de cancelar
+        dialogBuilder.setNegativeButton("Cancelar") { dialog, which ->
+            dismissCallback()
             dialog.cancel()
         }
         return dialogBuilder.create()

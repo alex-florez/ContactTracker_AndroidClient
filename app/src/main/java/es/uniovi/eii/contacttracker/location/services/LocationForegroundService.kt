@@ -20,6 +20,8 @@ import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateC
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
+import es.uniovi.eii.contacttracker.util.LocationUtils
+import es.uniovi.eii.contacttracker.util.PermissionUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -130,13 +132,19 @@ class LocationForegroundService : Service(){
      */
     private fun startLocationService(alarmID: Long){
         if(!isActive){
-            Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
-            startForeground(SERVICE_ID, notification)
-            locationTracker.setLocationRequest(createLocationTrackRequest()) // Construir LocationTrackRequest
-            locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
-            isActive = true
-            if(alarmID != -1L){ // Si es ejecutado desde una alarma de localización
-                sendBroadcast(Constants.ACTION_START_LOCATION_SERVICE) // Broadcast para actualizar la UI.
+            // Comprobar configuración de localización
+            if(!checkLocationSettings()) {
+                // Desactivar alarma
+                locationAlarmManager.toggleAlarm(alarmID, false)
+            } else {
+                Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
+                startForeground(SERVICE_ID, notification)
+                locationTracker.setLocationRequest(createLocationTrackRequest()) // Construir LocationTrackRequest
+                locationTracker.start(LocationUpdateMode.CALLBACK_MODE)
+                isActive = true
+                if(alarmID != -1L){ // Si es ejecutado desde una alarma de localización
+                    sendBroadcast(Constants.ACTION_START_LOCATION_SERVICE) // Broadcast para actualizar la UI.
+                }
             }
         }
     }
@@ -209,6 +217,15 @@ class LocationForegroundService : Service(){
         sendBroadcast(intent)
     }
 
+    /**
+     * Devuelve true si los ajustes de localización
+     * son correctos.
+     */
+    private fun checkLocationSettings(): Boolean {
+        return PermissionUtils.check(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                &&
+                LocationUtils.checkGPS(applicationContext)
+    }
 
     companion object {
         // Constantes

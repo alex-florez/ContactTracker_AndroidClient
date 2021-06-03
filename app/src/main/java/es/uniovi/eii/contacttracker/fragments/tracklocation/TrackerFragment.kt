@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -99,7 +100,7 @@ class TrackerFragment : Fragment() {
      * Broadcast Receiver que se dispara cuando se recibe
      * una nueva localización, para actualizar la UI.
      */
-    inner class LocationUpdateBroadcastReceiver() : BroadcastReceiver() {
+    inner class LocationUpdateBroadcastReceiver : BroadcastReceiver() {
 
         private val TAG = "LocationUpdateBroadcastReceiver"
 
@@ -112,6 +113,37 @@ class TrackerFragment : Fragment() {
             }
         }
     }
+
+    /**
+     * Callback para la solicitud de permisos.
+     */
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        fromPermissionRequest = true
+        // Permiso de localización principal concedido
+        if(permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){ // Versión de Android >= Q?
+                if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
+                    startLocationService()
+                } else { // Solicitar permisos de localización en 2o plano
+                    LocationUtils.createBackgroundLocationAlertDialog(requireContext(), { // Aceptar
+                        requestPermission(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    }, { // Cancelar
+                        startLocationService() // Activar servicio igualmente.
+                    }).show()
+                }
+            } else {
+                startLocationService()
+            }
+        }
+        // Si es una solicitud de permiso de localización en BACKGROUND...
+        if(permissions.keys.contains(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
+            startLocationService() // Iniciar el servicio de todos modos.
+        }
+    }
+
+    /* Flag que indica si se resume el fragmento desde la solicitud de permisos. */
+    private var fromPermissionRequest: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,53 +158,20 @@ class TrackerFragment : Fragment() {
         setListeners()
         setObservers()
         initLocationsRecyclerView()
-
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        // Establecer estado de los Switches
-        initLocationTrackSwitch()
         registerReceivers()
         viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable())
+        if(!fromPermissionRequest)
+            initLocationTrackSwitch()
     }
 
     override fun onPause() {
         super.onPause()
         unregisterReceivers()
-    }
-
-    /**
-     * Resultado de la solicitud de permisos de localización.
-     */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_ID -> {
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    startLocationService()
-                }
-            }
-        }
-    }
-
-    /**
-     * Método encargado de solicitar los permisos necesarios
-     * para la localización.
-     */
-    private fun requestLocationPermissions(){
-        val permissions = arrayListOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        // Si la versión es Android Q (API 29) soliticar también el permiso de Localización en Background
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            permissions.add(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
-
-        requestPermissions(permissions.toTypedArray(), LOCATION_PERMISSION_REQUEST_ID)
     }
 
     /**
@@ -221,15 +220,23 @@ class TrackerFragment : Fragment() {
      */
     private fun startLocationService(){
         doLocationChecks ({ // Éxito
-            if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
-                sendCommandToLocationService(Constants.ACTION_START_LOCATION_SERVICE)
-                viewModel.setIsLocationServiceActive(true)
-            } else {
-                Log.d(TAG, "Ya se está ejecutando un servicio de localización")
-            }
+           startTracking()
         }, { // Fracaso
-            binding.layoutCardLocationTracker.switchTrackLocation.isChecked = false
+           viewModel.setIsLocationServiceActive(false)
         })
+    }
+
+    /**
+     * Método encargado de comenzar con el rastreo
+     * de ubicación, enviando el comando al ForegroundService.
+     */
+    private fun startTracking(){
+        if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
+            sendCommandToLocationService(Constants.ACTION_START_LOCATION_SERVICE)
+            viewModel.setIsLocationServiceActive(true)
+        } else {
+            Log.d(TAG, "Ya se está ejecutando un servicio de localización")
+        }
     }
 
     /**
@@ -281,16 +288,17 @@ class TrackerFragment : Fragment() {
      * @param failCallback callback de llamada si hay fracaso.
      */
     private fun doLocationChecks(successCallback: () -> Unit, failCallback: () -> Unit) {
-        if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
+        if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permiso PRINCIPAL de localización
             if(LocationUtils.checkGPS(requireContext())){ // Comprobar GPS activado
-               successCallback()
+                successCallback()
             } else {
-                LocationUtils.createLocationSettingsAlertDialog(requireContext()).show() // Solicitar activación de GPS
                 failCallback()
+                LocationUtils.createLocationSettingsAlertDialog(requireContext()).show() // Solicitar activación de GPS
             }
         } else {
-            requestLocationPermissions() // Solicitar permisos necesarios
+            // Solicitar permiso de localización principal.
             failCallback()
+            requestPermissionLauncher.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))
         }
     }
 
@@ -349,6 +357,16 @@ class TrackerFragment : Fragment() {
             userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
         }
     }
+
+    /**
+     * Solicita el permiso pasado como parámetro.
+     *
+     * @param permission permiso solicitado.
+     */
+    private fun requestPermission(permission: String) {
+        requestPermissionLauncher.launch(arrayOf(permission))
+    }
+
 
     companion object {
         /**
