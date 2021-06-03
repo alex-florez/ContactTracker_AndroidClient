@@ -135,11 +135,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             fabTypeNormal.setOnClickListener{
                changeMapType(GoogleMap.MAP_TYPE_NORMAL)
             }
-
             // FAB para mapa satélite
             fabTypeSatellite.setOnClickListener{
                changeMapType(GoogleMap.MAP_TYPE_SATELLITE)
             }
+            // FAB para terreno
+            fabTypeTerrain.setOnClickListener{
+                changeMapType(GoogleMap.MAP_TYPE_TERRAIN)
+            }
+
             // Checkbox para ocultar marcadores
             checkboxHideMarkers.setOnCheckedChangeListener { _, isChecked ->
                 toggleMarkers(!isChecked)
@@ -172,9 +176,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         if(!clicked){
             binding.fabTypeNormal.visibility = View.VISIBLE
             binding.fabTypeSatellite.visibility = View.VISIBLE
+            binding.fabTypeTerrain.visibility = View.VISIBLE
         } else {
             binding.fabTypeNormal.visibility = View.INVISIBLE
             binding.fabTypeSatellite.visibility = View.INVISIBLE
+            binding.fabTypeTerrain.visibility = View.INVISIBLE
         }
     }
 
@@ -185,10 +191,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         if(!clicked){
             binding.fabTypeNormal.startAnimation(fromBottom)
             binding.fabTypeSatellite.startAnimation(fromBottom)
+            binding.fabTypeTerrain.startAnimation(fromBottom)
             binding.fabMapType.startAnimation(rotateOpen)
         } else {
             binding.fabTypeNormal.startAnimation(toBottom)
             binding.fabTypeSatellite.startAnimation(toBottom)
+            binding.fabTypeTerrain.startAnimation(toBottom)
             binding.fabMapType.startAnimation(rotateClose)
         }
     }
@@ -200,9 +208,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         if(!clicked){
             binding.fabTypeNormal.isClickable = true
             binding.fabTypeSatellite.isClickable = true
+            binding.fabTypeTerrain.isClickable = true
         } else {
             binding.fabTypeNormal.isClickable = false
             binding.fabTypeSatellite.isClickable = false
+            binding.fabTypeTerrain.isClickable = false
         }
     }
 

@@ -61,12 +61,6 @@ class TrackerFragment : Fragment() {
     private val viewModel:TrackerViewModel by viewModels()
 
     /**
-     * TimePickers de Material
-     */
-    private lateinit var startTimePicker: TimePickerFragment
-    private lateinit var endTimePicker: TimePickerFragment
-
-    /**
      * Broadcast Receiver para las alarmas de inicio y de fin.
      */
     private var locationAlarmBroadCastReceiver: LocationAlarmBroadCastReceiver? = null
@@ -89,12 +83,12 @@ class TrackerFragment : Fragment() {
             Log.d("RECEIVER", "Alarma de localización recibida.")
             when(intent?.getStringExtra(EXTRA_LOCATION_ALARM_COMMAND)) {
                 Constants.ACTION_START_LOCATION_SERVICE -> {
-                    // Activar Switch del Tracker
-                    binding.layoutCardLocationTracker.switchTrackLocation.isChecked = true
+                    // Notificar LiveData servicio ACTIVO
+                    viewModel.setIsLocationServiceActive(true)
                 }
                 Constants.ACTION_STOP_LOCATION_SERVICE -> {
-                    // Desactivar Switch del Tracker
-                    binding.layoutCardLocationTracker.switchTrackLocation.isChecked = false
+                    // Notificar LiveData servicio INACTIVO
+                    viewModel.setIsLocationServiceActive(false)
                 }
             }
         }
@@ -114,17 +108,13 @@ class TrackerFragment : Fragment() {
             location?.let {
                 Log.d(TAG, LocationUtils.format(it))
                 userLocationAdapter.addUserLocation(location)
-                toggleLabelNoLocations()
+                viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable())
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-        createTimePickers()
         createLocationsAdapter()
     }
 
@@ -144,13 +134,8 @@ class TrackerFragment : Fragment() {
         super.onResume()
         // Establecer estado de los Switches
         initLocationTrackSwitch()
-        initLocationAlarmSwitch()
-
-        viewModel.initAlarmPlaceHolders()
-        viewModel.retrieveActualAlarm()
-
         registerReceivers()
-        toggleLabelNoLocations()
+        viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable())
     }
 
     override fun onPause() {
@@ -195,39 +180,10 @@ class TrackerFragment : Fragment() {
      */
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(){
-        // Botones de rastreo manual
-//        binding.btnStartTracker.setOnClickListener {
-//            startLocationService()
-//        }
-//
-//        binding.btnStopTracker.setOnClickListener{
-//            stopLocationService()
-//        }
         // Switch para Activar/Desactivar el servicio de localización.
         binding.layoutCardLocationTracker.switchTrackLocation.setOnCheckedChangeListener{_, isChecked ->
             toggleLocationService(isChecked)
         }
-        // Alarma de localización
-//        binding.layoutCardLocationAlarm.switchAutomaticTracking.setOnCheckedChangeListener{ _, isChecked ->
-//            if(isChecked)
-//              enableAutomaticTracking()
-//            else
-//                disableAutomaticTracking()
-//        }
-//
-//        // TextFields para las horas de Inicio y de Fin.
-//        binding.layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
-//           startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
-//        }
-//
-//        binding.layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
-//            endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
-//        }
-//
-//        binding.layoutCardLocationAlarm.btnApplyAutoTracking.setOnClickListener {
-//            applyAutoTracking()
-//        }
-
     }
 
     /**
@@ -235,43 +191,16 @@ class TrackerFragment : Fragment() {
      * para observar los datos del ViewModel.
      */
     private fun setObservers(){
-        // PlaceHolder de hora de INICIO
-//        viewModel.starTime.observe(viewLifecycleOwner, {
-//            binding.layoutCardLocationAlarm
-//                    .txtStartAutoTracking.setText(Utils.formatDate(it, "HH:mm"))
-//            startTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
-//            startTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
-//        })
-//
-//        // PlaceHolder de hora de FIN
-//        viewModel.endTime.observe(viewLifecycleOwner, {
-//            binding.layoutCardLocationAlarm
-//                    .txtEndAutoTracking.setText(Utils.formatDate(it, "HH:mm"))
-//            endTimePicker.hours = Utils.getFromDate(it, Calendar.HOUR_OF_DAY)
-//            endTimePicker.minutes = Utils.getFromDate(it, Calendar.MINUTE)
-//        })
-//
-//        // Alarma establecida actualmente.
-//        viewModel.actualAlarmData.observe(viewLifecycleOwner, {
-//            if(it == null) { // Sin alarma
-//                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.noAlarm)
-//                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = ""
-//            } else {
-//                val currentAlarmText = "(${Utils.formatDate(it.startDate, "dd/MM/yyyy HH:mm")}) " +
-//                        "- (${Utils.formatDate(it.endDate, "dd/MM/yyyy HH:mm")})"
-//                binding.layoutCardLocationAlarm.labelCurrentAlarm.text = getString(R.string.labelCurrentAlarm)
-//                binding.layoutCardLocationAlarm.labelValueCurrentAlarm.text = currentAlarmText
-//            }
-//        })
-        // Flag de horas no válidas
-        viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
-            if(!validHours){
-                Snackbar.make(binding.root, getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG).let {
-                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                    it.show()
-                }
+        viewModel.apply {
+            // Flag de servicio de localización activo
+            isLocationServiceActive.observe(viewLifecycleOwner) {isActive ->
+                binding.layoutCardLocationTracker.switchTrackLocation.isChecked = isActive
             }
-        })
+            // Flag para la lista de localizaciones vacía o no
+            areLocationsAvailable.observe(viewLifecycleOwner) { available ->
+                binding.labelNoLocations.visibility = if (available) View.GONE else View.VISIBLE
+            }
+        }
     }
 
     /**
@@ -294,6 +223,7 @@ class TrackerFragment : Fragment() {
         doLocationChecks ({ // Éxito
             if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
                 sendCommandToLocationService(Constants.ACTION_START_LOCATION_SERVICE)
+                viewModel.setIsLocationServiceActive(true)
             } else {
                 Log.d(TAG, "Ya se está ejecutando un servicio de localización")
             }
@@ -313,7 +243,8 @@ class TrackerFragment : Fragment() {
                 it.show()
             }
             userLocationAdapter.clearLocations() // Vaciar Adapter de localizaciones
-            toggleLabelNoLocations() // Mostrar u ocultar label
+            viewModel.setIsLocationServiceActive(false) // Notificar al LiveData de servicio activo
+            viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable()) // Notificar al LiveData de disponibilidad de localizaciones
         }
     }
 
@@ -333,111 +264,13 @@ class TrackerFragment : Fragment() {
     }
 
     /**
-     * Habilita la programación automática de alarmas de localización.
-     */
-    private fun enableAutomaticTracking() {
-        doLocationChecks({ // Éxito
-            toggleAlarmCardState(true)
-            viewModel.toggleAutoTracking(true)
-        }, { // Fracaso
-//            binding.layoutCardLocationAlarm.switchAutomaticTracking.isChecked = false
-        })
-    }
-
-    /**
-     * Desactiva la programación automática de alarmas de localización.
-     */
-    private fun disableAutomaticTracking() {
-        toggleAlarmCardState(false)
-        viewModel.toggleAutoTracking(false)
-    }
-
-//    /**
-//     * Método invocado cuando se pulsa sobre el Switch de la UI para
-//     * activar/desactivar el rastreo automático.
-//     */
-//    private fun toggleAutomaticTracking(activate: Boolean) {
-//        doLocationChecks {
-//            toggleAlarmCardState(activate) // Estado de los componentes del Card.
-//            viewModel.toggleAutoTracking(activate) // Activar o desactivar el Auto Tracking
-//        }
-//    }
-
-    /**
-     * Recibe como parámetro el estado para establecer los
-     * componentes de la UI como activos o deshabilitados dentro
-     * del Card de alarmas de localización.
-     */
-    private fun toggleAlarmCardState(state: Boolean){
-//        binding.layoutCardLocationAlarm.txtInputLayoutStartAutoTracking.isEnabled = state
-//        binding.layoutCardLocationAlarm.txtInputLayoutEndAutoTracking.isEnabled = state
-//        binding.layoutCardLocationAlarm.btnApplyAutoTracking.isEnabled = state
-//        binding.layoutCardLocationAlarm.labelCurrentAlarm.isEnabled = state
-//        binding.layoutCardLocationAlarm.labelValueCurrentAlarm.isEnabled = state
-    }
-
-    /**
-     * Método que esconde el teclado de Android cuando
-     * se pulsa sobre un EditText.
-     */
-    private fun hideKeyboard(v:View, event: MotionEvent): Boolean{
-        v.onTouchEvent(event)
-        val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(v.windowToken, 0)
-        return true
-    }
-
-    /**
-     * Método que se encarga de crear los TimePickers de Material
-     * para seleccionar las horas.
-     */
-    private fun createTimePickers(){
-        startTimePicker = TimePickerFragment(object : OnTimeSetListener {
-            override fun onTimeSet(hour: Int, minute: Int) {
-                viewModel.setStartTime(Utils.getDate(hour, minute))
-            }
-        }, "Hora de inicio")
-
-        endTimePicker = TimePickerFragment(object : OnTimeSetListener {
-            override fun onTimeSet(hour: Int, minute: Int) {
-                viewModel.setEndTime(Utils.getDate(hour, minute))
-            }
-        }, "Hora de fin")
-    }
-
-    /**
-     * Método privado que inicializa el Switch de activación
-     * de la alarma de localización.
-     */
-    private fun initLocationAlarmSwitch(){
-//        binding.layoutCardLocationAlarm
-//                .switchAutomaticTracking.isChecked = viewModel.isAutoTrackingEnabled()
-    }
-
-    /**
      * Inicializa el Switch de activación del servicio
      * de rastreo de ubicación, según se esté ejecutando o no
      * el servicio de localización.
      */
     private fun initLocationTrackSwitch(){
-        binding.layoutCardLocationTracker
-                .switchTrackLocation.isChecked = LocationUtils.isLocationServiceRunning(requireContext())
+        viewModel.setIsLocationServiceActive(LocationUtils.isLocationServiceRunning(requireContext()))
     }
-
-    /**
-     * Listener de Click sobre el botón de aplicar
-     * alarmas.
-     */
-    private fun applyAutoTracking(){
-        doLocationChecks({ // Éxito
-            if(viewModel.setLocationAlarm())
-                Snackbar.make(binding.root, getString(R.string.newAlarm), Snackbar.LENGTH_SHORT).let {
-                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                    it.show()
-                }
-        }, {})
-    }
-
 
     /**
      * Método privado que realiza las comprobaciones de PERMISOS y de
@@ -449,7 +282,7 @@ class TrackerFragment : Fragment() {
      */
     private fun doLocationChecks(successCallback: () -> Unit, failCallback: () -> Unit) {
         if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permisos
-            if(LocationUtils.checkGPS(requireContext())){ // Configuración
+            if(LocationUtils.checkGPS(requireContext())){ // Comprobar GPS activado
                successCallback()
             } else {
                 LocationUtils.createLocationSettingsAlertDialog(requireContext()).show() // Solicitar activación de GPS
@@ -515,17 +348,6 @@ class TrackerFragment : Fragment() {
             this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
             userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
         }
-    }
-
-    /**
-     * Cambia la visibilidad de la etiqueta de texto que indica
-     * que no hay localizaciones si el adapter está vacío.
-     */
-    fun toggleLabelNoLocations(){
-        if(userLocationAdapter.currentList.isEmpty())
-            binding.labelNoLocations.visibility = TextView.VISIBLE
-        else
-            binding.labelNoLocations.visibility = TextView.GONE
     }
 
     companion object {

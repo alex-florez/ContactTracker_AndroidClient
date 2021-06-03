@@ -91,12 +91,6 @@ class UserLocationAdapter(
 
     }
 
-    fun getPosition(id: Long): Int{
-        val item = currentList.filter { i -> i.id == id }[0]
-        return currentList.indexOf(item)
-    }
-
-
     fun addLocations(newLocations: List<UserLocation>){
         submitList(newLocations.toList())
     }
@@ -106,10 +100,16 @@ class UserLocationAdapter(
      * la lista de localizaciones de Usuario.
      */
     fun clearLocations(){
+        locations.clear()
         submitList(null)
     }
 
-    fun isEmpty(): Boolean {
-        return currentList.isEmpty()
+    /**
+     * Devuelve true si existen localizciones en la
+     * lista.
+     */
+    fun areLocationsAvailable(): Boolean {
+        return locations.isNotEmpty()
     }
+
 }
