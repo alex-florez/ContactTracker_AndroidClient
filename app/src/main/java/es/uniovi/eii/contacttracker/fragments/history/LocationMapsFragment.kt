@@ -25,9 +25,6 @@ import es.uniovi.eii.contacttracker.model.UserLocationList
 import es.uniovi.eii.contacttracker.util.LocationUtils
 
 
-// Parámetro del fragmento.
-private const val LOCATIONS = "userLocations"
-
 /**
  * Fragmento que contiene un mapa de Google Maps
  * para visualizar los itinerarios del usuario, es decir,
@@ -226,6 +223,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     companion object {
+
+        /**
+         * Extra con las localizaciones.
+         */
+        private const val LOCATIONS = "userLocations"
+
         /**
          * FactoryMethod para crear el fragment.
          *
@@ -347,4 +350,5 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private fun unregisterReceiver(){
         requireActivity().unregisterReceiver(newLocationBroadcastReceiver)
     }
+
 }

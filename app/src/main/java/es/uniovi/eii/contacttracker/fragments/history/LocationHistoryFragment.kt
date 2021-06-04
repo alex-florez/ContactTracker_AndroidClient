@@ -110,6 +110,7 @@ class LocationHistoryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateSelectedDate(Date())
+        viewModel.deletedRows.value// Restaurar LiveData de localizaciones eliminadas
     }
 
     /**

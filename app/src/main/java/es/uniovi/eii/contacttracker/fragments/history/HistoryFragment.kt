@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.commit
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -17,6 +18,7 @@ private const val ARG_PARAM2 = "param2"
  * Fragmento que actúa de placeholder para los fragmentos
  * de historial de localizaciones.
  */
+@AndroidEntryPoint
 class HistoryPlaceholderFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null

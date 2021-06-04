@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.util.SingleLiveEvent
 import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
@@ -26,44 +27,15 @@ class LocationHistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * LiveData de inserción
-     */
-    private val _insertedUserLocationId = MutableLiveData<Long>()
-    val insertedUserLocationId: LiveData<Long> = _insertedUserLocationId
-
-    /**
      * LiveData con el número de filas eliminadas
      */
-    private val _deletedRows = MutableLiveData<Int>()
-    val deletedRows: LiveData<Int> = _deletedRows
+    private val _deletedRows = SingleLiveEvent<Int>()
+    val deletedRows: SingleLiveEvent<Int> = _deletedRows
 
     /**
      * Filtro de fecha Mutable.
      */
     val dateFilter = MutableLiveData<Date>()
-
-    /**
-     * Hace uso del repositorio para insertar en la base de datos el
-     * objeto UserLocation pasado como parámetro.
-     *
-     * @param userLocation localización del usuario.
-     */
-    fun insertUserLocation(userLocation: UserLocation){
-        viewModelScope.launch {
-            _insertedUserLocationId.value = locationRepository.insertUserLocation(userLocation)
-        }
-    }
-
-    /**
-     * Método que hace uso del Repositorio para inyectar y popular
-     * los datos de todas las localizaciones registradas del usuario
-     * en el Objeto LiveData correspondiente.
-     *
-     * @return livedata con la lista de localizaciones.
-     */
-    fun getAllUserLocations(): LiveData<List<UserLocation>> {
-        return locationRepository.getAllUserLocations()
-    }
 
     /**
      * Recibe como parámetro una fecha Date y la transforma
@@ -76,16 +48,6 @@ class LocationHistoryViewModel @Inject constructor(
     fun getAllUserLocationsByDate(date: Date): LiveData<List<UserLocation>>{
         val formattedDate = Utils.formatDate(date, "yyyy-MM-dd")
         return locationRepository.getAllUserLocationsByDate(formattedDate)
-    }
-
-    /**
-     * Invoca al repositorio para eliminar todas las localizaciones
-     * del usuario de la base de datos.
-     */
-    fun deleteAllUserLocations(){
-        viewModelScope.launch {
-            _deletedRows.value = locationRepository.deleteAllUserLocations()
-        }
     }
 
     /**
