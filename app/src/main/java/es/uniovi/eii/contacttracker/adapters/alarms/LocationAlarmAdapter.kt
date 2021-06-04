@@ -55,6 +55,7 @@ class LocationAlarmAdapter(
             binding.startHour.text = Utils.formatDate(alarm.startDate, "HH:mm")
             binding.endHour.text = Utils.formatDate(alarm.endDate, "HH:mm")
             binding.switchLocationAlarm.isChecked = alarm.active
+            binding.alarmDate.text = Utils.formatDate(alarm.startDate, "dd/MM/yyyy")
             // Listeners
             binding.btnRemoveAlarm.setOnClickListener{ // Eliminar alarma
                 onRemoveListener.onRemove(alarm)
