@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:paddingEnd="22dp">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/personalDataConsent"
+        android:textAppearance="?attr/textAppearanceHeadline6"/>
+
+    <!-- Body -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/personalDataRationale"
+        android:justificationMode="inter_word"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/personalDataRationale2"
+        android:justificationMode="inter_word"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/consentRationale"
+        android:layout_marginBottom="12dp"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:justificationMode="inter_word"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/privacyPolicyAgreement"
+        android:layout_marginBottom="16dp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:justificationMode="inter_word"/>
+
+    <!-- Botones de Aceptar/rechazar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/agree"
+            app:cornerRadius="50dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:backgroundTint="@color/teal_700"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancelAgree"
+            style="?attr/materialButtonOutlinedStyle"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            app:cornerRadius="50dp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+</LinearLayout>

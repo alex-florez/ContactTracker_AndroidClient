@@ -120,5 +120,22 @@
     <string name="showInMapContentDescription">Visualizar en el mapa</string>
     <string name="ocultar_marcadores">Ocultar marcadores</string>
 
+    <!-- Política de Privacidad -->
+    <string name="personalDataConsent">Consentimiento de Protección de Datos</string>
+    <string name="personalDataRationale">Esta aplicación utiliza tus datos personales asociados a las localizaciones registradas
+        para facilitar y mejorar las tareas de rastreo por parte de las autoridades sanitarias. Estos datos personales serán subidos a la nube una
+        vez notifiques un resultado positivo y quedarán asociados a tus ubicaciones.</string>
+    <string name="personalDataRationale2">Si lo deseas puedes optar por no indicar tus datos personales y
+        notificar que has dado positivo de manera anónima.</string>
+    
+    <string name="consentRationale">De acuerdo con lo establecido en la normativa vigente
+        sobre protección de datos de la LOPD/GDD de 2018 necesitamos tu consentimiento
+        voluntario para llevar a cabo el tratamiento de dichos datos personales de forma lícita.</string>
+
+    <string name="privacyPolicyAgreement">Al aceptar, estás confirmando que tienes más de 14 años y que estás de acuerdo
+    con el tratamiento de los datos personales aportados y con nuestra Política de Privacidad.</string>
+    <string name="privacyPolicy">Política de Privacidad</string>
+    <string name="agree">Sí, estoy de acuerdo</string>
+    <string name="cancelAgree">No, gracias</string>
 
 </resources>
