@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import es.uniovi.eii.contacttracker.BuildConfig
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import retrofit2.Retrofit
@@ -23,7 +24,7 @@ object NetworkModule {
     @Singleton
     fun providePositiveAPI(): PositiveAPI {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL_LOCALHOST)
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PositiveAPI::class.java)

@@ -26,6 +26,25 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        // Variante DEBUG con las peticiones realizadas en LOCAL.
+        debugLocalhost {
+            initWith debug
+            buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:8080\""
+        }
+
+        // Variante DEBUG con las peticiones realizadas al servidor DESPLEGADO.
+        debugDeploy {
+            initWith debug
+            buildConfigField "String", "BASE_URL", "\"https://contacttrackerbackend.azurewebsites.net\""
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
