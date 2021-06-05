@@ -1,7 +1,6 @@
 package es.uniovi.eii.contacttracker.fragments.notifypositive
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
+import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataConsentDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
@@ -125,7 +125,7 @@ class NotifyPositiveFragment : Fragment() {
     private fun notifyPositiveClick(){
         viewModel.flagAddPersonalData.value?.let { addPersonalData ->
             if(addPersonalData){ // Agregar datos personales
-                createPersonalDataDialog().show(requireActivity().supportFragmentManager, "Personal Data")
+                notifyPositiveWithPersonalData()
             } else { // Notificar sin aportar datos personales
                 notifyPositive()
             }
@@ -139,21 +139,45 @@ class NotifyPositiveFragment : Fragment() {
     private fun notifyPositive() {
         viewModel.notifyPositive()
     }
-    
+
+    /**
+     * Método Wrapper para notificar un positivo pero agregando
+     * además los datos personales del usuario, mostrando los diálogos
+     * correspondientes.
+     */
+    private fun notifyPositiveWithPersonalData(){
+        // Dialog para rellenar los datos personales.
+        createPersonalDataDialog(object : PersonalDataDialog.PersonalDataListener {
+            override fun onAccept(personalData: PersonalData) {
+                viewModel.savePersonalData(personalData) // Añadir los datos personales
+                // Dialog con la cláusula de consentimiento
+                createPersonalDataAgreementDialog(
+                    object : PersonalDataConsentDialog.PrivacyPolicyListener {
+                        override fun onAcceptPolicy() { // Política aceptada
+                           notifyPositive()
+                        }
+
+                        override fun onRejectPolicy() { // Política rechazada
+
+                        }
+                    }
+                ).show(requireActivity().supportFragmentManager, "Personal Data Agreement")
+            }
+        }).show(requireActivity().supportFragmentManager, "Personal Data")
+    }
 
     /**
      * Construye y configura el diálogo modal que contiene un
      * formulario para agregar los datos personales del usuario
      * al positivo notificado.
      */
-    private fun createPersonalDataDialog(): PersonalDataDialog {
+    private fun createPersonalDataDialog(onAccept: PersonalDataDialog.PersonalDataListener): PersonalDataDialog {
         // Crear diálogo y pasarle listener de Accept.
-        return PersonalDataDialog(object : PersonalDataDialog.PersonalDataListener {
-            override fun onAccept(personalData: PersonalData) {
-                viewModel.savePersonalData(personalData) // Añadir los datos personales
-                notifyPositive() // Notificar positivo
-            }
-        }, viewModel.getPersonalData())
+        return PersonalDataDialog(onAccept, viewModel.getPersonalData())
+    }
+
+    private fun createPersonalDataAgreementDialog(privacyPolicyListener: PersonalDataConsentDialog.PrivacyPolicyListener): PersonalDataConsentDialog {
+        return PersonalDataConsentDialog(privacyPolicyListener)
     }
 
     companion object {

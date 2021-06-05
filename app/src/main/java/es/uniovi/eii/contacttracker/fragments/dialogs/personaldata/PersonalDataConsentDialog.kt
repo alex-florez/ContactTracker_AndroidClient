@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import es.uniovi.eii.contacttracker.databinding.DialogPrivacyPolicyBinding
+import es.uniovi.eii.contacttracker.databinding.DialogPersonalDataConsentBinding
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 
 /**
@@ -13,7 +13,7 @@ import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
  * la política de privacidad.
  */
 class PersonalDataConsentDialog(
-        val privacyPolicyListener: PrivacyPolicyListener
+        private val privacyPolicyListener: PrivacyPolicyListener
 ) : DialogFragment(){
 
     /**
@@ -35,14 +35,22 @@ class PersonalDataConsentDialog(
     /**
      * View Binding
      */
-    private lateinit var binding: DialogPrivacyPolicyBinding
+    private lateinit var binding: DialogPersonalDataConsentBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
-        binding = DialogPrivacyPolicyBinding.inflate(inflater)
-        val builder = AlertDialog.Builder(requireContext())
+        binding = DialogPersonalDataConsentBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(requireActivity())
+        // Listeners
+        binding.acceptAgreement.setOnClickListener {
+            privacyPolicyListener.onAcceptPolicy()
+            dismiss()
+        }
+        binding.rejectAgreement.setOnClickListener {
+            privacyPolicyListener.onRejectPolicy()
+            dismiss()
+        }
         builder.setView(binding.root)
-
         return builder.create()
     }
 
