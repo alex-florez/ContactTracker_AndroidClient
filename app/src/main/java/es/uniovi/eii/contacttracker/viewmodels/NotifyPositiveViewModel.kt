@@ -1,14 +1,17 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.model.PersonalData
-import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
@@ -26,7 +29,8 @@ import javax.inject.Inject
 class NotifyPositiveViewModel @Inject constructor(
     private val positiveRepository: PositiveRepository,
     private val locationRepository: LocationRepository,
-    private val personalDataRepository: PersonalDataRepository
+    private val personalDataRepository: PersonalDataRepository,
+    private val configRepository: ConfigRepository
 ) : ViewModel() {
 
     /**
@@ -74,8 +78,18 @@ class NotifyPositiveViewModel @Inject constructor(
     fun notifyPositive() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
+            var infectivityPeriod = Constants.DEFAULT_INFECTIVITY_PERIOD
+            // Recuperar el periodo de infectividad de la configuración del Backend.
+            when(val trackerConfig = configRepository.getTrackerConfig()) {
+                is ResultWrapper.Success -> {
+                    infectivityPeriod = trackerConfig.value.infectivityPeriod
+                }
+                is ResultWrapper.NetworkError -> {
+                    Log.d("Err", "Error")
+                }
+            }
             // Obtener localizaciones desde los últimos X días
-            val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -5), "yyyy-MM-dd")// 3 días atrás por defecto.
+            val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
             val locations = locationRepository.getLastLocationsSince(startDate)
             // Obtener fechas a las que se corresponden las localizaciones.
             val locationDates = locationRepository.getLastLocationDatesSince(startDate)

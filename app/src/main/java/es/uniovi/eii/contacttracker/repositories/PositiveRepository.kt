@@ -3,7 +3,7 @@ package es.uniovi.eii.contacttracker.repositories
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.network.apiCall
-import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
