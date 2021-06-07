@@ -33,4 +33,18 @@ class PositiveRepository @Inject constructor(
         }
     }
 
+    /**
+     * Utiliza la API Rest del backend para recuperar los datos de los positivos que tengan
+     * localizaciones registradas en los últimos días, indicando dicho número de días como
+     * parámetro.
+     *
+     * @param lastDays Número de días atrás a tener en cuenta.
+     * @return ResultWrapper con la lista de positivos.
+     */
+    suspend fun getPositivesFromLastDays(lastDays: Int): ResultWrapper<List<Positive>> {
+        return apiCall(Dispatchers.IO) {
+            positiveAPI.getPositives(lastDays)
+        }
+    }
+
 }

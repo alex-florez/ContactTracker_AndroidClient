@@ -96,14 +96,14 @@ class LocationRepository @Inject constructor(
      * pasada como parámetro hasta el día de hoy.
      *
      * @param dateString String con la fecha formateada.
-     * @return lista con las distintas fechas.
+     * @return lista con los string de fechas formateadas.
      */
     @SuppressLint("SimpleDateFormat")
-    suspend fun getLastLocationDatesSince(dateString: String): List<Date> {
-        val stringDates = userLocationDao.getLocationDatesBetween(dateString,  Utils.formatDate(Date(), "yyyy-MM-dd"))
-        return stringDates.map { stringDate ->
-            SimpleDateFormat("yyyy-MM-dd").parse(stringDate)
-        }
+    suspend fun getLastLocationDatesSince(dateString: String): List<String> {
+        return userLocationDao.getLocationDatesBetween(dateString,  Utils.formatDate(Date(), "yyyy-MM-dd"))
+//        return stringDates.map { stringDate ->
+//            SimpleDateFormat("yyyy-MM-dd").parse(stringDate)
+//        }
     }
 
 }

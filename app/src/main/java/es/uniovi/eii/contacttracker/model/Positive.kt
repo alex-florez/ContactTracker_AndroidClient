@@ -11,6 +11,6 @@ import java.util.Date
  */
 data class Positive(
         val locations: List<UserLocation>, // Localizaciones registradas
-        val locationDates: List<Date>, // Lista de fechas correspondientes a las localizaciones
+        val locationDates: List<String>, // Lista de fechas correspondientes a las localizaciones
         val personalData: PersonalData? // Datos personales (Opcional)
 )
