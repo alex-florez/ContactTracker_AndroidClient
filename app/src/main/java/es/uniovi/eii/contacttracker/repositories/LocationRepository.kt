@@ -101,9 +101,6 @@ class LocationRepository @Inject constructor(
     @SuppressLint("SimpleDateFormat")
     suspend fun getLastLocationDatesSince(dateString: String): List<String> {
         return userLocationDao.getLocationDatesBetween(dateString,  Utils.formatDate(Date(), "yyyy-MM-dd"))
-//        return stringDates.map { stringDate ->
-//            SimpleDateFormat("yyyy-MM-dd").parse(stringDate)
-//        }
     }
 
 }
