@@ -95,20 +95,13 @@ class NotifyPositiveViewModel @Inject constructor(
             val locationDates = locationRepository.getLastLocationDatesSince(startDate)
             // Crear el objeto con las localizaciones del positivo, incluyendo los datos personales
             val personalData: PersonalData? = if(_flagAddPersonalData.value!!) getPersonalData() else null
-            val positiveLocations = Positive(Date(), locations, locationDates, personalData)
+            val positiveLocations = Positive(null, Date(), locations, locationDates, personalData)
             // Subir los datos al servidor
             when(val result = positiveRepository.notifyPositive(positiveLocations)) {
                 is ResultWrapper.NetworkError -> { _networkError.postValue(result) }
                 is ResultWrapper.GenericError -> { _notifyError.postValue(result) }
                 is ResultWrapper.Success -> {
                     result.value.let { _notifyPositiveResult.postValue(it) }
-                }
-            }
-
-            // Prueba
-            when(val result = positiveRepository.getPositivesFromLastDays(2)){
-                is ResultWrapper.Success -> {
-                    Log.d("ASD", result.value.toString())
                 }
             }
             _isLoading.postValue(false)

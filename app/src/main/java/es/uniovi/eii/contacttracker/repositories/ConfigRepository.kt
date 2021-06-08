@@ -13,7 +13,7 @@ import javax.inject.Inject
  *
  * Contiene las operaciones relativas a la configuración
  * del sistema, opciones de rastreo y comprobación de contactos
- * de riesgo.
+ * de riesgo, que se obtienen desde el Backend.
  */
 class ConfigRepository @Inject constructor(
         private val configAPI: ConfigAPI

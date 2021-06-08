@@ -28,6 +28,9 @@ interface UserLocationDao {
     @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = :date ORDER BY locationTimestamp DESC")
     fun getAllByDateString(date: String): LiveData<List<UserLocation>>
 
+    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = :date ORDER BY locationTimestamp ASC")
+    fun getAllByDate(date: String): List<UserLocation>
+
     @Query("DELETE FROM user_locations")
     suspend fun deleteAll(): Int
 
@@ -42,4 +45,6 @@ interface UserLocationDao {
 
     @Query("SELECT DISTINCT(date(locationTimestamp)) FROM user_locations WHERE date(locationTimestamp) >= :startDate AND date(locationTimestamp) <= :endDate")
     suspend fun getLocationDatesBetween(startDate: String, endDate: String): List<String>
+
+
 }

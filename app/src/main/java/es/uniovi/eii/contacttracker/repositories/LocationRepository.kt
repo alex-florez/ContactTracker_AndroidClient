@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.repositories
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
+import es.uniovi.eii.contacttracker.model.Itinerary
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
 import es.uniovi.eii.contacttracker.util.Utils
@@ -103,4 +104,21 @@ class LocationRepository @Inject constructor(
         return userLocationDao.getLocationDatesBetween(dateString,  Utils.formatDate(Date(), "yyyy-MM-dd"))
     }
 
+    /**
+     * Devuelve el itinerario de localizaciones asociadas desde la
+     * fecha pasada como parámetro hasta día de hoy.
+     *
+     * @param dateString fecha en formato yyyy-mm-dd.
+     * @return Itinerario con las localizaciones organizadas por fecha.
+     */
+    suspend fun getItinerarySince(dateString: String): Itinerary {
+        val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
+        val dates: List<String> = userLocationDao.getLocationDatesBetween(dateString, Utils.formatDate(Date(), "yyyy-MM-dd"))
+        // Rellenar el mapa
+        dates.forEach{ date ->
+            val locations = userLocationDao.getAllByDate(date)
+            map[date] = locations
+        }
+        return Itinerary(map)
+    }
 }
