@@ -38,6 +38,15 @@ interface RiskContactDetector {
     fun checkSpaceProximity(pointA: UserLocation, pointB: UserLocation, radius: Double): Boolean
 
     /**
+     * Devuelve la localización más próxima a la localización tomada como referencia.
+     * @param location Localización de referencia.
+     * @param otherLocations Localizaciones a comprobar.
+     * @return Tupla con la localización más cercana a la localización de referencia y
+     * la distancia correspondiente.
+     */
+    fun findClosestLocation(location: UserLocation, otherLocations: List<UserLocation>): Pair<UserLocation?, Double>
+
+    /**
      * CERCANÍA EN EL TIEMPO
      *
      * Calcula la diferencia de tiempo entre las dos localizaciones registradas pasadas como

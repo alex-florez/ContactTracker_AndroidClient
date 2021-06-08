@@ -8,4 +8,5 @@ class Itinerary(
         val locations: Map<String, List<UserLocation>>
 ) {
 
+        // Leer y escribir en fichero JSON
 }

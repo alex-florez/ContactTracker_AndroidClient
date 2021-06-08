@@ -45,4 +45,8 @@ object Constants {
     // *************************
     const val DEFAULT_INFECTIVITY_PERIOD = 3
 
+    // RADIO DE LA TIERRA (en km)
+    // **************************
+    const val EARTH_RADIUS = 6371
+
 }

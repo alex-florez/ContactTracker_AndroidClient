@@ -84,4 +84,5 @@ object Utils {
         val minsToSecs = minutes * 60
         return ((minsToSecs + seconds) * 1000).toLong()
     }
+
 }

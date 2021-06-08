@@ -42,7 +42,7 @@ class RiskContactFragment : Fragment() {
         binding = FragmentRiskContactBinding.inflate(inflater, container, false)
 
         binding.btnPrueba.setOnClickListener {
-            viewModel.getItinerary()
+            viewModel.detect()
         }
 
         return binding.root

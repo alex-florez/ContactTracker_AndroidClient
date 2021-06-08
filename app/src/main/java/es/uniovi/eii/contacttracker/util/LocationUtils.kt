@@ -203,4 +203,11 @@ object LocationUtils {
         return LatLng(location.lat, location.lng)
     }
 
+    /**
+     * Convierte Grados a Radianes.
+     */
+    fun toRadians(degrees: Double): Double{
+        return degrees * (Math.PI / 180)
+    }
+
 }
