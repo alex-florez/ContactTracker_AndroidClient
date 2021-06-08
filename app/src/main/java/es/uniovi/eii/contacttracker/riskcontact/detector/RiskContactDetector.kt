@@ -60,13 +60,4 @@ interface RiskContactDetector {
      */
     fun checkTimeProximity(pointA: UserLocation, pointB: UserLocation, time:Double): Boolean
 
-    /**
-     * Utiliza alguno de los algoritmos típicos para calcular distancias entre
-     * dos puntos en una figura esférica similar a la tierra (Haversin Formula, Vincenty...)
-     * y devuelve la distancia aproximada en metros.
-     * @param pointA Localización A con latitud y longitud.
-     * @param pointB Localización B con latitud y longitud.
-     * @return Distancia entre los puntos medida en METROS.
-     */
-    fun distance(pointA: UserLocation, pointB: UserLocation): Double
 }

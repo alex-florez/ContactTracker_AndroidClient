@@ -9,6 +9,6 @@ class RiskContactResult {
     /**
      * Lista de contactos de riesgo.
      */
-    val riskContacts: List<RiskContact> = mutableListOf()
+    val riskContacts: MutableList<RiskContact> = mutableListOf()
 
 }

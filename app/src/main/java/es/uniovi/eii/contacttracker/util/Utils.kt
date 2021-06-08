@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.util
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 /**
  * Clase de utilidades generales
@@ -85,4 +86,16 @@ object Utils {
         return ((minsToSecs + seconds) * 1000).toLong()
     }
 
+    /**
+     * Devuelve la diferencia de tiempo en SEGUNDOS entre las dos
+     * fechas pasadas como parámetro.
+     *
+     * @param date1 Fecha 1.
+     * @param date2 Fecha 2.
+     * @return Número de segundos de diferencia.
+     */
+    fun dateDifferenceInSecs(date1: Date, date2: Date): Int {
+        val diff = abs(date1.time - date2.time)
+        return (diff / 1000).toInt()
+    }
 }

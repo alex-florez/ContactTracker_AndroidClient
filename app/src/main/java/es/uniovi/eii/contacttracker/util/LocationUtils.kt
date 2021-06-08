@@ -14,11 +14,16 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.OnSuccessListener
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.util.Date
 import java.text.SimpleDateFormat
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Clase estática de utilidad, que contiene métodos de ayuda
@@ -210,4 +215,32 @@ object LocationUtils {
         return degrees * (Math.PI / 180)
     }
 
+    /**
+     * Utiliza uno de los algoritmos típicos para calcular distancias entre
+     * dos puntos en una figura esférica similar a la tierra, utiliza
+     * la Fórmula Haversin para implementar Great-Circle distance
+     * y devuelve la distancia aproximada en metros.
+     * @param pointA Localización A con latitud y longitud.
+     * @param pointB Localización B con latitud y longitud.
+     * @return Distancia entre los puntos medida en METROS.
+     */
+    fun distance(pointA: UserLocation, pointB: UserLocation): Double {
+        /* Haversin Formula */
+        /* Considera que la tierra es una ESFERA y determina la GREAT-CIRCLE Distance */
+        // Grados de diferencia entre latitudes y longitudes
+        val latDiff = pointB.lat - pointA.lat
+        val lngDiff = pointB.lng - pointA.lng
+        // Convertir a radianes los grados de diferencia entre las latitudes y longitudes.
+        val latDiffRads = toRadians(latDiff)
+        val lngDiffRads = toRadians(lngDiff)
+        // Calcular el término 'a' que está dentro de la raíz.
+        val a = sin(latDiffRads/2) * sin(latDiffRads/2) +
+                cos(toRadians(pointA.lat)) * cos(toRadians(pointB.lat)) *
+                sin(lngDiffRads/2) * sin(lngDiffRads/2)
+        // Aplicar arcotangente de dos parámetros y raíz cuadrada
+        // Multiplicar por el radio de la tierra para obtener los km de distancia.
+        val d = 2 * atan2(sqrt(a), sqrt(1-a)) * Constants.EARTH_RADIUS
+        // Devolver distancia en metros y con 4 decimales
+        return "%.4f".format(d * 1000).toDouble()
+    }
 }
