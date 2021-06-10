@@ -13,6 +13,8 @@ import es.uniovi.eii.contacttracker.location.listeners.callbacks.RegisterLocatio
 import es.uniovi.eii.contacttracker.location.trackers.FusedLocationTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationManagerTracker
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
+import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
+import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -47,5 +49,13 @@ abstract class LocationModule {
     abstract fun bindLocationManagerTracker(
         locationManagerTracker: LocationManagerTracker
     ): LocationTracker
+
+    // DETECTOR DE CONTACTOS DE RIESGO
+    // *******************************************************
+    @Binds
+    @Singleton
+    abstract fun bindRiskContactDetector(
+            riskContactDetectorImpl: RiskContactDetectorImpl
+    ): RiskContactDetector
 
 }

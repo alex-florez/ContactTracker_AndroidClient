@@ -10,6 +10,11 @@ class RiskContactResult {
     /**
      * Lista de contactos de riesgo.
      */
-    val riskContacts: MutableList<RiskContact> = mutableListOf()
+    var riskContacts: MutableList<RiskContact> = mutableListOf()
+
+    /**
+     * Número de positivos con los que se ha entrado en contacto.
+     */
+    var numberOfPositives: Int = 0
 
 }

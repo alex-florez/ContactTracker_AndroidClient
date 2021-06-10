@@ -7,7 +7,7 @@ import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
 import es.uniovi.eii.contacttracker.util.Utils
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -105,20 +105,27 @@ class LocationRepository @Inject constructor(
     }
 
     /**
-     * Devuelve el itinerario de localizaciones asociadas desde la
-     * fecha pasada como parámetro hasta día de hoy.
+     * Devuelve el itinerario de localizaciones asociadas a los últimos
+     * días, cuyo número es pasado como parámetro.
      *
-     * @param dateString fecha en formato yyyy-mm-dd.
+     * @param lastDays número de días.
      * @return Itinerario con las localizaciones organizadas por fecha.
      */
-    suspend fun getItinerarySince(dateString: String): Itinerary {
-        val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
-        val dates: List<String> = userLocationDao.getLocationDatesBetween(dateString, Utils.formatDate(Date(), "yyyy-MM-dd"))
-        // Rellenar el mapa
-        dates.forEach{ date ->
-            val locations = userLocationDao.getAllByDate(date)
-            map[date] = locations
+    suspend fun getItinerarySince(lastDays: Int): Itinerary {
+        if(lastDays > 0) {
+            // Calcular la fecha de inicio.
+            val sinceDate = Utils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
+            val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
+            val dates: List<String> = userLocationDao.getLocationDatesBetween(
+                    Utils.formatDate(sinceDate, "yyyy-MM-dd"),
+                    Utils.formatDate(Date(), "yyyy-MM-dd"))
+            // Rellenar el mapa
+            dates.forEach{ date ->
+                val locations = userLocationDao.getAllByDate(date)
+                map[date] = locations
+            }
+            return Itinerary(map)
         }
-        return Itinerary(map)
+        return Itinerary(mapOf()) // Itinerario vacío
     }
 }

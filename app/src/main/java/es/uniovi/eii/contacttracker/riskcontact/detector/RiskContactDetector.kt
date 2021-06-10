@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.riskcontact.detector
 
 import es.uniovi.eii.contacttracker.model.Itinerary
+import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.model.UserLocation
 
@@ -13,14 +14,14 @@ interface RiskContactDetector {
 
     /**
      * Ejecuta la comprobación comparando el itinerario del usuario
-     * del cliente Android con el itinerario del positivo. Devuelve un objeto
-     * resultado con los datos e información relativa a la comprobación.
+     * del cliente Android con el itinerario del positivo. Devuelve una lista
+     * con todos los tramos de contacto de riesgo que se hayan detectado.
      *
      * @param user Itinerario del propio usuario.
      * @param positive Itinerario del positivo.
-     * @return Objeto con los resultados de la comprobación.
+     * @return Lista con los contactos de riesgo o vacía si no hay ninguno.
      */
-    fun startChecking(user: Itinerary, positive: Itinerary): RiskContactResult
+    fun startChecking(user: Itinerary, positive: Itinerary): List<RiskContact>
 
     /**
      * CERCANÍA EN EL ESPACIO

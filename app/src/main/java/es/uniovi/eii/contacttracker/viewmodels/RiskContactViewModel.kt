@@ -8,6 +8,7 @@ import es.uniovi.eii.contacttracker.model.Itinerary
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class RiskContactViewModel @Inject constructor(
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val riskContactManager: RiskContactManager
 ): ViewModel() {
 
     /**
@@ -72,6 +74,10 @@ class RiskContactViewModel @Inject constructor(
 
        val result = detector.startChecking(userItinerary, positiveItinerary)
        Log.d("RESULTADO", result.toString())
+
+       viewModelScope.launch(Dispatchers.IO) {
+           riskContactManager.checkRiskContacts()
+       }
    }
 
 
