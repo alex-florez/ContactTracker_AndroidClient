@@ -1,7 +1,5 @@
 package es.uniovi.eii.contacttracker.model
 
-import android.os.CpuUsageInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -35,7 +33,7 @@ class RiskContact {
      * del propio usuario que hace la comprobación.
      */
     @Ignore
-    val contactLocations: MutableList<RiskContactLocation> = mutableListOf()
+    var contactLocations: MutableList<RiskContactLocation> = mutableListOf()
 
     /**
      * Nivel de Riesgo del Contacto, basado en el número
@@ -83,8 +81,10 @@ class RiskContact {
      * @param positiveLocation Localización del positivo.
      */
     fun addContactLocations(userLocation: UserLocation, positiveLocation: UserLocation) {
-        contactLocations[USER]?.add(userLocation)
-        contactLocations[POSITIVE]?.add(positiveLocation)
+        contactLocations.add(RiskContactLocation(
+                ContactPoint(userLocation.id.toString(), userLocation.lat, userLocation.lng, userLocation.locationTimestamp), // Usuario
+                ContactPoint(positiveLocation.id.toString(), positiveLocation.lat, positiveLocation.lng, positiveLocation.locationTimestamp) // Positivo
+        ))
         calculateExposeTime() // Recalcular tiempo de exposición.
         calculateMeanProximity() // Recalcular proximidad media.
         calculateMeanTimeInterval() // Recalcular intervalo de tiempo medio.
@@ -97,40 +97,19 @@ class RiskContact {
     fun calculateExposeTime() {
         if(contactLocations.size > 0){
             // Primeras localizaciones
-            val firstUserLocation = contactLocations[0].userLocation
-            val firstPositiveLocation = contactLocations[0].positiveLocation
+            val firstUserLocation = contactLocations[0].userContactPoint
+            val firstPositiveLocation = contactLocations[0].positiveContactPoint
             // Últimas localizaciones
-            val lastUserLocation = userLocs[userLocs.size-1]
-            val lastPositiveLocation = positiveLocs[positiveLocs.size-1]
+            val lastUserLocation = contactLocations[contactLocations.size-1].userContactPoint
+            val lastPositiveLocation = contactLocations[contactLocations.size-1].positiveContactPoint
             // Calcular el límite superior en inferior de la intersección.
-            val (inferior, superior) = getIntersection(firstUserLocation.locationTimestamp, lastUserLocation.locationTimestamp,
-                    firstPositiveLocation.locationTimestamp, lastPositiveLocation.locationTimestamp)
+            val (inferior, superior) = getIntersection(firstUserLocation.timestamp, lastUserLocation.timestamp,
+                    firstPositiveLocation.timestamp, lastPositiveLocation.timestamp)
             if(inferior != null && superior != null) {
                 exposeTime = abs(inferior.time - superior.time) // Diferencia de tiempo en milisegundos.
                 // Asignar fechas de inicio y fin de contacto.
                 startDate = inferior
                 endDate = superior
-            }
-        }
-        contactLocations[USER]?.let{ userLocs ->
-            contactLocations[POSITIVE]?.let { positiveLocs ->
-                if(userLocs.size > 0 && positiveLocs.size > 0){
-                    // Primeras localizaciones
-                    val firstUserLocation = userLocs[0]
-                    val firstPositiveLocation = positiveLocs[0]
-                    // Últimas localizaciones
-                    val lastUserLocation = userLocs[userLocs.size-1]
-                    val lastPositiveLocation = positiveLocs[positiveLocs.size-1]
-                    // Calcular el límite superior en inferior de la intersección.
-                    val (inferior, superior) = getIntersection(firstUserLocation.locationTimestamp, lastUserLocation.locationTimestamp,
-                        firstPositiveLocation.locationTimestamp, lastPositiveLocation.locationTimestamp)
-                    if(inferior != null && superior != null) {
-                        exposeTime = abs(inferior.time - superior.time) // Diferencia de tiempo en milisegundos.
-                        // Asignar fechas de inicio y fin de contacto.
-                        startDate = inferior
-                        endDate = superior
-                    }
-                }
             }
         }
     }
@@ -141,17 +120,13 @@ class RiskContact {
      */
     fun calculateMeanProximity() {
         var proximity = 0.0
-        contactLocations[USER]?.let{ userLocs ->
-            contactLocations[POSITIVE]?.let { positiveLocs ->
-                var i = 0
-                userLocs.forEach { userLocation ->
-                    val positiveLocation = positiveLocs[i]
-                    proximity += LocationUtils.distance(userLocation, positiveLocation)
-                    i++
-                }
-                if(i > 0)
-                    meanProximity = proximity / i
-            }
+        contactLocations.forEach { contactLocation ->
+            proximity += LocationUtils.distance(
+                    Pair(contactLocation.userContactPoint.lat,contactLocation.userContactPoint.lng),
+                    Pair(contactLocation.positiveContactPoint.lat,contactLocation.positiveContactPoint.lng))
+        }
+        if(contactLocations.isNotEmpty()){
+            meanProximity = proximity / contactLocations.size
         }
     }
 
@@ -162,29 +137,27 @@ class RiskContact {
     fun calculateMeanTimeInterval() {
         var time = 0L
         var n = 0
-        contactLocations[USER]?.let { userLocations ->
-            contactLocations[POSITIVE]?.let {positiveLocations ->
-                var i = 0
-                userLocations.forEach { userLocation ->
-                    // Si no es la última localización
-                    if(i < userLocations.size - 1){
-                        val positiveLocation = positiveLocations[i]
-                        val nextPositiveLocation = positiveLocations[i+1]
-                        val nextUserLocation = userLocations[i+1]
-                        // Intervalo de tiempo del positivo
-                        time += abs(positiveLocation.locationTimestamp.time
-                                - nextPositiveLocation.locationTimestamp.time)
-                        // Intervalo de tiempo del usuario
-                        time += abs(userLocation.locationTimestamp.time
-                                - nextUserLocation.locationTimestamp.time)
-                        n += 2 // Se han analizado dos intervalos
-                        i++
-                    }
-                }
-                if(n > 0)
-                    meanTimeInterval = time / n // Calcular la media
+        var i = 0 // Índice
+        contactLocations.forEach { contact ->
+            // Si no es la última localización
+            if(i < contactLocations.size - 1){
+                val next = contactLocations[i+1]
+                val ownLocation = contact.userContactPoint
+                val nextOwnLocation = next.userContactPoint
+                val positiveLocation = contact.positiveContactPoint
+                val nextPositiveLocation = next.positiveContactPoint
+                // Intervalo de tiempo del positivo
+                time += abs(positiveLocation.timestamp.time
+                        - nextPositiveLocation.timestamp.time)
+                // Intervalo de tiempo del usuario
+                time += abs(ownLocation.timestamp.time
+                        - nextOwnLocation.timestamp.time)
+                n += 2 // Se han analizado dos intervalos
+                i++
             }
         }
+        if(n > 0)
+            meanTimeInterval = time / n // Calcular la media
     }
 
     /**
@@ -196,10 +169,11 @@ class RiskContact {
         /* Normalizar los valores de los parámetros */
         val (exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal) = normalize()
         /* Obtener valores ponderados de los parámetros */
-        riskScore += exposeTimeNormal * 0.3 + meanProximityNormal * 0.5 + meanTimeIntervalNormal * 0.2
+        // Restar -1 para los parámetros que ponderan inversamente.
+        riskScore += exposeTimeNormal * 0.3 + (1 - meanProximityNormal) * 0.5 + (1 - meanTimeIntervalNormal) * 0.2
         val riskPercent: Double = riskScore * 100 // Porcentaje total de riesgo.
         riskLevel = getRiskLevel(riskPercent)
-        this.riskScore = "%.2f".format(riskPercent).toDouble()
+        this.riskScore = Utils.round(riskPercent, 2)
     }
 
     /**
@@ -209,12 +183,16 @@ class RiskContact {
      * @return Tripleta con los tres parámetros normalizados.
      */
     private fun normalize(): Triple<Double, Double, Double> {
+        // Truncar los valores que superen el límite.
+        val exptime: Long = if(exposeTime > 900000) 900000 else exposeTime
+        val meanprox = if(meanProximity > 10.0) 10.0 else meanProximity
+        val meantimeinterval: Long = if(meanTimeInterval > 600000.0) 600000 else meanTimeInterval
         // Tiempo de exposición
-        val exposeTimeNormal = (exposeTime - 0)/(900000.0 - 0) // Max: 15 min
+        val exposeTimeNormal = (exptime - 0)/(900000.0 - 0) // Max: 15 min
         // Proximidad media
-        val meanProximityNormal = (meanProximity - 0) / (10.0-0) // Máx: 10 m
+        val meanProximityNormal = (meanprox - 0) / (10.0-0) // Máx: 10 m
         // Intervalo de tiempo medio
-        val meanTimeIntervalNormal = (meanTimeInterval - 0) / (600000.0 - 0) // Max: 10 min
+        val meanTimeIntervalNormal = (meantimeinterval - 0) / (600000.0 - 0) // Max: 10 min
         return Triple(exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal)
     }
 

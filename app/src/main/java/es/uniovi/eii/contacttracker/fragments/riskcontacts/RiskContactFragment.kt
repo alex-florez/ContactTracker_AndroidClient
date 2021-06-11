@@ -45,6 +45,10 @@ class RiskContactFragment : Fragment() {
             viewModel.detect()
         }
 
+        viewModel.isDetecting.observe(viewLifecycleOwner) {
+            binding.btnPrueba.isEnabled = !it
+        }
+
         return binding.root
     }
 

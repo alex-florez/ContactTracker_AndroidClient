@@ -3,6 +3,9 @@ package es.uniovi.eii.contacttracker.util
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * Clase de utilidades generales
@@ -97,5 +100,19 @@ object Utils {
     fun dateDifferenceInSecs(date1: Date, date2: Date): Int {
         val diff = abs(date1.time - date2.time)
         return (diff / 1000).toInt()
+    }
+
+    /**
+     * Redondea el valor pasado como parámetro con el número de
+     * decimales indicado.
+     *
+     * @param value Valor a redondear.
+     * @param decimals Número de decimales.
+     * @return Valor redondeado.
+     */
+    fun round(value: Double, decimals: Int): Double {
+        val multiplier = 10.0.pow(decimals)
+        val rounded = (value * multiplier).roundToLong() / multiplier
+        return rounded
     }
 }

@@ -10,7 +10,8 @@ import java.util.Date
  * para almacenar unas coordenadas con su latitud y su longitud,
  * además del timestamp.
  */
-data class Location(
+data class ContactPoint(
+        val name: String,
         val lat: Double,
         val lng: Double,
         val timestamp: Date
@@ -23,9 +24,9 @@ data class Location(
 @Entity
 data class RiskContactLocation(
         @Embedded(prefix = "user_")
-        val userLocation: Location, /* Localización de Usuario */
+        val userContactPoint: ContactPoint, /* Localización de Usuario */
         @Embedded(prefix = "positive_")
-        val positiveLocation: Location /* Localización del Positivo */
+        val positiveContactPoint: ContactPoint /* Localización del Positivo */
 ){
         @PrimaryKey(autoGenerate = true)
         var riskContactLocationId: Long? = null

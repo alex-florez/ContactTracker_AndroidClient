@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.TrackLocationTabsPageAdapter
@@ -25,6 +27,11 @@ class TrackLocationTabsFragment : Fragment() {
      */
     private lateinit var binding: FragmentTrackLocationTabsBinding
 
+    /**
+     * View Pager 2
+     */
+    private lateinit var viewPager: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -39,6 +46,8 @@ class TrackLocationTabsFragment : Fragment() {
     ): View {
         binding = FragmentTrackLocationTabsBinding.inflate(inflater, container, false)
 
+        viewPager = binding.trackLocationViewpager
+        viewPager.adapter = TrackLocationTabsPageAdapter(requireActivity())
         setTabLayout()
         return binding.root
     }
@@ -48,13 +57,20 @@ class TrackLocationTabsFragment : Fragment() {
      * Adapter de ViewPager correspondiente.
      */
     private fun setTabLayout(){
-        activity?.let {
-            val pageAdapter = TrackLocationTabsPageAdapter(childFragmentManager)
-            binding.trackLocationViewPager.adapter = pageAdapter
-            binding.trackLocationTabLayout.setupWithViewPager(binding.trackLocationViewPager)
-            // Establecer iconos
-//            setTabIcons()
-        }
+        /**
+         * Títulos de página.
+         */
+        val tabTitles = arrayListOf("Tracker", "Alarmas", "Configurar")
+        val tabLayout = binding.trackLocationTabLayout
+
+        TabLayoutMediator(tabLayout, viewPager) {tab, position -> tab.text = tabTitles[position]}.attach()
+//        activity?.let {
+//            val pageAdapter = TrackLocationTabsPageAdapter(childFragmentManager)
+//            binding.trackLocationViewPager.adapter = pageAdapter
+//            binding.trackLocationTabLayout.setupWithViewPager(binding.trackLocationViewPager)
+//            // Establecer iconos
+////            setTabIcons()
+//        }
     }
 
     /**

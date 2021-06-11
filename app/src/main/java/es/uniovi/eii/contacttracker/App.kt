@@ -15,15 +15,14 @@ import es.uniovi.eii.contacttracker.repositories.LocationRepository
 class App : Application() {
 
     companion object {
-        // Canales de notificaciones
+        /* CANALES PARA LAS NOTIFICACIONES */
         const val CHANNEL_ID_LOCATION_FOREGROUND_SERVICE = "LocationForegroundServiceChannel"
+        const val CHANNEL_ID_RISK_CONTACT_RESULT = "RiskContactResultChannel"
     }
 
 
     override fun onCreate() {
         super.onCreate()
-
-        applicationContext.deleteDatabase("contacttracker.db")
         createNotificationChannels()
     }
 
@@ -33,14 +32,22 @@ class App : Application() {
      * está ejecutando en versiones Oreo o superior.
      */
     private fun createNotificationChannels(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val locationFSChannel: NotificationChannel = NotificationChannel(
-                CHANNEL_ID_LOCATION_FOREGROUND_SERVICE,
-                "Location Foreground Service Channel",
-                NotificationManager.IMPORTANCE_HIGH)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Canal para el ForegroundService de localización.
+            val locationFSChannel = NotificationChannel(
+                    CHANNEL_ID_LOCATION_FOREGROUND_SERVICE,
+                    "Location Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_HIGH)
+
+            // Canal para los resultados de la comprobación de contactos de riesgo
+            val riskContactsResultChannel = NotificationChannel(
+                    CHANNEL_ID_RISK_CONTACT_RESULT,
+                    "Risk Contact Result Channel",
+                    NotificationManager.IMPORTANCE_HIGH)
 
             val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(locationFSChannel)
+            notificationManager.createNotificationChannel(riskContactsResultChannel)
         }
     }
 
