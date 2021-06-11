@@ -23,6 +23,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        applicationContext.deleteDatabase("contacttracker.db")
         createNotificationChannels()
     }
 

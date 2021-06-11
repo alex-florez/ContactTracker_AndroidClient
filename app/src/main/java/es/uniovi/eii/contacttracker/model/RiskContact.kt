@@ -1,6 +1,10 @@
 package es.uniovi.eii.contacttracker.model
 
 import android.os.CpuUsageInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.Utils
 import java.util.Date
@@ -16,22 +20,34 @@ private const val POSITIVE = "positive"
  * Clase de datos que contiene la información de un
  * contacto de riesgo con un positivo.
  */
+@Entity
 class RiskContact {
 
+    @PrimaryKey(autoGenerate = true)
+    var riskContactId: Long? = null
+
+    /* Foreign Key para el resultado. */
+    var riskContactResultId: Long? = null
+
     /**
-     * Mapa que representa el TRAMO de localizaciones en los que
-     * tuvo lugar el contacto. Contiene tanto las localizaciones del
-     * positivo como las del usuario que hace la comprobación.
+     * Lista de pares de localizaciones que representa el TRAMO de localizaciones en los que
+     * tuvo lugar el contacto. Contiene tanto las localizaciones del positivo como las
+     * del propio usuario que hace la comprobación.
      */
-    val contactLocations: MutableMap<String, MutableList<UserLocation>> =
-        mutableMapOf(USER to mutableListOf(), POSITIVE to mutableListOf())
+    @Ignore
+    val contactLocations: MutableList<RiskContactLocation> = mutableListOf()
 
     /**
      * Nivel de Riesgo del Contacto, basado en el número
      * de localizaciones de contacto, tiempo de exposición y
      * proximidad media.
      */
-    var riskLevel: Pair<RiskLevel, Double> = Pair(RiskLevel.VERDE, 0.0)
+    var riskLevel: RiskLevel = RiskLevel.VERDE
+
+    /**
+     * Porcentaje del Nivel de Riesgo del contacto.
+     */
+    var riskScore: Double = 0.0
 
     /**
      * Tiempo de exposición total en formato de milisegundos.
@@ -79,6 +95,23 @@ class RiskContact {
      * Calcula el tiempo total de exposición.
      */
     fun calculateExposeTime() {
+        if(contactLocations.size > 0){
+            // Primeras localizaciones
+            val firstUserLocation = contactLocations[0].userLocation
+            val firstPositiveLocation = contactLocations[0].positiveLocation
+            // Últimas localizaciones
+            val lastUserLocation = userLocs[userLocs.size-1]
+            val lastPositiveLocation = positiveLocs[positiveLocs.size-1]
+            // Calcular el límite superior en inferior de la intersección.
+            val (inferior, superior) = getIntersection(firstUserLocation.locationTimestamp, lastUserLocation.locationTimestamp,
+                    firstPositiveLocation.locationTimestamp, lastPositiveLocation.locationTimestamp)
+            if(inferior != null && superior != null) {
+                exposeTime = abs(inferior.time - superior.time) // Diferencia de tiempo en milisegundos.
+                // Asignar fechas de inicio y fin de contacto.
+                startDate = inferior
+                endDate = superior
+            }
+        }
         contactLocations[USER]?.let{ userLocs ->
             contactLocations[POSITIVE]?.let { positiveLocs ->
                 if(userLocs.size > 0 && positiveLocs.size > 0){
@@ -165,7 +198,8 @@ class RiskContact {
         /* Obtener valores ponderados de los parámetros */
         riskScore += exposeTimeNormal * 0.3 + meanProximityNormal * 0.5 + meanTimeIntervalNormal * 0.2
         val riskPercent: Double = riskScore * 100 // Porcentaje total de riesgo.
-        riskLevel = Pair(getRiskLevel(riskPercent), "%.2f".format(riskPercent).toDouble())
+        riskLevel = getRiskLevel(riskPercent)
+        this.riskScore = "%.2f".format(riskPercent).toDouble()
     }
 
     /**

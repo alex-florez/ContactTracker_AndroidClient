@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.room.converters
 
 import androidx.room.TypeConverter
+import es.uniovi.eii.contacttracker.model.RiskLevel
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -10,6 +11,7 @@ import java.util.Date
  */
 class DBConverters {
 
+    /* FECHAS */
     @TypeConverter
     fun dateFromString(dateString: String): Date {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -21,4 +23,16 @@ class DBConverters {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return dateFormatter.format(date)
     }
+
+    @TypeConverter
+    fun toRiskLevel(riskLevel: String): RiskLevel {
+        return enumValueOf<RiskLevel>(riskLevel)
+    }
+
+    @TypeConverter
+    fun fromRiskLevel(riskLevel: RiskLevel): String {
+        return riskLevel.name
+    }
+
+
 }
