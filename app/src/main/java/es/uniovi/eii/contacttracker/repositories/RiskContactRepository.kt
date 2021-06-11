@@ -1,5 +1,8 @@
 package es.uniovi.eii.contacttracker.repositories
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import es.uniovi.eii.contacttracker.model.ResultWithRiskContacts
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactResult
@@ -69,5 +72,9 @@ class RiskContactRepository @Inject constructor(
             result.add(riskContactResult)
         }
         return result
+    }
+
+    fun getRiskContactResults(): LiveData<List<ResultWithRiskContacts>>{
+       return riskContactDao.getRiskContactResults()
     }
 }

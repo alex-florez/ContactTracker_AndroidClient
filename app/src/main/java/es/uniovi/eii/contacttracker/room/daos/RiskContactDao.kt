@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.room.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -27,6 +28,9 @@ interface RiskContactDao {
     suspend fun insertRiskContactLocations(riskContactLocations: List<RiskContactLocation>)
 
     @Transaction
-    @Query("SELECT * FROM RiskContactResult")
+    @Query("SELECT * FROM RiskContactResult ORDER BY timestamp DESC")
     suspend fun getAllRiskContactResults(): List<ResultWithRiskContacts>
+
+    @Query("SELECT * FROM RiskContactResult")
+    fun getRiskContactResults(): LiveData<List<ResultWithRiskContacts>>
 }

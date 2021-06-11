@@ -138,4 +138,12 @@
     <string name="agree">Sí, estoy de acuerdo</string>
     <string name="cancelAgree">No, gracias</string>
 
+    <!-- Fragment: Resultados de la Comprobación de Contactos de Riesgo -->
+    <string name="riskPercentPlaceholder">0%</string>
+    <string name="txtRiskPercent">Mayor porcentaje de riesgo alcanzado</string>
+    <string name="contactWith">Contacto con</string>
+    <plurals name="positiveContacs">
+        <item quantity="one">Contacto con %1$d positivo</item>
+        <item quantity="other">Contacto con %2$d positivos</item>
+    </plurals>
 </resources>

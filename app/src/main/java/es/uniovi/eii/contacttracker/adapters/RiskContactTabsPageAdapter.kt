@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactFragment
+import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactResultsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.LocationAlarmsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
@@ -21,7 +22,7 @@ class RiskContactTabsPageAdapter(
     override fun createFragment(position: Int): Fragment {
         when(position){
             0 -> return RiskContactFragment()
-            1 -> return DefaultBlankFragment()
+            1 -> return RiskContactResultsFragment()
         }
         return DefaultBlankFragment()
     }

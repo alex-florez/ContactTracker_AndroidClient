@@ -29,6 +29,12 @@ object Constants {
     const val EXTRA_LOCATION_ALARM = "extraLocationAlarm" // Objeto LocationAlarm con los datos de las alarmas.
     const val EXTRA_LOCATION_ALARM_ID = "extraLocationAlarmID" // ID de la alarma de localización.
 
+    // BROADCAST RECEIVER PARA LOS RESULTADOS DE LA COMPROBACIÓN DE CONTACTOS DE RIESGO
+    // ********************************************************************************
+    const val ACTION_GET_RISK_CONTACT_RESULT = "getRiskContactResult" // Acción para obtener el resultado de la comprobación.
+    const val EXTRA_RISK_CONTACT_RESULT = "extraRiskContactResult" // Extra para el resultado de la comprobación.
+
+
     // PARÁMETROS DE CONFIGURACIÓN
     // ***************************
     // Nº de metros máximo de DESPLAZAMIENTO

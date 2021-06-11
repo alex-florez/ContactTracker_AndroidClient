@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.RiskContactTabsPageAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactTabsBinding
@@ -20,6 +21,7 @@ private const val ARG_PARAM2 = "param2"
  * Fragmento Contenedor de fragments que contiene el ViewPager
  * con el TabLayout para gestionar los fragmentos internos.
  */
+@AndroidEntryPoint
 class RiskContactTabsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null

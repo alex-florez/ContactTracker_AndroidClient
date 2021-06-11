@@ -1,10 +1,12 @@
 package es.uniovi.eii.contacttracker.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.Utils
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 import kotlin.math.abs
 
@@ -18,8 +20,9 @@ private const val POSITIVE = "positive"
  * Clase de datos que contiene la información de un
  * contacto de riesgo con un positivo.
  */
+@Parcelize
 @Entity
-class RiskContact {
+class RiskContact : Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     var riskContactId: Long? = null

@@ -2,11 +2,13 @@ package es.uniovi.eii.contacttracker.riskcontact
 
 import android.app.Notification
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.App
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.model.Itinerary
 import es.uniovi.eii.contacttracker.model.Positive
@@ -79,10 +81,13 @@ class RiskContactManager @Inject constructor(
         /* Almacenar el resultado en la base de datos local. */
         riskContactRepository.insert(result)
 
+        /* Emitir un Broadcast */
+        sendBroadcast(result)
         /* Mostrar Notificación con los resultados. */
         with(NotificationManagerCompat.from(ctx)){
             notify(1999, createNotification(result))
         }
+
     }
 
 
@@ -147,5 +152,16 @@ class RiskContactManager @Inject constructor(
        val positiveList = listOf(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10)
        positiveLocations["2021-06-08"] = positiveList
        return Itinerary(positiveLocations)
+    }
+
+    /**
+     * Emite un Broadcast Receiver con el resultado de la comprobación.
+     */
+    private fun sendBroadcast(riskContactResult: RiskContactResult){
+        val intent = Intent()
+        intent.action = Constants.ACTION_GET_RISK_CONTACT_RESULT
+        intent.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
+        intent.putExtra("PRUEBANUM", 199)
+        ctx.sendBroadcast(intent)
     }
 }

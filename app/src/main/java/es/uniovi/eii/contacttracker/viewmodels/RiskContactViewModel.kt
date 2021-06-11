@@ -29,11 +29,6 @@ class RiskContactViewModel @Inject constructor(
 ): ViewModel() {
 
     /**
-     * RiskContact Detector
-     */
-    private val detector: RiskContactDetector = RiskContactDetectorImpl()
-
-    /**
      * LiveData que indica si se está ejecutando la comprobación.
      */
     private val _isDetecting = MutableLiveData(false)
