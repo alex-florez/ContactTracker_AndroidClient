@@ -83,6 +83,7 @@ class RiskContactManager @Inject constructor(
 
         /* Emitir un Broadcast */
         sendBroadcast(result)
+
         /* Mostrar Notificación con los resultados. */
         with(NotificationManagerCompat.from(ctx)){
             notify(1999, createNotification(result))

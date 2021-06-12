@@ -65,10 +65,6 @@ class RiskContactResultsFragment : Fragment() {
     inner class RiskContactResultReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val result = intent?.getParcelableExtra<RiskContactResult>(Constants.EXTRA_RISK_CONTACT_RESULT)
-            val number = intent?.getIntExtra("PRUEBANUM", 0)
-            number?.let {
-                Log.d("asdas", number.toString())
-            }
             result?.let {
                 riskContactResultAdapter.addResult(it)
                 binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)

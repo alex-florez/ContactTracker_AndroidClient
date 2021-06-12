@@ -30,12 +30,7 @@ data class RiskContactLocation(
         @Embedded(prefix = "user_")
         val userContactPoint: ContactPoint, /* Localización de Usuario */
         @Embedded(prefix = "positive_")
-        val positiveContactPoint: ContactPoint /* Localización del Positivo */
-) : Parcelable {
-        @PrimaryKey(autoGenerate = true)
-        var riskContactLocationId: Long? = null
-
-        /* Foreign Key para el Contacto de Riesgo. */
-        var rcId: Long? = null
-
-}
+        val positiveContactPoint: ContactPoint, /* Localización del Positivo */
+        @PrimaryKey(autoGenerate = true) var riskContactLocationId: Long? = null,
+        var rcId: Long? = null /* Foreign Key para el Contacto de Riesgo */
+) : Parcelable

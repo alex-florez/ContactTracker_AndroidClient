@@ -16,7 +16,12 @@ import java.util.Date
  */
 @Parcelize
 @Entity
-class RiskContactResult : Parcelable {
+class RiskContactResult(
+        @PrimaryKey(autoGenerate = true) var resultId: Long? = null,
+        @Ignore var riskContacts: MutableList<RiskContact> = mutableListOf(), /* Contactos de riesgo */
+        var numberOfPositives: Int = 0, /* Nº de positivos con los que se ha entrado en contacto */
+        var timestamp: Date = Date() /* Timestamp de finalización de la comprobación */
+) : Parcelable {
 
     companion object {
         /**
@@ -25,26 +30,6 @@ class RiskContactResult : Parcelable {
          */
         val DIFF_CALLBACK: DiffUtil.ItemCallback<RiskContactResult> = RiskContactResultDiffCallback()
     }
-
-    @PrimaryKey(autoGenerate = true)
-    var resultId: Long? = null
-
-    /**
-     * Lista de contactos de riesgo.
-     */
-    @Ignore
-    var riskContacts: MutableList<RiskContact> = mutableListOf()
-
-    /**
-     * Número de positivos con los que se ha entrado en contacto.
-     */
-    @Transient
-    var numberOfPositives: Int = 0
-
-    /**
-     * Timestamp de finalización de la comprobación.
-     */
-    var timestamp: Date = Date()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

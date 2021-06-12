@@ -22,58 +22,21 @@ private const val POSITIVE = "positive"
  */
 @Parcelize
 @Entity
-class RiskContact : Parcelable {
-
-    @PrimaryKey(autoGenerate = true)
-    var riskContactId: Long? = null
-
-    /* Foreign Key para el resultado. */
-    var riskContactResultId: Long? = null
-
-    /**
-     * Lista de pares de localizaciones que representa el TRAMO de localizaciones en los que
-     * tuvo lugar el contacto. Contiene tanto las localizaciones del positivo como las
-     * del propio usuario que hace la comprobación.
-     */
-    @Ignore
-    var contactLocations: MutableList<RiskContactLocation> = mutableListOf()
-
-    /**
-     * Nivel de Riesgo del Contacto, basado en el número
-     * de localizaciones de contacto, tiempo de exposición y
-     * proximidad media.
-     */
-    var riskLevel: RiskLevel = RiskLevel.VERDE
-
-    /**
-     * Porcentaje del Nivel de Riesgo del contacto.
-     */
-    var riskScore: Double = 0.0
-
-    /**
-     * Tiempo de exposición total en formato de milisegundos.
-     */
-    var exposeTime: Long = 0L
-
-    /**
-     * Proximidad media (metros).
-     */
-    var meanProximity: Double = 0.0
-
-    /**
-     * Intervalo de tiempo medio (milisegundos).
-     */
-    var meanTimeInterval: Long = 0L
-
-    /**
-     * Fecha de inicio del contacto. (Aproximada)
-     */
-    var startDate: Date = Date()
-
-    /**
-     * Fecha de fin de contacto. (Aproximada)
-     */
-    var endDate: Date = Date()
+class RiskContact(
+        @PrimaryKey(autoGenerate = true) var riskContactId: Long? = null,
+        var riskContactResultId: Long? = null, /* Foreign Key para el resultado */
+        @Ignore var contactLocations: MutableList<RiskContactLocation> = mutableListOf(), /* lista de Pares de localizaciones que representa el TRAMO de localizaciones en los que
+                                                                                         tuvo lugar el contacto. Contiene tanto las localizaciones del positivo como las
+                                                                                         el propio usuario que hace la comprobación.*/
+        var riskLevel: RiskLevel = RiskLevel.VERDE, /* Nivel de Riesgo del Contacto, basado en el número de
+                                                        localizaciones de contacto, tiempo de exposición y proximidad media.*/
+        var riskScore: Double = 0.0, /* Porcentaje de Nivel de Riesgo del Contacto */
+        var exposeTime: Long = 0L, /* Tiempo de exposición total en formato de milisegundos */
+        var meanProximity: Double = 0.0, /* Proximidad media (metros) */
+        var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
+        var startDate: Date = Date(), /* Fecha de inicio del contacto. (Aproximada) */
+        var endDate: Date = Date() /* Fecha de fin de contacto. (Aproximada) */
+) : Parcelable {
 
     /**
      * Añade el par de localizaciones correspondiente al usuario del móvil
