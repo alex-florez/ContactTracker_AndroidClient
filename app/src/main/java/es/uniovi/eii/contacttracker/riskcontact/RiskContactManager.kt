@@ -81,6 +81,8 @@ class RiskContactManager @Inject constructor(
         /* Almacenar el resultado en la base de datos local. */
         riskContactRepository.insert(result)
 
+        result.getHighestRiskContact()
+
         /* Emitir un Broadcast */
         sendBroadcast(result)
 

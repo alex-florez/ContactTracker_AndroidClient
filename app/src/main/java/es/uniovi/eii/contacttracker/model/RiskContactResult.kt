@@ -1,13 +1,14 @@
 package es.uniovi.eii.contacttracker.model
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.results.RiskContactResultDiffCallback
 import kotlinx.parcelize.Parcelize
-import java.util.Date
+import java.util.*
 
 /**
  * Clase que representa el resultado de la comprobación de contactos de riesgo.
@@ -29,6 +30,19 @@ class RiskContactResult(
          * resultados de contactos de riesgo.
          */
         val DIFF_CALLBACK: DiffUtil.ItemCallback<RiskContactResult> = RiskContactResultDiffCallback()
+    }
+
+
+    /**
+     * Devuelve el contacto de riesgo de mayor peligro, es decir,
+     * el que tenga mayor Score de riesgo.
+     */
+    fun getHighestRiskContact(): RiskContact {
+        /* Ordenar por riskScore descendente */
+        val ordered = riskContacts.sortedByDescending { it.riskScore }
+        if(ordered.isNotEmpty())
+            return ordered[0] // Devolver el primero
+        return RiskContact()
     }
 
     override fun equals(other: Any?): Boolean {

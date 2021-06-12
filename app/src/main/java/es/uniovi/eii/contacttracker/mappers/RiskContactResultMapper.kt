@@ -22,7 +22,7 @@ fun toRiskContactResult(resultWithRiskContacts: ResultWithRiskContacts): RiskCon
         riskContact.riskContactId = it.riskContact.riskContactId
         riskContact.riskContactResultId = it.riskContact.riskContactResultId
         riskContact.riskLevel = it.riskContact.riskLevel
-        riskContact.riskScore = it.riskContact.riskScore
+        riskContact.riskPercent = it.riskContact.riskPercent
         riskContact.exposeTime = it.riskContact.exposeTime
         riskContact.meanProximity = it.riskContact.meanProximity
         riskContact.meanTimeInterval = it.riskContact.meanTimeInterval

@@ -30,7 +30,8 @@ class RiskContact(
                                                                                          el propio usuario que hace la comprobación.*/
         var riskLevel: RiskLevel = RiskLevel.VERDE, /* Nivel de Riesgo del Contacto, basado en el número de
                                                         localizaciones de contacto, tiempo de exposición y proximidad media.*/
-        var riskScore: Double = 0.0, /* Porcentaje de Nivel de Riesgo del Contacto */
+        var riskPercent: Double = 0.0, /* Porcentaje de Nivel de Riesgo del Contacto */
+        var riskScore: Double = 0.0, /* Nivel total de riesgo */
         var exposeTime: Long = 0L, /* Tiempo de exposición total en formato de milisegundos */
         var meanProximity: Double = 0.0, /* Proximidad media (metros) */
         var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
@@ -131,15 +132,15 @@ class RiskContact(
      * del contacto de riesgo y de los factores de ponderación establecidos.
      */
     fun calculateRiskLevel() {
-        var riskScore = 0.0 // Valor total ponderado del riesgo.
+        this.riskScore = 0.0 // Valor total ponderado del riesgo.
         /* Normalizar los valores de los parámetros */
         val (exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal) = normalize()
         /* Obtener valores ponderados de los parámetros */
         // Restar -1 para los parámetros que ponderan inversamente.
-        riskScore += exposeTimeNormal * 0.3 + (1 - meanProximityNormal) * 0.5 + (1 - meanTimeIntervalNormal) * 0.2
-        val riskPercent: Double = riskScore * 100 // Porcentaje total de riesgo.
+        this.riskScore += exposeTimeNormal * 0.3 + (1 - meanProximityNormal) * 0.5 + (1 - meanTimeIntervalNormal) * 0.2
+        val riskPercent: Double = this.riskScore * 100 // Porcentaje total de riesgo.
         riskLevel = getRiskLevel(riskPercent)
-        this.riskScore = Utils.round(riskPercent, 2)
+        this.riskPercent = Utils.round(riskPercent, 2)
     }
 
     /**
@@ -191,4 +192,6 @@ class RiskContact(
         val inferior: Date = if(date21.before(date11)) date11 else date21
         return Pair(inferior, superior)
     }
+
+
 }

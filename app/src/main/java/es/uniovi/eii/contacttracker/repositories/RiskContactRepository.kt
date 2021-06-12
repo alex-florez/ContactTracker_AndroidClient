@@ -1,8 +1,6 @@
 package es.uniovi.eii.contacttracker.repositories
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import es.uniovi.eii.contacttracker.model.ResultWithRiskContacts
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactResult
@@ -60,7 +58,7 @@ class RiskContactRepository @Inject constructor(
                 riskContact.riskContactId = it.riskContact.riskContactId
                 riskContact.riskContactResultId = it.riskContact.riskContactResultId
                 riskContact.riskLevel = it.riskContact.riskLevel
-                riskContact.riskScore = it.riskContact.riskScore
+                riskContact.riskPercent = it.riskContact.riskPercent
                 riskContact.exposeTime = it.riskContact.exposeTime
                 riskContact.meanProximity = it.riskContact.meanProximity
                 riskContact.meanTimeInterval = it.riskContact.meanTimeInterval
