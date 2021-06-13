@@ -135,8 +135,23 @@ class RiskContactResultsFragment : Fragment() {
         riskContactResultAdapter = RiskContactResultAdapter(object : RiskContactResultAdapter.OnRiskContactResultClick {
             override fun onClick(riskContactResult: RiskContactResult) {
                 // Ver detalles del resultado de la comprobación.
+                showResultDetails(riskContactResult)
             }
         })
+    }
+
+    /**
+     * Inicia una transacción para mostrar el fragment con los
+     * detalles de un resultado de la comprobación.
+     *
+     * @param riskContactResult Resultado de la comprobación.
+     */
+    private fun showResultDetails(riskContactResult: RiskContactResult){
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.riskContactPlaceholder, ResultDetailsFragment.newInstance(riskContactResult))
+            .addToBackStack("ResultDetailsFragment")
+            .commit()
     }
 
     /**

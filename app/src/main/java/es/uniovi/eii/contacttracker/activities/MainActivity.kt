@@ -11,6 +11,7 @@ import es.uniovi.eii.contacttracker.fragments.history.HistoryPlaceholderFragment
 import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
 import es.uniovi.eii.contacttracker.fragments.notifypositive.NotifyPositiveFragment
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactFragment
+import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactPlaceholder
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactTabsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         return when(id){
             R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
             R.id.bottomMenuOption2 -> NotifyPositiveFragment()
-            R.id.bottomMenuOption3 -> RiskContactTabsFragment()
+            R.id.bottomMenuOption3 -> RiskContactPlaceholder()
             R.id.bottomMenuOption4 -> HistoryPlaceholderFragment()
             else -> DefaultBlankFragment()
         }

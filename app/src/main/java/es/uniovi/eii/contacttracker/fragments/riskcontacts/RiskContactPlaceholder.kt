@@ -1,12 +1,10 @@
-package es.uniovi.eii.contacttracker.fragments.history
+package es.uniovi.eii.contacttracker.fragments.riskcontacts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.commit
-import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -15,11 +13,11 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 /**
- * Fragmento que actúa de placeholder para los fragmentos
- * de historial de localizaciones.
+ * Fragment que sirve de Placeholder para los fragments
+ * de la opción de menú para la comprobación de contactos
+ * de riesgo.
  */
-@AndroidEntryPoint
-class HistoryPlaceholderFragment : Fragment() {
+class RiskContactPlaceholder : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -36,14 +34,13 @@ class HistoryPlaceholderFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_history_placeholder, container, false)
-
-        /* Mostrar el fragment con el histórico */
+        // Inflate the layout for this fragment
+        val root = inflater.inflate(R.layout.fragment_risk_contact_placeholder, container, false)
+        /* Mostrar el fragment con las tabs de los resultados de la comprobación */
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.historyPlaceholder, LocationHistoryFragment())
+            .replace(R.id.riskContactPlaceholder, RiskContactTabsFragment())
             .commit()
-
         return root
     }
 
@@ -54,12 +51,12 @@ class HistoryPlaceholderFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment HistoryPlaceholderFragment.
+         * @return A new instance of fragment RiskContactPlaceholder.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            HistoryPlaceholderFragment().apply {
+            RiskContactPlaceholder().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

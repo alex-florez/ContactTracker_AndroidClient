@@ -146,4 +146,18 @@
         <item quantity="one">Contacto con %1$d positivo</item>
         <item quantity="other">Contacto con %2$d positivos</item>
     </plurals>
+
+    <!-- Fragment: Detalles de un resultado de la comprobación -->
+    <string name="riskiestContact">Contacto de mayor riesgo</string>
+    <string name="riskPercent">Riesgo</string>
+    <string name="startHour">Hora de inicio</string>
+    <string name="endHour">Hora de fin</string>
+    <string name="exposeTime">Tiempo de exposición</string>
+    <string name="meanProximity">Proximidad media</string>
+    <string name="riskContacts">Contactos de riesgo</string>
+    <string name="numberPositives">Número de positivos</string>
+    <string name="totalMeanRisk">Riesgo medio total</string>
+    <string name="totalMeanExposeTime">Tiempo de exposición medio total</string>
+    <string name="totalMeanProximity">Proximidad media total</string>
+    <string name="generalData">Datos generales</string>
 </resources>
