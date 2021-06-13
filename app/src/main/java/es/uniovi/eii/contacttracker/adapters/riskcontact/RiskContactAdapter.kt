@@ -38,11 +38,11 @@ class RiskContactAdapter(
         fun bindRiskContact(riskContact: RiskContact, onShowInMapClick: OnShowInMapClick) {
             binding.apply {
                 txtContactDate.text = Utils.formatDate(riskContact.startDate, "dd/MM/yyyy")
-                txtContactStartHour.text = Utils.formatDate(riskContact.startDate, "HH:mm")
-                txtContactEndHour.text = Utils.formatDate(riskContact.endDate, "HH:mm")
+                txtContactStartHour.text = Utils.formatDate(riskContact.startDate, "HH:mm:ss")
+                txtContactEndHour.text = Utils.formatDate(riskContact.endDate, "HH:mm:ss")
                 // Tiempo de exposición: x min y secs
                 val exposeTimeMinSecs = Utils.getMinuteSecond(riskContact.exposeTime)
-                val exposeTimeText = "${exposeTimeMinSecs[0]} min ${exposeTimeMinSecs[1]} secs"
+                val exposeTimeText = "${exposeTimeMinSecs[0]} min ${exposeTimeMinSecs[1]} sec"
                 txtContactExposeTime.text = exposeTimeText
                 val meanProxText = "${riskContact.meanProximity} m"
                 txtContactMeanProximity.text = meanProxText

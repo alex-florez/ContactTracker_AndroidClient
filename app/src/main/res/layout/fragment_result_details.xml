@@ -59,7 +59,9 @@
                             android:id="@+id/txtContactDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12/06/2021"/>
+                            android:text="12/06/2021"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"/>
                     </LinearLayout>
                     <!-- Horas de Inicio y de Fin -->
                     <LinearLayout
@@ -81,7 +83,9 @@
                                 android:id="@+id/txtContactStartHour"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="15:57"/>
+                                android:text="15:57"
+                                android:textAppearance="?attr/textAppearanceSubtitle2"
+                                android:textStyle="bold"/>
                         </LinearLayout>
                         <!-- Hora de fin -->
                         <LinearLayout
@@ -98,7 +102,9 @@
                                 android:id="@+id/txtContactEndHour"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="16:17"/>
+                                android:text="16:17"
+                                android:textAppearance="?attr/textAppearanceSubtitle2"
+                                android:textStyle="bold"/>
                         </LinearLayout>
                     </LinearLayout>
                     <!-- Tiempo de exposición -->
@@ -115,7 +121,9 @@
                             android:id="@+id/txtContactExposeTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="15 min"/>
+                            android:text="15 min"
+                            android:textColor="@color/deepBlue"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                     <!-- Proximidad media -->
                     <LinearLayout
@@ -132,7 +140,9 @@
                             android:id="@+id/txtContactMeanProximity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="5 m"/>
+                            android:text="5 m"
+                            android:textStyle="bold"
+                            android:textColor="@color/deepBlue"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -148,14 +158,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="end"
+                        android:paddingEnd="8dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/riskPercent"
                             android:textSize="12sp"
                             android:paddingTop="4dp"
-                            android:paddingBottom="2dp"/>
+                            android:paddingBottom="2dp"
+                            android:textAppearance="?attr/textAppearanceOverline"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/txtHighestRiskPercentDetails"
@@ -170,16 +183,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:paddingEnd="8dp">
                         <!-- Botón para mostrar el contacto en el mapa -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnShowContactInMap"
                             android:layout_width="52dp"
                             android:layout_height="52dp"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             app:icon="@android:drawable/ic_dialog_map"
                             app:iconGravity="textStart"
-                            app:iconPadding="0dp" />
+                            app:iconPadding="0dp"
+                            style="?attr/materialButtonOutlinedStyle"
+                            app:iconTint="@color/teal_700"
+                            app:strokeWidth="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -235,23 +252,29 @@
                             android:id="@+id/txtNumberOfPositivesDetails"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"/>
+                            android:text="2"
+                            android:textStyle="bold"
+                            android:textColor="@color/red1"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="end">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/totalMeanRisk"
                             android:layout_marginEnd="6dp"/>
+
                         <TextView
                             android:id="@+id/txtTotalMeanRisk"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="20 %"/>
+                            android:text="20 %"
+                            android:textColor="@color/teal_700"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -272,7 +295,9 @@
                             android:id="@+id/txtTotalMeanExposeTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="20 min"/>
+                            android:text="20 min"
+                            android:textColor="@color/teal_700"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -287,7 +312,9 @@
                             android:id="@+id/txtTotalMeanProximity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="20 m"/>
+                            android:text="20 m"
+                            android:textColor="@color/teal_700"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

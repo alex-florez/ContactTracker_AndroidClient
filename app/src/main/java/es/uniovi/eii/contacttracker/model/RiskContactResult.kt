@@ -7,7 +7,9 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.results.RiskContactResultDiffCallback
+import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.parcelize.Parcelize
+import okhttp3.internal.Util
 import java.util.*
 
 /**
@@ -43,6 +45,54 @@ class RiskContactResult(
         if(ordered.isNotEmpty())
             return ordered[0] // Devolver el primero
         return RiskContact()
+    }
+
+    /**
+     * Devuelve el porcentaje total de riesgo medio en función
+     * de los riesgos de todos los contactos de riesgo.
+     *
+     * @return Media de riesgo total.
+     */
+    fun getTotalMeanRisk(): Double {
+        var mean = 0.0
+        if(riskContacts.isEmpty())
+            return mean
+        riskContacts.forEach {
+            mean += it.riskPercent
+        }
+        return Utils.round(mean/riskContacts.size, 4)
+    }
+
+    /**
+     * Devuelve la media total de tiempo de exposición en milisegundos.
+     *
+     * @return Milisegundos medios de tiempo de exposición.
+     */
+    fun getTotalMeanExposeTime(): Long {
+        var mean = 0L
+        if(riskContacts.isEmpty())
+            return mean
+        riskContacts.forEach {
+            mean += it.exposeTime
+        }
+
+        return Utils.round((mean/riskContacts.size).toDouble(), 4).toLong()
+    }
+
+    /**
+     * Devuelve la proximidad media total en metros, en función
+     * de las proximidades medias de los contactos de riesgo.
+     *
+     * @return Distancia de proximidad media en metros.
+     */
+    fun getTotalMeanProximity(): Double {
+        var mean = 0.0
+        if(riskContacts.isEmpty())
+            return mean
+        riskContacts.forEach {
+            mean += it.meanProximity
+        }
+        return Utils.round(mean/riskContacts.size, 4)
     }
 
     override fun equals(other: Any?): Boolean {

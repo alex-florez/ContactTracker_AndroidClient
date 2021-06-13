@@ -13,6 +13,7 @@ import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentResultDetailsBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactResult
+import es.uniovi.eii.contacttracker.util.Utils
 
 /**
  * Argumento recibido como extra que contiene los resultados.
@@ -54,8 +55,8 @@ class ResultDetailsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = FragmentResultDetailsBinding.inflate(inflater, container, false)
-
-        initRecyclerView()
+        initRecyclerView() // Iniciar recyclerview
+        bindData() // Vincular datos
         return binding.root
     }
 
@@ -84,6 +85,43 @@ class ResultDetailsFragment : Fragment() {
         /* Rellenar el recyclerview */
         result?.let {
             riskContactsAdapter.submitList(it.riskContacts)
+        }
+    }
+
+    /**
+     * Se encarga de vincular los datos del resultado de la comprobación
+     * con las vistas del Fragment.
+     */
+    private fun bindData(){
+        result?.let {
+            val riskiestContact = it.getHighestRiskContact()
+            binding.apply {
+                /* Contacto de mayor riesgo */
+                txtContactDate.text = Utils.formatDate(riskiestContact.startDate, "dd/MM/yyyy")
+                txtContactStartHour.text = Utils.formatDate(riskiestContact.startDate, "HH:mm:ss")
+                txtContactEndHour.text = Utils.formatDate(riskiestContact.endDate, "HH:mm:ss")
+                // Tiempo de exposición
+                val exposeTime = Utils.getMinuteSecond(riskiestContact.exposeTime)
+                val exposeTimeText = "${exposeTime[0]} min ${exposeTime[1]} sec"
+                txtContactExposeTime.text = exposeTimeText
+                // Proximidad media
+                val meanProxText = "${riskiestContact.meanProximity} m"
+                txtContactMeanProximity.text = meanProxText
+                // Porcentaje de riesgo
+                val riskPercentText = "${riskiestContact.riskPercent} %"
+                txtHighestRiskPercentDetails.text = riskPercentText
+
+                /* Datos generales */
+                txtNumberOfPositivesDetails.text = it.numberOfPositives.toString()
+                val totalMeanRiskText = "${it.getTotalMeanRisk()} %"
+                val totalMeanExposeTime = Utils.getMinuteSecond(it.getTotalMeanExposeTime())
+                val totalMeanExposeTimeText = "${totalMeanExposeTime[0]} min ${totalMeanExposeTime[1]} sec"
+                val totalMeanProximityText = "${it.getTotalMeanProximity()} m"
+
+                txtTotalMeanRisk.text = totalMeanRiskText
+                txtTotalMeanExposeTime.text = totalMeanExposeTimeText
+                txtTotalMeanProximity.text = totalMeanProximityText
+            }
         }
     }
 
