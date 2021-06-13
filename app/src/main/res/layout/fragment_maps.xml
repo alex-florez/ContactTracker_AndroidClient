@@ -7,7 +7,6 @@
     tools:context=".fragments.history.MapsFragment">
 
     <!-- Mapa de Google Maps -->
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -21,6 +20,7 @@
         app:layout_constraintVertical_bias="0.0">
     </androidx.fragment.app.FragmentContainerView>
 
+    <!-- FAB buttons para las capas -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMapType"
         android:layout_width="wrap_content"
@@ -77,6 +77,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fabTypeSatellite"
         app:layout_constraintEnd_toEndOf="@+id/fabTypeSatellite" />
 
+    <!-- Checkbox para ocultar los marcadores -->
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkboxHideMarkers"
         android:layout_width="wrap_content"

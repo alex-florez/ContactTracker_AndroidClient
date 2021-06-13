@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentResultDetailsBinding
@@ -26,6 +27,7 @@ private const val ARG_RESULT = "result"
  * Fragment que muestra los detalles de un resultado de
  * comprobación de contactos de riesgo.
  */
+@AndroidEntryPoint
 class ResultDetailsFragment : Fragment() {
 
     /**
@@ -59,6 +61,7 @@ class ResultDetailsFragment : Fragment() {
         binding = FragmentResultDetailsBinding.inflate(inflater, container, false)
         initRecyclerView() // Iniciar recyclerview
         bindData() // Vincular datos
+        setListeners()
         return binding.root
     }
 
@@ -69,7 +72,7 @@ class ResultDetailsFragment : Fragment() {
         riskContactsAdapter = RiskContactAdapter(object : RiskContactAdapter.OnShowInMapClick {
             override fun onClick(riskContact: RiskContact) {
                 /* Mostrar el contacto en el mapa */
-
+                showRiskContactInMap(riskContact)
             }
         })
     }
@@ -87,6 +90,20 @@ class ResultDetailsFragment : Fragment() {
         /* Rellenar el recyclerview */
         result?.let {
             riskContactsAdapter.submitList(it.riskContacts)
+        }
+    }
+
+    /**
+     * Inicializa y establece los Listeners para los eventos
+     * de los componentes de la interfaz.
+     */
+    private fun setListeners(){
+        binding.apply {
+            btnShowContactInMap.setOnClickListener {
+                result?.let { res ->
+                    showRiskContactInMap(res.getHighestRiskContact())
+                }
+            }
         }
     }
 
@@ -149,6 +166,18 @@ class ResultDetailsFragment : Fragment() {
         }
         if(color != null)
             binding.cardRiskiestContact.background = color
+    }
+
+    /**
+     * Muestra el contacto de riesgo indicado en un mapa de Google Maps.
+     */
+    private fun showRiskContactInMap(riskContact: RiskContact) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+            .replace(R.id.riskContactPlaceholder, RiskContactMapFragment.newInstance(riskContact))
+            .addToBackStack("RiskContactMapFragment")
+            .commit()
     }
 
     companion object {

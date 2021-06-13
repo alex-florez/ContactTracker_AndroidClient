@@ -157,7 +157,7 @@
     <string name="riskContacts">Contactos de riesgo</string>
     <string name="numberPositives">Número de positivos</string>
     <string name="totalMeanRisk">Riesgo medio total</string>
-    <string name="totalMeanExposeTime">Tiempo de exposición medio total</string>
+    <string name="totalMeanExposeTime">Tiempo de exposición medio</string>
     <string name="totalMeanProximity">Proximidad media total</string>
     <string name="generalData">Datos generales</string>
 </resources>

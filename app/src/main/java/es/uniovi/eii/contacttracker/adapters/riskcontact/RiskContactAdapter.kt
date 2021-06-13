@@ -54,6 +54,10 @@ class RiskContactAdapter(
                 txtHighestRiskPercentDetails.text = riskText
                 // Color del card
                 setCardColor(riskContact.riskLevel)
+                // Listener de click para el botón
+                btnShowContactInMap.setOnClickListener {
+                    onShowInMapClick.onClick(riskContact)
+                }
             }
         }
 

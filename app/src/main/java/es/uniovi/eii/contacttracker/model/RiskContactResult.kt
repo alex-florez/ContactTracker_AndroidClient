@@ -41,7 +41,7 @@ class RiskContactResult(
      */
     fun getHighestRiskContact(): RiskContact {
         /* Ordenar por riskScore descendente */
-        val ordered = riskContacts.sortedByDescending { it.riskScore }
+        val ordered = riskContacts.sortedBy { it.riskScore }
         if(ordered.isNotEmpty())
             return ordered[0] // Devolver el primero
         return RiskContact()
