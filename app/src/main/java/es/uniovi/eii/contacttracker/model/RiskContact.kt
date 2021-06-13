@@ -1,9 +1,11 @@
 package es.uniovi.eii.contacttracker.model
 
 import android.os.Parcelable
+import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactDiffCallback
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.parcelize.Parcelize
@@ -93,7 +95,7 @@ class RiskContact(
                     Pair(contactLocation.positiveContactPoint.lat,contactLocation.positiveContactPoint.lng))
         }
         if(contactLocations.isNotEmpty()){
-            meanProximity = proximity / contactLocations.size
+            meanProximity = Utils.round(proximity / contactLocations.size, 4) // Redondear con 4 decimales
         }
     }
 
@@ -193,5 +195,41 @@ class RiskContact(
         return Pair(inferior, superior)
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RiskContact
+
+        if (contactLocations != other.contactLocations) return false
+        if (riskLevel != other.riskLevel) return false
+        if (riskPercent != other.riskPercent) return false
+        if (riskScore != other.riskScore) return false
+        if (exposeTime != other.exposeTime) return false
+        if (meanProximity != other.meanProximity) return false
+        if (meanTimeInterval != other.meanTimeInterval) return false
+        if (startDate != other.startDate) return false
+        if (endDate != other.endDate) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = contactLocations.hashCode()
+        result = 31 * result + riskLevel.hashCode()
+        result = 31 * result + riskPercent.hashCode()
+        result = 31 * result + riskScore.hashCode()
+        result = 31 * result + exposeTime.hashCode()
+        result = 31 * result + meanProximity.hashCode()
+        result = 31 * result + meanTimeInterval.hashCode()
+        result = 31 * result + startDate.hashCode()
+        result = 31 * result + endDate.hashCode()
+        return result
+    }
+
+    companion object {
+        /* Constante estática con el DiffUtil para el ListAdapter */
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<RiskContact> = RiskContactDiffCallback()
+    }
 
 }
