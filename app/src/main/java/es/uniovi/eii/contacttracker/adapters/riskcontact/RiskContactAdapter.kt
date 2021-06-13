@@ -1,13 +1,17 @@
 package es.uniovi.eii.contacttracker.adapters.riskcontact
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardRiskContactBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
+import es.uniovi.eii.contacttracker.model.RiskLevel
 import es.uniovi.eii.contacttracker.util.Utils
 
 /**
@@ -48,7 +52,30 @@ class RiskContactAdapter(
                 txtContactMeanProximity.text = meanProxText
                 val riskText = "${riskContact.riskPercent} %"
                 txtHighestRiskPercentDetails.text = riskText
+                // Color del card
+                setCardColor(riskContact.riskLevel)
             }
+        }
+
+        /**
+         * Cambia el color del card en función
+         * del nivel de riesgo del contacto.
+         */
+        private fun setCardColor(riskLevel: RiskLevel){
+            val color = when(riskLevel) {
+                RiskLevel.AMARILLO -> {
+                    ContextCompat.getDrawable(itemView.context, R.color.yellowWarning)
+                }
+                RiskLevel.NARANJA -> {
+                    ContextCompat.getDrawable(itemView.context, R.color.orangeWarning)
+                }
+                RiskLevel.ROJO -> {
+                    ContextCompat.getDrawable(itemView.context, R.color.redDanger)
+                }
+                else -> ContextCompat.getDrawable(itemView.context, R.color.greenOk)
+            }
+            if(color != null)
+                binding.cardRiskContact.background = color
         }
     }
 

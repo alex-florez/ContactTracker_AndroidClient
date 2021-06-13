@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
@@ -13,6 +14,7 @@ import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentResultDetailsBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactResult
+import es.uniovi.eii.contacttracker.model.RiskLevel
 import es.uniovi.eii.contacttracker.util.Utils
 
 /**
@@ -121,8 +123,32 @@ class ResultDetailsFragment : Fragment() {
                 txtTotalMeanRisk.text = totalMeanRiskText
                 txtTotalMeanExposeTime.text = totalMeanExposeTimeText
                 txtTotalMeanProximity.text = totalMeanProximityText
+
+                /* Color del card del contacto de mayor riesgo */
+                setCardColor(riskiestContact.riskLevel)
             }
         }
+    }
+
+    /**
+     * Cambia el color del card del contacto de mayorn riesgo en
+     * función del nivel de riesgo del contacto.
+     */
+    private fun setCardColor(riskLevel: RiskLevel){
+        val color = when(riskLevel) {
+            RiskLevel.AMARILLO -> {
+                ContextCompat.getDrawable(requireContext(), R.color.yellowWarning)
+            }
+            RiskLevel.NARANJA -> {
+                ContextCompat.getDrawable(requireContext(), R.color.orangeWarning)
+            }
+            RiskLevel.ROJO -> {
+                ContextCompat.getDrawable(requireContext(), R.color.redDanger)
+            }
+            else -> ContextCompat.getDrawable(requireContext(), R.color.greenOk)
+        }
+        if(color != null)
+            binding.cardRiskiestContact.background = color
     }
 
     companion object {

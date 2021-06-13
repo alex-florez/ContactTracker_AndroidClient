@@ -10,6 +10,7 @@
     android:layout_marginBottom="8dp">
 
     <LinearLayout
+        android:id="@+id/cardRiskContact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -172,7 +173,7 @@
                     app:iconGravity="textStart"
                     app:iconPadding="0dp"
                     style="?attr/materialButtonOutlinedStyle"
-                    app:iconTint="@color/teal_700"
+                    app:iconTint="@color/black"
                     app:strokeWidth="2dp"/>
             </LinearLayout>
         </LinearLayout>
