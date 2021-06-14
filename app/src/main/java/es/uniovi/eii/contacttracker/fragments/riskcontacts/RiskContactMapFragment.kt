@@ -5,13 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.*
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactMapBinding
+import es.uniovi.eii.contacttracker.model.ContactPoint
 import es.uniovi.eii.contacttracker.model.RiskContact
+import es.uniovi.eii.contacttracker.model.RiskContactLocation
 
 /**
  * Contacto de Riesgo.
@@ -70,7 +75,51 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
      * de riesgo en el mapa.
      */
     private fun drawContact(){
+        riskContact?.let {
+            val userLocations = mutableListOf<ContactPoint>()
+            val positiveLocations = mutableListOf<ContactPoint>()
+            // Crear listas con las localizaciones del usuario y del positivo.
+            it.contactLocations.forEach { contactLocation ->
+                userLocations.add(contactLocation.userContactPoint)
+                positiveLocations.add(contactLocation.positiveContactPoint)
+            }
+            /* Dibujar Localizaciones del usuario */
+            drawLocations(userLocations, requireContext().getColor(R.color.blue1))
+            /* Dibujar localizciones del positivo */
+            drawLocations(positiveLocations, requireContext().getColor(R.color.red1))
+            /* Mover la cámara */
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                LatLng(userLocations[0].lat, userLocations[0].lng), Constants.DEFAULT_ZOOM))
+        }
+    }
 
+    /**
+     * Dibuja en el mapa el tramo representado por la lista de
+     * puntos de contactos de riesgo mediante una polilínea del
+     * color indicado.
+     *
+     * @param contactPoints Lista de puntos de contacto.
+     * @param color Color en el que se desea dibujar la línea.
+     *
+     */
+    private fun drawLocations(contactPoints: List<ContactPoint>, color: Int) {
+        // Crear la lista de puntos
+        val points = mutableListOf<LatLng>()
+        contactPoints.forEach {
+            points.add(LatLng(it.lat, it.lng))
+        }
+        // Dibujar polilínea
+        val path = map.addPolyline(PolylineOptions()
+            .addAll(points))
+        path.width = 12f
+        path.color = color
+        // Dibujar marcador de inicio y de fin
+        if(points.isNotEmpty()){
+            val startMarker = map.addMarker(MarkerOptions()
+                .position(points[0]))
+            val endMarker = map.addMarker(MarkerOptions()
+                .position(points[points.size-1]))
+        }
     }
 
     companion object {

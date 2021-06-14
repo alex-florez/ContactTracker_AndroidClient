@@ -5,6 +5,10 @@ import com.google.android.gms.maps.model.LatLng
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Clase parcelable que envuelve a la lista de localizaciones
+ * de usuario.
+ */
 @Parcelize
 data class UserLocationList(
     val locations: List<UserLocation>?
