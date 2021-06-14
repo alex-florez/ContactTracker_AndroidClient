@@ -1,5 +1,8 @@
 package es.uniovi.eii.contacttracker.util
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -114,5 +117,23 @@ object Utils {
         val multiplier = 10.0.pow(decimals)
         val rounded = (value * multiplier).roundToLong() / multiplier
         return rounded
+    }
+
+    /**
+     * Transforma el Drawable indicado como parámetro en un Bitmap.
+     *
+     * @param drawable Objeto Drawable.
+     * @return Bitmap transformado.
+     */
+    fun drawableToBitmap(drawable:Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0,0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 }

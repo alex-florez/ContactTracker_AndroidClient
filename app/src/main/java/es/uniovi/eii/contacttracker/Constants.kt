@@ -55,4 +55,8 @@ object Constants {
     // **************************
     const val EARTH_RADIUS = 6371
 
+    // NOTIFICACIONES
+    // **************************
+    const val ACTION_SHOW_RISK_CONTACT_RESULT = "actionShowRiskContactResult" // Acción enviada en un Intent para mostrar los resultados de una comprobación.
+
 }

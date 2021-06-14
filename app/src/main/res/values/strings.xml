@@ -160,4 +160,9 @@
     <string name="totalMeanExposeTime">Tiempo de exposición medio</string>
     <string name="totalMeanProximity">Proximidad media total</string>
     <string name="generalData">Datos generales</string>
+
+
+    <!-- Notificaciones -->
+    <string name="resultNotificationTitle">Resultados de la comprobación</string>
+    <string name="resultNotificationHealthy">No has tenido contacto con ningún positivo.</string>
 </resources>

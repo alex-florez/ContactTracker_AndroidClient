@@ -150,7 +150,7 @@ class RiskContactResultsFragment : Fragment() {
         requireActivity().supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            .replace(R.id.riskContactPlaceholder, ResultDetailsFragment.newInstance(riskContactResult))
+            .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
             .addToBackStack("ResultDetailsFragment")
             .commit()
     }

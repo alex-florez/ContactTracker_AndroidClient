@@ -1,27 +1,33 @@
 package es.uniovi.eii.contacttracker.riskcontact
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.model.Itinerary
-import es.uniovi.eii.contacttracker.model.Positive
-import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.activities.MainActivity
+import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
+import es.uniovi.eii.contacttracker.util.Utils
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 import java.util.Date
+
+private const val RESULT_NOTIFICATION_ID = 1999
 
 /**
  * Clase que contiene toda la funcionalidad para gestionar
@@ -86,7 +92,7 @@ class RiskContactManager @Inject constructor(
 
         /* Mostrar Notificación con los resultados. */
         with(NotificationManagerCompat.from(ctx)){
-            notify(1999, createNotification(result))
+            notify(RESULT_NOTIFICATION_ID, createNotification(result))
         }
 
     }
@@ -100,14 +106,62 @@ class RiskContactManager @Inject constructor(
      * @return Notificación Android con un resumen de los resultados.
      */
     private fun createNotification(riskContactResult: RiskContactResult): Notification {
+        // Color e icono grande de la notificación
+        var color = ctx.getColor(R.color.greenOk)
+        var largeIcon: Bitmap? = null
+        when(riskContactResult.getHighestRiskContact().riskLevel){
+            RiskLevel.VERDE -> {
+                color = ctx.getColor(R.color.greenOk)
+                ContextCompat.getDrawable(ctx, R.drawable.ic_healthy)?.let {
+                    largeIcon = Utils.drawableToBitmap(it)
+                }
+            }
+            RiskLevel.AMARILLO -> {
+                color = ctx.getColor(R.color.yellowWarning)
+                ContextCompat.getDrawable(ctx, R.drawable.ic_yellow_warning)?.let {
+                    largeIcon = Utils.drawableToBitmap(it)
+                }
+            }
+            RiskLevel.NARANJA -> {
+                color = ctx.getColor(R.color.orangeWarning)
+                ContextCompat.getDrawable(ctx, R.drawable.ic_orange_warning)?.let {
+                    largeIcon = Utils.drawableToBitmap(it)
+                }
+            }
+            RiskLevel.ROJO -> {
+                color = ctx.getColor(R.color.redDanger)
+                ContextCompat.getDrawable(ctx, R.drawable.ic_danger)?.let {
+                    largeIcon = Utils.drawableToBitmap(it)
+                }
+            }
+        }
+        // Contenido de texto
+        var textContent = ""
+        textContent = if(riskContactResult.riskContacts.isNotEmpty()){
+            "Has estado en contacto con ${riskContactResult.numberOfPositives} " +
+                    if(riskContactResult.numberOfPositives > 1) "positivos" else "positivo." +
+                            " Porcentaje de riesgo más alto: ${riskContactResult.getHighestRiskContact().riskPercent} %."
+        } else { // No ha habido contactos de riesgo.
+            ctx.getString(R.string.resultNotificationHealthy)
+        }
+        // Intent para ver los resultados de la comprobación.
+        val pendindIntent: PendingIntent = Intent(ctx, MainActivity::class.java).let {
+            it.action = Constants.ACTION_SHOW_RISK_CONTACT_RESULT
+            it.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
+            PendingIntent.getActivity(ctx, 0, it, 0)
+        }
+
         return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
-                .setContentTitle("Resultados de la comprobación de Contactos de Riesgo.")
-                .setContentText("!Has estado en contacto con ${riskContactResult.numberOfPositives} positivos!")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setColorized(true)
-                .setColor(ctx.getColor(R.color.orange))
-                .build()
+            .setContentTitle(ctx.getString(R.string.resultNotificationTitle))
+            .setContentText(textContent)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setColorized(true)
+            .setColor(color)
+            .setLargeIcon(largeIcon)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
+            .setContentIntent(pendindIntent)
+            .build()
     }
 
     private fun pruebaUser(): Itinerary {
