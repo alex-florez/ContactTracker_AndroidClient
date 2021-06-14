@@ -9,13 +9,11 @@
     app:strokeColor="@color/grey1"
     android:layout_marginBottom="12dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp">
-
         <!-- Fecha de la comprobación -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,48 +33,53 @@
                 android:text="10:13"
                 android:gravity="end"/>
         </LinearLayout>
-
-        <!-- Número de positivos con los que se entró en contacto -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contactWith"
-                android:layout_marginEnd="4dp"/>
-            <TextView
-                android:id="@+id/txtNumberOfPositives"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2 positivos"
-                android:textColor="@color/red1"
-                android:textSize="16sp"
-                android:textAppearance="?attr/textAppearanceHeadline6"/>
-        </LinearLayout>
-
-        <!-- Porcentaje de riesgo más alto -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="match_parent"
-                android:text="@string/txtRiskPercent"/>
-            <TextView
-                android:id="@+id/txtHighestRiskPercent"
+            <!-- Columna izquierda -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/riskPercentPlaceholder"
-                android:textSize="24sp"
-                android:gravity="end"
-                android:textAppearance="?attr/textAppearanceHeadline6"/>
-        </LinearLayout>
+                android:orientation="vertical">
+                <!-- Número de positivos con los que se entró en contacto -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@string/contactWith"/>
+                <TextView
+                    android:id="@+id/txtNumberOfPositives"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2 positivos"
+                    android:textColor="@color/red1"
+                    android:textSize="16sp"
+                    android:textAppearance="?attr/textAppearanceHeadline6"/>
+            </LinearLayout>
 
+            <!-- Porcentaje de riesgo más alto -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="end"
+                    android:text="@string/txtRiskPercent"/>
+                <TextView
+                    android:id="@+id/txtHighestRiskPercent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/riskPercentPlaceholder"
+                    android:textSize="24sp"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceHeadline6"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

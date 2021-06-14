@@ -45,7 +45,9 @@ class RiskContactResultAdapter(
                                         || riskContactResult.numberOfPositives == 0) "${riskContactResult.numberOfPositives} positivos"
                                         else "${riskContactResult.numberOfPositives} positivo"
                 txtNumberOfPositives.text = positivesString
-                txtHighestRiskPercent.text = "12 %"
+                // Porcentaje de riesgo más alto
+                val riskiestPercentText = "${riskContactResult.getHighestRiskContact().riskPercent}%"
+                txtHighestRiskPercent.text = riskiestPercentText
             }
             // Listener de Click.
             itemView.setOnClickListener{

@@ -34,7 +34,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_marginEnd="8dp"
+                    android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/txtContactDate"
                     android:layout_width="wrap_content"
@@ -58,7 +59,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/startHour"
-                        android:layout_marginEnd="6dp"/>
+                        android:layout_marginEnd="6dp"
+                        android:textStyle="bold"/>
                     <TextView
                         android:id="@+id/txtContactStartHour"
                         android:layout_width="wrap_content"
@@ -77,7 +79,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/endHour"
-                        android:layout_marginEnd="6dp"/>
+                        android:layout_marginEnd="6dp"
+                        android:textStyle="bold"/>
+                    />
                     <TextView
                         android:id="@+id/txtContactEndHour"
                         android:layout_width="wrap_content"
@@ -100,7 +104,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/exposeTime"/>
+                        android:text="@string/exposeTime"
+                        android:textStyle="bold"/>
+                    />
                     <TextView
                         android:id="@+id/txtContactExposeTime"
                         android:layout_width="match_parent"
@@ -119,7 +125,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/meanProximity"/>
+                        android:text="@string/meanProximity"
+                        android:textStyle="bold"/>
+                    />
 
                     <TextView
                         android:id="@+id/txtContactMeanProximity"

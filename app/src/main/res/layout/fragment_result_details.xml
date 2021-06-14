@@ -260,41 +260,40 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:baselineAligned="false">
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1.4"
                             android:layout_height="wrap_content"
-                            android:text="@string/numberPositives"
-                            android:layout_marginEnd="6dp"/>
+                            android:text="@string/numberPositives"/>
                         <TextView
                             android:id="@+id/txtNumberOfPositivesDetails"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="2"
                             android:textStyle="bold"
                             android:textColor="@color/red1"/>
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:gravity="end">
+                        android:orientation="horizontal">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1.4"
                             android:layout_height="wrap_content"
-                            android:text="@string/totalMeanRisk"
-                            android:layout_marginEnd="6dp"/>
+                            android:text="@string/totalMeanRisk"/>
 
                         <TextView
                             android:id="@+id/txtTotalMeanRisk"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="20 %"
                             android:textColor="@color/teal_700"
@@ -311,13 +310,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1.4"
                             android:layout_height="wrap_content"
-                            android:text="@string/totalMeanExposeTime"
-                            android:layout_marginEnd="6dp"/>
+                            android:text="@string/totalMeanExposeTime"/>
                         <TextView
                             android:id="@+id/txtTotalMeanExposeTime"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="20 min"
                             android:textColor="@color/teal_700"
@@ -328,13 +328,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1.4"
                             android:layout_height="wrap_content"
-                            android:text="@string/totalMeanProximity"
-                            android:layout_marginEnd="6dp"/>
+                            android:text="@string/totalMeanProximity"/>
                         <TextView
                             android:id="@+id/txtTotalMeanProximity"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="20 m"
                             android:textColor="@color/teal_700"

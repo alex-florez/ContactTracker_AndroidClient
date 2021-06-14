@@ -140,8 +140,8 @@
 
     <!-- Fragment: Resultados de la Comprobación de Contactos de Riesgo -->
     <string name="riskPercentPlaceholder">0%</string>
-    <string name="txtRiskPercent">Mayor porcentaje de riesgo alcanzado</string>
-    <string name="contactWith">Contacto con</string>
+    <string name="txtRiskPercent">Nivel de riesgo más alto</string>
+    <string name="contactWith">Contacto con:</string>
     <plurals name="positiveContacs">
         <item quantity="one">Contacto con %1$d positivo</item>
         <item quantity="other">Contacto con %2$d positivos</item>
