@@ -23,6 +23,6 @@
     <!-- Colores para los resultados de la comprobación -->
     <color name="greenOk">#9BDC6C</color>
     <color name="yellowWarning">#F3EB57</color>
-    <color name="orangeWarning">#DF9B6E</color>
+    <color name="orangeWarning">#FF7B34</color>
     <color name="redDanger">#D83434</color>
 </resources>
