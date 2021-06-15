@@ -71,8 +71,8 @@ class RiskContactManager @Inject constructor(
         val scopeDays = 3
 
         /* Obtener el itinerario del propio usuario desde la fecha indicada */
-//        val userItinerary = locationRepository.getItinerarySince(scopeDays)
-        val userItinerary = pruebaUser()
+        val userItinerary = locationRepository.getItinerarySince(scopeDays)
+//        val userItinerary = pruebaUser()
         /* Obtener los positivos con los que hacer la comprobación */
         var positives = mutableListOf<Positive>()
         when(val positivesResult = positiveRepository.getPositivesFromLastDays(scopeDays)) {
@@ -85,12 +85,12 @@ class RiskContactManager @Inject constructor(
             }
         }
 
-        positives.add(Positive(null, Date(), listOf(), listOf(), null))
+//        positives.add(Positive(null, Date(), listOf(), listOf(), null))
         /* Hacer la comprobación para cada positivo */
         positives.forEach { positive ->
             // Itinerario del positivo
-//            val positiveItinerary = positive.getItinerary()
-            val positiveItinerary = pruebaPositive()
+            val positiveItinerary = positive.getItinerary()
+//            val positiveItinerary = pruebaPositive()
             val contacts = detector.startChecking(userItinerary, positiveItinerary)
             if(contacts.isNotEmpty()){
                 // Actualizar el resultado.

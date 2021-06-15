@@ -17,6 +17,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/* Formato estándar para las fechas utilizadas en el algoritmo de comprobación. */
+private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+
 /**
  * Clase que implementa la interfaz que define el Detector de
  * Contactos de Riesgo y que contiene el algoritmo para hacer
@@ -94,7 +97,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
         pointB: UserLocation,
         time: Double
     ): Boolean {
-        val minDiff = Utils.dateDifferenceInSecs(pointA.locationTimestamp, pointB.locationTimestamp) / 60
+        val minDiff = Utils.dateDifferenceInSecs(pointA.locationTimestamp, pointB.locationTimestamp) / 60.0
         return minDiff <= time
     }
 

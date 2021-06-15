@@ -3,7 +3,7 @@ package es.uniovi.eii.contacttracker.room.converters
 import androidx.room.TypeConverter
 import es.uniovi.eii.contacttracker.model.RiskLevel
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 /**
  * Clase que utiliza ROOM para convertir y parsear datos

@@ -106,6 +106,20 @@ object Utils {
     }
 
     /**
+     * Transforma el string pasado como parámetro a una
+     * instancia de la Clase Date según el formato indicado
+     * como parámetro.
+     *
+     * @param stringDate String con la fecha.
+     * @param format Formato de la fecha.
+     * @return Objeto Date.
+     */
+    fun toDate(stringDate: String, format: String): Date? {
+        val formatter = SimpleDateFormat(format)
+        return formatter.parse(stringDate)
+    }
+
+    /**
      * Redondea el valor pasado como parámetro con el número de
      * decimales indicado.
      *
