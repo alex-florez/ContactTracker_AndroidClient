@@ -16,6 +16,12 @@ import es.uniovi.eii.contacttracker.viewmodels.RiskContactViewModel
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+/**
+ * Enumerado para el modo de comprobación.
+ */
+enum class CHECK_MODE {
+    MANUAL, PERIODIC
+}
 
 /**
  * Fragmento para las comprobaciones de Contactos de Riesgo.
@@ -33,6 +39,12 @@ class RiskContactFragment : Fragment() {
      */
     private val viewModel: RiskContactViewModel by viewModels()
 
+    /**
+     * Modo de comprobación seleccionado.
+     */
+    private var checkMode = CHECK_MODE.MANUAL
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -41,15 +53,85 @@ class RiskContactFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         binding = FragmentRiskContactBinding.inflate(inflater, container, false)
 
-        binding.btnPrueba.setOnClickListener {
+        binding.btnManualCheck.setOnClickListener {
             viewModel.detect()
         }
 
         viewModel.isDetecting.observe(viewLifecycleOwner) {
-            binding.btnPrueba.isEnabled = !it
+            binding.btnManualCheck.isEnabled = !it
         }
 
+        setListeners()
+
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        selectMode(CHECK_MODE.MANUAL) // Leer el modo de comprobación de las SharedPrefs
+    }
+
+    /**
+     * Establece los listeners de eventos para los componentes
+     * de la UI.
+     */
+    private fun setListeners(){
+        binding.apply {
+            radioBtnManualCheck.setOnClickListener {
+                selectMode(CHECK_MODE.MANUAL)
+            }
+
+            radioBtnPeriodicCheck.setOnClickListener {
+                selectMode(CHECK_MODE.PERIODIC)
+            }
+        }
+    }
+
+    /**
+     * Selecciona el modo de comprobación en función
+     * del RadioButton que se haya pulsado.
+     *
+     * @param newCheckMode Nuevo modo de comprobación.
+     */
+    private fun selectMode(newCheckMode: CHECK_MODE){
+        this.checkMode = newCheckMode
+        // Gestionar estado de los radio buttons
+        when(newCheckMode){
+            CHECK_MODE.MANUAL -> {
+                toggleManualCheck(true)
+                togglePeriodicCheck(false)
+            }
+            CHECK_MODE.PERIODIC -> {
+                togglePeriodicCheck(true)
+                toggleManualCheck(false)
+            }
+        }
+    }
+
+
+    /**
+     * Habilita/Deshabilita el modo manual, cambiando el estado
+     * de los componentes de la UI.
+     */
+    private fun toggleManualCheck(isEnabled: Boolean){
+        binding.apply {
+            radioBtnManualCheck.isChecked = isEnabled
+            txtViewManual.isEnabled = isEnabled
+            btnManualCheck.isEnabled = isEnabled
+        }
+    }
+
+    /**
+     * Habilita/Deshabilita el modo automático, cambiando el estado
+     * de los componentes de la UI.
+     */
+    private fun togglePeriodicCheck(isEnabled: Boolean){
+        binding.apply {
+            radioBtnPeriodicCheck.isChecked = isEnabled
+            txtViewPeriodic.isEnabled = isEnabled
+            txtInputLayoutCheckHour.isEnabled = isEnabled
+            btnApplyCheckHour.isEnabled = isEnabled
+        }
     }
 
     companion object {
