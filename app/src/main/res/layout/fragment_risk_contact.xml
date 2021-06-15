@@ -34,8 +34,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/manualCheck"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:checked="true"/>
+                android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
             <TextView
                 android:id="@+id/txtViewManual"
@@ -108,7 +107,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="15:50"/>
+                    android:text="15:50"
+                    android:editable="false"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

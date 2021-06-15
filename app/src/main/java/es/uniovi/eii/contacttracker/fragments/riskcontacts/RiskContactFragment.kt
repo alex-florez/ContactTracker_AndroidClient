@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactBinding
+import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
+import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
+import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.RiskContactViewModel
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,7 +22,7 @@ private const val ARG_PARAM2 = "param2"
 /**
  * Enumerado para el modo de comprobación.
  */
-enum class CHECK_MODE {
+enum class CheckMode {
     MANUAL, PERIODIC
 }
 
@@ -40,13 +43,19 @@ class RiskContactFragment : Fragment() {
     private val viewModel: RiskContactViewModel by viewModels()
 
     /**
+     * Time Picker para seleccionar una hora.
+     */
+    private lateinit var checkHourTimePicker: TimePickerFragment
+
+    /**
      * Modo de comprobación seleccionado.
      */
-    private var checkMode = CHECK_MODE.MANUAL
+    private var checkMode = CheckMode.MANUAL
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createTimePicker()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -56,19 +65,19 @@ class RiskContactFragment : Fragment() {
         binding.btnManualCheck.setOnClickListener {
             viewModel.detect()
         }
-
         viewModel.isDetecting.observe(viewLifecycleOwner) {
             binding.btnManualCheck.isEnabled = !it
         }
-
         setListeners()
+        setObservers()
 
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        selectMode(CHECK_MODE.MANUAL) // Leer el modo de comprobación de las SharedPrefs
+        selectMode(viewModel.getCheckMode()) // Leer el modo de comprobación de las SharedPrefs
+        updateCheckHour(viewModel.getCheckHour()) // Leer la hora de la comprobación de las SharedPrefs
     }
 
     /**
@@ -77,14 +86,56 @@ class RiskContactFragment : Fragment() {
      */
     private fun setListeners(){
         binding.apply {
+            /* Radio Buttons */
             radioBtnManualCheck.setOnClickListener {
-                selectMode(CHECK_MODE.MANUAL)
+                selectMode(CheckMode.MANUAL)
             }
 
             radioBtnPeriodicCheck.setOnClickListener {
-                selectMode(CHECK_MODE.PERIODIC)
+                selectMode(CheckMode.PERIODIC)
+            }
+
+            /* EditText para la hora de la comprobación */
+            txtCheckHour.setOnClickListener {
+                checkHourTimePicker.show(requireActivity().supportFragmentManager, "CheckHour")
             }
         }
+    }
+
+    /**
+     * Configura los observers para los LiveData definidos
+     * en el ViewModel.
+     */
+    private fun setObservers(){
+        viewModel.apply {
+            /* Hora de la comprobación */
+            checkHour.observe(viewLifecycleOwner) {
+                updateCheckHour(it)
+            }
+        }
+    }
+
+    /**
+     * Actualiza el campo de texto con la nueva hora de comprobación,
+     * además de actualizar las horas y minutos del TimePicker.
+     */
+    private fun updateCheckHour(date: Date) {
+        val checkHourText = Utils.formatDate(date, "HH:mm")
+        binding.txtCheckHour.setText(checkHourText)
+        checkHourTimePicker.hours = Utils.getFromDate(date, Calendar.HOUR_OF_DAY)
+        checkHourTimePicker.minutes = Utils.getFromDate(date, Calendar.MINUTE)
+    }
+
+    /**
+     * Instancia el Time Picker para seleccionar la hora
+     * de comprobación.
+     */
+    private fun createTimePicker(){
+        this.checkHourTimePicker = TimePickerFragment(object : OnTimeSetListener {
+            override fun onTimeSet(hour: Int, minute: Int) {
+                viewModel.setCheckHour(Utils.getDate(hour, minute))
+            }
+        }, "Hora de la comprobación")
     }
 
     /**
@@ -93,15 +144,16 @@ class RiskContactFragment : Fragment() {
      *
      * @param newCheckMode Nuevo modo de comprobación.
      */
-    private fun selectMode(newCheckMode: CHECK_MODE){
+    private fun selectMode(newCheckMode: CheckMode){
         this.checkMode = newCheckMode
+        viewModel.setCheckMode(newCheckMode) // Guardar el modo de comprobación en las SharedPrefs
         // Gestionar estado de los radio buttons
         when(newCheckMode){
-            CHECK_MODE.MANUAL -> {
+            CheckMode.MANUAL -> {
                 toggleManualCheck(true)
                 togglePeriodicCheck(false)
             }
-            CHECK_MODE.PERIODIC -> {
+            CheckMode.PERIODIC -> {
                 togglePeriodicCheck(true)
                 toggleManualCheck(false)
             }

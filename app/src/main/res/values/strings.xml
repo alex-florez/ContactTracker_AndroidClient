@@ -37,6 +37,9 @@
     <string name="shared_prefs_personal_data_city">PersonalDataCity</string>
     <string name="shared_prefs_personal_data_cp">PersonalDataCp</string>
 
+    <!-- Preferences: Comprobación de contactos de riesgo -->
+    <string name="shared_prefs_risk_contact_check_mode">RiskContactCheckMode</string>
+    <string name="shared_prefs_risk_contact_check_hour">RiskContactCheckHour</string>
 
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
