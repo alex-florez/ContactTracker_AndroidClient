@@ -90,4 +90,22 @@ class RiskContactViewModel @Inject constructor(
         return riskContactRepository.getCheckHour()
     }
 
+    /**
+     * Invoca al manager de contactos de riesgo para
+     * establecer una nueva alarma de comprobación que
+     * se dispare en la fecha indicada.
+     *
+     * @param Fecha en la que se debe ejecutar la alarma de comprobación.
+     */
+    fun setPeriodicCheck(date: Date){
+        riskContactManager.setPeriodicCheck(date)
+    }
+
+    /**
+     * Deshabilita la alarma de comprobación establecida.
+     */
+    fun disablePeriodicCheck(){
+        riskContactManager.disablePeriodicCheck()
+    }
+
 }

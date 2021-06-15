@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
@@ -97,6 +99,17 @@ class RiskContactFragment : Fragment() {
             txtCheckHour.setOnClickListener {
                 checkHourTimePicker.show(requireActivity().supportFragmentManager, "CheckHour")
             }
+
+            /* Botón para aplicar la alarma de comprobación */
+            btnApplyCheckHour.setOnClickListener {
+                viewModel.checkHour.value?.let { date ->
+                    viewModel.setPeriodicCheck(date)
+                    Snackbar.make(binding.root, getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG).let {
+                        it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                        it.show()
+                    }
+                }
+            }
         }
     }
 
@@ -157,6 +170,7 @@ class RiskContactFragment : Fragment() {
             CheckMode.MANUAL -> {
                 toggleManualCheck(true)
                 togglePeriodicCheck(false)
+                viewModel.disablePeriodicCheck() // Cancelar alarma de comprobación
             }
             CheckMode.PERIODIC -> {
                 togglePeriodicCheck(true)

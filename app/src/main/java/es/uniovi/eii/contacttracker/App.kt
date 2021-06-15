@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker
 
 import android.app.Application
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
@@ -18,6 +19,7 @@ class App : Application() {
         /* CANALES PARA LAS NOTIFICACIONES */
         const val CHANNEL_ID_LOCATION_FOREGROUND_SERVICE = "LocationForegroundServiceChannel"
         const val CHANNEL_ID_RISK_CONTACT_RESULT = "RiskContactResultChannel"
+        const val CHANNEL_ID_RISK_CONTACT_CHECKING = "RiskContactCheckingChannel"
     }
 
 
@@ -45,9 +47,17 @@ class App : Application() {
                     "Risk Contact Result Channel",
                     NotificationManager.IMPORTANCE_HIGH)
 
+            // Canal para el servicio en 1er plano de la comprobación de los contactos de riesgo
+            val riskContactCheckingChannel = NotificationChannel(
+                CHANNEL_ID_RISK_CONTACT_CHECKING,
+                "Risk Contact Checking Channel",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+
             val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(locationFSChannel)
             notificationManager.createNotificationChannel(riskContactsResultChannel)
+            notificationManager.createNotificationChannel(riskContactCheckingChannel)
         }
     }
 

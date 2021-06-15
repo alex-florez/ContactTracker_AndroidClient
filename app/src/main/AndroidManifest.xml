@@ -45,6 +45,10 @@
             android:enabled="true"
             android:exported="false"/>
 
+        <service android:name=".riskcontact.service.RiskContactCheckingForegroundService"
+            android:enabled="true"
+            android:exported="false"/>
+
         <!-- Broadcast Receivers -->
         <receiver android:name=".location.receivers.LocationAlarmCommandBroadcastReceiver"/>
 

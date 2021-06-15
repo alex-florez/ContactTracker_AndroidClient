@@ -1,11 +1,13 @@
 package es.uniovi.eii.contacttracker.riskcontact
 
+import android.app.AlarmManager
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
@@ -22,12 +24,17 @@ import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
+import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactCheckingForegroundService
 import es.uniovi.eii.contacttracker.util.Utils
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
-import java.util.Date
 
+/* ID de la notificación con los resultados de la comprobación */
 private const val RESULT_NOTIFICATION_ID = 1999
+/* ID de la alarma de comprobación de contactos de riesgo */
+private const val CHECK_ALARM_ID = 2999
+
 
 /**
  * Clase que contiene toda la funcionalidad para gestionar
@@ -39,8 +46,15 @@ class RiskContactManager @Inject constructor(
         private val locationRepository: LocationRepository, // Repositorio de localización.
         private val positiveRepository: PositiveRepository, // Repositorio de positivos.
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
+        private val alarmManager: AlarmManager, // Manager de alarmas de Android
         @ApplicationContext private val ctx: Context
+
 ) {
+
+    /**
+     * Pending intent de la alarma de comprobación.
+     */
+    private var checkAlarmIntent: PendingIntent? = null
 
     /**
      * Ejecuta la comprobación de contactos de riesgo teniendo en cuenta los
@@ -94,7 +108,40 @@ class RiskContactManager @Inject constructor(
         with(NotificationManagerCompat.from(ctx)){
             notify(RESULT_NOTIFICATION_ID, createNotification(result))
         }
+    }
 
+    /**
+     * Establece una nueva alarma de Android para realizar la
+     * comprobación de contactos de riesgo.
+     *
+     * @param date Fecha de disparo de la alarma.
+     */
+    fun setPeriodicCheck(date: Date){
+        // Crear hora de inicio
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, Utils.getFromDate(date, Calendar.HOUR_OF_DAY))
+        cal.set(Calendar.MINUTE, Utils.getFromDate(date, Calendar.MINUTE))
+        cal.set(Calendar.SECOND, 0)
+        val startTime = cal.timeInMillis
+        // Establecer pending intent
+        checkAlarmIntent = getPendingIntentService(
+            Intent(ctx, RiskContactCheckingForegroundService::class.java),
+            CHECK_ALARM_ID
+        )
+        // Establecer alarma
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, AlarmManager.INTERVAL_DAY, checkAlarmIntent)
+    }
+
+
+
+    /**
+     * Cancela la alarma de comprobación actualmente
+     * establecida.
+     */
+    fun disablePeriodicCheck(){
+        checkAlarmIntent?.let {
+            alarmManager.cancel(checkAlarmIntent)
+        }
     }
 
 
@@ -162,6 +209,23 @@ class RiskContactManager @Inject constructor(
             .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
             .setContentIntent(pendindIntent)
             .build()
+    }
+
+    /**
+     * Método privado que devuelve el PendingIntent correspondiente
+     * al Intent pasado como parámetro en función de la versión
+     * del dispositivo.
+     *
+     * @param intent Intent con el servicio de localización.
+     * @param id Id asociado al PendingIntent.
+     *
+     */
+    private fun getPendingIntentService(intent: Intent, id: Int): PendingIntent {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            PendingIntent.getForegroundService(ctx, id, intent, 0)
+        } else {
+            PendingIntent.getService(ctx, id, intent, 0)
+        }
     }
 
     private fun pruebaUser(): Itinerary {
