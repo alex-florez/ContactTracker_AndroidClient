@@ -53,6 +53,26 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/checkRiskContacts"
                 app:strokeWidth="2dp" />
+            <!-- ICONO DE CARGA -->
+            <LinearLayout
+                android:id="@+id/riskContactCheckLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Placeholder para la línea de progreso -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/riskContactCheckingPlaceholder"
+                    android:layout_gravity="center"/>
+
+                <!-- Línea de progreso -->
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:indeterminateAnimationType="disjoint"/>
+            </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

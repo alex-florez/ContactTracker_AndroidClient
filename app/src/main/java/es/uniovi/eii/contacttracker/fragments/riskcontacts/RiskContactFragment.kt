@@ -61,13 +61,6 @@ class RiskContactFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = FragmentRiskContactBinding.inflate(inflater, container, false)
-
-        binding.btnManualCheck.setOnClickListener {
-            viewModel.detect()
-        }
-        viewModel.isDetecting.observe(viewLifecycleOwner) {
-            binding.btnManualCheck.isEnabled = !it
-        }
         setListeners()
         setObservers()
 
@@ -95,6 +88,11 @@ class RiskContactFragment : Fragment() {
                 selectMode(CheckMode.PERIODIC)
             }
 
+            /* Botón de Comprobación manual*/
+            btnManualCheck.setOnClickListener {
+                viewModel.startChecking()
+            }
+
             /* EditText para la hora de la comprobación */
             txtCheckHour.setOnClickListener {
                 checkHourTimePicker.show(requireActivity().supportFragmentManager, "CheckHour")
@@ -111,6 +109,13 @@ class RiskContactFragment : Fragment() {
             /* Hora de la comprobación */
             checkHour.observe(viewLifecycleOwner) {
                 updateCheckHour(it)
+            }
+            /* Icono de carga */
+            isChecking.observe(viewLifecycleOwner) {
+                binding.apply {
+                    btnManualCheck.isEnabled = !it // Deshabilitar botón
+                    riskContactCheckLoading.visibility = if(it) View.VISIBLE else View.GONE // Línea de progreso
+                }
             }
         }
     }

@@ -171,6 +171,7 @@
     <string name="manualCheckExplanation">Inicia una comprobación manualmente para detectar posibles contactos de riesgo con otros positivos.</string>
     <string name="periodicCheckExplanation">Programa una hora concreta del día para realizar la comprobación. Esta comprobación se repetirá todos los días a la hora indicada.</string>
     <string name="checkHour">Hora de la comprobación</string>
+    <string name="riskContactCheckingPlaceholder">Comparando tus localizaciones con las de otros positivos...</string>
 
     <!-- Notificaciones -->
     <string name="resultNotificationTitle">Resultados de la comprobación</string>

@@ -28,8 +28,8 @@ class RiskContactViewModel @Inject constructor(
     /**
      * LiveData que indica si se está ejecutando la comprobación.
      */
-    private val _isDetecting = MutableLiveData(false)
-    val isDetecting: LiveData<Boolean> = _isDetecting
+    private val _isChecking = MutableLiveData(false)
+    val isChecking: LiveData<Boolean> = _isChecking
 
     /**
      * LiveData para la hora de la comprobación.
@@ -37,12 +37,16 @@ class RiskContactViewModel @Inject constructor(
     private val _checkHour = MutableLiveData<Date>()
     val checkHour: LiveData<Date> = _checkHour
 
-   fun detect() {
+    /**
+     * Hace uso del manager de contactos de riesgo para
+     * comenzar una nueva comprobación.
+     */
+   fun startChecking() {
        viewModelScope.launch(Dispatchers.IO) {
-           _isDetecting.postValue(true)
+           _isChecking.postValue(true)
            riskContactManager.checkRiskContacts()
            val result = riskContactRepository.getAll()
-           _isDetecting.postValue(false)
+           _isChecking.postValue(false)
        }
    }
 
