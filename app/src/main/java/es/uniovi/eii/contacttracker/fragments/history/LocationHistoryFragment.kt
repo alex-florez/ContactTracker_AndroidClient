@@ -93,8 +93,8 @@ class LocationHistoryFragment : Fragment() {
         }.observe(viewLifecycleOwner, { locationList ->
             userLocationAdapter.addLocations(locationList)
             binding.recyclerViewUserLocations.smoothScrollToPosition(0) // Hacer scroll en el recycler
-            toggleNoLocationsLabel(locationList)
-            showNumberOfLocations(locationList.size)
+            toggleNoLocationsLabel(locationList) // Etiqueta de lista vacía
+            showNumberOfLocations(locationList.size) // Caja de información general
         })
 
         // Observer para la eliminación de localizaciones
@@ -162,9 +162,9 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun showNumberOfLocations(number: Int){
         if(number == 0){
-            binding.numberOfLocationsBox.visibility = View.INVISIBLE
+            binding.historyDataBox.visibility = View.INVISIBLE
         } else {
-            binding.numberOfLocationsBox.visibility = View.VISIBLE
+            binding.historyDataBox.visibility = View.VISIBLE
             binding.txtNumberOfLocations.text = number.toString()
         }
     }
@@ -221,6 +221,7 @@ class LocationHistoryFragment : Fragment() {
         viewModel.getAllUserLocationsByDate(selectedDate).observe(viewLifecycleOwner) { locations ->
             requireActivity().supportFragmentManager
                 .beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .replace(R.id.historyPlaceholder, MapsFragment.newInstance(UserLocationList(locations)))
                 .addToBackStack("MapsFragment")
                 .commit()

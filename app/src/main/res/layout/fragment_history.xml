@@ -50,27 +50,25 @@
                 android:contentDescription="@string/contentDescriptionDeleteLocationsByDate" />
         </LinearLayout>
 
+        <!-- Caja con datos generales y botón de mostrar mapa -->
         <LinearLayout
+            android:id="@+id/historyDataBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
+            android:orientation="vertical"
+            android:visibility="invisible">
             <LinearLayout
-                android:id="@+id/numberOfLocationsBox"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_marginStart="10dp"
-                android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:visibility="invisible">
-
+                android:layout_marginStart="10dp">
                 <TextView
                     android:id="@+id/txtNumberOfLocations"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_gravity="bottom"
                     android:text="10"
                     android:textColor="@color/red1"
                     android:textStyle="bold" />
@@ -78,46 +76,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="localizaciones"/>
-            </LinearLayout>
+                    android:text="@string/locations"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginEnd="8dp"/>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="end"
-                android:layout_marginEnd="10dp"
-                android:baselineAligned="false">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="@string/showInMap" />
-
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShowMap"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/deepBlue"
-                    android:contentDescription="@string/showInMapContentDescription"
-                    android:src="@android:drawable/ic_dialog_map" />
-
-                <!--            <com.google.android.material.button.MaterialButton-->
-                <!--                android:id="@+id/btnShowMap"-->
-                <!--                android:layout_width="wrap_content"-->
-                <!--                android:layout_height="wrap_content"-->
-                <!--                android:backgroundTint="@color/addGreen"-->
-                <!--                android:text="@string/showInMap"-->
-                <!--                app:icon="@android:drawable/ic_dialog_map" />-->
-
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    android:layout_gravity="center"
+                    style="?attr/materialButtonOutlinedStyle"
+                    app:icon="@android:drawable/ic_dialog_map"/>
             </LinearLayout>
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@android:color/darker_gray"/>
         </LinearLayout>
-
-
+        <!-- RecyclerView con las localizaciones -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewUserLocations"
             android:layout_width="match_parent"

@@ -70,6 +70,7 @@
     <string name="date">Fecha</string>
     <string name="history_date_picker_title">Selecciona una fecha</string>
     <string name="showInMap">Visualizar en el mapa</string>
+    <string name="locations">localizaciones</string>
 
     <!-- Alarmas de localización -->
     <string name="locationAlarmsTitle">Alarmas de localización</string>
