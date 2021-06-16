@@ -61,6 +61,8 @@ class RiskContactRepository @Inject constructor(
 
     /**
      * Devuelve los resultados de todas las comprobaciones realizadas.
+     * Dado que se trata de varias relaciones 1 a n, se realiza una transformación
+     * de los objetos wrapper a los objetos originales.
      */
     suspend fun getAll(): List<RiskContactResult> {
         // Obtener lista de objetos wrapper

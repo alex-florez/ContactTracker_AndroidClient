@@ -149,6 +149,7 @@
         <item quantity="one">Contacto con %1$d positivo</item>
         <item quantity="other">Contacto con %2$d positivos</item>
     </plurals>
+    <string name="emptyResultsLabel">No hay resultados</string>
 
     <!-- Fragment: Detalles de un resultado de la comprobación -->
     <string name="riskiestContact">Contacto de mayor riesgo</string>

@@ -109,9 +109,22 @@ class RiskContactResultsFragment : Fragment() {
      * del ViewModel.
      */
     private fun setObservers(){
-        viewModel.results.observe(viewLifecycleOwner) {
-            riskContactResultAdapter.submitList(it)
-            binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)
+        viewModel.apply {
+            /* Resultados de la comprobación */
+            results.observe(viewLifecycleOwner) {
+                riskContactResultAdapter.submitList(it)
+                binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)
+            }
+            /* Icono de carga */
+            isLoading.observe(viewLifecycleOwner) {
+                binding.riskContactResultProgress.visibility = if(it) View.VISIBLE else View.GONE
+                // Ocultar etiqueta de lista vacía si está cargando
+                if(it) binding.txtLabelEmpty.visibility = View.GONE
+            }
+            /* Etiqueta de lista vacía */
+            isEmpty.observe(viewLifecycleOwner) {
+                binding.txtLabelEmpty.visibility = if(it) View.VISIBLE else View.GONE
+            }
         }
     }
 
