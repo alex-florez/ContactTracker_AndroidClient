@@ -6,10 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.Log
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -26,6 +23,7 @@ import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactCheckingForegroundService
 import es.uniovi.eii.contacttracker.util.Utils
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -48,7 +46,6 @@ class RiskContactManager @Inject constructor(
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
         private val alarmManager: AlarmManager, // Manager de alarmas de Android
         @ApplicationContext private val ctx: Context
-
 ) {
 
     /**
@@ -101,13 +98,12 @@ class RiskContactManager @Inject constructor(
         /* Almacenar el resultado en la base de datos local. */
         riskContactRepository.insert(result)
 
-        /* Emitir un Broadcast */
-        sendBroadcast(result)
-
         /* Mostrar Notificación con los resultados. */
         with(NotificationManagerCompat.from(ctx)){
             notify(RESULT_NOTIFICATION_ID, createNotification(result))
         }
+        /* Emitir un Broadcast */
+        sendBroadcast(result)
     }
 
     /**
@@ -192,7 +188,7 @@ class RiskContactManager @Inject constructor(
             ctx.getString(R.string.resultNotificationHealthy)
         }
         // Intent para ver los resultados de la comprobación.
-        val pendindIntent: PendingIntent = Intent(ctx, MainActivity::class.java).let {
+        val pendingIntent: PendingIntent = Intent(ctx, MainActivity::class.java).let {
             it.action = Constants.ACTION_SHOW_RISK_CONTACT_RESULT
             it.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
             PendingIntent.getActivity(ctx, 0, it, 0)
@@ -207,7 +203,7 @@ class RiskContactManager @Inject constructor(
             .setColor(color)
             .setLargeIcon(largeIcon)
             .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
-            .setContentIntent(pendindIntent)
+            .setContentIntent(pendingIntent)
             .build()
     }
 

@@ -19,7 +19,7 @@ import java.util.*
  */
 @Parcelize
 @Entity
-class RiskContactResult(
+data class RiskContactResult(
         @PrimaryKey(autoGenerate = true) var resultId: Long? = null,
         @Ignore var riskContacts: MutableList<RiskContact> = mutableListOf(), /* Contactos de riesgo */
         var numberOfPositives: Int = 0, /* Nº de positivos con los que se ha entrado en contacto */

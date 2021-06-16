@@ -3,6 +3,7 @@ package es.uniovi.eii.contacttracker.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants

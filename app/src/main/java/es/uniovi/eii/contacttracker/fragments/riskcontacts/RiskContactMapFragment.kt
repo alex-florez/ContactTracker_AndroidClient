@@ -87,9 +87,11 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
             drawLocations(userLocations, requireContext().getColor(R.color.blue1))
             /* Dibujar localizciones del positivo */
             drawLocations(positiveLocations, requireContext().getColor(R.color.red1))
-            /* Mover la cámara */
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                LatLng(userLocations[0].lat, userLocations[0].lng), Constants.DEFAULT_ZOOM))
+            if(userLocations.isNotEmpty()){
+                /* Mover la cámara */
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    LatLng(userLocations[0].lat, userLocations[0].lng), Constants.DEFAULT_ZOOM))
+            }
         }
     }
 
