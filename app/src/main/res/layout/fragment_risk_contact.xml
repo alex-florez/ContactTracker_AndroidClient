@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/riskContactCheckingPlaceholder"
                     android:textAlignment="center"
-                    android:textSize="12sp"/>
+                    android:textSize="13sp"/>
 
                 <!-- Línea de progreso -->
                 <com.google.android.material.progressindicator.LinearProgressIndicator

@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.riskcontact
 
 import android.app.AlarmManager
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -78,7 +79,10 @@ class RiskContactManager @Inject constructor(
             }
             else -> { // Error en la comprobación
                 // Notificar el error
-//                return
+                with(NotificationManagerCompat.from(ctx)){
+                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
+                }
+                return // Dejar de ejecutar la comprobación
             }
         }
 
@@ -204,6 +208,19 @@ class RiskContactManager @Inject constructor(
             .setLargeIcon(largeIcon)
             .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
             .setContentIntent(pendingIntent)
+            .build()
+    }
+
+    /**
+     * Crea y devuelve una notificación de error en la comprobación.
+     */
+    private fun createErrorNotification(): Notification {
+        return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
+            .setContentTitle(ctx.getString(R.string.resultNotificationCheckingErrorTitle))
+            .setContentText(ctx.getString(R.string.resultNotificationCheckingError))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(ctx.getString(R.string.resultNotificationCheckingError)))
             .build()
     }
 

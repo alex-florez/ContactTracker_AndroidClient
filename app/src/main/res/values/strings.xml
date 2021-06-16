@@ -177,4 +177,7 @@
     <!-- Notificaciones -->
     <string name="resultNotificationTitle">Resultados de la comprobación</string>
     <string name="resultNotificationHealthy">No has tenido contacto con ningún positivo.</string>
+    <string name="resultNotificationCheckingErrorTitle">Error durante la comprobación de contactos</string>
+    <string name="resultNotificationCheckingError">No ha sido posible realizar la comprobación de contactos de riesgo.</string>
+
 </resources>
