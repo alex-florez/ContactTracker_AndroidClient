@@ -1,21 +1,9 @@
 package es.uniovi.eii.contacttracker.riskcontact.detector
 
-import android.util.Log
-import es.uniovi.eii.contacttracker.Constants
-import es.uniovi.eii.contacttracker.model.Itinerary
-import es.uniovi.eii.contacttracker.model.RiskContact
-import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.LocationUtils.toRadians
 import es.uniovi.eii.contacttracker.util.Utils
-import java.text.SimpleDateFormat
-import java.util.Date
 import javax.inject.Inject
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 /* Formato estándar para las fechas utilizadas en el algoritmo de comprobación. */
 private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
@@ -31,6 +19,11 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
      * Almacena las localizaciones que ya han sido utilizadas para comprobar.
      */
     private val usedLocations = mutableListOf<UserLocation>()
+
+    /**
+     * Configuración de la comprobación.
+     */
+    private var riskContactConfig: RiskContactConfig = RiskContactConfig()
 
     override fun startChecking(user: Itinerary, positive: Itinerary): List<RiskContact> {
         val result = mutableListOf<RiskContact>()
@@ -51,7 +44,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
                             && checkTimeProximity(userLocation, closestLocation, 5.0) // Cercanía en el TIEMPO
                         ) {
                             if(riskContact == null){ /* Registrar nuevo contacto */
-                                riskContact = RiskContact() // Iniciar nuevo Tramo de contacto.
+                                riskContact = RiskContact(config = riskContactConfig) // Iniciar nuevo Tramo de contacto.
                             }
                             /* Actualizar Contacto de Riesgo si ya se estaba en un tramo de contacto */
                             riskContact?.addContactLocations(userLocation, closestLocation)
@@ -99,6 +92,10 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
     ): Boolean {
         val minDiff = Utils.dateDifferenceInSecs(pointA.locationTimestamp, pointB.locationTimestamp) / 60.0
         return minDiff <= time
+    }
+
+    override fun setConfig(config: RiskContactConfig) {
+        this.riskContactConfig = config
     }
 
     override fun checkSpaceProximity(

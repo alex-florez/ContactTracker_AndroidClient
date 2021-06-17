@@ -65,33 +65,32 @@ class RiskContactManager @Inject constructor(
     suspend fun checkRiskContacts() {
         // Resultado de la comprobación
         val result = RiskContactResult()
-        // Obtener el alcance en DÍAS de la comprobación de las SharedPreferences.
-        val scopeDays = 3
+        // Recuperar la configuración de la comprobación de contactos de riesgo.
+        val config = retrieveRiskContactConfig()
+        detector.setConfig(config) // Establecer la configuración al detector.
 
-        /* Obtener el itinerario del propio usuario desde la fecha indicada */
-        val userItinerary = locationRepository.getItinerarySince(scopeDays)
-//        val userItinerary = pruebaUser()
-        /* Obtener los positivos con los que hacer la comprobación */
+        /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */
+//        val userItinerary = locationRepository.getItinerarySince(config.checkScope)
+        val userItinerary = pruebaUser()
+        /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives = mutableListOf<Positive>()
-        when(val positivesResult = positiveRepository.getPositivesFromLastDays(scopeDays)) {
+        when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
             is ResultWrapper.Success -> {
                 positives = positivesResult.value.toMutableList()
             }
             else -> { // Error en la comprobación
-                // Notificar el error
-                with(NotificationManagerCompat.from(ctx)){
-                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
-                }
-                return // Dejar de ejecutar la comprobación
+//                with(NotificationManagerCompat.from(ctx)){
+//                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
+//                }
+//                return // Dejar de ejecutar la comprobación
             }
         }
-
-//        positives.add(Positive(null, Date(), listOf(), listOf(), null))
+        positives.add(Positive(null, Date(), listOf(), listOf(), null))
         /* Hacer la comprobación para cada positivo */
         positives.forEach { positive ->
             // Itinerario del positivo
-            val positiveItinerary = positive.getItinerary()
-//            val positiveItinerary = pruebaPositive()
+//            val positiveItinerary = positive.getItinerary()
+            val positiveItinerary = pruebaPositive()
             val contacts = detector.startChecking(userItinerary, positiveItinerary)
             if(contacts.isNotEmpty()){
                 // Actualizar el resultado.
@@ -108,6 +107,26 @@ class RiskContactManager @Inject constructor(
         }
         /* Emitir un Broadcast */
         sendBroadcast(result)
+    }
+
+
+    /**
+     * Recupera la configuración de la comprobación de contactos
+     * establecida actualmente a partir de las Shared Preferences y
+     * de la configuración remota establecida en la nube por los administradores.
+     *
+     * @return Objeto con los parámetros de configuración de la comprobación.
+     */
+    private fun retrieveRiskContactConfig(): RiskContactConfig {
+        return RiskContactConfig(
+            3,
+            Pair(0, 900000),
+            Pair(0.0, 10.0),
+            Pair(0, 600000),
+            0.3,
+            0.5,
+            0.2
+        )
     }
 
     /**

@@ -38,7 +38,8 @@ class RiskContact(
         var meanProximity: Double = 0.0, /* Proximidad media (metros) */
         var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
         var startDate: Date = Date(), /* Fecha de inicio del contacto. (Aproximada) */
-        var endDate: Date = Date() /* Fecha de fin de contacto. (Aproximada) */
+        var endDate: Date = Date(), /* Fecha de fin de contacto. (Aproximada) */
+        @Ignore var config: RiskContactConfig = RiskContactConfig() /* Configuración de la comprobación */
 ) : Parcelable {
 
     /**
@@ -63,7 +64,7 @@ class RiskContact(
     /**
      * Calcula el tiempo total de exposición.
      */
-    fun calculateExposeTime() {
+    private fun calculateExposeTime() {
         if(contactLocations.size > 0){
             // Primeras localizaciones
             val firstUserLocation = contactLocations[0].userContactPoint
@@ -87,7 +88,7 @@ class RiskContact(
      * Calcula la media de proximidad entre las localizaciones
      * del usuario y del positivo.
      */
-    fun calculateMeanProximity() {
+    private fun calculateMeanProximity() {
         var proximity = 0.0
         contactLocations.forEach { contactLocation ->
             proximity += LocationUtils.distance(
@@ -103,7 +104,7 @@ class RiskContact(
      * Calcula el intervalo de tiempo medio entre localizaciones
      * de ambos individuos, tanto del positivo como del propio usuario.
      */
-    fun calculateMeanTimeInterval() {
+    private fun calculateMeanTimeInterval() {
         var time = 0L
         var n = 0
         var i = 0 // Índice
@@ -133,15 +134,17 @@ class RiskContact(
      * Calcula el nivel de riesgo en función de los parámetros
      * del contacto de riesgo y de los factores de ponderación establecidos.
      */
-    fun calculateRiskLevel() {
+    private fun calculateRiskLevel() {
         this.riskScore = 0.0 // Valor total ponderado del riesgo.
         /* Normalizar los valores de los parámetros */
         val (exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal) = normalize()
         /* Obtener valores ponderados de los parámetros */
         // Restar -1 para los parámetros que ponderan inversamente.
-        this.riskScore += exposeTimeNormal * 0.3 + (1 - meanProximityNormal) * 0.5 + (1 - meanTimeIntervalNormal) * 0.2
+        this.riskScore += exposeTimeNormal * config.exposeTimeWeight +
+                (1 - meanProximityNormal) * config.meanProximityWeight +
+                (1 - meanTimeIntervalNormal) * config.meanTimeIntervalWeight
         val riskPercent: Double = this.riskScore * 100 // Porcentaje total de riesgo.
-        riskLevel = getRiskLevel(riskPercent)
+        this.riskLevel = getRiskLevel(riskPercent)
         this.riskPercent = Utils.round(riskPercent, 2)
     }
 
@@ -152,16 +155,16 @@ class RiskContact(
      * @return Tripleta con los tres parámetros normalizados.
      */
     private fun normalize(): Triple<Double, Double, Double> {
-        // Truncar los valores que superen el límite.
-        val exptime: Long = if(exposeTime > 900000) 900000 else exposeTime
-        val meanprox = if(meanProximity > 10.0) 10.0 else meanProximity
-        val meantimeinterval: Long = if(meanTimeInterval > 600000.0) 600000 else meanTimeInterval
         // Tiempo de exposición
-        val exposeTimeNormal = (exptime - 0)/(900000.0 - 0) // Max: 15 min
-        // Proximidad media
-        val meanProximityNormal = (meanprox - 0) / (10.0-0) // Máx: 10 m
-        // Intervalo de tiempo medio
-        val meanTimeIntervalNormal = (meantimeinterval - 0) / (600000.0 - 0) // Max: 10 min
+        val exposeTimeNormal = Utils.normalize(exposeTime.toDouble(),
+                config.exposeTimeRange.first.toDouble(),
+                config.exposeTimeRange.second.toDouble())
+        val meanProximityNormal = Utils.normalize(meanProximity,
+                config.meanProximityRange.first,
+                config.meanProximityRange.second)
+        val meanTimeIntervalNormal = Utils.normalize(meanTimeInterval.toDouble(),
+                config.meanTimeIntervalRange.first.toDouble(),
+                config.meanTimeIntervalRange.second.toDouble())
         return Triple(exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal)
     }
 

@@ -1,9 +1,6 @@
 package es.uniovi.eii.contacttracker.riskcontact.detector
 
-import es.uniovi.eii.contacttracker.model.Itinerary
-import es.uniovi.eii.contacttracker.model.RiskContact
-import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.model.*
 
 /**
  * Interfaz que representa la funcionalidad del detector
@@ -61,4 +58,11 @@ interface RiskContactDetector {
      */
     fun checkTimeProximity(pointA: UserLocation, pointB: UserLocation, time:Double): Boolean
 
+    /**
+     * Establece la configuración de la comprobación con la nueva
+     * configuración pasada como parámetro.
+     *
+     * @param config Configuración de la comprobación.
+     */
+    fun setConfig(config: RiskContactConfig)
 }

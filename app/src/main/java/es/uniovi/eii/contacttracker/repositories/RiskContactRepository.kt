@@ -86,6 +86,7 @@ class RiskContactRepository @Inject constructor(
                 riskContact.startDate = it.riskContact.startDate
                 riskContact.endDate = it.riskContact.endDate
                 riskContact.contactLocations = it.riskContactLocations.toMutableList()
+                riskContact.config = it.riskContact.config
                 riskContactResult.riskContacts.add(riskContact)
             }
             result.add(riskContactResult)
