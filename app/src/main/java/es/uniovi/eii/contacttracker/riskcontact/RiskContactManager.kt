@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -18,9 +19,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
-import es.uniovi.eii.contacttracker.repositories.LocationRepository
-import es.uniovi.eii.contacttracker.repositories.PositiveRepository
-import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
+import es.uniovi.eii.contacttracker.repositories.*
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactCheckingForegroundService
 import es.uniovi.eii.contacttracker.util.Utils
@@ -45,6 +44,7 @@ class RiskContactManager @Inject constructor(
         private val locationRepository: LocationRepository, // Repositorio de localización.
         private val positiveRepository: PositiveRepository, // Repositorio de positivos.
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
+        private val riskContactConfigRepository: RiskContactSettingsRepository, // Repositorio de configuración de la comprobación
         private val alarmManager: AlarmManager, // Manager de alarmas de Android
         @ApplicationContext private val ctx: Context
 ) {
@@ -66,7 +66,7 @@ class RiskContactManager @Inject constructor(
         // Resultado de la comprobación
         val result = RiskContactResult()
         // Recuperar la configuración de la comprobación de contactos de riesgo.
-        val config = retrieveRiskContactConfig()
+        val config = riskContactConfigRepository.retrieveRiskContactConfig()
         detector.setConfig(config) // Establecer la configuración al detector.
 
         /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */
@@ -74,17 +74,17 @@ class RiskContactManager @Inject constructor(
         val userItinerary = pruebaUser()
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives = mutableListOf<Positive>()
-        when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
-            is ResultWrapper.Success -> {
-                positives = positivesResult.value.toMutableList()
-            }
-            else -> { // Error en la comprobación
+//        when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
+//            is ResultWrapper.Success -> {
+//                positives = positivesResult.value.toMutableList()
+//            }
+//            else -> { // Error en la comprobación
 //                with(NotificationManagerCompat.from(ctx)){
 //                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
 //                }
 //                return // Dejar de ejecutar la comprobación
-            }
-        }
+//            }
+//        }
         positives.add(Positive(null, Date(), listOf(), listOf(), null))
         /* Hacer la comprobación para cada positivo */
         positives.forEach { positive ->
@@ -107,26 +107,6 @@ class RiskContactManager @Inject constructor(
         }
         /* Emitir un Broadcast */
         sendBroadcast(result)
-    }
-
-
-    /**
-     * Recupera la configuración de la comprobación de contactos
-     * establecida actualmente a partir de las Shared Preferences y
-     * de la configuración remota establecida en la nube por los administradores.
-     *
-     * @return Objeto con los parámetros de configuración de la comprobación.
-     */
-    private fun retrieveRiskContactConfig(): RiskContactConfig {
-        return RiskContactConfig(
-            3,
-            Pair(0, 900000),
-            Pair(0.0, 10.0),
-            Pair(0, 600000),
-            0.3,
-            0.5,
-            0.2
-        )
     }
 
     /**

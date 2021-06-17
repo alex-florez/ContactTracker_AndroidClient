@@ -157,14 +157,14 @@ class RiskContact(
     private fun normalize(): Triple<Double, Double, Double> {
         // Tiempo de exposición
         val exposeTimeNormal = Utils.normalize(exposeTime.toDouble(),
-                config.exposeTimeRange.first.toDouble(),
-                config.exposeTimeRange.second.toDouble())
+                config.exposeTimeRange[0].toDouble(),
+                config.exposeTimeRange[1].toDouble())
         val meanProximityNormal = Utils.normalize(meanProximity,
-                config.meanProximityRange.first,
-                config.meanProximityRange.second)
+                config.meanProximityRange[0],
+                config.meanProximityRange[1])
         val meanTimeIntervalNormal = Utils.normalize(meanTimeInterval.toDouble(),
-                config.meanTimeIntervalRange.first.toDouble(),
-                config.meanTimeIntervalRange.second.toDouble())
+                config.meanTimeIntervalRange[0].toDouble(),
+                config.meanTimeIntervalRange[1].toDouble())
         return Triple(exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal)
     }
 
