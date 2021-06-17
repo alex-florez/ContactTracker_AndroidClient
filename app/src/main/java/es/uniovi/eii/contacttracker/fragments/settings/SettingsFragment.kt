@@ -17,6 +17,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        // Esconder menú de la Toolbar
+        val item1 = menu.findItem(R.id.appSettings)
+        val item2 = menu.findItem(R.id.privacyPolicy)
+        item1.isVisible = false
+        item2.isVisible = false
+        super.onPrepareOptionsMenu(menu)
     }
 }
