@@ -40,8 +40,8 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
                     val (closestLocation, distance) = findClosestLocation(userLocation, pLocations)
                     if(closestLocation != null){
                         /* Comprobar Cercanía en el Espacio y en el tiempo */
-                        if(checkSpaceProximity(userLocation, closestLocation, 5.0) // Cercanía en el ESPACIO
-                            && checkTimeProximity(userLocation, closestLocation, 5.0) // Cercanía en el TIEMPO
+                        if(checkSpaceProximity(userLocation, closestLocation, riskContactConfig.securityDistanceMargin) // Cercanía en el ESPACIO
+                            && checkTimeProximity(userLocation, closestLocation, riskContactConfig.timeDifferenceMargin) // Cercanía en el TIEMPO
                         ) {
                             if(riskContact == null){ /* Registrar nuevo contacto */
                                 riskContact = RiskContact(config = riskContactConfig) // Iniciar nuevo Tramo de contacto.

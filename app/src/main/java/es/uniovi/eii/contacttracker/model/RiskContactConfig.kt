@@ -5,6 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 /* Valores por defecto */
 private const val SCOPE = 3
+private val SECURITY_DISTANCE_MARGIN = 5.0
+private val TIME_DIFFERENCE_MARGIN = 5.0
 private val EXPOSE_TIME_RANGE = arrayOf(0L, 900000L)
 private val MEAN_PROXIMITY_RANGE = arrayOf(0.0, 10.0)
 private val MEAN_TIME_INTERVAL_RANGE = arrayOf(0L, 600000L)
@@ -20,6 +22,8 @@ private const val MEAN_TIME_INTERVAL_WEIGHT = 0.2
 @Parcelize
 data class RiskContactConfig(
     var checkScope: Int = SCOPE, // Alcance de la comprobación en días.
+    val securityDistanceMargin: Double = SECURITY_DISTANCE_MARGIN, // Margen de diferencia de Distancia de seguridad
+    val timeDifferenceMargin: Double = TIME_DIFFERENCE_MARGIN, // Margen de diferencia temporal
     val exposeTimeRange: Array<Long> = EXPOSE_TIME_RANGE, // Rango de tiempo de exposición (milisegundos)
     val meanProximityRange: Array<Double> = MEAN_PROXIMITY_RANGE, // Rango de proximidad media (metros)
     val meanTimeIntervalRange: Array<Long> = MEAN_TIME_INTERVAL_RANGE, // Rango de intervalo de tiempo medio (milisegundos)
@@ -35,6 +39,8 @@ data class RiskContactConfig(
         other as RiskContactConfig
 
         if (checkScope != other.checkScope) return false
+        if (securityDistanceMargin != other.securityDistanceMargin) return false
+        if (timeDifferenceMargin != other.timeDifferenceMargin) return false
         if (!exposeTimeRange.contentEquals(other.exposeTimeRange)) return false
         if (!meanProximityRange.contentEquals(other.meanProximityRange)) return false
         if (!meanTimeIntervalRange.contentEquals(other.meanTimeIntervalRange)) return false
@@ -47,6 +53,8 @@ data class RiskContactConfig(
 
     override fun hashCode(): Int {
         var result = checkScope
+        result = 31 * result + securityDistanceMargin.hashCode()
+        result = 31 * result + timeDifferenceMargin.hashCode()
         result = 31 * result + exposeTimeRange.contentHashCode()
         result = 31 * result + meanProximityRange.contentHashCode()
         result = 31 * result + meanTimeIntervalRange.contentHashCode()
@@ -55,4 +63,5 @@ data class RiskContactConfig(
         result = 31 * result + meanTimeIntervalWeight.hashCode()
         return result
     }
+
 }
