@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
@@ -17,6 +20,7 @@ import es.uniovi.eii.contacttracker.fragments.riskcontacts.ResultDetailsFragment
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactFragment
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactPlaceholder
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactTabsFragment
+import es.uniovi.eii.contacttracker.fragments.settings.SettingsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
@@ -46,6 +50,45 @@ class MainActivity : AppCompatActivity() {
         intent?.let{
             processIntent(it)
         }
+    }
+
+    /**
+     * Creación del menú de opciones de la Toolbar.
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    /**
+     * Callback para los eventos de Click sobre las opciones
+     * del menú de la Toolbar.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.appSettings -> {
+                goToSettings()
+
+                true
+            }
+            R.id.privacyPolicy -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    /**
+     * Muestra el fragmento de configuración general de la
+     * aplicación.
+     */
+    private fun goToSettings(){
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.slide_out_top)
+            .replace(R.id.main_fragment_container, SettingsFragment())
+            .addToBackStack("Settings")
+            .commit()
     }
 
     /**
@@ -120,6 +163,11 @@ class MainActivity : AppCompatActivity() {
      * del Fragment asociado a dicha opción de menú.
      */
     private fun getMenuFragment(id: Int): Fragment {
+        val fm = supportFragmentManager
+        // Vaciar BackStack
+        for(i in 0..fm.backStackEntryCount){
+            fm.popBackStack()
+        }
         return when(id){
             R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
             R.id.bottomMenuOption2 -> NotifyPositiveFragment()
