@@ -3,6 +3,7 @@ package es.uniovi.eii.contacttracker.fragments.settings
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import androidx.core.view.iterator
 import androidx.preference.PreferenceFragmentCompat
 import es.uniovi.eii.contacttracker.R
 
@@ -12,20 +13,21 @@ import es.uniovi.eii.contacttracker.R
 class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        // Establecer la SharedPreferences Custom
+        preferenceManager.sharedPreferencesName = getString(R.string.shared_prefs_file_name)
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(true) // Permite a este fragmento manejar el menú de opciones.
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         // Esconder menú de la Toolbar
-        val item1 = menu.findItem(R.id.appSettings)
-        val item2 = menu.findItem(R.id.privacyPolicy)
-        item1.isVisible = false
-        item2.isVisible = false
+        for(item in menu.iterator()){
+            item.isVisible = false
+        }
         super.onPrepareOptionsMenu(menu)
     }
 }
