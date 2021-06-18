@@ -1,11 +1,22 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:preference="http://schemas.android.com/tools">
 
     <PreferenceCategory app:title="@string/messages_header">
+
+        <es.uniovi.eii.contacttracker.fragments.settings.NumberPickerPreference
+            android:selectable="true"
+            android:layout="@layout/number_picker_preference_layout"
+            app:minValue="20"
+            app:maxValue="100"
+            app:prefId="idNumberPicker"/>
 
         <EditTextPreference
             app:key="signature"
             app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            android:inputType="number"
+            android:digits="0123456789"/>
 
         <ListPreference
             app:defaultValue="reply"
@@ -14,6 +25,7 @@
             app:key="reply"
             app:title="@string/reply_title"
             app:useSimpleSummaryProvider="true" />
+
 
     </PreferenceCategory>
 
