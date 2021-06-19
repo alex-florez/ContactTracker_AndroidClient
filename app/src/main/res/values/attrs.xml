@@ -21,6 +21,7 @@
         <attr name="prefTitle" format="string" />
         <attr name="wrapSelectorWheelNp" format="boolean"/>
         <attr name="pickerTitle" format="string"/>
+        <attr name="valueUnit" format="string"/>
     </declare-styleable>
 
 </resources>

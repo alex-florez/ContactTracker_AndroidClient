@@ -82,6 +82,8 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
      * @param sec Segundos a persistir
      */
     private fun persist(min: Int, sec: Int){
+        minutesValue = min
+        secondsValue = sec
         val millis = Utils.getMillis(min, sec)
         with(sharedPrefs.edit()){
             putLong(prefId, millis)

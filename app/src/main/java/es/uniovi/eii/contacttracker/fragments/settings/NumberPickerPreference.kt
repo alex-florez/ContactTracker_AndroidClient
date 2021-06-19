@@ -31,6 +31,7 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
     /* Títulos */
     private var title = ""
     private var pickerTitle = ""
+    private var valueUnit = "" // Unidad de medida del valor.
     /* ID de la Shared Preference */
     private lateinit var prefId: String
 
@@ -46,6 +47,7 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
             defValue = a.getInteger(R.styleable.NumberPickerPreference_defVal, 0)
             title = a.getString(R.styleable.NumberPickerPreference_prefTitle) ?: "title"
             pickerTitle = a.getString(R.styleable.NumberPickerPreference_pickerTitle) ?: "pickerTitle"
+            valueUnit = a.getString(R.styleable.NumberPickerPreference_valueUnit) ?: ""
             prefId = a.getString(R.styleable.NumberPickerPreference_prefKey) ?: "id"
             wrapSelectorWheel = a.getBoolean(R.styleable.NumberPickerPreference_wrapSelectorWheelNp, true)
             a.recycle()
@@ -72,12 +74,14 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
      * @param value Valor a persistir.
      */
     private fun persist(value: Int){
+        this.value = value
         with(sharedPrefs.edit()){
             putInt(prefId, value)
             apply()
         }
         // Actualizar componente de la Preference
-        binding.prefValue.text = value.toString()
+        val textValue = "$value $valueUnit"
+        binding.prefValue.text = textValue
     }
 
     /**
@@ -109,7 +113,9 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
      * establece en la vista.
      */
     private fun setCurrentValue() {
-        binding.prefValue.text = value.toString()
+        this.value = sharedPrefs.getInt(prefId, defValue)
+        val valueText = "$value $valueUnit"
+        binding.prefValue.text = valueText
         binding.prefTitle.text = title
     }
 }

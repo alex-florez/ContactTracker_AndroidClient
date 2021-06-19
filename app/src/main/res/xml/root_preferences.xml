@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:preference="http://schemas.android.com/tools">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="@string/tracker_header">
 
         <es.uniovi.eii.contacttracker.fragments.settings.MinuteSecondsPickerPreference
             android:selectable="true"
@@ -11,50 +11,34 @@
             app:maxValueMinutes="5"
             app:minValueSeconds="0"
             app:maxValueSeconds="59"
-            app:title="Intervalo de Tiempo"
+            app:title="@string/time_interval_title"
             app:wrapSelectorWheel="true"
-            app:prefId="timeInterval"/>
+            app:prefId="@string/shared_prefs_tracker_config_min_interval"/>
 
         <es.uniovi.eii.contacttracker.fragments.settings.NumberPickerPreference
             android:selectable="true"
             android:layout="@layout/number_picker_preference_layout"
             app:minValue="0"
             app:maxValue="10"
-            app:prefTitle="Desplazamiento mínimo"
+            app:prefTitle="@string/min_displacement_title"
             app:pickerTitle="Metros"
             app:wrapSelectorWheelNp="true"
-            app:prefKey="minDisplacement"/>
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            android:digits="0123456789"/>
-
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
-
-
+            app:prefKey="@string/shared_prefs_tracker_config_smallest_displacement"
+            app:valueUnit="m"/>
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="@string/risk_contact_header">
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
+        <es.uniovi.eii.contacttracker.fragments.settings.NumberPickerPreference
+            android:selectable="true"
+            android:layout="@layout/number_picker_preference_layout"
+            app:minValue="1"
+            app:maxValue="10"
+            app:prefTitle="@string/check_scope_title"
+            app:pickerTitle="Días"
+            app:wrapSelectorWheelNp="true"
+            app:prefKey="@string/shared_prefs_risk_contact_check_scope"
+            app:valueUnit="días"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

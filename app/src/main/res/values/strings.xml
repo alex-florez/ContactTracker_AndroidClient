@@ -185,13 +185,17 @@
 
     <!-- Menú de la barra de herramientas -->
     <string name="settings">Ajustes</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- Preference Titles -->
+    <string name="tracker_header">Rastreo</string>
+    <string name="risk_contact_header">Comprobación de contactos</string>
+
+    <!-- Preferencias de Rastreo -->
+    <string name="time_interval_title">Intervalo de tiempo</string>
+    <string name="min_displacement_title">Desplazamiento mínimo</string>
+
+    <!-- Preferencias de Comprobación de Contactos -->
+    <string name="check_scope_title">Alcance de la comprobación</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
