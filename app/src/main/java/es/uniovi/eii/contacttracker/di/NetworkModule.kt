@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.di
 
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +25,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providePositiveAPI(): PositiveAPI {
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(PositiveAPI::class.java)
     }

@@ -57,8 +57,8 @@ class UserLocationAdapter(
             val formattedDate = Utils.formatDate(location.locationTimestamp, "dd/MM/yyyy")
             val formattedHour = Utils.formatDate(location.locationTimestamp, "HH:mm:ss")
             binding.apply {
-                txtLocationLat.text = location.lat.toString()
-                txtLocationLng.text = location.lng.toString()
+                txtLocationLat.text = Utils.round(location.lat, 6).toString()
+                txtLocationLng.text = Utils.round(location.lng, 6).toString()
                 txtLocationAccuracy.text = location.accuracy.toString()
                 txtLocationDate.text = formattedDate
                 txtLocationHour.text = formattedHour

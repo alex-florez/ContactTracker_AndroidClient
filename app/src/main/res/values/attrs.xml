@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Atributos XML para la custom preference del NumberPicker -->
+    <declare-styleable name="MinuteSecondsPickerPreference">
+        <attr name="minValueMinutes" format="integer|reference"/>
+        <attr name="maxValueMinutes" format="integer|reference"/>
+        <attr name="defValMinutes" format="integer|reference"/>
+        <attr name="minValueSeconds" format="integer|reference"/>
+        <attr name="maxValueSeconds" format="integer|reference"/>
+        <attr name="defValSeconds" format="integer|reference"/>
+        <attr name="prefId" format="string"/>
+        <attr name="title" format="string" />
+        <attr name="wrapSelectorWheel" format="boolean"/>
+    </declare-styleable>
+
     <declare-styleable name="NumberPickerPreference">
         <attr name="minValue" format="integer|reference"/>
         <attr name="maxValue" format="integer|reference"/>
-        <attr name="prefId" format="string"/>
-        <attr name="wrapSelectorWheel" format="boolean"/>
+        <attr name="defVal" format="integer|reference"/>
+        <attr name="prefKey" format="string"/>
+        <attr name="prefTitle" format="string" />
+        <attr name="wrapSelectorWheelNp" format="boolean"/>
+        <attr name="pickerTitle" format="string"/>
     </declare-styleable>
+
 </resources>

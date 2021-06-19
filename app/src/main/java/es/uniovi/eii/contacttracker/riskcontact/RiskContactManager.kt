@@ -70,27 +70,27 @@ class RiskContactManager @Inject constructor(
         detector.setConfig(config) // Establecer la configuración al detector.
 
         /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */
-//        val userItinerary = locationRepository.getItinerarySince(config.checkScope)
-        val userItinerary = pruebaUser()
+        val userItinerary = locationRepository.getItinerarySince(config.checkScope)
+//        val userItinerary = pruebaUser()
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives = mutableListOf<Positive>()
-//        when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
-//            is ResultWrapper.Success -> {
-//                positives = positivesResult.value.toMutableList()
-//            }
-//            else -> { // Error en la comprobación
-//                with(NotificationManagerCompat.from(ctx)){
-//                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
-//                }
-//                return // Dejar de ejecutar la comprobación
-//            }
-//        }
-        positives.add(Positive(null, Date(), listOf(), listOf(), null))
+        when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
+            is ResultWrapper.Success -> {
+                positives = positivesResult.value.toMutableList()
+            }
+            else -> { // Error en la comprobación
+                with(NotificationManagerCompat.from(ctx)){
+                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
+                }
+                return // Dejar de ejecutar la comprobación
+            }
+        }
+//        positives.add(Positive(null, Date(), listOf(), listOf(), null))
         /* Hacer la comprobación para cada positivo */
         positives.forEach { positive ->
             // Itinerario del positivo
-//            val positiveItinerary = positive.getItinerary()
-            val positiveItinerary = pruebaPositive()
+            val positiveItinerary = positive.getItinerary()
+//            val positiveItinerary = pruebaPositive()
             val contacts = detector.startChecking(userItinerary, positiveItinerary)
             if(contacts.isNotEmpty()){
                 // Actualizar el resultado.

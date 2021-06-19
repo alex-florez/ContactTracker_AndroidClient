@@ -4,9 +4,20 @@ import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.location.Location
 import android.os.Build
+import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
+import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.util.readFile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import javax.inject.Inject
+import javax.inject.Scope
 
 /**
  * Clase App que extiende de Application y que engloba
@@ -22,11 +33,18 @@ class App : Application() {
         const val CHANNEL_ID_RISK_CONTACT_CHECKING = "RiskContactCheckingChannel"
     }
 
+    @Inject
+    lateinit var repo: LocationRepository
+
+    var scope = CoroutineScope(Job() + Dispatchers.IO)
+
+    private var positive = false
 
     override fun onCreate() {
         super.onCreate()
         deleteDatabase("contacttracker.db")
         createNotificationChannels()
+        simulate()
     }
 
 
@@ -60,6 +78,50 @@ class App : Application() {
             notificationManager.createNotificationChannel(riskContactsResultChannel)
             notificationManager.createNotificationChannel(riskContactCheckingChannel)
         }
+    }
+
+
+    private fun simulate() {
+        val df = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+//        /* POSITIVO */
+//        val p1 = UserLocation(2222, 43.537562, -5.904420, 20.0, "", df.parse("08/06/2021 12:08:03"))
+//
+//        /* USUARIO */
+//        scope.launch {
+//            repo.insertUserLocation(p1)
+//        }
+        if(positive){
+            val positiveLines = readFile(applicationContext, "positive.txt")
+            val positiveLocations = mutableListOf<UserLocation>()
+            var counter = 0
+            positiveLines.forEach {
+                val cols = it.split(",")
+                val location = UserLocation(counter.toLong(), cols[1].toDouble(), cols[0].toDouble(), 20.0, "", df.parse(cols[2])!!)
+                positiveLocations.add(location)
+                counter++
+            }
+            scope.launch {
+                positiveLocations.forEach {
+                    repo.insertUserLocation(it)
+                }
+            }
+        } else {
+            val userLines = readFile(applicationContext, "user.txt")
+            val userLocations = mutableListOf<UserLocation>()
+            var counter = 0
+            userLines.forEach {
+                val cols = it.split(",")
+                val location = UserLocation(counter.toLong(), cols[1].toDouble(), cols[0].toDouble(), 20.0, "", df.parse(cols[2])!!)
+                userLocations.add(location)
+                counter++
+            }
+            scope.launch {
+                userLocations.forEach {
+                    repo.insertUserLocation(it)
+                }
+            }
+        }
+
     }
 
 }

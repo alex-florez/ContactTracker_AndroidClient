@@ -10,18 +10,17 @@
     android:background="?attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/timePickerTitle"
+        android:id="@+id/prefTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Intervalo de tiempo"
+        android:text="Título"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
     <TextView
-        android:id="@+id/timePickerDescription"
+        android:id="@+id/prefValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="INtervalo de tiempo"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:text="Valor"
         android:textSize="14sp"/>
 
 </LinearLayout>

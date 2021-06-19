@@ -4,13 +4,26 @@
 
     <PreferenceCategory app:title="@string/messages_header">
 
+        <es.uniovi.eii.contacttracker.fragments.settings.MinuteSecondsPickerPreference
+            android:selectable="true"
+            android:layout="@layout/number_picker_preference_layout"
+            app:minValueMinutes="0"
+            app:maxValueMinutes="5"
+            app:minValueSeconds="0"
+            app:maxValueSeconds="59"
+            app:title="Intervalo de Tiempo"
+            app:wrapSelectorWheel="true"
+            app:prefId="timeInterval"/>
+
         <es.uniovi.eii.contacttracker.fragments.settings.NumberPickerPreference
             android:selectable="true"
             android:layout="@layout/number_picker_preference_layout"
-            app:minValue="20"
-            app:maxValue="100"
-            app:prefId="idNumberPicker"/>
-
+            app:minValue="0"
+            app:maxValue="10"
+            app:prefTitle="Desplazamiento mínimo"
+            app:pickerTitle="Metros"
+            app:wrapSelectorWheelNp="true"
+            app:prefKey="minDisplacement"/>
         <EditTextPreference
             app:key="signature"
             app:title="@string/signature_title"
