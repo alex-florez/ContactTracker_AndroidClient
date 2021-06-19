@@ -63,7 +63,8 @@ class TrackerSettingsRepository @Inject constructor(
      * SharedPreferences.
      */
     fun getSmallestDisplacement(): Float {
-        return sharedPrefs.getFloat(
-                ctx.getString(R.string.shared_prefs_tracker_config_smallest_displacement), 0f)
+        return sharedPrefs.getInt(
+                ctx.getString(R.string.shared_prefs_tracker_config_smallest_displacement), 0)
+            .toFloat()
     }
 }
