@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.NumberPicker
-import android.widget.TextView
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import es.uniovi.eii.contacttracker.R
@@ -130,8 +129,10 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
      * establece en la vista.
      */
     private fun setCurrentValue() {
+        // Valor por defecto de milisegundos
+        val defaultMillis = Utils.getMillis(defaultValueMinutes, defaultValueSeconds)
         // Recuperar milisegundos
-        val millis = sharedPrefs.getLong(prefId, 0)
+        val millis = sharedPrefs.getLong(prefId, defaultMillis)
         val minSecs = Utils.getMinuteSecond(millis)
         minutesValue = minSecs[0]
         secondsValue = minSecs[1]

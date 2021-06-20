@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Build
 import android.util.Log
@@ -40,10 +41,18 @@ class App : Application() {
 
     private var positive = false
 
+    /**
+     * Referencia a las Shared Preferences.
+     */
+    private lateinit var sharedPrefs:SharedPreferences
+
+
     override fun onCreate() {
         super.onCreate()
         deleteDatabase("contacttracker.db")
+        sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         createNotificationChannels()
+        initSharedPrefs()
         simulate()
     }
 
@@ -77,6 +86,28 @@ class App : Application() {
             notificationManager.createNotificationChannel(locationFSChannel)
             notificationManager.createNotificationChannel(riskContactsResultChannel)
             notificationManager.createNotificationChannel(riskContactCheckingChannel)
+        }
+    }
+
+    /**
+     * Inicializa las propiedades necesarias de las Shared Preferences
+     * si aún no existen.
+     */
+    private fun initSharedPrefs(){
+        with(sharedPrefs.edit()){
+            /* Intervalo de tiempo mínimo */
+            if(!sharedPrefs.contains(getString(R.string.shared_prefs_tracker_config_min_interval))){
+                putLong(getString(R.string.shared_prefs_tracker_config_min_interval), 3000)
+            }
+            /* Desplazamiento mínimo */
+            if(!sharedPrefs.contains(getString(R.string.shared_prefs_tracker_config_smallest_displacement))){
+                putInt(getString(R.string.shared_prefs_tracker_config_smallest_displacement), 0)
+            }
+            /* Alcance de la comprobación */
+            if(!sharedPrefs.contains(getString(R.string.shared_prefs_risk_contact_check_scope))){
+                putInt(getString(R.string.shared_prefs_risk_contact_check_scope), 3)
+            }
+            apply()
         }
     }
 
