@@ -16,6 +16,7 @@
     <!-- Errores genéricos -->
     <string name="network_error">Ha habido un error de red en la solicitud.</string>
     <string name="request_error">Error en la solicitud</string>
+    <string name="required_field">Este campo es obligatorio</string>
 
     <!-- Shared Preferences File -->
     <string name="shared_prefs_file_name">es.uniovi.eii.contacttracker.sharedprefs</string>

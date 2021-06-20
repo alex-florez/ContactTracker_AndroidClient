@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.textfield.TextInputLayout
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.DialogPersonalDataBinding
 import es.uniovi.eii.contacttracker.model.PersonalData
@@ -38,14 +39,26 @@ class PersonalDataDialog(
         val inflater = requireActivity().layoutInflater
         binding = DialogPersonalDataBinding.inflate(inflater)
         builder.setView(binding.root)
-                .setPositiveButton(R.string.accept, DialogInterface.OnClickListener { _, _ ->
-                    listener.onAccept(getPersonalData())
-                }).setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {dialog, _ ->
+                .setPositiveButton(R.string.accept,null)
+                .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {dialog, _ ->
                     dialog.cancel()
                 })
 
         setPersonalData()
-        return builder.create()
+        val dialog = builder.create()
+        // Listener para el Botón Positivo para que no se cierre el diálogo.
+        dialog.setOnShowListener {
+            val positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
+                // Validar los datos
+                val personalData = getPersonalData()
+                if(validateData(personalData)){
+                    listener.onAccept(personalData)
+                    dialog.dismiss()
+                }
+            }
+        }
+        return dialog
     }
 
     /**
@@ -79,6 +92,65 @@ class PersonalDataDialog(
                 txtCityEditText.setText(city)
                 txtCPEditText.setText(cp)
             }
+        }
+    }
+
+    /**
+     * Devuelve true si los datos personales introducidos
+     * son correctos, en otro caso devuelve false y muestra
+     * los errores correspondientes.
+     *
+     * @param data Datos personales a validar.
+     */
+    private fun validateData(data: PersonalData): Boolean {
+        removeErrors()
+        var valid = true
+        val invalidInputs = mutableListOf<TextInputLayout>() // Lista de campos inválidos.
+        if(data.name.isEmpty())
+            invalidInputs.add(binding.txtNameLayout)
+        if(data.surname.isEmpty())
+            invalidInputs.add(binding.txtSurnameLayout)
+        if(data.dni.isEmpty())
+            invalidInputs.add(binding.txtDNILayout)
+        if(data.phoneNumber.isEmpty())
+            invalidInputs.add(binding.txtPhoneNumberLayout)
+        if(data.city.isEmpty())
+            invalidInputs.add(binding.txtCityLayout)
+        if(data.cp.isEmpty())
+            invalidInputs.add(binding.txtCPLayout)
+
+        if(invalidInputs.isNotEmpty())
+            valid = false
+        invalidInputs.forEach {
+            showError(it, getString(R.string.required_field))
+        }
+        return valid
+    }
+
+    /**
+     * Muestra el mensaje de error pasado como parámetro en
+     * el layout del campo de texto pasado como parámetro.
+     *
+     * @param textInput Referencia al layout del campo de texto.
+     * @param error Mensaje de error.
+     */
+    private fun showError(textInput: TextInputLayout, error: String){
+        textInput.isErrorEnabled = true
+        textInput.error = error
+    }
+
+    /**
+     * Elimina todos los errores de los campos
+     * que haya actualmente visibles.
+     */
+    private fun removeErrors(){
+        val textInputs = arrayListOf<TextInputLayout>(
+            binding.txtNameLayout, binding.txtSurnameLayout, binding.txtDNILayout,
+            binding.txtPhoneNumberLayout, binding.txtCityLayout, binding.txtCPLayout)
+
+        textInputs.forEach {
+            it.error = null
+            it.isErrorEnabled = false
         }
     }
 
