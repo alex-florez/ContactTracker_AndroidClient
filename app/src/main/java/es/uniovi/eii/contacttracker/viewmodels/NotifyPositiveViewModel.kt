@@ -10,6 +10,7 @@ import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
+import es.uniovi.eii.contacttracker.model.TrackerConfig
 import es.uniovi.eii.contacttracker.network.model.ResultWrapper
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
@@ -51,6 +52,12 @@ class NotifyPositiveViewModel @Inject constructor(
     val personalData = MutableLiveData<PersonalData?>()
 
     /**
+     * LiveData para la configuración del rastreo.
+     */
+    private val _trackerConfig = MutableLiveData<TrackerConfig>()
+    val trackerConfig: LiveData<TrackerConfig> = _trackerConfig
+
+    /**
      * Error de RED
      */
     private val _networkError = MutableLiveData<ResultWrapper.NetworkError>()
@@ -78,16 +85,8 @@ class NotifyPositiveViewModel @Inject constructor(
     fun notifyPositive() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            var infectivityPeriod = Constants.DEFAULT_INFECTIVITY_PERIOD
-            // Recuperar el periodo de infectividad de la configuración del Backend.
-            when(val trackerConfig = configRepository.getTrackerConfig()) {
-                is ResultWrapper.Success -> {
-                    infectivityPeriod = trackerConfig.value.infectivityPeriod
-                }
-                is ResultWrapper.NetworkError -> {
-                    Log.d("Err", "Error")
-                }
-            }
+            // Periodo de infectividad
+            val infectivityPeriod = _trackerConfig.value?.infectivityPeriod ?: Constants.DEFAULT_INFECTIVITY_PERIOD
             // Obtener localizaciones desde los últimos X días
             val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
             val locations = locationRepository.getLastLocationsSince(startDate)
@@ -133,6 +132,21 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     fun getPersonalData(): PersonalData {
         return personalDataRepository.get()
+    }
+
+    /**
+     * Recupera la configuración del rastreo
+     * desde el Backend.
+     */
+    fun getTrackerConfig() {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Recuperar el periodo de infectividad de la configuración del Backend.
+            when(val trackerConfig = configRepository.getTrackerConfig()) {
+                is ResultWrapper.Success -> {
+                    _trackerConfig.postValue(trackerConfig.value)
+                }
+            }
+        }
     }
 
 }

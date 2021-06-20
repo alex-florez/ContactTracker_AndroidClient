@@ -52,6 +52,11 @@ class NotifyPositiveFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getTrackerConfig() // Leer la configuración del Backend.
+    }
+
     /**
      * Configura los listeners para los componentes
      * de la UI.
@@ -90,6 +95,12 @@ class NotifyPositiveFragment : Fragment() {
                     s.show()
                 }
             })
+
+            // Periodo de infectividad
+            trackerConfig.observe(viewLifecycleOwner) {
+                val text = "${it.infectivityPeriod} días"
+                binding.txtInfectivityPeriod.text = text
+            }
 
             // Resultado de NOTIFICAR POSITIVO
             notifyPositiveResult.observe(viewLifecycleOwner, {
