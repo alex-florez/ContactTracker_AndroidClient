@@ -7,7 +7,6 @@ import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactFragment
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactResultsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.LocationAlarmsFragment
-import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
 
 private const val NUM_PAGES = 2

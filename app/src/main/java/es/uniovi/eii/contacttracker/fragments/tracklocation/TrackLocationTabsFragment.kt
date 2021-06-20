@@ -60,17 +60,10 @@ class TrackLocationTabsFragment : Fragment() {
         /**
          * Títulos de página.
          */
-        val tabTitles = arrayListOf("Tracker", "Alarmas", "Configurar")
+        val tabTitles = arrayListOf("Rastreador", "Alarmas")
         val tabLayout = binding.trackLocationTabLayout
 
         TabLayoutMediator(tabLayout, viewPager) {tab, position -> tab.text = tabTitles[position]}.attach()
-//        activity?.let {
-//            val pageAdapter = TrackLocationTabsPageAdapter(childFragmentManager)
-//            binding.trackLocationViewPager.adapter = pageAdapter
-//            binding.trackLocationTabLayout.setupWithViewPager(binding.trackLocationViewPager)
-//            // Establecer iconos
-////            setTabIcons()
-//        }
     }
 
     /**

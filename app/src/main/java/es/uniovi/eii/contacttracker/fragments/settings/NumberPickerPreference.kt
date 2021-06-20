@@ -11,8 +11,7 @@ import android.widget.NumberPicker
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.databinding.NumberPickerPreferenceLayoutBinding
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.databinding.CustomPreferenceLayoutBinding
 
 /**
  * Preference personalizada para seleccionar números con un NumberPicker
@@ -36,7 +35,7 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
     private lateinit var prefId: String
 
     /* View Binding */
-    private lateinit var binding: NumberPickerPreferenceLayoutBinding
+    private lateinit var binding: CustomPreferenceLayoutBinding
 
     init {
         // Vincular los valores de los atributos.
@@ -61,7 +60,7 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        binding = NumberPickerPreferenceLayoutBinding.bind(holder.itemView)
+        binding = CustomPreferenceLayoutBinding.bind(holder.itemView)
         sharedPrefs = context.getSharedPreferences(context.getString(R.string.shared_prefs_file_name), Context.MODE_PRIVATE)
         setCurrentValue()
         binding.root.setOnClickListener(this)

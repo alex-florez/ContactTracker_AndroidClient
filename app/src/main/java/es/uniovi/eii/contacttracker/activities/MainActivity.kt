@@ -22,7 +22,6 @@ import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactPlaceholde
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactTabsFragment
 import es.uniovi.eii.contacttracker.fragments.settings.SettingsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
-import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 

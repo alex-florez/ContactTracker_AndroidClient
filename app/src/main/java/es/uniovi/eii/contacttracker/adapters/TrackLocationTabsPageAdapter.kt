@@ -8,10 +8,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.LocationAlarmsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerInfoFragment
-import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerConfigurationFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
 
-private const val NUM_PAGES = 3
+private const val NUM_PAGES = 2
 
 /**
  * Clase que representa el adapter para las páginas que serán mostradas
@@ -30,7 +29,6 @@ class TrackLocationTabsPageAdapter(
         when(position){
             0 -> return TrackerFragment()
             1 -> return LocationAlarmsFragment()
-            2 -> return TrackerConfigurationFragment()
         }
         return DefaultBlankFragment()
     }
