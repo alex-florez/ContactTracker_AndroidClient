@@ -3,7 +3,9 @@ package es.uniovi.eii.contacttracker.location.services
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -22,6 +24,7 @@ import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -76,8 +79,14 @@ class LocationForegroundService : Service(){
      */
     private var isActive: Boolean = false
 
+    /**
+     * Referencia a las Shared Preferences.
+     */
+    private lateinit var sharedPrefs: SharedPreferences
+
     override fun onCreate() {
         super.onCreate()
+        sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         init()
     }
 
@@ -178,13 +187,20 @@ class LocationForegroundService : Service(){
         val pendingIntent:PendingIntent = Intent(this, MainActivity::class.java).let {
             PendingIntent.getActivity(this, 0, it, 0)
         }
+        /* Cuerpo de la notificación */
+        val timeInterval = Utils.getMinuteSecond(sharedPrefs.getLong(
+            applicationContext.getString(R.string.shared_prefs_tracker_config_min_interval), 0L))
+        val body = "Tu ubicación está siendo registrada cada ${timeInterval[0]} min ${timeInterval[1]} sec."
         return NotificationCompat.Builder(this, App.CHANNEL_ID_LOCATION_FOREGROUND_SERVICE)
-                .setContentTitle("Servicio de localización")
-                .setContentText("Rastreando tu ubicación...")
+                .setContentTitle(applicationContext.getString(R.string.locationServiceTitle))
+                .setContentText(body)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setTicker("Ticker!")
+                .setColorized(true)
+                .setColor(getColor(R.color.blue1))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(body))
                 .build()
     }
 

@@ -177,11 +177,15 @@
     <string name="riskContactCheckingPlaceholder">Comparando tus localizaciones con las de otros positivos...</string>
     <string name="checkAlarmSetSnackbar">Alarma de comprobación programada correctamente.</string>
 
-    <!-- Notificaciones -->
+    <!-- Notificaciones: Resultados de la Comprobación de Contactos de Riesgo -->
     <string name="resultNotificationTitle">Resultados de la comprobación</string>
     <string name="resultNotificationHealthy">No has tenido contacto con ningún positivo.</string>
     <string name="resultNotificationCheckingErrorTitle">Error durante la comprobación de contactos</string>
     <string name="resultNotificationCheckingError">No ha sido posible realizar la comprobación de contactos de riesgo.</string>
+
+    <!-- Notificaciones: Servicio de rastreo de ubicación -->
+    <string name="locationServiceTitle">Servicio de rastreo de ubicación</string>
+
 
     <!-- Menú de la barra de herramientas -->
     <string name="settings">Ajustes</string>
