@@ -22,7 +22,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun addition_isCorrect() {
+    fun `addition isCorrect`() {
         assertEquals("2", "2")
         print(itinerary1.locations.toString())
     }
