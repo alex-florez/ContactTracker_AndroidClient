@@ -183,10 +183,10 @@ class RiskContactManager @Inject constructor(
         }
         // Contenido de texto
         var textContent = ""
+        var positivesText = if(riskContactResult.numberOfPositives > 1) "positivos" else "positivo"
         textContent = if(riskContactResult.riskContacts.isNotEmpty()){
-            "Has estado en contacto con ${riskContactResult.numberOfPositives} " +
-                    if(riskContactResult.numberOfPositives > 1) "positivos" else "positivo." +
-                            " Porcentaje de riesgo más alto: ${riskContactResult.getHighestRiskContact().riskPercent} %."
+            "Has estado en contacto con ${riskContactResult.numberOfPositives} " + positivesText +
+                            ". Porcentaje de riesgo más alto: ${riskContactResult.getHighestRiskContact().riskPercent} %."
         } else { // No ha habido contactos de riesgo.
             ctx.getString(R.string.resultNotificationHealthy)
         }
@@ -200,13 +200,13 @@ class RiskContactManager @Inject constructor(
         return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
             .setContentTitle(ctx.getString(R.string.resultNotificationTitle))
             .setContentText(textContent)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentIntent(pendingIntent)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setColorized(true)
             .setColor(color)
             .setLargeIcon(largeIcon)
             .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
-            .setContentIntent(pendingIntent)
             .build()
     }
 
