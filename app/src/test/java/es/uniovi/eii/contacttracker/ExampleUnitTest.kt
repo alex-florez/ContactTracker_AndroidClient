@@ -1,8 +1,7 @@
 package es.uniovi.eii.contacttracker
 
-import android.util.Log
 import es.uniovi.eii.contacttracker.model.Itinerary
-import es.uniovi.eii.contacttracker.util.readFile
+import es.uniovi.eii.contacttracker.util.TestUtils
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -15,21 +14,16 @@ import org.junit.Before
  */
 class ExampleUnitTest {
 
-    var lines: List<String> = listOf()
+    private var itinerary1: Itinerary = Itinerary(mapOf())
 
     @Before
     fun init(){
-        read()
-    }
-    @Test
-    fun addition_isCorrect() {
-        assertEquals("linea1", lines[0])
+      itinerary1 = TestUtils.parseItinerary("itinerary1.txt")
     }
 
-    private fun read(){
-        javaClass.classLoader?.getResourceAsStream("prueba.txt")?.bufferedReader().use {
-            if(it != null)
-                lines = it.readLines()
-        }
+    @Test
+    fun addition_isCorrect() {
+        assertEquals("2", "2")
+        print(itinerary1.locations.toString())
     }
 }
