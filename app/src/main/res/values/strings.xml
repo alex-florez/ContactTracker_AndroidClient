@@ -46,7 +46,7 @@
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
     <string name="bottom_menu_item_2">Positivo</string>
-    <string name="bottom_menu_item_3">Comprobar</string>
+    <string name="bottom_menu_item_3">Contactos</string>
     <string name="bottom_menu_item_4">Histórico</string>
 
 
