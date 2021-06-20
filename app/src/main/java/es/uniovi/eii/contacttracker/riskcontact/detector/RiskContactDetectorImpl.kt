@@ -57,7 +57,22 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
                                 riskContact = null
                             }
                         }
+                    } else {
+                        /* Comprobar si se estaba registrando un nuevo contacto */
+                        riskContact?.let {
+                            /* Almacenar el Contacto de Riesgo en el resultado.*/
+                            result.add(it)
+                            /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
+                            riskContact = null
+                        }
                     }
+                }
+                /* Comprobar si queda algúun contacto por almacenar */
+                riskContact?.let {
+                    /* Almacenar el Contacto de Riesgo en el resultado.*/
+                    result.add(it)
+                    /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
+                    riskContact = null
                 }
             }
         }

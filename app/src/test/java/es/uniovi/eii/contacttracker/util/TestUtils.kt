@@ -37,7 +37,7 @@ object TestUtils {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
         val lines = readFile(filename)
         val locations = mutableListOf<UserLocation>()
-        var count = 0
+        var count = 1
         lines.forEach {
             val data = it.split(",")
             val lng = data[0].toDouble()

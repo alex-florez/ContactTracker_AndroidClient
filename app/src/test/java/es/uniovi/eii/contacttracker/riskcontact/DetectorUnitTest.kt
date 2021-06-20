@@ -1,9 +1,12 @@
 package es.uniovi.eii.contacttracker.riskcontact
 
 import es.uniovi.eii.contacttracker.model.Itinerary
+import es.uniovi.eii.contacttracker.model.RiskContactConfig
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
+import es.uniovi.eii.contacttracker.util.TestUtils
+import es.uniovi.eii.contacttracker.util.TestUtils.parseItinerary
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -84,6 +87,8 @@ class DetectorUnitTest {
         assertEquals(true, detector.checkSpaceProximity(l1,l3,5.0))
     }
 
+    // PRUEBAS UNITARIAS CON VARIOS ITINERARIOS
+    // ****************************************
     @Test
     fun `empty itineraries`(){
         val positive = Itinerary(mapOf())
@@ -92,4 +97,71 @@ class DetectorUnitTest {
         assertEquals(0, result.size)
     }
 
+    /**
+     * Test unitario con dos itinerarios que no generan contactos.
+     */
+    @Test
+    fun `no contacts`(){
+        val i1 = parseItinerary("itinerary1.txt")
+        val i2 = parseItinerary("itinerary2.txt")
+        val contacts = detector.startChecking(i1, i2)
+        assertEquals(0, contacts.size)
+    }
+
+    /**
+     * Test unitario con dos itinerarios que están cercanos en el tiempo
+     * pero no en el espacio.
+     */
+    @Test
+    fun `no contacts time proximity`(){
+        val i1 = parseItinerary("itinerary1.txt")
+        val i3 = parseItinerary("itinerary3.txt")
+        val contacts = detector.startChecking(i1, i3)
+        assertEquals(0, contacts.size)
+    }
+
+    /**
+     * Test unitario con dos itinerarios que están cercanos en el
+     * espacio pero no en el tiempo.
+     */
+    @Test
+    fun `no contacts space proximity`(){
+        val i2 = parseItinerary("itinerary2.txt")
+        val i4 = parseItinerary("itinerary4.txt")
+        val contacts = detector.startChecking(i2, i4)
+        assertEquals(0, contacts.size)
+    }
+
+    /**
+     * Test unitario con dos itinerarios que generan un contacto en
+     * un solo día.
+     */
+    @Test
+    fun `one contact one day`(){
+        detector.setConfig(RiskContactConfig(
+            securityDistanceMargin = 3.0,
+            timeDifferenceMargin = 1.0
+        ))
+        val i1 = parseItinerary("itinerary1.txt")
+        val i5 = parseItinerary("itinerary5.txt")
+        val contacts = detector.startChecking(i1, i5)
+        // 1 contacto
+        assertEquals(1, contacts.size)
+        assertEquals(3, contacts[0].contactLocations.size) // 3 puntos de contacto
+        // Comprobar las localizaciones de contacto
+        val locations = contacts[0].contactLocations
+        // Localizaciones del positivo
+        assertEquals("2", locations[0].positiveContactPoint.name)
+        assertEquals("3", locations[1].positiveContactPoint.name)
+        assertEquals("4", locations[2].positiveContactPoint.name)
+        // Localizaciones del usuario
+        assertEquals("8", locations[0].userContactPoint.name)
+        assertEquals("9", locations[1].userContactPoint.name)
+        assertEquals("10", locations[2].userContactPoint.name)
+        // Comprobar propiedades del contacto
+        assertEquals(15000L, contacts[0].exposeTime)
+        assertEquals(1.766, contacts[0].meanProximity, 0.1)
+        assertEquals(10000, contacts[0].meanTimeInterval)
+        assertEquals(0.6134, contacts[0].riskScore, 0.1)
+    }
 }
