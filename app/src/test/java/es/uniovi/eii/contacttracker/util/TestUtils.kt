@@ -57,7 +57,6 @@ object TestUtils {
             val filtered = locations.filter { l -> dateFormatter.format(l.locationTimestamp) == it }
             map[it] = filtered
         }
-        print(dates)
         return Itinerary(map)
     }
 }

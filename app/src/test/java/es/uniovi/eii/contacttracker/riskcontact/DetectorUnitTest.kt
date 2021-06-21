@@ -64,11 +64,18 @@ class DetectorUnitTest {
         val l2 = UserLocation(2, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 12:06:17"))
         val l3 = UserLocation(3, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 12:06:17"))
         val l4 = UserLocation(4, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 12:15:20"))
+        val l5 = UserLocation(5, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 11:59:20"))
+        val l6 = UserLocation(6, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-21 12:06:05"))
+
+
         /* No hay coincidencia */
         assertEquals(false, detector.checkTimeProximity(l1,l4,5.0))
+        assertEquals(false, detector.checkTimeProximity(l1,l5, 6.0))
+        assertEquals(false, detector.checkTimeProximity(l1, l6, 5.0))
         /* Hay coincidencia */
         assertEquals(true, detector.checkTimeProximity(l1, l2, 5.0))
         assertEquals(true, detector.checkTimeProximity(l2, l3, 5.0))
+        assertEquals(true, detector.checkTimeProximity(l1,l5, 7.0))
     }
 
     /**
@@ -163,5 +170,96 @@ class DetectorUnitTest {
         assertEquals(1.766, contacts[0].meanProximity, 0.1)
         assertEquals(10000, contacts[0].meanTimeInterval)
         assertEquals(0.6134, contacts[0].riskScore, 0.1)
+    }
+
+    /**
+     * Test unitario de dos itinerarios que generan varios
+     * contactos en un mismo día.
+     */
+    @Test
+    fun `multiple contacts one day`() {
+        detector.setConfig(RiskContactConfig(
+            securityDistanceMargin = 2.5,
+            timeDifferenceMargin = 1.0
+        ))
+        val i1 = parseItinerary("itinerary1.txt")
+        val i6 = parseItinerary("itinerary6.txt")
+        val contacts = detector.startChecking(i1, i6)
+
+        assertEquals(2, contacts.size)
+        // Comprobación de las propiedades de los contactos
+        val contact1 = contacts[0]
+        val contact2 = contacts[1]
+        assertEquals(3, contact1.contactLocations.size)
+        assertEquals(2, contact2.contactLocations.size)
+        // Localizaciones del Contacto 1
+        assertEquals("3", contact1.contactLocations[0].userContactPoint.name)
+        assertEquals("4", contact1.contactLocations[0].positiveContactPoint.name)
+        assertEquals("4", contact1.contactLocations[1].userContactPoint.name)
+        assertEquals("5", contact1.contactLocations[1].positiveContactPoint.name)
+        assertEquals("5", contact1.contactLocations[2].userContactPoint.name)
+        assertEquals("6", contact1.contactLocations[2].positiveContactPoint.name)
+        // Localizaciones del Contacto 2
+        assertEquals("8", contact2.contactLocations[0].userContactPoint.name)
+        assertEquals("11", contact2.contactLocations[0].positiveContactPoint.name)
+        assertEquals("9", contact2.contactLocations[1].userContactPoint.name)
+        assertEquals("12", contact2.contactLocations[1].positiveContactPoint.name)
+        // Propiedades del contacto 1
+        assertEquals(10000, contact1.exposeTime)
+        assertEquals(1.779, contact1.meanProximity, 0.1)
+        assertEquals(10000, contact1.meanTimeInterval)
+        assertEquals(0.61005, contact1.riskScore, 0.01)
+        // Propiedades del contacto 2
+        assertEquals(0, contact2.exposeTime)
+        assertEquals(1.505, contact2.meanProximity, 0.1)
+        assertEquals(10000, contact2.meanTimeInterval)
+        assertEquals(0.6214, contact2.riskScore, 0.01)
+    }
+
+    /**
+     * Test unitario con dos itinerarios de varios días
+     * con varios contactos de riesgo.
+     */
+    @Test
+    fun `multiple contacts multiple days`(){
+        detector.setConfig(RiskContactConfig(
+            securityDistanceMargin = 2.5,
+            timeDifferenceMargin = 1.0
+        ))
+        val i7 = parseItinerary("itinerary7.txt")
+        val i8 = parseItinerary("itinerary8.txt")
+        val contacts = detector.startChecking(i7, i8)
+
+        assertEquals(2, contacts.size)
+        assertEquals(4, contacts[0].contactLocations.size)
+        assertEquals(3, contacts[1].contactLocations.size)
+        val contact1 = contacts[0]
+        val contact2 = contacts[1]
+        // Localizaciones del primer contacto
+        assertEquals("5", contact1.contactLocations[0].userContactPoint.name)
+        assertEquals("3", contact1.contactLocations[0].positiveContactPoint.name)
+        assertEquals("6", contact1.contactLocations[1].userContactPoint.name)
+        assertEquals("4", contact1.contactLocations[1].positiveContactPoint.name)
+        assertEquals("7", contact1.contactLocations[2].userContactPoint.name)
+        assertEquals("5", contact1.contactLocations[2].positiveContactPoint.name)
+        assertEquals("8", contact1.contactLocations[3].userContactPoint.name)
+        assertEquals("6", contact1.contactLocations[3].positiveContactPoint.name)
+        // Localizaciones del segundo contacto
+        assertEquals("10", contact2.contactLocations[0].userContactPoint.name)
+        assertEquals("8", contact2.contactLocations[0].positiveContactPoint.name)
+        assertEquals("11", contact2.contactLocations[1].userContactPoint.name)
+        assertEquals("9", contact2.contactLocations[1].positiveContactPoint.name)
+        assertEquals("12", contact2.contactLocations[2].userContactPoint.name)
+        assertEquals("10", contact2.contactLocations[2].positiveContactPoint.name)
+        // Comprobar propiedades de los contactos
+        assertEquals(10000, contact1.exposeTime)
+        assertEquals(0.7575, contact1.meanProximity, 0.1)
+        assertEquals(10000, contact1.meanTimeInterval)
+        assertEquals(0.662125, contact1.riskScore, 0.01)
+
+        assertEquals(10000, contact2.exposeTime)
+        assertEquals(0.7367, contact2.meanProximity, 0.1)
+        assertEquals(10000, contact2.meanTimeInterval)
+        assertEquals(0.6632, contact2.riskScore, 0.01)
     }
 }
