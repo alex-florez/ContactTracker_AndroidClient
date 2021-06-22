@@ -27,6 +27,13 @@
         </item>
     </style>
 
+    <!-- Estilo para la SplashScreen -->
+    <style name="SplashTheme" parent="Theme.ContactTracker">
+        <item name="android:windowBackground">
+            @drawable/splashscreen
+        </item>
+    </style>
+    
     <!-- Bottom Navigation Style -->
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
         <item name="colorPrimary">@color/teal_200</item>
