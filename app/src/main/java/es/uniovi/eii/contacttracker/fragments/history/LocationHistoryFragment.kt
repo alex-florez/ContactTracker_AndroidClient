@@ -222,7 +222,7 @@ class LocationHistoryFragment : Fragment() {
             requireActivity().supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .replace(R.id.historyPlaceholder, MapsFragment.newInstance(UserLocationList(locations)))
+                .replace(R.id.main_fragment_container, MapsFragment.newInstance(UserLocationList(locations)))
                 .addToBackStack("MapsFragment")
                 .commit()
         }

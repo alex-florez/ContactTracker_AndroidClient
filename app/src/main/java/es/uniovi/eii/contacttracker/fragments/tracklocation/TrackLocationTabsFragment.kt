@@ -15,7 +15,7 @@ import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationTabsBinding
 
 
 /**
- * Fragmento que sirve de contenedor para albergar al
+ * Fragmento contenedor para albergar al
  * TabLayout que contiene los diferentes tabs para la
  * opción de Menú del rastreador de ubicación.
  */

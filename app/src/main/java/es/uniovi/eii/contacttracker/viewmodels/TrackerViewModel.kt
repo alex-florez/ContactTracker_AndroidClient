@@ -13,6 +13,9 @@ import es.uniovi.eii.contacttracker.util.Utils
 import java.util.*
 import javax.inject.Inject
 
+/**
+ * View Model para el fragmento de rastreo de ubicación.
+ */
 @HiltViewModel
 class TrackerViewModel @Inject constructor(): ViewModel() {
 
