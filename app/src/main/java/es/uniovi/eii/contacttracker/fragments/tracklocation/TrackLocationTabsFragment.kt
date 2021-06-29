@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.adapters.TrackLocationTabsPageAdapter
+import es.uniovi.eii.contacttracker.adapters.locations.TrackLocationTabsPageAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationTabsBinding
 
 

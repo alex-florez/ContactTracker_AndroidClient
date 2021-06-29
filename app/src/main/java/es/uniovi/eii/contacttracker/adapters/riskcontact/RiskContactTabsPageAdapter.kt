@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.adapters
+package es.uniovi.eii.contacttracker.adapters.riskcontact
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -10,6 +10,7 @@ import es.uniovi.eii.contacttracker.fragments.tracklocation.LocationAlarmsFragme
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
 
 private const val NUM_PAGES = 2
+
 class RiskContactTabsPageAdapter(
     fa: FragmentActivity
 ) : FragmentStateAdapter(fa) {

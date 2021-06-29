@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.adapters
+package es.uniovi.eii.contacttracker.adapters.locations
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
