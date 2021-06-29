@@ -10,6 +10,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,6 +76,13 @@ class LocationHistoryFragment : Fragment() {
                     "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
             }
         })
+        userLocationAdapter.registerAdapterDataObserver(object :
+            RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                val lm = binding.recyclerViewUserLocations.layoutManager as LinearLayoutManager
+                lm.scrollToPositionWithOffset(positionStart, 0)
+            }
+        })
 
     }
 
@@ -91,8 +99,10 @@ class LocationHistoryFragment : Fragment() {
             selectedDate = date
             viewModel.getAllUserLocationsByDate(date)
         }.observe(viewLifecycleOwner, { locationList ->
-            userLocationAdapter.addLocations(locationList)
-            binding.recyclerViewUserLocations.smoothScrollToPosition(0) // Hacer scroll en el recycler
+            userLocationAdapter.submitList(locationList)
+//            userLocationAdapter.submitList(locationList) {
+//                binding.recyclerViewUserLocations.scrollToPosition(0)
+//            }
             toggleNoLocationsLabel(locationList) // Etiqueta de lista vacía
             showNumberOfLocations(locationList.size) // Caja de información general
         })
