@@ -27,7 +27,7 @@ import java.util.Date
  * Fragmento para la opción de menú "Histórico".
  *
  * Representa la funcionalidad para visualizar y consultar la
- * historia de los recorridos del usuario, y las coordenadas registradas
+ * historia de los itinerarios del usuario, y las coordenadas registradas
  * en el tiempo.
  */
 @AndroidEntryPoint
