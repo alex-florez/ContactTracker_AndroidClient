@@ -76,14 +76,6 @@ class LocationHistoryFragment : Fragment() {
                     "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
             }
         })
-        userLocationAdapter.registerAdapterDataObserver(object :
-            RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                val lm = binding.recyclerViewUserLocations.layoutManager as LinearLayoutManager
-                lm.scrollToPositionWithOffset(positionStart, 0)
-            }
-        })
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -99,10 +91,9 @@ class LocationHistoryFragment : Fragment() {
             selectedDate = date
             viewModel.getAllUserLocationsByDate(date)
         }.observe(viewLifecycleOwner, { locationList ->
-            userLocationAdapter.submitList(locationList)
-//            userLocationAdapter.submitList(locationList) {
-//                binding.recyclerViewUserLocations.scrollToPosition(0)
-//            }
+            userLocationAdapter.submitList(locationList) {
+                binding.recyclerViewUserLocations.scrollToPosition(0)
+            }
             toggleNoLocationsLabel(locationList) // Etiqueta de lista vacía
             showNumberOfLocations(locationList.size) // Caja de información general
         })
@@ -187,7 +178,6 @@ class LocationHistoryFragment : Fragment() {
         datePickerBuilder.setTitleText(R.string.history_date_picker_title)
         datePickerBuilder.setSelection(actualDate.time)
         selectedDate = actualDate
-
         datePicker = datePickerBuilder.build()
         // Listener
         datePicker.addOnPositiveButtonClickListener {

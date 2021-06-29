@@ -124,7 +124,6 @@ class TrackerInfoFragment : Fragment() {
         binding.apply {
             this.recyclerViewTrackLocationInfo.layoutManager = manager
             this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
-            userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
         }
     }
 

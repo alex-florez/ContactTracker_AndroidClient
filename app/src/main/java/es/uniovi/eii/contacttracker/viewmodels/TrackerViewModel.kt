@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.util.Utils
 import java.util.*
@@ -27,7 +28,6 @@ class TrackerViewModel @Inject constructor(): ViewModel() {
     private val _areLocationsAvailable = MutableLiveData(false)
     val areLocationsAvailable: LiveData<Boolean> = _areLocationsAvailable
 
-
     /**
      * Establece el estado del LiveData en función del
      * flag pasado como parámetro.
@@ -43,7 +43,5 @@ class TrackerViewModel @Inject constructor(): ViewModel() {
     fun setAreLocationsAvailable(areLocations: Boolean) {
         _areLocationsAvailable.value = areLocations
     }
-
-
 
 }

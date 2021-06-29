@@ -28,18 +28,6 @@ class UserLocationAdapter(
     }
 
     /**
-     * Lista auxiliar de localizaciones. La última localización
-     * está en el comienzo de la lista, de forma que se muestre la primera.
-     */
-    private val locations = arrayListOf<UserLocation>()
-
-
-    /**
-     * Referencia al recycler view al que está vinculado este adapter.
-     */
-    var recyclerView: RecyclerView? = null
-
-    /**
      * ViewHolder para los objetos UserLocation.
      */
     class UserLocationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -82,34 +70,31 @@ class UserLocationAdapter(
     /**
      * Método que añade una nueva localización de usuario
      * en la lista interna del adapter.
+     *
+     * @param location Localización del usuario a insertar.
+     * @param callback Callback a invocar una vez se inserta la localización.
      */
-    fun addUserLocation(location: UserLocation){
-        locations.add(0, location) // Añadir al principio
-        submitList(locations.toList())
-        // Hacer Scroll al principio
-        recyclerView?.smoothScrollToPosition(0)
-
+    fun addUserLocation(location: UserLocation, callback: () -> Unit){
+        val actual = currentList.toMutableList()
+        actual.add(0, location)
+        submitList(actual) {
+            callback()
+        }
     }
-
-    fun addLocations(newLocations: List<UserLocation>){
-        submitList(newLocations.toList())
-    }
-
     /**
      * Cuando es invocado, limpia toda
      * la lista de localizaciones de Usuario.
      */
     fun clearLocations(){
-        locations.clear()
         submitList(null)
     }
 
     /**
-     * Devuelve true si existen localizciones en la
+     * Devuelve true si existen localizaciones en la
      * lista.
      */
     fun areLocationsAvailable(): Boolean {
-        return locations.isNotEmpty()
+        return currentList.isNotEmpty()
     }
 
 }

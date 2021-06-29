@@ -72,6 +72,9 @@ class TrackerFragment : Fragment() {
      */
     private var locationReceiver: LocationUpdateBroadcastReceiver? = null
 
+    /* Flag que indica si se resume el fragmento desde la solicitud de permisos. */
+    private var fromPermissionRequest: Boolean = false
+
     // BROADCAST RECEIVERS
     /**
      * Clase interna privada que representa el BroadCast receiver que
@@ -108,7 +111,9 @@ class TrackerFragment : Fragment() {
             val location: UserLocation? = intent?.getParcelableExtra(Constants.EXTRA_LOCATION)
             location?.let {
                 Log.d(TAG, LocationUtils.format(it))
-                userLocationAdapter.addUserLocation(location)
+                userLocationAdapter.addUserLocation(location) {
+                    binding.recyclerViewTrackLocationInfo.scrollToPosition(0)
+                }
                 viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable())
             }
         }
@@ -141,9 +146,6 @@ class TrackerFragment : Fragment() {
             startLocationService() // Iniciar el servicio de todos modos.
         }
     }
-
-    /* Flag que indica si se resume el fragmento desde la solicitud de permisos. */
-    private var fromPermissionRequest: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,7 +197,7 @@ class TrackerFragment : Fragment() {
             isLocationServiceActive.observe(viewLifecycleOwner) {isActive ->
                 binding.layoutCardLocationTracker.switchTrackLocation.isChecked = isActive
             }
-            // Flag para la lista de localizaciones vacía o no
+            // Flag para la lista de localizaciones vacía
             areLocationsAvailable.observe(viewLifecycleOwner) { available ->
                 binding.labelNoLocations.visibility = if (available) View.GONE else View.VISIBLE
             }
@@ -354,7 +356,6 @@ class TrackerFragment : Fragment() {
         binding.apply {
             this.recyclerViewTrackLocationInfo.layoutManager = manager
             this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
-            userLocationAdapter.recyclerView = this.recyclerViewTrackLocationInfo // Attach to adapter
         }
     }
 
