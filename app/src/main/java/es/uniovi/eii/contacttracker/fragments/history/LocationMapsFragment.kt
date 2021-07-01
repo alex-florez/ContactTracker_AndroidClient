@@ -57,7 +57,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     /**
      * Listado de localizaciones.
      */
-    private var locations: UserLocationList? = null
+    private var locations: List<UserLocation> = listOf()
 
     /**
      * Listado de marcadores de Google Maps.
@@ -103,7 +103,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         // Recuperar localizaciones
-        locations = arguments?.getParcelable(LOCATIONS)
+        locations = arguments?.getParcelableArrayList(LOCATIONS) ?: listOf()
 
         setListeners()
         return binding.root
@@ -235,10 +235,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
          * @param userLocations lista con las localizaciones del usuario.
          */
         @JvmStatic
-        fun newInstance(userLocations: UserLocationList) =
+        fun newInstance(userLocations: List<UserLocation>) =
             MapsFragment().apply {
+                val list = arrayListOf<UserLocation>()
+                list.addAll(userLocations)
                 arguments = Bundle().apply {
-                    putParcelable(LOCATIONS, userLocations)
+                    putParcelableArrayList(LOCATIONS, list)
                 }
             }
     }
@@ -258,13 +260,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     /**
-     * Mueve la cámara hasta la posición inicial.
+     * Mueve la cámara hasta la posición de la última
+     * localización registrada.
      */
     private fun setInitialLocation(){
-        val start = locations?.getInitialLocation()
-        start?.apply {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), Constants.DEFAULT_ZOOM))
-        }
+        val start = locations[0]
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom
+            (LocationUtils.toLatLng(start), Constants.DEFAULT_ZOOM))
     }
 
     /**
@@ -273,19 +275,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
      */
     private fun addMarkers(){
         var sortedLocations = listOf<UserLocation>()
-        locations?.let {
-            it.locations?.apply {
-                sortedLocations = sortedBy { location ->
-                    location.locationTimestamp
-                }
+        // Ordenar localizaciones por fecha
+        locations.apply {
+            sortedLocations = sortedBy { location ->
+                location.locationTimestamp
             }
-           sortedLocations.forEach { location ->
-                val latLng = LocationUtils.toLatLng(location)
-                val marker = map.addMarker(MarkerOptions()
-                    .title(location.locationTimestamp.toString())
-                    .position(latLng))
-                marker?.let { markers.add(marker) } // Guardar marcador
-            }
+        }
+        sortedLocations.forEach { location ->
+            val latLng = LocationUtils.toLatLng(location)
+            val marker = map.addMarker(MarkerOptions()
+                .title(location.locationTimestamp.toString())
+                .position(latLng))
+            marker?.let { markers.add(marker) } // Guardar marcador
         }
     }
 
@@ -295,9 +296,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
      */
     private fun drawPath(){
         // Obtener lista de puntos LatLng
-        var points = listOf<LatLng>()
-        locations?.let {
-            points = it.getAsLatLng()
+        val points = mutableListOf<LatLng>()
+        locations.forEach {
+            points.add(LocationUtils.toLatLng(it))
         }
         // Crear la polilínea
         path = map.addPolyline(PolylineOptions()
