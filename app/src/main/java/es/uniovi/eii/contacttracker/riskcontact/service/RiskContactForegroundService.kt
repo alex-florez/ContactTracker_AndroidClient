@@ -23,7 +23,7 @@ private const val SERVICE_ID = 1001
  * comprobación de contactos de riesgo.
  */
 @AndroidEntryPoint
-class RiskContactCheckingForegroundService : Service() {
+class RiskContactForegroundService : Service() {
 
     /**
      * Manager para los contactos de riesgo.

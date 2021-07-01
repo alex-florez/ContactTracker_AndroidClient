@@ -11,6 +11,10 @@ import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import javax.inject.Singleton
 
+/**
+ * Módulo de inyección de dependencias para las alarmas
+ * de localización.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AlarmModule {

@@ -1,13 +1,11 @@
 package es.uniovi.eii.contacttracker.network
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import es.uniovi.eii.contacttracker.network.model.ResponseError
-import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 /**
@@ -18,22 +16,20 @@ import java.io.IOException
  * @param dispatcher Dispatcher en el que se ejecutará la corrutina.
  * @param call suspend function que representa la llamada a la API.
  */
-suspend fun <T> apiCall(dispatcher: CoroutineDispatcher, call: suspend () -> T): ResultWrapper<T> {
+suspend fun <T> apiCall(dispatcher: CoroutineDispatcher, call: suspend () -> T): APIResult<T> {
     return withContext(dispatcher) {
         try {
-            ResultWrapper.Success(call.invoke()) // Éxito
+            APIResult.Success(call.invoke()) // Éxito
         } catch (throwable: Throwable) {
             when (throwable) {
-                is IOException -> ResultWrapper.NetworkError // Error de RED
+                is IOException -> APIResult.NetworkError // Error de RED
                 is HttpException -> { // Excepción Genérica
                     // Parsear datos del error al objeto de Dominio
                     val code = throwable.code()
                     val responseError = Gson().fromJson(throwable.response()?.errorBody()?.charStream(), ResponseError::class.java)
-                    ResultWrapper.GenericError(code, responseError)
+                    APIResult.GenericError(code, responseError)
                 }
-                else -> {
-                    ResultWrapper.GenericError(null, null)
-                }
+                else -> APIResult.GenericError(null, null)
             }
         }
     }

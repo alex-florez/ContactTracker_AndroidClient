@@ -3,9 +3,8 @@ package es.uniovi.eii.contacttracker.repositories
 import es.uniovi.eii.contacttracker.model.TrackerConfig
 import es.uniovi.eii.contacttracker.network.api.ConfigAPI
 import es.uniovi.eii.contacttracker.network.apiCall
-import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import kotlinx.coroutines.Dispatchers
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 /**
@@ -25,7 +24,7 @@ class ConfigRepository @Inject constructor(
      *
      * @return Result Wrapper con la configuración del rastreo.
      */
-    suspend fun getTrackerConfig(): ResultWrapper<TrackerConfig> {
+    suspend fun getTrackerConfig(): APIResult<TrackerConfig> {
         return apiCall(Dispatchers.IO) {
             configAPI.getTrackerConfig()
         }

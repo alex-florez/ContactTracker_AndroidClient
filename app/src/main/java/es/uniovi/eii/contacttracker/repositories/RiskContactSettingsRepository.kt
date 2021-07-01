@@ -6,7 +6,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.model.RiskContactConfig
 import es.uniovi.eii.contacttracker.network.api.ConfigAPI
 import es.uniovi.eii.contacttracker.network.apiCall
-import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class RiskContactSettingsRepository @Inject constructor(
         var config = RiskContactConfig()
         /* Recuperar configuración remota */
         when(val result = apiCall(Dispatchers.IO){ configAPI.getRiskContactConfig() }){
-            is ResultWrapper.Success -> {
+            is APIResult.Success -> {
                 config = result.value
             }
         }

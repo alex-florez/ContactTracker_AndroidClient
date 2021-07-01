@@ -25,7 +25,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DBModule {
 
-    // BASE DE DATOS
+    /* Base de datos de la App */
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appCtx: Context): AppDatabase {

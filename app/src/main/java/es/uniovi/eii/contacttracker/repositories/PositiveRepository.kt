@@ -1,7 +1,7 @@
 package es.uniovi.eii.contacttracker.repositories
 
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
-import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.apiCall
 import es.uniovi.eii.contacttracker.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
@@ -27,7 +27,7 @@ class PositiveRepository @Inject constructor(
      * @param positive datos del positivo.
      * @return result wrapper con los datos del servidor.
      */
-    suspend fun notifyPositive(positive: Positive): ResultWrapper<NotifyPositiveResult> {
+    suspend fun notifyPositive(positive: Positive): APIResult<NotifyPositiveResult> {
         return apiCall(Dispatchers.IO) {
             positiveAPI.notifyPositive(positive)
         }
@@ -41,7 +41,7 @@ class PositiveRepository @Inject constructor(
      * @param lastDays Número de días atrás a tener en cuenta.
      * @return ResultWrapper con la lista de positivos.
      */
-    suspend fun getPositivesFromLastDays(lastDays: Int): ResultWrapper<List<Positive>> {
+    suspend fun getPositivesFromLastDays(lastDays: Int): APIResult<List<Positive>> {
         return apiCall(Dispatchers.IO) {
             positiveAPI.getPositives(lastDays)
         }

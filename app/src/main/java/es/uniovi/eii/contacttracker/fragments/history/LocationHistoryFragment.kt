@@ -91,6 +91,7 @@ class LocationHistoryFragment : Fragment() {
             selectedDate = date
             viewModel.getAllUserLocationsByDate(date)
         }.observe(viewLifecycleOwner, { locationList ->
+            // Comprobar el scroll
             userLocationAdapter.submitList(locationList) {
                 binding.recyclerViewUserLocations.scrollToPosition(0)
             }

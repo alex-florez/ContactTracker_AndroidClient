@@ -19,7 +19,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object APIModule {
 
     /* API Rest para notificar y registrar POSITIVOS */
     @Provides

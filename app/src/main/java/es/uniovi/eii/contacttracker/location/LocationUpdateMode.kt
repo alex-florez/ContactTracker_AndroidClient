@@ -5,5 +5,6 @@ package es.uniovi.eii.contacttracker.location
  * de las actualizaciones de localización.
  */
 enum class LocationUpdateMode {
-    CALLBACK_MODE, PENDING_INTENT_MODE
+    CALLBACK_MODE, /* Callback de llamada al recibir una localización */
+    PENDING_INTENT_MODE /* Pending intent al recibir una localización */
 }

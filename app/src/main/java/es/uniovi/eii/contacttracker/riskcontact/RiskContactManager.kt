@@ -2,13 +2,11 @@ package es.uniovi.eii.contacttracker.riskcontact
 
 import android.app.AlarmManager
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -18,12 +16,11 @@ import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.model.*
-import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.*
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
-import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactCheckingForegroundService
+import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactForegroundService
 import es.uniovi.eii.contacttracker.util.Utils
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -75,7 +72,7 @@ class RiskContactManager @Inject constructor(
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives = mutableListOf<Positive>()
         when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
-            is ResultWrapper.Success -> {
+            is APIResult.Success -> {
                 positives = positivesResult.value.toMutableList()
             }
             else -> { // Error en la comprobación
@@ -124,7 +121,7 @@ class RiskContactManager @Inject constructor(
         val startTime = cal.timeInMillis
         // Establecer pending intent
         checkAlarmIntent = getPendingIntentService(
-            Intent(ctx, RiskContactCheckingForegroundService::class.java),
+            Intent(ctx, RiskContactForegroundService::class.java),
             CHECK_ALARM_ID
         )
         // Establecer alarma

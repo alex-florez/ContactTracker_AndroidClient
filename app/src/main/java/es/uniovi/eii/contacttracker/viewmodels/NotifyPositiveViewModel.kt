@@ -1,6 +1,5 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,7 @@ import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.model.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.model.TrackerConfig
-import es.uniovi.eii.contacttracker.network.model.ResultWrapper
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
@@ -60,14 +59,14 @@ class NotifyPositiveViewModel @Inject constructor(
     /**
      * Error de RED
      */
-    private val _networkError = MutableLiveData<ResultWrapper.NetworkError>()
-    val networkError: LiveData<ResultWrapper.NetworkError> = _networkError
+    private val _networkError = MutableLiveData<APIResult.NetworkError>()
+    val networkError: LiveData<APIResult.NetworkError> = _networkError
 
     /**
      * Error GENÉRICO enviado desde el Servidor al notificar un positivo
      */
-    private val _notifyError = MutableLiveData<ResultWrapper.GenericError>()
-    val notifyError: LiveData<ResultWrapper.GenericError> = _notifyError
+    private val _notifyError = MutableLiveData<APIResult.GenericError>()
+    val notifyError: LiveData<APIResult.GenericError> = _notifyError
 
 
     /**
@@ -97,9 +96,9 @@ class NotifyPositiveViewModel @Inject constructor(
             val positiveLocations = Positive(null, Date(), locations, locationDates, personalData)
             // Subir los datos al servidor
             when(val result = positiveRepository.notifyPositive(positiveLocations)) {
-                is ResultWrapper.NetworkError -> { _networkError.postValue(result) }
-                is ResultWrapper.GenericError -> { _notifyError.postValue(result) }
-                is ResultWrapper.Success -> {
+                is APIResult.NetworkError -> { _networkError.postValue(result) }
+                is APIResult.GenericError -> { _notifyError.postValue(result) }
+                is APIResult.Success -> {
                     result.value.let { _notifyPositiveResult.postValue(it) }
                 }
             }
@@ -142,7 +141,7 @@ class NotifyPositiveViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             // Recuperar el periodo de infectividad de la configuración del Backend.
             when(val trackerConfig = configRepository.getTrackerConfig()) {
-                is ResultWrapper.Success -> {
+                is APIResult.Success -> {
                     _trackerConfig.postValue(trackerConfig.value)
                 }
             }

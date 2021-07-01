@@ -22,6 +22,9 @@ import es.uniovi.eii.contacttracker.fragments.settings.SettingsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 
+/**
+ * Actividad principal de la aplicación.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

@@ -212,9 +212,10 @@ object LocationUtils {
     /**
      * Convierte Grados a Radianes.
      */
-    fun toRadians(degrees: Double): Double{
+    private fun toRadians(degrees: Double): Double{
         return degrees * (Math.PI / 180)
     }
+
 
     /**
      * Utiliza uno de los algoritmos típicos para calcular distancias entre
@@ -241,7 +242,6 @@ object LocationUtils {
         // Aplicar arcotangente de dos parámetros y raíz cuadrada
         // Multiplicar por el radio de la tierra para obtener los km de distancia.
         val d = 2 * atan2(sqrt(a), sqrt(1-a)) * Constants.EARTH_RADIUS
-        val nf = NumberFormat.getNumberInstance()
         // Devolver distancia en metros y con 4 decimales
         return Utils.round(d*1000, 4)
     }
@@ -272,5 +272,37 @@ object LocationUtils {
         val d = 2 * atan2(sqrt(a), sqrt(1-a)) * Constants.EARTH_RADIUS
         // Devolver distancia en metros y con 4 decimales
         return Utils.round(d*1000, 4)
+    }
+
+    /**
+     * Parsea el fichero de texto de nombre indicado para obtener
+     * una lista con las localizaciones de usuario que representa cada
+     * línea del fichero. El fichero debe estar situado en Assets.
+     *
+     * @param filename Nombre del fichero de texto.
+     * @return Lista con las localizaciones parseadas.
+     */
+    fun parseLocationsFile(filename: String, ctx: Context): List<UserLocation>{
+        val lines = FileUtils.readFile(ctx, filename)
+        val locations = mutableListOf<UserLocation>()
+        var counter = 0
+        lines.forEach {
+            val data = it.split(",")
+            val lat = data[1].toDouble()
+            val lng = data[0].toDouble()
+            val timestamp = Utils.toDate(data[2], "dd/MM/yyyy HH:mm:ss") ?: Date()
+            locations.add(
+                UserLocation(
+                    counter.toLong(),
+                    lat,
+                    lng,
+                    0.0,
+                    "file",
+                    timestamp
+                )
+            )
+            counter++
+        }
+        return locations
     }
 }

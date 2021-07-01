@@ -19,7 +19,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 /**
- * Módulo de dependencias a nivel de servicios de localización.
+ * Módulo de dependencias a nivel de servicios de localización
+ * para rastrear la ubicación y comprobación de contactos de riesgo.
  */
 @Module
 @InstallIn(SingletonComponent::class)

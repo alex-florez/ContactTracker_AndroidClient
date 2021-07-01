@@ -11,7 +11,8 @@ import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
-import es.uniovi.eii.contacttracker.util.readFile
+import es.uniovi.eii.contacttracker.util.FileUtils.readFile
+import es.uniovi.eii.contacttracker.util.LocationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -113,46 +114,21 @@ class App : Application() {
 
 
     private fun simulate() {
-        val df = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-//        /* POSITIVO */
-//        val p1 = UserLocation(2222, 43.537562, -5.904420, 20.0, "", df.parse("08/06/2021 12:08:03"))
-//
-//        /* USUARIO */
-//        scope.launch {
-//            repo.insertUserLocation(p1)
-//        }
         if(positive){
-            val positiveLines = readFile(applicationContext, "positive.txt")
-            val positiveLocations = mutableListOf<UserLocation>()
-            var counter = 0
-            positiveLines.forEach {
-                val cols = it.split(",")
-                val location = UserLocation(counter.toLong(), cols[1].toDouble(), cols[0].toDouble(), 20.0, "", df.parse(cols[2])!!)
-                positiveLocations.add(location)
-                counter++
-            }
+            val positiveLocations = LocationUtils.parseLocationsFile("positive.txt", this)
             scope.launch {
                 positiveLocations.forEach {
                     repo.insertUserLocation(it)
                 }
             }
         } else {
-            val userLines = readFile(applicationContext, "user.txt")
-            val userLocations = mutableListOf<UserLocation>()
-            var counter = 0
-            userLines.forEach {
-                val cols = it.split(",")
-                val location = UserLocation(counter.toLong(), cols[1].toDouble(), cols[0].toDouble(), 20.0, "", df.parse(cols[2])!!)
-                userLocations.add(location)
-                counter++
-            }
+            val locations = LocationUtils.parseLocationsFile("user.txt", this)
             scope.launch {
-                userLocations.forEach {
+                locations.forEach {
                     repo.insertUserLocation(it)
                 }
             }
         }
-
     }
 
 }
