@@ -13,17 +13,11 @@ import java.util.Date
 import kotlin.math.abs
 
 /**
- * Constantes.
- */
-private const val USER = "user"
-private const val POSITIVE = "positive"
-
-/**
  * Clase de datos que contiene la información de un
  * contacto de riesgo con un positivo.
  */
 @Parcelize
-@Entity
+@Entity(tableName = "risk_contacts")
 class RiskContact(
         @PrimaryKey(autoGenerate = true) var riskContactId: Long? = null,
         var riskContactResultId: Long? = null, /* Foreign Key para el resultado */
@@ -52,8 +46,8 @@ class RiskContact(
      */
     fun addContactLocations(userLocation: UserLocation, positiveLocation: UserLocation) {
         contactLocations.add(RiskContactLocation(
-                ContactPoint(userLocation.id.toString(), userLocation.lat, userLocation.lng, userLocation.locationTimestamp), // Usuario
-                ContactPoint(positiveLocation.id.toString(), positiveLocation.lat, positiveLocation.lng, positiveLocation.locationTimestamp) // Positivo
+                userContactPoint = Point(userLocation.lat(), userLocation.lng(), userLocation.timestamp()),
+                positiveContactPoint = Point(positiveLocation.lat(), positiveLocation.lng(), positiveLocation.timestamp())
         ))
         calculateExposeTime() // Recalcular tiempo de exposición.
         calculateMeanProximity() // Recalcular proximidad media.
@@ -156,13 +150,13 @@ class RiskContact(
      */
     private fun normalize(): Triple<Double, Double, Double> {
         // Tiempo de exposición
-        val exposeTimeNormal = Utils.normalize(exposeTime.toDouble(),
+        val exposeTimeNormal = normalize(exposeTime.toDouble(),
                 config.exposeTimeRange[0].toDouble(),
                 config.exposeTimeRange[1].toDouble())
-        val meanProximityNormal = Utils.normalize(meanProximity,
+        val meanProximityNormal = normalize(meanProximity,
                 config.meanProximityRange[0],
                 config.meanProximityRange[1])
-        val meanTimeIntervalNormal = Utils.normalize(meanTimeInterval.toDouble(),
+        val meanTimeIntervalNormal = normalize(meanTimeInterval.toDouble(),
                 config.meanTimeIntervalRange[0].toDouble(),
                 config.meanTimeIntervalRange[1].toDouble())
         return Triple(exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal)
@@ -176,9 +170,11 @@ class RiskContact(
      * @return Nivel de riesgo asociado.
      */
     private fun getRiskLevel(riskPercent: Double): RiskLevel {
-        return if(riskPercent <= 25) RiskLevel.AMARILLO
-        else if(riskPercent <= 75) RiskLevel.NARANJA
-        else RiskLevel.ROJO
+        return when {
+            riskPercent <= 25 -> RiskLevel.AMARILLO
+            riskPercent <= 75 -> RiskLevel.NARANJA
+            else -> RiskLevel.ROJO
+        }
     }
 
     /**
@@ -196,6 +192,25 @@ class RiskContact(
         // Límite inferior
         val inferior: Date = if(date21.before(date11)) date11 else date21
         return Pair(inferior, superior)
+    }
+
+    /**
+     * Normaliza el valor indicado para transformarlo en un valor
+     * en la escala de 0 a 1, según el valor mínimo y máximo especificados.
+     *
+     * @param value Valor a normalizar.
+     * @param min Valor mínimo.
+     * @param max Valor máximo.
+     * @return Valor Double normalizado.
+     */
+    private fun normalize(value: Double, min: Double, max: Double): Double {
+        // Truncar el valor si supera alguno de los límites.
+        val v = when {
+            value < min -> {min}
+            value > max -> {max}
+            else -> value
+        }
+        return (v - min) / (max - min)
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,10 +1,12 @@
 package es.uniovi.eii.contacttracker.riskcontact
 
 import es.uniovi.eii.contacttracker.model.Itinerary
+import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.RiskContactConfig
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
+import es.uniovi.eii.contacttracker.util.FileUtils
 import es.uniovi.eii.contacttracker.util.TestUtils
 import es.uniovi.eii.contacttracker.util.TestUtils.parseItinerary
 import org.junit.Assert.*
@@ -37,7 +39,7 @@ class DetectorUnitTest {
      */
     @Test
     fun `find closest location`(){
-        val location = UserLocation(0, 43.532024, -5.912487, 0.0, "", Date())
+        val location = UserLocation(0, Point(43.532024, -5.912487, Date()), 0.0, "")
         var closest = detector.findClosestLocation(location, listOf())
         // Lista vacía
         assertEquals(null, closest.first)

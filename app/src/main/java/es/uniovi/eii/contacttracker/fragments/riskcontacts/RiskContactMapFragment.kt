@@ -14,9 +14,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactMapBinding
-import es.uniovi.eii.contacttracker.model.ContactPoint
+import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.RiskContact
-import es.uniovi.eii.contacttracker.model.RiskContactLocation
 
 /**
  * Contacto de Riesgo.
@@ -76,8 +75,8 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
      */
     private fun drawContact(){
         riskContact?.let {
-            val userLocations = mutableListOf<ContactPoint>()
-            val positiveLocations = mutableListOf<ContactPoint>()
+            val userLocations = mutableListOf<Point>()
+            val positiveLocations = mutableListOf<Point>()
             // Crear listas con las localizaciones del usuario y del positivo.
             it.contactLocations.forEach { contactLocation ->
                 userLocations.add(contactLocation.userContactPoint)
@@ -104,7 +103,7 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
      * @param color Color en el que se desea dibujar la línea.
      *
      */
-    private fun drawLocations(contactPoints: List<ContactPoint>, color: Int) {
+    private fun drawLocations(contactPoints: List<Point>, color: Int) {
         // Crear la lista de puntos
         val points = mutableListOf<LatLng>()
         contactPoints.forEach {

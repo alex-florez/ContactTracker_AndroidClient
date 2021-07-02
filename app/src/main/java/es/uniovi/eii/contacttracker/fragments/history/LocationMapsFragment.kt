@@ -21,7 +21,6 @@ import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentMapsBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
-import es.uniovi.eii.contacttracker.model.UserLocationList
 import es.uniovi.eii.contacttracker.util.LocationUtils
 
 
@@ -278,13 +277,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         // Ordenar localizaciones por fecha
         locations.apply {
             sortedLocations = sortedBy { location ->
-                location.locationTimestamp
+                location.timestamp()
             }
         }
         sortedLocations.forEach { location ->
             val latLng = LocationUtils.toLatLng(location)
             val marker = map.addMarker(MarkerOptions()
-                .title(location.locationTimestamp.toString())
+                .title(location.timestamp().toString())
                 .position(latLng))
             marker?.let { markers.add(marker) } // Guardar marcador
         }
@@ -316,7 +315,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private fun addNewLocation(location: UserLocation) {
         val latLng = LocationUtils.toLatLng(location)
         val newMarker = map.addMarker(MarkerOptions()
-            .title(location.locationTimestamp.toString())
+            .title(location.timestamp().toString())
             .position(latLng)
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)))
         // Dibujar línea

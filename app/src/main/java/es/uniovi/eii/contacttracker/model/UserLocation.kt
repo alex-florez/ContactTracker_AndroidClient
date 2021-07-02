@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.model
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.locations.UserLocationDiffCallback
@@ -9,21 +10,17 @@ import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 /**
- * Clase de datos UserLocation que representa el concepto
- * de Localización del Usuario.
+ * Clase de datos que representa el concepto
+ * de una localización/ubicación del usuario.
  */
 @Parcelize
 @Entity(tableName = "user_locations")
 data class UserLocation (
     @PrimaryKey(autoGenerate = true) var id: Long?,
-    val lat: Double,
-    val lng: Double,
+    @Embedded val point: Point,
     val accuracy: Double,
-    val provider: String,
-    val locationTimestamp: Date
+    val provider: String
 ) : Parcelable {
-
-
 
     companion object {
         /**
@@ -32,31 +29,39 @@ data class UserLocation (
         val DIFF_CALLBACK: DiffUtil.ItemCallback<UserLocation> = UserLocationDiffCallback()
     }
 
+    /* Devuelve la latitud */
+    fun lat(): Double = point.lat
+
+    /* Devuelve la longitud */
+    fun lng(): Double = point.lng
+
+    /* Devuelve el timestamp de la localización */
+    fun timestamp(): Date = point.timestamp
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as UserLocation
 
-        if (lat != other.lat) return false
-        if (lng != other.lng) return false
+        if (id != other.id) return false
+        if (point != other.point) return false
         if (accuracy != other.accuracy) return false
         if (provider != other.provider) return false
-        if (locationTimestamp != other.locationTimestamp) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = lat.hashCode()
-        result = 31 * result + lng.hashCode()
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + point.hashCode()
         result = 31 * result + accuracy.hashCode()
         result = 31 * result + provider.hashCode()
-        result = 31 * result + locationTimestamp.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "UserLocation(id=$id, lat=$lat, lng=$lng, accuracy=$accuracy, provider='$provider', timestamp=$locationTimestamp)"
+        return "UserLocation(id=$id, point=$point, accuracy=$accuracy, provider='$provider')"
     }
+
 }

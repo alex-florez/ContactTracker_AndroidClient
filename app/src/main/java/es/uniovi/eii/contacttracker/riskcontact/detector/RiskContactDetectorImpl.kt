@@ -30,50 +30,49 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
         usedLocations.clear()
 
         /* Recorrer localizaciones del itinerario del usuario por cada día */
-        user.locations.keys.forEach { date ->
-            val uLocations = user.locations[date] // Localizaciones del usuario
-            val pLocations = positive.locations[date] // Localizaciones del positivo
+        user.dates().forEach { date ->
+            val uLocations = user[date] // Localizaciones del usuario
+            val pLocations = positive[date] // Localizaciones del positivo
             var riskContact: RiskContact? = null // Contacto de riesgo
-            if(pLocations != null) {  // Comprobar si hay localizaciones del positivo para esa fecha
-                uLocations?.forEach { userLocation ->
-                    /* Buscar el punto más cercano del positivo (y que no haya sido ya comprobado) */
-                    val (closestLocation, distance) = findClosestLocation(userLocation, pLocations)
-                    if(closestLocation != null){
-                        /* Comprobar Cercanía en el Espacio y en el tiempo */
-                        if(checkSpaceProximity(userLocation, closestLocation, riskContactConfig.securityDistanceMargin) // Cercanía en el ESPACIO
-                            && checkTimeProximity(userLocation, closestLocation, riskContactConfig.timeDifferenceMargin) // Cercanía en el TIEMPO
-                        ) {
-                            if(riskContact == null){ /* Registrar nuevo contacto */
-                                riskContact = RiskContact(config = riskContactConfig) // Iniciar nuevo Tramo de contacto.
-                            }
-                            /* Actualizar Contacto de Riesgo si ya se estaba en un tramo de contacto */
-                            riskContact?.addContactLocations(userLocation, closestLocation)
-                            usedLocations.add(closestLocation) // Marcar la localización del positivo como usada
-                        } else {
-                            riskContact?.let{
-                                /* Almacenar el Contacto de Riesgo en el resultado.*/
-                                result.add(it)
-                                /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
-                                riskContact = null
-                            }
+            // Comprobar si hay localizaciones del positivo para esa fecha
+            uLocations.forEach { userLocation ->
+                /* Buscar el punto más cercano del positivo (y que no haya sido ya comprobado) */
+                val (closestLocation, distance) = findClosestLocation(userLocation, pLocations)
+                if(closestLocation != null){
+                    /* Comprobar Cercanía en el Espacio y en el tiempo */
+                    if(checkSpaceProximity(userLocation, closestLocation, riskContactConfig.securityDistanceMargin) // Cercanía en el ESPACIO
+                        && checkTimeProximity(userLocation, closestLocation, riskContactConfig.timeDifferenceMargin) // Cercanía en el TIEMPO
+                    ) {
+                        if(riskContact == null){ /* Registrar nuevo contacto */
+                            riskContact = RiskContact(config = riskContactConfig) // Iniciar nuevo Tramo de contacto.
                         }
+                        /* Actualizar Contacto de Riesgo si ya se estaba en un tramo de contacto */
+                        riskContact?.addContactLocations(userLocation, closestLocation)
+                        usedLocations.add(closestLocation) // Marcar la localización del positivo como usada
                     } else {
-                        /* Comprobar si se estaba registrando un nuevo contacto */
-                        riskContact?.let {
+                        riskContact?.let{
                             /* Almacenar el Contacto de Riesgo en el resultado.*/
                             result.add(it)
                             /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
                             riskContact = null
                         }
                     }
+                } else {
+                    /* Comprobar si se estaba registrando un nuevo contacto */
+                    riskContact?.let {
+                        /* Almacenar el Contacto de Riesgo en el resultado.*/
+                        result.add(it)
+                        /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
+                        riskContact = null
+                    }
                 }
-                /* Comprobar si queda algúun contacto por almacenar */
-                riskContact?.let {
-                    /* Almacenar el Contacto de Riesgo en el resultado.*/
-                    result.add(it)
-                    /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
-                    riskContact = null
-                }
+            }
+            /* Comprobar si queda algúun contacto por almacenar */
+            riskContact?.let {
+                /* Almacenar el Contacto de Riesgo en el resultado.*/
+                result.add(it)
+                /* Cerrar Tramo de Contacto de Riesgo (si había uno existente) */
+                riskContact = null
             }
         }
         return result
@@ -105,7 +104,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
         pointB: UserLocation,
         time: Double
     ): Boolean {
-        val minDiff = Utils.dateDifferenceInSecs(pointA.locationTimestamp, pointB.locationTimestamp) / 60.0
+        val minDiff = Utils.dateDifferenceInSecs(pointA.timestamp(), pointB.timestamp()) / 60.0
         return minDiff <= time
     }
 

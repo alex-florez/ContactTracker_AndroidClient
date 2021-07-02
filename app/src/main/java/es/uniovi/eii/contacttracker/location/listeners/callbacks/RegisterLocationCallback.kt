@@ -61,7 +61,8 @@ class RegisterLocationCallback @Inject constructor(
 
     /**
      * Utiliza una corrutina de Kotlin para insertar la
-     * nueva localización en la base de datos ROOM local de la App.
+     * nueva localización en la base de datos ROOM local de la App
+     * y enviar un broadcast con la nueva localización obtenida.
      */
     private fun insertIntoDB(location: Location){
         job = scope.launch {

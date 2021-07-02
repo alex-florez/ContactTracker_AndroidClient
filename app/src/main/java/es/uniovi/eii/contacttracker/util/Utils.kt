@@ -150,26 +150,4 @@ object Utils {
         drawable.draw(canvas)
         return bitmap
     }
-
-    /**
-     * Normaliza el valor indicado para transformarlo en un valor
-     * en la escala de 0 a 1, según el valor mínimo y máximo especificados.
-     *
-     * @param value Valor a normalizar.
-     * @param min Valor mínimo.
-     * @param max Valor máximo.
-     * @return Valor Double normalizado.
-     */
-    fun normalize(value: Double, min: Double, max: Double): Double {
-        // Truncar el valor si supera alguno de los límites.
-        var v = 0.0
-        v = if(value < min){
-            min
-        } else if(value > max){
-            max
-        } else {
-            value
-        }
-        return (v - min) / (max - min)
-    }
 }

@@ -51,26 +51,6 @@ class RiskContactResultsFragment : Fragment() {
      */
     private lateinit var riskContactResultAdapter: RiskContactResultAdapter
 
-    /**
-     * Broadcast Receiver
-     */
-    private var riskContactResultReceiver: RiskContactResultReceiver? = null
-
-    /**
-     * Broadcast Receiver para recibir un nuevo resultado de una
-     * comprobación de contactos de riesgo.
-     */
-    inner class RiskContactResultReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val result = intent?.getParcelableExtra<RiskContactResult>(Constants.EXTRA_RISK_CONTACT_RESULT)
-            result?.let {
-                riskContactResultAdapter.addResult(it)
-                binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)
-            }
-        }
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -91,17 +71,6 @@ class RiskContactResultsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        registerReceivers()
-        viewModel.getRiskContactResults()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceivers()
-    }
-
     /**
      * Establece los observers para los LiveData Observables
      * del ViewModel.
@@ -109,9 +78,13 @@ class RiskContactResultsFragment : Fragment() {
     private fun setObservers(){
         viewModel.apply {
             /* Resultados de la comprobación */
-            results.observe(viewLifecycleOwner) {
+//            results.observe(viewLifecycleOwner) {
+//                riskContactResultAdapter.submitList(it)
+//                binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)
+//            }
+            getAllRiskContactResults().observe(viewLifecycleOwner) {
                 riskContactResultAdapter.submitList(it)
-                binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)
+                binding.txtLabelEmpty.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
             }
             /* Icono de carga */
             isLoading.observe(viewLifecycleOwner) {
@@ -164,26 +137,6 @@ class RiskContactResultsFragment : Fragment() {
             .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
             .addToBackStack("ResultDetailsFragment")
             .commit()
-    }
-
-    /**
-     * Registra los BroadcastReceivers.
-     */
-    private fun registerReceivers(){
-        if(riskContactResultReceiver == null){
-            riskContactResultReceiver = RiskContactResultReceiver()
-        }
-        requireActivity().registerReceiver(
-            riskContactResultReceiver,
-            IntentFilter(Constants.ACTION_GET_RISK_CONTACT_RESULT)
-        )
-    }
-
-    /**
-     * Desvincula los Broadcast Receivers.
-     */
-    private fun unregisterReceivers(){
-        requireActivity().unregisterReceiver(riskContactResultReceiver)
     }
 
     companion object {

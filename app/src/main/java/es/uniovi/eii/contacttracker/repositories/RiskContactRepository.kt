@@ -1,13 +1,16 @@
 package es.uniovi.eii.contacttracker.repositories
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
-import es.uniovi.eii.contacttracker.model.ResultWithRiskContacts
-import es.uniovi.eii.contacttracker.model.RiskContact
+import es.uniovi.eii.contacttracker.room.relations.ResultWithRiskContacts
 import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.model.RiskContactWithLocation
+import es.uniovi.eii.contacttracker.repositories.mappers.toResultWithRiskContacts
+import es.uniovi.eii.contacttracker.repositories.mappers.toRiskContactResult
+import es.uniovi.eii.contacttracker.room.relations.RiskContactWithLocations
 import es.uniovi.eii.contacttracker.room.daos.RiskContactDao
 import javax.inject.Inject
 import java.util.Date
@@ -35,63 +38,39 @@ class RiskContactRepository @Inject constructor(
      * @param riskContactResult Resultado de la comprobación de contactos de riesgo.
      */
     suspend fun insert(riskContactResult: RiskContactResult) {
-        // Crear objeto wrapper para cada Risk Contact
-        val riskContacts = mutableListOf<RiskContactWithLocation>()
-        for(rc in riskContactResult.riskContacts) {
-            riskContacts.add(RiskContactWithLocation(rc, rc.contactLocations))
-        }
-        // Crear objeto Wrapper
-        val wrapper = ResultWithRiskContacts(
-                riskContactResult,
-                riskContacts
-        )
+        val wrapper = toResultWithRiskContacts(riskContactResult)
         // Insertar Resultado
         val resultId = riskContactDao.insert(wrapper.riskContactResult)
         // Insertar Contactos de Riesgo
-        for(riskContactWithLocation in wrapper.riskContacts){
-            riskContactWithLocation.riskContact.riskContactResultId = resultId // ID del resultado.
-            val riskContactId = riskContactDao.insertRiskContact(riskContactWithLocation.riskContact)
-            for(contactPoint in riskContactWithLocation.riskContactLocations){
-                contactPoint.rcId = riskContactId // ID del Contacto de Riesgo.
+        wrapper.riskContacts.forEach {
+            it.riskContact.riskContactResultId = resultId // ID del resultado
+            val riskContactId = riskContactDao.insertRiskContact(it.riskContact) // Insertar contacto de riesgo.
+            // Insertar localizaciones de contacto
+            it.riskContactLocations.forEach { riskContactLocation ->
+                riskContactLocation.riskContactId = riskContactId // ID del contacto de riesgo
             }
-            // Insertar Puntos de Contacto
-            riskContactDao.insertRiskContactLocations(riskContactWithLocation.riskContactLocations)
+            riskContactDao.insertRiskContactLocations(it.riskContactLocations)
         }
     }
 
     /**
      * Devuelve los resultados de todas las comprobaciones realizadas.
      * Dado que se trata de varias relaciones 1 a n, se realiza una transformación
-     * de los objetos wrapper a los objetos originales.
+     * de los objetos wrapper a los objetos originales del dominio. Se utiliza una
+     * transformación para mantener el comportamiento del LiveData.
+     *
+     * @return LiveData con la lista de resultados convertidos a objetos del dominio.
      */
-    suspend fun getAll(): List<RiskContactResult> {
-        // Obtener lista de objetos wrapper
+    fun getAll(): LiveData<List<RiskContactResult>> {
         val wrapperList = riskContactDao.getAllRiskContactResults()
-        val result = mutableListOf<RiskContactResult>()
-        wrapperList.forEach { wrapper ->
-            val riskContactResult = RiskContactResult()
-            riskContactResult.resultId = wrapper.riskContactResult.resultId
-            riskContactResult.numberOfPositives = wrapper.riskContactResult.numberOfPositives
-            riskContactResult.timestamp = wrapper.riskContactResult.timestamp
-            // Transformar RiskContacts
-            wrapper.riskContacts.forEach {
-                val riskContact = RiskContact()
-                riskContact.riskContactId = it.riskContact.riskContactId
-                riskContact.riskContactResultId = it.riskContact.riskContactResultId
-                riskContact.riskLevel = it.riskContact.riskLevel
-                riskContact.riskPercent = it.riskContact.riskPercent
-                riskContact.exposeTime = it.riskContact.exposeTime
-                riskContact.meanProximity = it.riskContact.meanProximity
-                riskContact.meanTimeInterval = it.riskContact.meanTimeInterval
-                riskContact.startDate = it.riskContact.startDate
-                riskContact.endDate = it.riskContact.endDate
-                riskContact.contactLocations = it.riskContactLocations.toMutableList()
-                riskContact.config = it.riskContact.config
-                riskContactResult.riskContacts.add(riskContact)
+        // Transformar livedata para convertir los objetos wrapper a objetos del dominio
+        return Transformations.map(wrapperList) {
+            val mappedResults = mutableListOf<RiskContactResult>()
+            it.forEach { result ->
+                mappedResults.add(toRiskContactResult(result))
             }
-            result.add(riskContactResult)
+            mappedResults.toList()
         }
-        return result
     }
 
     /**

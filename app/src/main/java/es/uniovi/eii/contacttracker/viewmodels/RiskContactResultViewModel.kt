@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.uniovi.eii.contacttracker.model.ResultWithRiskContacts
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +19,8 @@ class RiskContactResultViewModel @Inject constructor (
      * LiveData con la lista de Resultados de
      * las comprobaciones.
      */
-    private val _results = MutableLiveData<List<RiskContactResult>>(listOf())
-    val results: LiveData<List<RiskContactResult>> = _results
+    private var _results = MutableLiveData<List<RiskContactResult>>(listOf())
+    var results: LiveData<List<RiskContactResult>> = _results
 
     /**
      * LiveData para el icono de progreso de carga de los
@@ -42,13 +40,25 @@ class RiskContactResultViewModel @Inject constructor (
      * Rellena el LiveData con todos los resultados de las
      * comprobaciones realizadas.
      */
-    fun getRiskContactResults() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            _results.value = riskContactRepository.getAll()
-            _isLoading.value = false
-            _isEmpty.value = _results.value?.isEmpty()
-        }
-    }
+//    fun getRiskContactResults() {
+//        viewModelScope.launch {
+//            _isLoading.value = true
+//            _results.value = riskContactRepository.getAll()
+//            _isLoading.value = false
+//            _isEmpty.value = _results.value?.isEmpty()
+//        }
+//    }
 
+//    fun getRiskContactResults() {
+//        viewModelScope.launch {
+//            _isLoading.value = true
+//            results = riskContactRepository.getAll()
+//            _isLoading.value = false
+//            _isEmpty.value = results.value?.isEmpty() ?: true
+//        }
+//    }
+
+    fun getAllRiskContactResults():LiveData<List<RiskContactResult>> {
+       return riskContactRepository.getAll()
+    }
 }

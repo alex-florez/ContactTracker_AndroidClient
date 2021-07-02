@@ -8,7 +8,7 @@ import androidx.room.Transaction
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactLocation
 import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.model.ResultWithRiskContacts
+import es.uniovi.eii.contacttracker.room.relations.ResultWithRiskContacts
 
 /**
  * Data Access Object para acceder a los resultados de la
@@ -27,10 +27,7 @@ interface RiskContactDao {
     @Insert
     suspend fun insertRiskContactLocations(riskContactLocations: List<RiskContactLocation>)
 
-    @Transaction
-    @Query("SELECT * FROM RiskContactResult ORDER BY timestamp DESC")
-    suspend fun getAllRiskContactResults(): List<ResultWithRiskContacts>
+    @Query("SELECT * FROM risk_contact_results ORDER BY timestamp DESC")
+    fun getAllRiskContactResults(): LiveData<List<ResultWithRiskContacts>>
 
-    @Query("SELECT * FROM RiskContactResult")
-    fun getRiskContactResults(): LiveData<List<ResultWithRiskContacts>>
 }

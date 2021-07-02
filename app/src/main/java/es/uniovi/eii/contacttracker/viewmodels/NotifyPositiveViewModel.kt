@@ -88,7 +88,7 @@ class NotifyPositiveViewModel @Inject constructor(
             val infectivityPeriod = _trackerConfig.value?.infectivityPeriod ?: Constants.DEFAULT_INFECTIVITY_PERIOD
             // Obtener localizaciones desde los últimos X días
             val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
-            val locations = locationRepository.getLastLocationsSince(startDate)
+            val locations = locationRepository.getLastLocationsSince(infectivityPeriod)
             // Obtener fechas a las que se corresponden las localizaciones.
             val locationDates = locationRepository.getLastLocationDatesSince(startDate)
             // Crear el objeto con las localizaciones del positivo, incluyendo los datos personales

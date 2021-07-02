@@ -41,12 +41,12 @@ class Positive(
          *
          * @return Itinerario con las localizaciones organizadas por fechas.
          */
-        fun getItinerary(): Itinerary {
-                val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
-                locationDates.forEach{ date ->
-                        val filteredLocations = locations.filter { l -> Utils.formatDate(l.locationTimestamp, "yyyy-MM-dd") == date }
-                        map[date] = filteredLocations
-                }
-                return Itinerary(map)
-        }
+//        fun getItinerary(): Itinerary {
+//                val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
+//                locationDates.forEach{ date ->
+//                        val filteredLocations = locations.filter { l -> Utils.formatDate(l.timestamp(), "yyyy-MM-dd") == date }
+//                        map[date] = filteredLocations
+//                }
+//                return Itinerary(map)
+//        }
 }

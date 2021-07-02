@@ -84,11 +84,14 @@ class LocationRepository @Inject constructor(
      * Devuelve las localizaciones del usuario registradas desde la fecha pasada
      * como parámetro hasta el día de hoy.
      *
-     * @param dateString string formateado con la fecha de inicio.
+     * @param lastDays N.º de días atrás para consultar las localizaciones.
      * @return lista con las localizaciones.
      */
-    suspend fun getLastLocationsSince(dateString: String): List<UserLocation>{
-        return userLocationDao.getLocationsBetween(dateString, Utils.formatDate(Date(), "yyyy-MM-dd"))
+    suspend fun getLastLocationsSince(lastDays: Int): List<UserLocation>{
+        val sinceDate = Utils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
+        return userLocationDao.getLocationsBetween(
+            Utils.formatDate(sinceDate, "yyyy-MM-dd"),
+            Utils.formatDate(Date(), "yyyy-MM-dd"))
     }
 
     /**
@@ -111,21 +114,21 @@ class LocationRepository @Inject constructor(
      * @param lastDays número de días.
      * @return Itinerario con las localizaciones organizadas por fecha.
      */
-    suspend fun getItinerarySince(lastDays: Int): Itinerary {
-        if(lastDays > 0) {
-            // Calcular la fecha de inicio.
-            val sinceDate = Utils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
-            val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
-            val dates: List<String> = userLocationDao.getLocationDatesBetween(
-                    Utils.formatDate(sinceDate, "yyyy-MM-dd"),
-                    Utils.formatDate(Date(), "yyyy-MM-dd"))
-            // Rellenar el mapa
-            dates.forEach{ date ->
-                val locations = userLocationDao.getAllByDate(date)
-                map[date] = locations
-            }
-            return Itinerary(map)
-        }
-        return Itinerary(mapOf()) // Itinerario vacío
-    }
+//    suspend fun getItinerarySince(lastDays: Int): Itinerary {
+//        if(lastDays > 0) {
+//            // Calcular la fecha de inicio.
+//            val sinceDate = Utils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
+//            val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
+//            val dates: List<String> = userLocationDao.getLocationDatesBetween(
+//                    Utils.formatDate(sinceDate, "yyyy-MM-dd"),
+//                    Utils.formatDate(Date(), "yyyy-MM-dd"))
+//            // Rellenar el mapa
+//            dates.forEach{ date ->
+//                val locations = userLocationDao.getAllByDate(date)
+//                map[date] = locations
+//            }
+//            return Itinerary(map)
+//        }
+//        return Itinerary(mapOf()) // Itinerario vacío
+//    }
 }

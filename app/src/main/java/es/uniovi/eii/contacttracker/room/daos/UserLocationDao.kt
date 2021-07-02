@@ -22,28 +22,28 @@ interface UserLocationDao {
 
     // QUERY'S
     // *********************************************************************************************
-    @Query("SELECT * FROM user_locations ORDER BY locationTimestamp DESC")
+    @Query("SELECT * FROM user_locations ORDER BY timestamp DESC")
     fun getAll(): LiveData<List<UserLocation>>
 
-    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = :date ORDER BY locationTimestamp DESC")
+    @Query("SELECT * FROM user_locations WHERE date(timestamp) = :date ORDER BY timestamp DESC")
     fun getAllByDateString(date: String): LiveData<List<UserLocation>>
 
-    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = :date ORDER BY locationTimestamp ASC")
+    @Query("SELECT * FROM user_locations WHERE date(timestamp) = :date ORDER BY timestamp ASC")
     fun getAllByDate(date: String): List<UserLocation>
 
     @Query("DELETE FROM user_locations")
     suspend fun deleteAll(): Int
 
-    @Query("DELETE FROM user_locations WHERE date(locationTimestamp) = :dateString")
+    @Query("DELETE FROM user_locations WHERE date(timestamp) = :dateString")
     suspend fun deleteByDate(dateString: String): Int
 
-    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) = date('now') ORDER BY locationTimestamp DESC")
+    @Query("SELECT * FROM user_locations WHERE date(timestamp) = date('now') ORDER BY timestamp DESC")
     suspend fun getToday(): List<UserLocation>
 
-    @Query("SELECT * FROM user_locations WHERE date(locationTimestamp) >= :startDate AND date(locationTimestamp) <= :endDate")
+    @Query("SELECT * FROM user_locations WHERE date(timestamp) >= :startDate AND date(timestamp) <= :endDate")
     suspend fun getLocationsBetween(startDate: String, endDate: String): List<UserLocation>
 
-    @Query("SELECT DISTINCT(date(locationTimestamp)) FROM user_locations WHERE date(locationTimestamp) >= :startDate AND date(locationTimestamp) <= :endDate")
+    @Query("SELECT DISTINCT(date(timestamp)) FROM user_locations WHERE date(timestamp) >= :startDate AND date(timestamp) <= :endDate")
     suspend fun getLocationDatesBetween(startDate: String, endDate: String): List<String>
 
 

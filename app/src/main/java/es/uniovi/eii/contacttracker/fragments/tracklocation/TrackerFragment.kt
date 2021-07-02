@@ -342,7 +342,7 @@ class TrackerFragment : Fragment() {
                     requireContext(),
                     userLocation,
                     19,
-                    "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
+                    "Localización ${Utils.formatDate(userLocation.timestamp(), "dd/MM/yyyy HH:mm:ss")}")
             }
         })
     }

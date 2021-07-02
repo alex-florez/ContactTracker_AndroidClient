@@ -10,6 +10,7 @@ import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -44,8 +45,8 @@ class RiskContactViewModel @Inject constructor(
    fun startChecking() {
        viewModelScope.launch(Dispatchers.IO) {
            _isChecking.postValue(true)
+           delay(2000)
            riskContactManager.checkRiskContacts()
-           val result = riskContactRepository.getAll()
            _isChecking.postValue(false)
        }
    }

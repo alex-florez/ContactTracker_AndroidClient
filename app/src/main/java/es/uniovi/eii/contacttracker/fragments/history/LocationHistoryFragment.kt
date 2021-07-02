@@ -18,7 +18,6 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
-import es.uniovi.eii.contacttracker.model.UserLocationList
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.Utils
 import es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel
@@ -73,7 +72,7 @@ class LocationHistoryFragment : Fragment() {
                     requireContext(),
                     userLocation,
                     19,
-                    "Localización ${Utils.formatDate(userLocation.locationTimestamp, "dd/MM/yyyy HH:mm:ss")}")
+                    "Localización ${Utils.formatDate(userLocation.timestamp(), "dd/MM/yyyy HH:mm:ss")}")
             }
         })
     }

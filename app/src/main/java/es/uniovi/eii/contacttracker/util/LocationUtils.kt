@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
+import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -143,8 +144,8 @@ object LocationUtils {
      * de localización de usuario pasado como parámetro.
      */
     fun format(userLocation: UserLocation): String {
-        return "Localización {ID: ${userLocation.id} Lat: ${userLocation.lat}, Lng: ${userLocation.lng}" +
-                " Acc: ${userLocation.accuracy}, Date: ${dateFormatter.format(userLocation.locationTimestamp)}}"
+        return "Localización {ID: ${userLocation.id} Lat: ${userLocation.lat()}, Lng: ${userLocation.lng()}" +
+                " Acc: ${userLocation.accuracy}, Date: ${dateFormatter.format(userLocation.timestamp())}}"
     }
 
     /**
@@ -153,13 +154,16 @@ object LocationUtils {
      * del Dominio.
      */
     fun parse(location:Location): UserLocation {
-        return UserLocation(
-            null,
+        val point = Point(
             location.latitude,
             location.longitude,
-            location.accuracy.toDouble(),
-            location.provider,
             Date(location.time)
+        )
+        return UserLocation(
+            null,
+            point,
+            location.accuracy.toDouble(),
+            location.provider
         )
     }
 
@@ -191,8 +195,8 @@ object LocationUtils {
         location: UserLocation,
         zoom: Int,
         label: String){
-        val query = "${location.lat},${location.lng}(${label})"
-        val uriString = "geo:${location.lat},${location.lng}?q=${query}&z=${zoom}"
+        val query = "${location.lat()},${location.lng()}(${label})"
+        val uriString = "geo:${location.lat()},${location.lng()}?q=${query}&z=${zoom}"
         val uri = Uri.parse(uriString)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         ctx.startActivity(intent)
@@ -206,7 +210,7 @@ object LocationUtils {
      * @return LatLng con la localización convertida.
      */
     fun toLatLng(location: UserLocation): LatLng {
-        return LatLng(location.lat, location.lng)
+        return LatLng(location.lat(), location.lng())
     }
 
     /**
@@ -230,14 +234,14 @@ object LocationUtils {
         /* Haversin Formula */
         /* Considera que la tierra es una ESFERA y determina la GREAT-CIRCLE Distance */
         // Grados de diferencia entre latitudes y longitudes
-        val latDiff = pointB.lat - pointA.lat
-        val lngDiff = pointB.lng - pointA.lng
+        val latDiff = pointB.lat() - pointA.lat()
+        val lngDiff = pointB.lng() - pointA.lng()
         // Convertir a radianes los grados de diferencia entre las latitudes y longitudes.
         val latDiffRads = toRadians(latDiff)
         val lngDiffRads = toRadians(lngDiff)
         // Calcular el término 'a' que está dentro de la raíz.
         val a = sin(latDiffRads/2) * sin(latDiffRads/2) +
-                cos(toRadians(pointA.lat)) * cos(toRadians(pointB.lat)) *
+                cos(toRadians(pointA.lat())) * cos(toRadians(pointB.lat())) *
                 sin(lngDiffRads/2) * sin(lngDiffRads/2)
         // Aplicar arcotangente de dos parámetros y raíz cuadrada
         // Multiplicar por el radio de la tierra para obtener los km de distancia.
@@ -294,11 +298,9 @@ object LocationUtils {
             locations.add(
                 UserLocation(
                     counter.toLong(),
-                    lat,
-                    lng,
+                    Point(lat, lng, timestamp),
                     0.0,
-                    "file",
-                    timestamp
+                    "file"
                 )
             )
             counter++
