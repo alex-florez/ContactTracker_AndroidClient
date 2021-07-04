@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.util
 
 import es.uniovi.eii.contacttracker.model.Itinerary
+import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.UserLocation
 import java.text.SimpleDateFormat
 
@@ -43,21 +44,11 @@ object TestUtils {
             val lng = data[0].toDouble()
             val lat = data[1].toDouble()
             val date = df.parse(data[2])
-            locations.add(UserLocation(count.toLong(), lat, lng, 0.0,"", date!!))
+            locations.add(UserLocation(count.toLong(), Point(lat, lng, date!!), 0.0,""))
             count++
         }
         // Crear itinerario
-        val map = mutableMapOf<String, List<UserLocation>>()
-        val dates = locations.distinctBy {
-            dateFormatter.format(it.locationTimestamp)
-        }.map {
-            dateFormatter.format(it.locationTimestamp)
-        }
-        dates.forEach {
-            val filtered = locations.filter { l -> dateFormatter.format(l.locationTimestamp) == it }
-            map[it] = filtered
-        }
-        return Itinerary(map)
+        return Itinerary(locations)
     }
 }
 

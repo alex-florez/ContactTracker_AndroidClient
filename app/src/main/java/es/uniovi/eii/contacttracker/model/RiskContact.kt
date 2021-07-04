@@ -46,7 +46,9 @@ class RiskContact(
      */
     fun addContactLocations(userLocation: UserLocation, positiveLocation: UserLocation) {
         contactLocations.add(RiskContactLocation(
+                userContactPointName = userLocation.id.toString(),
                 userContactPoint = Point(userLocation.lat(), userLocation.lng(), userLocation.timestamp()),
+                positiveContactPointName = positiveLocation.id.toString(),
                 positiveContactPoint = Point(positiveLocation.lat(), positiveLocation.lng(), positiveLocation.timestamp())
         ))
         calculateExposeTime() // Recalcular tiempo de exposición.

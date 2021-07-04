@@ -37,16 +37,16 @@ class RiskContactUnitTest {
     fun `check expose time exact intersection`(){
         /* Intersección exacta */
         riskContact.addContactLocations(
-            UserLocation(11, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:00")!!),
-            UserLocation(21, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:00")!!)
+            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
+            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:10")!!),
-            UserLocation(22, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:10")!!)
+            UserLocation(12, Point(43.531779, -5.91148,  df.parse("21/06/2021 12:00:10")),0.0, ""),
+            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:20")!!),
-            UserLocation(23, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:20")!!)
+            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
+            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")), 0.0, "")
         )
         // Fecha de inicio y de fin
         assertEquals("21/06/2021 12:00:00", df.format(riskContact.startDate))
@@ -63,16 +63,16 @@ class RiskContactUnitTest {
     fun `check expose time internal intersection`(){
         /* Intersección interna */
         riskContact.addContactLocations(
-            UserLocation(11, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:00")!!),
-            UserLocation(21, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:05")!!)
+            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
+            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:05")),0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:10")!!),
-            UserLocation(22, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:09")!!)
+            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")),0.0, ""),
+            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:09")),0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:20")!!),
-            UserLocation(23, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:15")!!)
+            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
+            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:15")),0.0, "")
         )
         // Fecha de inicio y de fin
         assertEquals("21/06/2021 12:00:05", df.format(riskContact.startDate))
@@ -90,16 +90,16 @@ class RiskContactUnitTest {
     fun `check expose time external intersection`(){
         /* Intersección externa */
         riskContact.addContactLocations(
-            UserLocation(11, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:00")!!),
-            UserLocation(21, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 11:59:00")!!)
+            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
+            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 11:59:00")),0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:10")!!),
-            UserLocation(22, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:12")!!)
+            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")), 0.0, ""),
+            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:12")),0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:20")!!),
-            UserLocation(23, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:25")!!)
+            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
+            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:25")),0.0, "")
         )
         // Fecha de inicio y de fin
         assertEquals("21/06/2021 12:00:00", df.format(riskContact.startDate))
@@ -116,16 +116,16 @@ class RiskContactUnitTest {
     fun `check expose time left intersection`(){
         /* Intersección por la izquierda */
         riskContact.addContactLocations(
-            UserLocation(11, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:00")!!),
-            UserLocation(21, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 11:59:00")!!)
+            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
+            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 11:59:00")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:10")!!),
-            UserLocation(22, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:12")!!)
+            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")),0.0, ""),
+            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:12")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:20")!!),
-            UserLocation(23, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:15")!!)
+            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")), 0.0, ""),
+            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:15")), 0.0, "")
         )
         // Fecha de inicio y de fin
         assertEquals("21/06/2021 12:00:00", df.format(riskContact.startDate))
@@ -142,16 +142,16 @@ class RiskContactUnitTest {
     fun `check expose time right intersection`(){
         /* Intersección por la derecha */
         riskContact.addContactLocations(
-            UserLocation(11, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:00")!!),
-            UserLocation(21, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:05")!!)
+            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")),0.0, ""),
+            UserLocation(21, Point(43.531779, -5.91148,  df.parse("21/06/2021 12:00:05")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:10")!!),
-            UserLocation(22, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:12")!!)
+            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")), 0.0, ""),
+            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:12")),  0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:20")!!),
-            UserLocation(23, 43.531779, -5.91148, 0.0, "", df.parse("21/06/2021 12:00:25")!!)
+            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
+            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:25")), 0.0, "")
         )
         // Fecha de inicio y de fin
         assertEquals("21/06/2021 12:00:05", df.format(riskContact.startDate))
@@ -167,16 +167,16 @@ class RiskContactUnitTest {
     fun `check mean proximity`(){
         assertEquals(0.0, riskContact.meanProximity, 0.01)
         riskContact.addContactLocations(
-            UserLocation(11, 43.53192309009996, -5.913243243698072, 0.0, "", df.parse("21/06/2021 12:00:00")!!),
-            UserLocation(21, 43.53191738405285, -5.913219581274731, 0.0, "", df.parse("21/06/2021 12:00:05")!!)
+            UserLocation(11, Point(43.53192309009996, -5.913243243698072, df.parse("21/06/2021 12:00:00")), 0.0, ""),
+            UserLocation(21, Point(43.53191738405285, -5.913219581274731, df.parse("21/06/2021 12:00:05")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.53197138253921, -5.913188619181912, 0.0, "", df.parse("21/06/2021 12:00:10")!!),
-            UserLocation(22, 43.53196876782065, -5.913173105925772, 0.0, "", df.parse("21/06/2021 12:00:12")!!)
+            UserLocation(12, Point(43.53197138253921, -5.913188619181912, df.parse("21/06/2021 12:00:10")),  0.0, ""),
+            UserLocation(22, Point(43.53196876782065, -5.913173105925772, df.parse("21/06/2021 12:00:12")),0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.53202645322956, -5.913128095966302, 0.0, "", df.parse("21/06/2021 12:00:20")!!),
-            UserLocation(23, 43.53202431557776, -5.913113403953236, 0.0, "", df.parse("21/06/2021 12:00:25")!!)
+            UserLocation(13, Point(43.53202645322956, -5.913128095966302, df.parse("21/06/2021 12:00:20")), 0.0, ""),
+            UserLocation(23, Point(43.53202431557776, -5.913113403953236, df.parse("21/06/2021 12:00:25")), 0.0, "")
         )
         assertEquals(1.5007, riskContact.meanProximity, 0.01)
     }
@@ -189,16 +189,16 @@ class RiskContactUnitTest {
     fun `check mean time interval`(){
         assertEquals(0, riskContact.meanTimeInterval)
         riskContact.addContactLocations(
-            UserLocation(11, 43.53192309009996, -5.913243243698072, 0.0, "", df.parse("21/06/2021 11:59:34")!!),
-            UserLocation(21, 43.53191738405285, -5.913219581274731, 0.0, "", df.parse("21/06/2021 12:00:05")!!)
+            UserLocation(11, Point(43.53192309009996, -5.913243243698072,  df.parse("21/06/2021 11:59:34")), 0.0, ""),
+            UserLocation(21, Point(43.53191738405285, -5.913219581274731, df.parse("21/06/2021 12:00:05")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.53197138253921, -5.913188619181912, 0.0, "", df.parse("21/06/2021 11:59:46")!!),
-            UserLocation(22, 43.53196876782065, -5.913173105925772, 0.0, "", df.parse("21/06/2021 12:00:22")!!)
+            UserLocation(12, Point(43.53197138253921, -5.913188619181912,  df.parse("21/06/2021 11:59:46")), 0.0, ""),
+            UserLocation(22, Point(43.53196876782065, -5.913173105925772, df.parse("21/06/2021 12:00:22")),0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.53202645322956, -5.913128095966302, 0.0, "", df.parse("21/06/2021 12:00:28")!!),
-            UserLocation(23, 43.53202431557776, -5.913113403953236, 0.0, "", df.parse("21/06/2021 12:00:35")!!)
+            UserLocation(13, Point(43.53202645322956, -5.913128095966302, df.parse("21/06/2021 12:00:28")), 0.0, ""),
+            UserLocation(23, Point(43.53202431557776, -5.913113403953236, df.parse("21/06/2021 12:00:35")), 0.0, "")
         )
         assertEquals(21000, riskContact.meanTimeInterval)
     }
@@ -210,16 +210,16 @@ class RiskContactUnitTest {
     @Test
     fun `check risk score`(){
         riskContact.addContactLocations(
-            UserLocation(11, 43.53192309009996, -5.913243243698072, 0.0, "", df.parse("21/06/2021 11:59:34")!!),
-            UserLocation(21, 43.53191738405285, -5.913219581274731, 0.0, "", df.parse("21/06/2021 12:00:05")!!)
+            UserLocation(11, Point(43.53192309009996, -5.913243243698072,  df.parse("21/06/2021 11:59:34")), 0.0, ""),
+            UserLocation(21, Point(43.53191738405285, -5.913219581274731, df.parse("21/06/2021 12:00:05")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(12, 43.53197138253921, -5.913188619181912, 0.0, "", df.parse("21/06/2021 11:59:46")!!),
-            UserLocation(22, 43.53196876782065, -5.913173105925772, 0.0, "", df.parse("21/06/2021 12:00:22")!!)
+            UserLocation(12, Point(43.53197138253921, -5.913188619181912, df.parse("21/06/2021 11:59:46")), 0.0, ""),
+            UserLocation(22, Point(43.53196876782065, -5.913173105925772, df.parse("21/06/2021 12:00:22")), 0.0, "")
         )
         riskContact.addContactLocations(
-            UserLocation(13, 43.53202645322956, -5.913128095966302, 0.0, "", df.parse("21/06/2021 12:00:28")!!),
-            UserLocation(23, 43.53202431557776, -5.913113403953236, 0.0, "", df.parse("21/06/2021 12:00:35")!!)
+            UserLocation(13, Point(43.53202645322956, -5.913128095966302, df.parse("21/06/2021 12:00:28")), 0.0, ""),
+            UserLocation(23, Point(43.53202431557776, -5.913113403953236, df.parse("21/06/2021 12:00:35")), 0.0, "")
         )
         assertEquals(23000, riskContact.exposeTime)
         assertEquals(1.5007, riskContact.meanProximity, 0.01)

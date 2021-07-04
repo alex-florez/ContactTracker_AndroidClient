@@ -78,10 +78,6 @@ class RiskContactResultsFragment : Fragment() {
     private fun setObservers(){
         viewModel.apply {
             /* Resultados de la comprobación */
-//            results.observe(viewLifecycleOwner) {
-//                riskContactResultAdapter.submitList(it)
-//                binding.recyclerViewRiskContactResults.smoothScrollToPosition(0)
-//            }
             getAllRiskContactResults().observe(viewLifecycleOwner) {
                 riskContactResultAdapter.submitList(it)
                 binding.txtLabelEmpty.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE

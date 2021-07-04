@@ -46,9 +46,9 @@ class DetectorUnitTest {
         assertEquals(Double.POSITIVE_INFINITY, closest.second, 0.1)
         // Varias localizaciones
         val list = listOf(
-            UserLocation(1, 43.5320505, -5.9124605, 0.0, "", Date()),
-            UserLocation(2, 43.5320376, -5.9123865, 0.0, "", Date()),
-            UserLocation(3, 43.532031, -5.9124588, 0.0, "", Date())
+            UserLocation(1, Point(43.5320505, -5.9124605, Date()), 0.0, ""),
+            UserLocation(2, Point(43.5320376, -5.9123865, Date()), 0.0, ""),
+            UserLocation(3, Point(43.532031, -5.9124588, Date()), 0.0, "")
         )
         closest = detector.findClosestLocation(location, list)
         assertEquals(3L, closest.first?.id)
@@ -62,12 +62,12 @@ class DetectorUnitTest {
     @Test
     fun `check time proximity`() {
         val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val l1 = UserLocation(1, 43.5320505, -5.9124605, 0.0, "", df.parse("2021-06-20 12:05:30"))
-        val l2 = UserLocation(2, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 12:06:17"))
-        val l3 = UserLocation(3, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 12:06:17"))
-        val l4 = UserLocation(4, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 12:15:20"))
-        val l5 = UserLocation(5, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-20 11:59:20"))
-        val l6 = UserLocation(6, 43.5320376, -5.9123865, 0.0, "", df.parse("2021-06-21 12:06:05"))
+        val l1 = UserLocation(1, Point(43.5320505, -5.9124605,  df.parse("2021-06-20 12:05:30")), 0.0, "")
+        val l2 = UserLocation(2, Point(43.5320376, -5.9123865,  df.parse("2021-06-20 12:06:17")), 0.0, "")
+        val l3 = UserLocation(3, Point(43.5320376, -5.9123865, df.parse("2021-06-20 12:06:17")), 0.0, "")
+        val l4 = UserLocation(4, Point(43.5320376, -5.9123865, df.parse("2021-06-20 12:15:20")), 0.0, "")
+        val l5 = UserLocation(5, Point(43.5320376, -5.9123865,  df.parse("2021-06-20 11:59:20")),0.0, "")
+        val l6 = UserLocation(6, Point(43.5320376, -5.9123865,  df.parse("2021-06-21 12:06:05")), 0.0, "")
 
 
         /* No hay coincidencia */
@@ -86,9 +86,9 @@ class DetectorUnitTest {
      */
     @Test
     fun `check space proximity`(){
-        val l1 = UserLocation(1, 43.532026, -5.912564, 0.0, "", Date())
-        val l2 = UserLocation(2, 43.532012, -5.912499, 0.0, "", Date())
-        val l3 = UserLocation(3, 43.532022, -5.912544, 0.0, "", Date())
+        val l1 = UserLocation(1, Point(43.532026, -5.912564, Date()), 0.0, "")
+        val l2 = UserLocation(2, Point(43.532012, -5.912499, Date()),0.0, "")
+        val l3 = UserLocation(3, Point(43.532022, -5.912544, Date()), 0.0, "")
 
         /* No hay coincidencia */
         assertEquals(false, detector.checkSpaceProximity(l1, l2,5.0))
@@ -100,8 +100,8 @@ class DetectorUnitTest {
     // ****************************************
     @Test
     fun `empty itineraries`(){
-        val positive = Itinerary(mapOf())
-        val user = Itinerary(mapOf())
+        val positive = Itinerary(listOf())
+        val user = Itinerary(listOf())
         val result = detector.startChecking(user, positive)
         assertEquals(0, result.size)
     }
@@ -160,13 +160,13 @@ class DetectorUnitTest {
         // Comprobar las localizaciones de contacto
         val locations = contacts[0].contactLocations
         // Localizaciones del positivo
-        assertEquals("2", locations[0].positiveContactPoint.name)
-        assertEquals("3", locations[1].positiveContactPoint.name)
-        assertEquals("4", locations[2].positiveContactPoint.name)
+        assertEquals("2", locations[0].positiveContactPointName)
+        assertEquals("3", locations[1].positiveContactPointName)
+        assertEquals("4", locations[2].positiveContactPointName)
         // Localizaciones del usuario
-        assertEquals("8", locations[0].userContactPoint.name)
-        assertEquals("9", locations[1].userContactPoint.name)
-        assertEquals("10", locations[2].userContactPoint.name)
+        assertEquals("8", locations[0].userContactPointName)
+        assertEquals("9", locations[1].userContactPointName)
+        assertEquals("10", locations[2].userContactPointName)
         // Comprobar propiedades del contacto
         assertEquals(15000L, contacts[0].exposeTime)
         assertEquals(1.766, contacts[0].meanProximity, 0.1)
@@ -195,17 +195,17 @@ class DetectorUnitTest {
         assertEquals(3, contact1.contactLocations.size)
         assertEquals(2, contact2.contactLocations.size)
         // Localizaciones del Contacto 1
-        assertEquals("3", contact1.contactLocations[0].userContactPoint.name)
-        assertEquals("4", contact1.contactLocations[0].positiveContactPoint.name)
-        assertEquals("4", contact1.contactLocations[1].userContactPoint.name)
-        assertEquals("5", contact1.contactLocations[1].positiveContactPoint.name)
-        assertEquals("5", contact1.contactLocations[2].userContactPoint.name)
-        assertEquals("6", contact1.contactLocations[2].positiveContactPoint.name)
+        assertEquals("3", contact1.contactLocations[0].userContactPointName)
+        assertEquals("4", contact1.contactLocations[0].positiveContactPointName)
+        assertEquals("4", contact1.contactLocations[1].userContactPointName)
+        assertEquals("5", contact1.contactLocations[1].positiveContactPointName)
+        assertEquals("5", contact1.contactLocations[2].userContactPointName)
+        assertEquals("6", contact1.contactLocations[2].positiveContactPointName)
         // Localizaciones del Contacto 2
-        assertEquals("8", contact2.contactLocations[0].userContactPoint.name)
-        assertEquals("11", contact2.contactLocations[0].positiveContactPoint.name)
-        assertEquals("9", contact2.contactLocations[1].userContactPoint.name)
-        assertEquals("12", contact2.contactLocations[1].positiveContactPoint.name)
+        assertEquals("8", contact2.contactLocations[0].userContactPointName)
+        assertEquals("11", contact2.contactLocations[0].positiveContactPointName)
+        assertEquals("9", contact2.contactLocations[1].userContactPointName)
+        assertEquals("12", contact2.contactLocations[1].positiveContactPointName)
         // Propiedades del contacto 1
         assertEquals(10000, contact1.exposeTime)
         assertEquals(1.779, contact1.meanProximity, 0.1)
@@ -238,21 +238,21 @@ class DetectorUnitTest {
         val contact1 = contacts[0]
         val contact2 = contacts[1]
         // Localizaciones del primer contacto
-        assertEquals("5", contact1.contactLocations[0].userContactPoint.name)
-        assertEquals("3", contact1.contactLocations[0].positiveContactPoint.name)
-        assertEquals("6", contact1.contactLocations[1].userContactPoint.name)
-        assertEquals("4", contact1.contactLocations[1].positiveContactPoint.name)
-        assertEquals("7", contact1.contactLocations[2].userContactPoint.name)
-        assertEquals("5", contact1.contactLocations[2].positiveContactPoint.name)
-        assertEquals("8", contact1.contactLocations[3].userContactPoint.name)
-        assertEquals("6", contact1.contactLocations[3].positiveContactPoint.name)
+        assertEquals("5", contact1.contactLocations[0].userContactPointName)
+        assertEquals("3", contact1.contactLocations[0].positiveContactPointName)
+        assertEquals("6", contact1.contactLocations[1].userContactPointName)
+        assertEquals("4", contact1.contactLocations[1].positiveContactPointName)
+        assertEquals("7", contact1.contactLocations[2].userContactPointName)
+        assertEquals("5", contact1.contactLocations[2].positiveContactPointName)
+        assertEquals("8", contact1.contactLocations[3].userContactPointName)
+        assertEquals("6", contact1.contactLocations[3].positiveContactPointName)
         // Localizaciones del segundo contacto
-        assertEquals("10", contact2.contactLocations[0].userContactPoint.name)
-        assertEquals("8", contact2.contactLocations[0].positiveContactPoint.name)
-        assertEquals("11", contact2.contactLocations[1].userContactPoint.name)
-        assertEquals("9", contact2.contactLocations[1].positiveContactPoint.name)
-        assertEquals("12", contact2.contactLocations[2].userContactPoint.name)
-        assertEquals("10", contact2.contactLocations[2].positiveContactPoint.name)
+        assertEquals("10", contact2.contactLocations[0].userContactPointName)
+        assertEquals("8", contact2.contactLocations[0].positiveContactPointName)
+        assertEquals("11", contact2.contactLocations[1].userContactPointName)
+        assertEquals("9", contact2.contactLocations[1].positiveContactPointName)
+        assertEquals("12", contact2.contactLocations[2].userContactPointName)
+        assertEquals("10", contact2.contactLocations[2].positiveContactPointName)
         // Comprobar propiedades de los contactos
         assertEquals(10000, contact1.exposeTime)
         assertEquals(0.7575, contact1.meanProximity, 0.1)
