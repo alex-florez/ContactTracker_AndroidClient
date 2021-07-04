@@ -1,20 +1,12 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import android.app.Application
-import android.content.Context
-import android.location.Location
-import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.util.SingleLiveEvent
-import es.uniovi.eii.contacttracker.util.Utils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
+import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
 
@@ -46,7 +38,7 @@ class LocationHistoryViewModel @Inject constructor(
      * @return LiveData con las localizaciones.
      */
     fun getAllUserLocationsByDate(date: Date): LiveData<List<UserLocation>>{
-        val formattedDate = Utils.formatDate(date, "yyyy-MM-dd")
+        val formattedDate = DateUtils.formatDate(date, "yyyy-MM-dd")
         return locationRepository.getAllUserLocationsByDate(formattedDate)
     }
 
@@ -57,7 +49,7 @@ class LocationHistoryViewModel @Inject constructor(
      * @param date fecha por la cual filtrar.
      */
     fun deleteUserLocationsByDate(date: Date) {
-        val formattedDate = Utils.formatDate(date, "yyyy-MM-dd")
+        val formattedDate = DateUtils.formatDate(date, "yyyy-MM-dd")
         viewModelScope.launch {
             _deletedRows.value = locationRepository.deleteUserLocationsByDate(formattedDate)
         }

@@ -2,11 +2,9 @@ package es.uniovi.eii.contacttracker.repositories
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import es.uniovi.eii.contacttracker.model.Itinerary
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
-import es.uniovi.eii.contacttracker.util.Utils
-import java.text.SimpleDateFormat
+import es.uniovi.eii.contacttracker.util.DateUtils
 import java.util.*
 import javax.inject.Inject
 
@@ -88,10 +86,10 @@ class LocationRepository @Inject constructor(
      * @return lista con las localizaciones.
      */
     suspend fun getLastLocationsSince(lastDays: Int): List<UserLocation>{
-        val sinceDate = Utils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
+        val sinceDate = DateUtils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
         return userLocationDao.getLocationsBetween(
-            Utils.formatDate(sinceDate, "yyyy-MM-dd"),
-            Utils.formatDate(Date(), "yyyy-MM-dd"))
+            DateUtils.formatDate(sinceDate, "yyyy-MM-dd"),
+            DateUtils.formatDate(Date(), "yyyy-MM-dd"))
     }
 
     /**
@@ -104,7 +102,7 @@ class LocationRepository @Inject constructor(
      */
     @SuppressLint("SimpleDateFormat")
     suspend fun getLastLocationDatesSince(dateString: String): List<String> {
-        return userLocationDao.getLocationDatesBetween(dateString,  Utils.formatDate(Date(), "yyyy-MM-dd"))
+        return userLocationDao.getLocationDatesBetween(dateString,  DateUtils.formatDate(Date(), "yyyy-MM-dd"))
     }
 
     /**

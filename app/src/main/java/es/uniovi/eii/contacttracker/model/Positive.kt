@@ -2,8 +2,6 @@ package es.uniovi.eii.contacttracker.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import es.uniovi.eii.contacttracker.model.UserLocation
-import es.uniovi.eii.contacttracker.util.Utils
 import java.util.Date
 
 /**

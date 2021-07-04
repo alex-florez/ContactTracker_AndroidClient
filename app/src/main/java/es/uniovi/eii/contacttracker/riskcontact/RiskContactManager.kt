@@ -6,6 +6,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -20,8 +22,7 @@ import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.*
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactForegroundService
-import es.uniovi.eii.contacttracker.util.Utils
-import java.text.SimpleDateFormat
+import es.uniovi.eii.contacttracker.util.DateUtils
 import java.util.*
 import javax.inject.Inject
 
@@ -117,8 +118,8 @@ class RiskContactManager @Inject constructor(
     fun setPeriodicCheck(date: Date){
         // Crear hora de inicio
         val cal = Calendar.getInstance()
-        cal.set(Calendar.HOUR_OF_DAY, Utils.getFromDate(date, Calendar.HOUR_OF_DAY))
-        cal.set(Calendar.MINUTE, Utils.getFromDate(date, Calendar.MINUTE))
+        cal.set(Calendar.HOUR_OF_DAY, DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY))
+        cal.set(Calendar.MINUTE, DateUtils.getFromDate(date, Calendar.MINUTE))
         cal.set(Calendar.SECOND, 0)
         val startTime = cal.timeInMillis
         // Establecer pending intent
@@ -158,25 +159,25 @@ class RiskContactManager @Inject constructor(
             RiskLevel.VERDE -> {
                 color = ctx.getColor(R.color.greenOk)
                 ContextCompat.getDrawable(ctx, R.drawable.ic_healthy)?.let {
-                    largeIcon = Utils.drawableToBitmap(it)
+                    largeIcon = drawableToBitmap(it)
                 }
             }
             RiskLevel.AMARILLO -> {
                 color = ctx.getColor(R.color.yellowWarning)
                 ContextCompat.getDrawable(ctx, R.drawable.ic_yellow_warning)?.let {
-                    largeIcon = Utils.drawableToBitmap(it)
+                    largeIcon = drawableToBitmap(it)
                 }
             }
             RiskLevel.NARANJA -> {
                 color = ctx.getColor(R.color.orangeWarning)
                 ContextCompat.getDrawable(ctx, R.drawable.ic_orange_warning)?.let {
-                    largeIcon = Utils.drawableToBitmap(it)
+                    largeIcon = drawableToBitmap(it)
                 }
             }
             RiskLevel.ROJO -> {
                 color = ctx.getColor(R.color.redDanger)
                 ContextCompat.getDrawable(ctx, R.drawable.ic_danger)?.let {
-                    largeIcon = Utils.drawableToBitmap(it)
+                    largeIcon = drawableToBitmap(it)
                 }
             }
         }
@@ -237,6 +238,24 @@ class RiskContactManager @Inject constructor(
         } else {
             PendingIntent.getService(ctx, id, intent, 0)
         }
+    }
+
+    /**
+     * Transforma el Drawable indicado como parámetro en un Bitmap.
+     *
+     * @param drawable Objeto Drawable.
+     * @return Bitmap transformado.
+     */
+    private fun drawableToBitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0,0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
 //    private fun pruebaUser(): Itinerary {

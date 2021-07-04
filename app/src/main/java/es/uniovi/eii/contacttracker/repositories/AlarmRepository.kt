@@ -6,7 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.room.daos.LocationAlarmDao
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import java.util.Date
 import javax.inject.Inject
 
@@ -94,8 +94,8 @@ class AlarmRepository @Inject constructor(
      * @return lista de alarmas de localización que generan colisión.
      */
     suspend fun getAlarmCollisions(alarm: LocationAlarm): List<LocationAlarm> {
-        val stringStartDate = Utils.formatDate(alarm.startDate, "yyyy-MM-dd HH:mm:ss")
-        val stringEndDate = Utils.formatDate(alarm.endDate, "yyyy-MM-dd HH:mm:ss")
+        val stringStartDate = DateUtils.formatDate(alarm.startDate, "yyyy-MM-dd HH:mm:ss")
+        val stringEndDate = DateUtils.formatDate(alarm.endDate, "yyyy-MM-dd HH:mm:ss")
         return locationAlarmDao.getCollisions(stringStartDate, stringEndDate)
     }
 

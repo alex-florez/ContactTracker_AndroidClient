@@ -12,7 +12,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.RiskContactViewModel
 import java.util.*
 
@@ -138,10 +138,10 @@ class RiskContactFragment : Fragment() {
      * además de actualizar las horas y minutos del TimePicker.
      */
     private fun updateCheckHour(date: Date) {
-        val checkHourText = Utils.formatDate(date, "HH:mm")
+        val checkHourText = DateUtils.formatDate(date, "HH:mm")
         binding.txtCheckHour.setText(checkHourText)
-        checkHourTimePicker.hours = Utils.getFromDate(date, Calendar.HOUR_OF_DAY)
-        checkHourTimePicker.minutes = Utils.getFromDate(date, Calendar.MINUTE)
+        checkHourTimePicker.hours = DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY)
+        checkHourTimePicker.minutes = DateUtils.getFromDate(date, Calendar.MINUTE)
     }
 
     /**
@@ -151,7 +151,7 @@ class RiskContactFragment : Fragment() {
     private fun createTimePicker(){
         this.checkHourTimePicker = TimePickerFragment(object : OnTimeSetListener {
             override fun onTimeSet(hour: Int, minute: Int) {
-                viewModel.setCheckHour(Utils.getDate(hour, minute))
+                viewModel.setCheckHour(DateUtils.getDate(hour, minute))
             }
         }, "Hora de la comprobación")
     }

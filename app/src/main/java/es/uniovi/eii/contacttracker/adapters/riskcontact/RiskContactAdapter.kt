@@ -1,18 +1,16 @@
 package es.uniovi.eii.contacttracker.adapters.riskcontact
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardRiskContactBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskLevel
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
  * Adapter para los items del recycler view
@@ -41,11 +39,11 @@ class RiskContactAdapter(
 
         fun bindRiskContact(riskContact: RiskContact, onShowInMapClick: OnShowInMapClick) {
             binding.apply {
-                txtContactDate.text = Utils.formatDate(riskContact.startDate, "dd/MM/yyyy")
-                txtContactStartHour.text = Utils.formatDate(riskContact.startDate, "HH:mm:ss")
-                txtContactEndHour.text = Utils.formatDate(riskContact.endDate, "HH:mm:ss")
+                txtContactDate.text = DateUtils.formatDate(riskContact.startDate, "dd/MM/yyyy")
+                txtContactStartHour.text = DateUtils.formatDate(riskContact.startDate, "HH:mm:ss")
+                txtContactEndHour.text = DateUtils.formatDate(riskContact.endDate, "HH:mm:ss")
                 // Tiempo de exposición: x min y secs
-                val exposeTimeMinSecs = Utils.getMinuteSecond(riskContact.exposeTime)
+                val exposeTimeMinSecs = DateUtils.getMinuteSecond(riskContact.exposeTime)
                 val exposeTimeText = "${exposeTimeMinSecs[0]} min ${exposeTimeMinSecs[1]} sec"
                 txtContactExposeTime.text = exposeTimeText
                 val meanProxText = "${riskContact.meanProximity} m"

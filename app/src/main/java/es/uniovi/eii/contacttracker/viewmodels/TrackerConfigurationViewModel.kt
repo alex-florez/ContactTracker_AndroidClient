@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import javax.inject.Inject
 
 /**
@@ -43,7 +43,7 @@ class TrackerConfigurationViewModel @Inject constructor(
      * a minutos y segundos.
      */
     fun getMinIntervalMinSecs(): Array<Int> {
-        _minInterval.value?.let{ return Utils.getMinuteSecond(it) }
+        _minInterval.value?.let{ return DateUtils.getMinuteSecond(it) }
         return arrayOf()
     }
 

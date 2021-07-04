@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.alarms.LocationAlarmDiffCallback
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -31,8 +31,8 @@ data class LocationAlarm(
      * y Minutos de la fecha de Inicio.
      */
     fun getStartTime(): Array<Int>{
-        return arrayOf(Utils.getFromDate(startDate, Calendar.HOUR_OF_DAY),
-                Utils.getFromDate(startDate, Calendar.MINUTE))
+        return arrayOf(DateUtils.getFromDate(startDate, Calendar.HOUR_OF_DAY),
+                DateUtils.getFromDate(startDate, Calendar.MINUTE))
     }
 
     /**
@@ -40,8 +40,8 @@ data class LocationAlarm(
      * y Minutos de la fecha de Fin.
      */
     fun getEndTime(): Array<Int>{
-        return arrayOf(Utils.getFromDate(endDate, Calendar.HOUR_OF_DAY),
-                Utils.getFromDate(endDate, Calendar.MINUTE))
+        return arrayOf(DateUtils.getFromDate(endDate, Calendar.HOUR_OF_DAY),
+                DateUtils.getFromDate(endDate, Calendar.MINUTE))
     }
 
 
@@ -52,8 +52,8 @@ data class LocationAlarm(
      */
     fun updateHours() {
         if(startDate.before(Date())){ // alarma desfasada
-            startDate = Utils.addToDate(startDate, Calendar.DATE, 1)
-            endDate = Utils.addToDate(endDate, Calendar.DATE, 1)
+            startDate = DateUtils.addToDate(startDate, Calendar.DATE, 1)
+            endDate = DateUtils.addToDate(endDate, Calendar.DATE, 1)
         }
     }
 

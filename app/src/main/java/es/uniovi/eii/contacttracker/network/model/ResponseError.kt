@@ -1,6 +1,6 @@
 package es.uniovi.eii.contacttracker.network.model
 
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import java.util.Date
 
 /**
@@ -13,7 +13,7 @@ data class ResponseError(
         var timestamp: Long // Timestamp del error
 ) {
     override fun toString(): String {
-        val date = Utils.formatDate(Date(timestamp), "dd-MM-yyyy HH:mm:ss")
+        val date = DateUtils.formatDate(Date(timestamp), "dd-MM-yyyy HH:mm:ss")
         return "ResponseError(code=$code, message='$message', timestamp=$date)"
     }
 }

@@ -12,7 +12,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.CustomPreferenceLayoutBinding
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
  * Preference personalizada para seleccionar minutos y segundos con
@@ -83,7 +83,7 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
     private fun persist(min: Int, sec: Int){
         minutesValue = min
         secondsValue = sec
-        val millis = Utils.getMillis(min, sec)
+        val millis = DateUtils.getMillis(min, sec)
         with(sharedPrefs.edit()){
             putLong(prefId, millis)
             apply()
@@ -130,10 +130,10 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
      */
     private fun setCurrentValue() {
         // Valor por defecto de milisegundos
-        val defaultMillis = Utils.getMillis(defaultValueMinutes, defaultValueSeconds)
+        val defaultMillis = DateUtils.getMillis(defaultValueMinutes, defaultValueSeconds)
         // Recuperar milisegundos
         val millis = sharedPrefs.getLong(prefId, defaultMillis)
-        val minSecs = Utils.getMinuteSecond(millis)
+        val minSecs = DateUtils.getMinuteSecond(millis)
         minutesValue = minSecs[0]
         secondsValue = minSecs[1]
         val text = "$minutesValue min $secondsValue sec"

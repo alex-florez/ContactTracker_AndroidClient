@@ -7,7 +7,8 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactDiffCallback
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
+import es.uniovi.eii.contacttracker.util.NumberUtils.round
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 import kotlin.math.abs
@@ -88,11 +89,10 @@ class RiskContact(
         var proximity = 0.0
         contactLocations.forEach { contactLocation ->
             proximity += LocationUtils.distance(
-                    Pair(contactLocation.userContactPoint.lat,contactLocation.userContactPoint.lng),
-                    Pair(contactLocation.positiveContactPoint.lat,contactLocation.positiveContactPoint.lng))
+                contactLocation.userContactPoint, contactLocation.positiveContactPoint)
         }
         if(contactLocations.isNotEmpty()){
-            meanProximity = Utils.round(proximity / contactLocations.size, 4) // Redondear con 4 decimales
+            meanProximity = round(proximity / contactLocations.size, 4) // Redondear con 4 decimales
         }
     }
 
@@ -141,7 +141,7 @@ class RiskContact(
                 (1 - meanTimeIntervalNormal) * config.meanTimeIntervalWeight
         val riskPercent: Double = this.riskScore * 100 // Porcentaje total de riesgo.
         this.riskLevel = getRiskLevel(riskPercent)
-        this.riskPercent = Utils.round(riskPercent, 2)
+        this.riskPercent = round(riskPercent, 2)
     }
 
     /**

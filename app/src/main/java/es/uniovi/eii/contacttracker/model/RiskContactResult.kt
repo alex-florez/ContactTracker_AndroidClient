@@ -1,15 +1,14 @@
 package es.uniovi.eii.contacttracker.model
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.results.RiskContactResultDiffCallback
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
+import es.uniovi.eii.contacttracker.util.NumberUtils.round
 import kotlinx.parcelize.Parcelize
-import okhttp3.internal.Util
 import java.util.*
 
 /**
@@ -60,7 +59,7 @@ data class RiskContactResult(
         riskContacts.forEach {
             mean += it.riskPercent
         }
-        return Utils.round(mean/riskContacts.size, 4)
+        return round(mean/riskContacts.size, 4)
     }
 
     /**
@@ -76,7 +75,7 @@ data class RiskContactResult(
             mean += it.exposeTime
         }
 
-        return Utils.round((mean/riskContacts.size).toDouble(), 4).toLong()
+        return round((mean/riskContacts.size).toDouble(), 4).toLong()
     }
 
     /**
@@ -92,7 +91,7 @@ data class RiskContactResult(
         riskContacts.forEach {
             mean += it.meanProximity
         }
-        return Utils.round(mean/riskContacts.size, 4)
+        return round(mean/riskContacts.size, 4)
     }
 
     override fun equals(other: Any?): Boolean {

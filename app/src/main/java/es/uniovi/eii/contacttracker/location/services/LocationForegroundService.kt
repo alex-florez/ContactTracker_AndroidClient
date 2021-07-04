@@ -3,7 +3,6 @@ package es.uniovi.eii.contacttracker.location.services
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.IBinder
@@ -24,14 +23,12 @@ import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.math.min
 
 /**
  * Servicio Foreground en 1er Plano que realiza el rastreo de ubicación,
@@ -188,7 +185,7 @@ class LocationForegroundService : Service(){
             PendingIntent.getActivity(this, 0, it, 0)
         }
         /* Cuerpo de la notificación */
-        val timeInterval = Utils.getMinuteSecond(sharedPrefs.getLong(
+        val timeInterval = DateUtils.getMinuteSecond(sharedPrefs.getLong(
             applicationContext.getString(R.string.shared_prefs_tracker_config_min_interval), 0L))
         val body = "Tu ubicación está siendo registrada cada ${timeInterval[0]} min ${timeInterval[1]} sec."
         return NotificationCompat.Builder(this, App.CHANNEL_ID_LOCATION_FOREGROUND_SERVICE)

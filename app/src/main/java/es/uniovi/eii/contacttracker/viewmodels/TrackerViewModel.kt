@@ -4,13 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
-import es.uniovi.eii.contacttracker.model.LocationAlarm
-import es.uniovi.eii.contacttracker.model.UserLocation
-import es.uniovi.eii.contacttracker.repositories.AlarmRepository
-import es.uniovi.eii.contacttracker.util.Utils
-import java.util.*
 import javax.inject.Inject
 
 /**

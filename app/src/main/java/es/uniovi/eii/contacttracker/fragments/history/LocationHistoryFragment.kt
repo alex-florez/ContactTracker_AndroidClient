@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +17,7 @@ import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel
 import java.util.Date
 
@@ -72,7 +70,7 @@ class LocationHistoryFragment : Fragment() {
                     requireContext(),
                     userLocation,
                     19,
-                    "Localización ${Utils.formatDate(userLocation.timestamp(), "dd/MM/yyyy HH:mm:ss")}")
+                    "Localización ${DateUtils.formatDate(userLocation.timestamp(), "dd/MM/yyyy HH:mm:ss")}")
             }
         })
     }
@@ -209,7 +207,7 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun updateSelectedDate(date: Date){
         viewModel.dateFilter.value = date
-        binding.txtInputEditTextHistoryDate.setText(Utils.formatDate(date, "dd/MM/YYYY"))
+        binding.txtInputEditTextHistoryDate.setText(DateUtils.formatDate(date, "dd/MM/YYYY"))
     }
 
     /**

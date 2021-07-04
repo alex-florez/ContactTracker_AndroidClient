@@ -15,7 +15,7 @@ import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -87,7 +87,7 @@ class NotifyPositiveViewModel @Inject constructor(
             // Periodo de infectividad
             val infectivityPeriod = _trackerConfig.value?.infectivityPeriod ?: Constants.DEFAULT_INFECTIVITY_PERIOD
             // Obtener localizaciones desde los últimos X días
-            val startDate = Utils.formatDate(Utils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
+            val startDate = DateUtils.formatDate(DateUtils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
             val locations = locationRepository.getLastLocationsSince(infectivityPeriod)
             // Obtener fechas a las que se corresponden las localizaciones.
             val locationDates = locationRepository.getLastLocationDatesSince(startDate)

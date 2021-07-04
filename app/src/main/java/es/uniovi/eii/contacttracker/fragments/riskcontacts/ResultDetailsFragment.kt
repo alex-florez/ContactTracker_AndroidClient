@@ -1,7 +1,6 @@
 package es.uniovi.eii.contacttracker.fragments.riskcontacts
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,7 @@ import es.uniovi.eii.contacttracker.databinding.FragmentResultDetailsBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.model.RiskLevel
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
  * Argumento recibido como extra que contiene los resultados.
@@ -116,11 +115,11 @@ class ResultDetailsFragment : Fragment() {
             val riskiestContact = it.getHighestRiskContact()
             binding.apply {
                 /* Contacto de mayor riesgo */
-                txtContactDate.text = Utils.formatDate(riskiestContact.startDate, "dd/MM/yyyy")
-                txtContactStartHour.text = Utils.formatDate(riskiestContact.startDate, "HH:mm:ss")
-                txtContactEndHour.text = Utils.formatDate(riskiestContact.endDate, "HH:mm:ss")
+                txtContactDate.text = DateUtils.formatDate(riskiestContact.startDate, "dd/MM/yyyy")
+                txtContactStartHour.text = DateUtils.formatDate(riskiestContact.startDate, "HH:mm:ss")
+                txtContactEndHour.text = DateUtils.formatDate(riskiestContact.endDate, "HH:mm:ss")
                 // Tiempo de exposición
-                val exposeTime = Utils.getMinuteSecond(riskiestContact.exposeTime)
+                val exposeTime = DateUtils.getMinuteSecond(riskiestContact.exposeTime)
                 val exposeTimeText = "${exposeTime[0]} min ${exposeTime[1]} sec"
                 txtContactExposeTime.text = exposeTimeText
                 // Proximidad media
@@ -133,7 +132,7 @@ class ResultDetailsFragment : Fragment() {
                 /* Datos generales */
                 txtNumberOfPositivesDetails.text = it.numberOfPositives.toString()
                 val totalMeanRiskText = "${it.getTotalMeanRisk()} %"
-                val totalMeanExposeTime = Utils.getMinuteSecond(it.getTotalMeanExposeTime())
+                val totalMeanExposeTime = DateUtils.getMinuteSecond(it.getTotalMeanExposeTime())
                 val totalMeanExposeTimeText = "${totalMeanExposeTime[0]} min ${totalMeanExposeTime[1]} sec"
                 val totalMeanProximityText = "${it.getTotalMeanProximity()} m"
 

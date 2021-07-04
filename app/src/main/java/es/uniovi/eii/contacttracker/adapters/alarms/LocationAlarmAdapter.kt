@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardLocationAlarmBinding
 import es.uniovi.eii.contacttracker.model.LocationAlarm
-import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
  * Adapter de tipo lista para las alarmas de localización.
@@ -52,10 +51,10 @@ class LocationAlarmAdapter(
                               onRemoveListener: OnRemoveAlarmClickListener,
                               onAlarmStateChangedListener: OnAlarmStateChangedListener
         ) {
-            binding.startHour.text = Utils.formatDate(alarm.startDate, "HH:mm")
-            binding.endHour.text = Utils.formatDate(alarm.endDate, "HH:mm")
+            binding.startHour.text = DateUtils.formatDate(alarm.startDate, "HH:mm")
+            binding.endHour.text = DateUtils.formatDate(alarm.endDate, "HH:mm")
             binding.switchLocationAlarm.isChecked = alarm.active
-            binding.alarmDate.text = Utils.formatDate(alarm.startDate, "dd/MM/yyyy")
+            binding.alarmDate.text = DateUtils.formatDate(alarm.startDate, "dd/MM/yyyy")
             // Listeners
             binding.btnRemoveAlarm.setOnClickListener{ // Eliminar alarma
                 onRemoveListener.onRemove(alarm)

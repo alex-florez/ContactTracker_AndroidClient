@@ -1,6 +1,6 @@
 package es.uniovi.eii.contacttracker.model
 
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /* Formato de las fechas */
 const val dateFormat = "yyyy-MM-dd"
@@ -20,11 +20,11 @@ class Itinerary(
         init {
                 /* Agrupar localizaciones por días */
                 val dates = locations.map {
-                        Utils.formatDate(it.timestamp(), dateFormat)
+                        DateUtils.formatDate(it.timestamp(), dateFormat)
                 }.distinct()
                 dates.forEach { date ->
                         groupedLocations[date] = locations.filter {
-                                Utils.formatDate(it.timestamp(), dateFormat) == date
+                                DateUtils.formatDate(it.timestamp(), dateFormat) == date
                         }
                 }
         }

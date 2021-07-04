@@ -2,7 +2,7 @@ package es.uniovi.eii.contacttracker.riskcontact.detector
 
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import javax.inject.Inject
 
 /* Formato estándar para las fechas utilizadas en el algoritmo de comprobación. */
@@ -87,7 +87,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
         var closest: UserLocation? = null
         var minimumDistance = Double.POSITIVE_INFINITY
         otherLocations.forEach { other ->
-            val distance = LocationUtils.distance(location, other)
+            val distance = LocationUtils.distance(location.point, other.point)
             if(distance < minimumDistance  // Menor distancia
                 && !usedLocations.contains(other) // Localización no ha sido ya utilizada
             ) {
@@ -104,7 +104,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
         pointB: UserLocation,
         time: Double
     ): Boolean {
-        val minDiff = Utils.dateDifferenceInSecs(pointA.timestamp(), pointB.timestamp()) / 60.0
+        val minDiff = DateUtils.dateDifferenceInSecs(pointA.timestamp(), pointB.timestamp()) / 60.0
         return minDiff <= time
     }
 
@@ -117,7 +117,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
         pointB: UserLocation,
         radius: Double
     ): Boolean {
-        return LocationUtils.distance(pointA, pointB) <= radius
+        return LocationUtils.distance(pointA.point, pointB.point) <= radius
     }
 
 

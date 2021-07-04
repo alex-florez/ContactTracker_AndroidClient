@@ -1,16 +1,14 @@
 package es.uniovi.eii.contacttracker.adapters.results
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardRiskContactResultBinding
 import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
  * Adapter para los items que representan el Resultado
@@ -39,8 +37,8 @@ class RiskContactResultAdapter(
 
         fun bindRiskContactResult(riskContactResult: RiskContactResult, onRiskContactResultClick: OnRiskContactResultClick) {
             binding.apply {
-                txtResultDate.text = Utils.formatDate(riskContactResult.timestamp, "dd/MM/yyyy")
-                txtResultHour.text = Utils.formatDate(riskContactResult.timestamp, "HH:mm")
+                txtResultDate.text = DateUtils.formatDate(riskContactResult.timestamp, "dd/MM/yyyy")
+                txtResultHour.text = DateUtils.formatDate(riskContactResult.timestamp, "HH:mm")
                 val positivesString = if(riskContactResult.numberOfPositives > 1
                                         || riskContactResult.numberOfPositives == 0) "${riskContactResult.numberOfPositives} positivos"
                                         else "${riskContactResult.numberOfPositives} positivo"

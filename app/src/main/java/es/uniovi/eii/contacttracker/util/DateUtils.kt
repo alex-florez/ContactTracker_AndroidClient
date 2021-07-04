@@ -13,7 +13,7 @@ import kotlin.math.roundToLong
 /**
  * Clase de utilidades generales
  */
-object Utils {
+object DateUtils {
 
     /**
      * Recibe como parámetro una fecha y devuelve
@@ -117,37 +117,5 @@ object Utils {
     fun toDate(stringDate: String, format: String): Date? {
         val formatter = SimpleDateFormat(format)
         return formatter.parse(stringDate)
-    }
-
-    /**
-     * Redondea el valor pasado como parámetro con el número de
-     * decimales indicado.
-     *
-     * @param value Valor a redondear.
-     * @param decimals Número de decimales.
-     * @return Valor redondeado.
-     */
-    fun round(value: Double, decimals: Int): Double {
-        val multiplier = 10.0.pow(decimals)
-        val rounded = (value * multiplier).roundToLong() / multiplier
-        return rounded
-    }
-
-    /**
-     * Transforma el Drawable indicado como parámetro en un Bitmap.
-     *
-     * @param drawable Objeto Drawable.
-     * @return Bitmap transformado.
-     */
-    fun drawableToBitmap(drawable:Drawable): Bitmap {
-        val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0,0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        return bitmap
     }
 }

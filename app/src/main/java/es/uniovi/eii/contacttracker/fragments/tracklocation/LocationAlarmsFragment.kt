@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,9 +24,8 @@ import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragm
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
-import es.uniovi.eii.contacttracker.util.Utils
+import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.LocationAlarmsViewModel
-import org.w3c.dom.Text
 import java.util.Date
 import java.util.*
 
@@ -104,13 +102,13 @@ class LocationAlarmsFragment : Fragment() {
     private fun createTimePickers(){
         startTimePicker = TimePickerFragment(object : OnTimeSetListener {
             override fun onTimeSet(hour: Int, minute: Int) {
-                viewModel.setStartTime(Utils.getDate(hour, minute))
+                viewModel.setStartTime(DateUtils.getDate(hour, minute))
             }
         }, "Hora de inicio")
 
         endTimePicker = TimePickerFragment(object : OnTimeSetListener {
             override fun onTimeSet(hour: Int, minute: Int) {
-                viewModel.setEndTime(Utils.getDate(hour, minute))
+                viewModel.setEndTime(DateUtils.getDate(hour, minute))
             }
         }, "Hora de fin")
     }
@@ -209,10 +207,10 @@ class LocationAlarmsFragment : Fragment() {
      */
     private fun updateStartHour(date: Date) {
         binding.layoutCardLocationAlarm
-                    .txtStartAutoTracking.setText(Utils.formatDate(date, "HH:mm"))
+                    .txtStartAutoTracking.setText(DateUtils.formatDate(date, "HH:mm"))
             // Establecer Horas y minutos en el TimePicker.
-            startTimePicker.hours = Utils.getFromDate(date, Calendar.HOUR_OF_DAY)
-            startTimePicker.minutes = Utils.getFromDate(date, Calendar.MINUTE)
+            startTimePicker.hours = DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY)
+            startTimePicker.minutes = DateUtils.getFromDate(date, Calendar.MINUTE)
     }
 
     /**
@@ -223,10 +221,10 @@ class LocationAlarmsFragment : Fragment() {
      */
     private fun updateEndHour(date: Date) {
         binding.layoutCardLocationAlarm
-                .txtEndAutoTracking.setText(Utils.formatDate(date, "HH:mm"))
+                .txtEndAutoTracking.setText(DateUtils.formatDate(date, "HH:mm"))
         // Establecer Horas y minutos en el TimePicker.
-        endTimePicker.hours = Utils.getFromDate(date, Calendar.HOUR_OF_DAY)
-        endTimePicker.minutes = Utils.getFromDate(date, Calendar.MINUTE)
+        endTimePicker.hours = DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY)
+        endTimePicker.minutes = DateUtils.getFromDate(date, Calendar.MINUTE)
     }
 
     /**
