@@ -47,10 +47,6 @@ object Constants {
     // Zoom por Defecto
     const val DEFAULT_ZOOM = 18f
 
-    // CONFIGURACIÓN DEL RASTREO
-    // *************************
-    const val DEFAULT_INFECTIVITY_PERIOD = 3
-
     // RADIO DE LA TIERRA (en km)
     // **************************
     const val EARTH_RADIUS = 6371

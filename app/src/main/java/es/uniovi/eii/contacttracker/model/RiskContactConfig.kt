@@ -4,15 +4,18 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 /* Valores por defecto */
-private const val SCOPE = 3
-private val SECURITY_DISTANCE_MARGIN = 5.0
-private val TIME_DIFFERENCE_MARGIN = 5.0
+const val SCOPE = 3
+private const val SECURITY_DISTANCE_MARGIN = 5.0
+private const val TIME_DIFFERENCE_MARGIN = 5.0
 private val EXPOSE_TIME_RANGE = arrayOf(0L, 900000L)
 private val MEAN_PROXIMITY_RANGE = arrayOf(0.0, 10.0)
 private val MEAN_TIME_INTERVAL_RANGE = arrayOf(0L, 600000L)
 private const val EXPOSE_TIME_WEIGHT = 0.3
 private const val MEAN_PROXIMITY_WEIGHT = 0.5
 private const val MEAN_TIME_INTERVAL_WEIGHT = 0.2
+
+/* Claves de las Shared Preferences */
+const val RISK_CONTACT_CHECK_SCOPE_KEY = "RiskContactCheckScope"
 
 /**
  * Clase de datos que contiene todos los parámetros de

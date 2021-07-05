@@ -97,7 +97,7 @@ class NotifyPositiveFragment : Fragment() {
             })
 
             // Periodo de infectividad
-            trackerConfig.observe(viewLifecycleOwner) {
+            notifyConfig.observe(viewLifecycleOwner) {
                 val text = "${it.infectivityPeriod} días"
                 binding.txtInfectivityPeriod.text = text
             }

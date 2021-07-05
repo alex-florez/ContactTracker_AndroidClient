@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.Constants
-import es.uniovi.eii.contacttracker.model.PersonalData
-import es.uniovi.eii.contacttracker.model.NotifyPositiveResult
-import es.uniovi.eii.contacttracker.model.Positive
-import es.uniovi.eii.contacttracker.model.TrackerConfig
+import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
@@ -53,8 +50,8 @@ class NotifyPositiveViewModel @Inject constructor(
     /**
      * LiveData para la configuración del rastreo.
      */
-    private val _trackerConfig = MutableLiveData<TrackerConfig>()
-    val trackerConfig: LiveData<TrackerConfig> = _trackerConfig
+    private val _notifyConfig = MutableLiveData<NotifyPositiveConfig>()
+    val notifyConfig: LiveData<NotifyPositiveConfig> = _notifyConfig
 
     /**
      * Error de RED
@@ -85,7 +82,7 @@ class NotifyPositiveViewModel @Inject constructor(
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             // Periodo de infectividad
-            val infectivityPeriod = _trackerConfig.value?.infectivityPeriod ?: Constants.DEFAULT_INFECTIVITY_PERIOD
+            val infectivityPeriod = _notifyConfig.value?.infectivityPeriod ?: DEFAULT_INFECTIVITY_PERIOD
             // Obtener localizaciones desde los últimos X días
             val startDate = DateUtils.formatDate(DateUtils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
             val locations = locationRepository.getLastLocationsSince(infectivityPeriod)
@@ -134,17 +131,11 @@ class NotifyPositiveViewModel @Inject constructor(
     }
 
     /**
-     * Recupera la configuración del rastreo
-     * desde el Backend.
+     * Recupera la configuración de la notificación de positivos desde el Backend.
      */
     fun getTrackerConfig() {
         viewModelScope.launch(Dispatchers.IO) {
-            // Recuperar el periodo de infectividad de la configuración del Backend.
-            when(val trackerConfig = configRepository.getTrackerConfig()) {
-                is APIResult.Success -> {
-                    _trackerConfig.postValue(trackerConfig.value)
-                }
-            }
+            _notifyConfig.postValue(configRepository.getNotifyPositiveConfig())
         }
     }
 

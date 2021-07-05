@@ -20,7 +20,7 @@ import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedIntentService
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
-import es.uniovi.eii.contacttracker.repositories.TrackerSettingsRepository
+import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.PermissionUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
@@ -56,9 +56,10 @@ class LocationForegroundService : Service(){
     lateinit var locationCallback: LocationUpdateCallback
 
     /**
-     * Repositorio de parámetros de configuración del Tracker.
+     * Repositorio de configuración.
      */
-    @Inject lateinit var trackerSettingsRepository: TrackerSettingsRepository
+    @Inject lateinit var configRepository: ConfigRepository
+
 
     /**
      * Manager para las ALARMAS DE LOCALIZACIÓN.
@@ -209,12 +210,12 @@ class LocationForegroundService : Service(){
      * @return objeto de solicitud de rastreo de ubicación.
      */
     private fun createLocationTrackRequest(): LocationTrackRequest {
-        val minInterval = trackerSettingsRepository.getMinInterval()
-        val smallestDisplacement = trackerSettingsRepository.getSmallestDisplacement()
+        /* Recuperar configuración de rastreo */
+        val config = configRepository.getTrackerConfig()
         return LocationTrackRequest(
-                minInterval = minInterval,
-                fastestInterval = minInterval,
-                smallestDisplacement = smallestDisplacement)
+                minInterval = config.minInterval,
+                fastestInterval = config.minInterval,
+                smallestDisplacement = config.smallestDisplacement)
     }
 
     /**

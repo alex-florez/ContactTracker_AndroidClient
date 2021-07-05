@@ -42,7 +42,7 @@ class RiskContactManager @Inject constructor(
         private val locationRepository: LocationRepository, // Repositorio de localización.
         private val positiveRepository: PositiveRepository, // Repositorio de positivos.
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
-        private val riskContactConfigRepository: RiskContactSettingsRepository, // Repositorio de configuración de la comprobación
+        private val configRepository: ConfigRepository, // Repositorio de configuración
         private val alarmManager: AlarmManager, // Manager de alarmas de Android
         @ApplicationContext private val ctx: Context
 ) {
@@ -64,7 +64,7 @@ class RiskContactManager @Inject constructor(
         // Resultado de la comprobación
         val result = RiskContactResult()
         // Recuperar la configuración de la comprobación de contactos de riesgo.
-        val config = riskContactConfigRepository.retrieveRiskContactConfig()
+        val config = configRepository.getRiskContactConfig()
         detector.setConfig(config) // Establecer la configuración al detector.
 
         /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */

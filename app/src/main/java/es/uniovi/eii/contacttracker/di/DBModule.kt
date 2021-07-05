@@ -1,12 +1,14 @@
 package es.uniovi.eii.contacttracker.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
@@ -24,6 +26,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DBModule {
+
+    /* Fichero de Shared Preferences de la aplicación */
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext ctx: Context): SharedPreferences {
+       return ctx.getSharedPreferences(ctx.getString(R.string.shared_prefs_file_name), Context.MODE_PRIVATE)
+    }
 
     /* Base de datos de la App */
     @Provides
