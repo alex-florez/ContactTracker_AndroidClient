@@ -1,17 +1,11 @@
 package es.uniovi.eii.contacttracker.util
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 /**
  * Clase de utilidades generales

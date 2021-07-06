@@ -14,7 +14,7 @@ import retrofit2.http.Headers
 interface ConfigAPI {
 
     @Headers("Content-Type: application/json")
-    @GET("/config/tracker-config")
+    @GET("/config/notify-config")
     suspend fun getNotifyPositiveConfig(): NotifyPositiveConfig
 
     @Headers("Content-Type: application/json")
