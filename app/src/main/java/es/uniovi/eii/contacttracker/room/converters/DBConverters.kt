@@ -6,27 +6,27 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Clase que utiliza ROOM para convertir y parsear datos
+ * Clase de apoyo a ROOM para convertir y parsear datos
  * entre la App y la base de datos SQLite.
  */
 class DBConverters {
 
+    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
     /* FECHAS */
     @TypeConverter
     fun dateFromString(dateString: String): Date {
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        return dateFormatter.parse(dateString) ?: Date()
+        return df.parse(dateString) ?: Date()
     }
 
     @TypeConverter
     fun dateToString(date: Date): String {
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        return dateFormatter.format(date)
+        return df.format(date)
     }
 
     @TypeConverter
     fun toRiskLevel(riskLevel: String): RiskLevel {
-        return enumValueOf<RiskLevel>(riskLevel)
+        return enumValueOf(riskLevel)
     }
 
     @TypeConverter

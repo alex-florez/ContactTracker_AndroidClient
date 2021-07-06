@@ -4,6 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
@@ -42,6 +45,20 @@ object DateUtils {
         calendar.set(Calendar.MINUTE, minutes)
         calendar.set(Calendar.SECOND, 0)
         return calendar.time
+    }
+
+    /**
+     * Convierte los milisegundos pasados como parámetro en un
+     * objeto Date teniendo en cuenta la zona horaria del dispositivo.
+     *
+     * @param millis Milisegundos.
+     * @return Objeto Date correspondiente.
+     */
+    fun millisToDate(millis: Long): Date {
+        val time = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(millis), ZoneId.systemDefault() // Zona horaria del dispositivo.
+        )
+        return Date.from(time.atZone(ZoneId.systemDefault()).toInstant())
     }
 
     /**

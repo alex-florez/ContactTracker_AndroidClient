@@ -25,7 +25,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun riskContactDao(): RiskContactDao
 
     companion object {
-        // Singleton
         const val DB_NAME = "contacttracker.db"
     }
 }

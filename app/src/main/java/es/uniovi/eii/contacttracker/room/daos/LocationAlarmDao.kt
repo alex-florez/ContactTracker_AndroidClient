@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import es.uniovi.eii.contacttracker.model.LocationAlarm
-import java.util.Date
 
 /**
  * Data Access Object para acceder a los datos
@@ -39,5 +38,3 @@ interface LocationAlarmDao {
     @Query("SELECT * FROM location_alarms WHERE (datetime(startDate) >= datetime(:newStartDate) AND datetime(startDate) <= datetime(:newEndDate)) OR (datetime(endDate) >= datetime(:newStartDate) AND datetime(endDate) <= datetime(:newEndDate) OR (datetime(startDate) < datetime(:newStartDate) AND datetime(endDate) > datetime(:newEndDate)))")
     suspend fun getCollisions(newStartDate: String, newEndDate: String): List<LocationAlarm>
 }
-
-//@Query("SELECT * FROM location_alarms WHERE (time(startDate) >= time(:newStartDate) AND time(startDate) <= time(:newEndDate)) OR (time(endDate) >= time(:newStartDate) AND time(endDate) <= time(:newEndDate) OR (time(startDate) < time(:newStartDate) AND time(endDate) > time(:newEndDate)))")
