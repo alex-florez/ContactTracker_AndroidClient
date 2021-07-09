@@ -52,11 +52,6 @@ class NotifyPositiveFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getTrackerConfig() // Leer la configuración del Backend.
-    }
-
     /**
      * Configura los listeners para los componentes
      * de la UI.
@@ -66,10 +61,6 @@ class NotifyPositiveFragment : Fragment() {
             // Botón de notificar un positivo
             btnNotifyPositive.setOnClickListener{
                 notifyPositiveClick()
-            }
-            // Checkbox para adjuntar los datos personales
-            checkBoxAddPersonalData.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.setAddPersonalData(isChecked)
             }
         }
     }
@@ -134,21 +125,11 @@ class NotifyPositiveFragment : Fragment() {
      * de notificar un positivo.
      */
     private fun notifyPositiveClick(){
-        viewModel.flagAddPersonalData.value?.let { addPersonalData ->
-            if(addPersonalData){ // Agregar datos personales
-                notifyPositiveWithPersonalData()
-            } else { // Notificar sin aportar datos personales
-                notifyPositive()
-            }
+        if(binding.checkBoxAddPersonalData.isChecked){ // Agregar datos personales
+            notifyPositiveWithPersonalData()
+        } else {  // Notificar sin aportar datos personales
+            viewModel.notifyPositive(false)
         }
-    }
-
-    /**
-     * Se encarga de invocar al viewModel para notificar
-     * un positivo y hacer visible la barra de progreso.
-     */
-    private fun notifyPositive() {
-        viewModel.notifyPositive()
     }
 
     /**
@@ -160,12 +141,12 @@ class NotifyPositiveFragment : Fragment() {
         // Dialog para rellenar los datos personales.
         createPersonalDataDialog(object : PersonalDataDialog.PersonalDataListener {
             override fun onAccept(personalData: PersonalData) {
-                viewModel.savePersonalData(personalData) // Añadir los datos personales
+                viewModel.savePersonalData(personalData) // Almacenar los datos personales
                 // Dialog con la cláusula de consentimiento
                 createPersonalDataAgreementDialog(
                     object : PersonalDataConsentDialog.PrivacyPolicyListener {
                         override fun onAcceptPolicy() { // Política aceptada
-                           notifyPositive()
+                           viewModel.notifyPositive(true)
                         }
 
                         override fun onRejectPolicy() { // Política rechazada

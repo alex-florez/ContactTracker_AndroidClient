@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.model
+package es.uniovi.eii.contacttracker.positive
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

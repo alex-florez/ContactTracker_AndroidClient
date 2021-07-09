@@ -97,36 +97,14 @@ class LocationRepository @Inject constructor(
      * con las fechas de las últimas localizaciones registradas desde la fecha
      * pasada como parámetro hasta el día de hoy.
      *
-     * @param dateString String con la fecha formateada.
+     * @param lastDays N.º de días atrás que se tienen en cuenta.
      * @return lista con los string de fechas formateadas.
      */
     @SuppressLint("SimpleDateFormat")
-    suspend fun getLastLocationDatesSince(dateString: String): List<String> {
-        return userLocationDao.getLocationDatesBetween(dateString,  DateUtils.formatDate(Date(), "yyyy-MM-dd"))
+    suspend fun getLastLocationDatesSince(lastDays: Int): List<String> {
+        val sinceDate = DateUtils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
+        return userLocationDao.getLocationDatesBetween(
+            DateUtils.formatDate(sinceDate, "yyyy-MM-dd"),
+            DateUtils.formatDate(Date(), "yyyy-MM-dd"))
     }
-
-    /**
-     * Devuelve el itinerario de localizaciones asociadas a los últimos
-     * días, cuyo número es pasado como parámetro.
-     *
-     * @param lastDays número de días.
-     * @return Itinerario con las localizaciones organizadas por fecha.
-     */
-//    suspend fun getItinerarySince(lastDays: Int): Itinerary {
-//        if(lastDays > 0) {
-//            // Calcular la fecha de inicio.
-//            val sinceDate = Utils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
-//            val map: MutableMap<String, List<UserLocation>> = mutableMapOf()
-//            val dates: List<String> = userLocationDao.getLocationDatesBetween(
-//                    Utils.formatDate(sinceDate, "yyyy-MM-dd"),
-//                    Utils.formatDate(Date(), "yyyy-MM-dd"))
-//            // Rellenar el mapa
-//            dates.forEach{ date ->
-//                val locations = userLocationDao.getAllByDate(date)
-//                map[date] = locations
-//            }
-//            return Itinerary(map)
-//        }
-//        return Itinerary(mapOf()) // Itinerario vacío
-//    }
 }

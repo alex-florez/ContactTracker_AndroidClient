@@ -40,7 +40,7 @@ class App : Application() {
 
     var scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    private var positive = false
+    private var positive = true
 
     /**
      * Referencia a las Shared Preferences.

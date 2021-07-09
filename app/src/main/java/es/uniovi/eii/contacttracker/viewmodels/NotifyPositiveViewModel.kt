@@ -5,17 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
-import es.uniovi.eii.contacttracker.repositories.ConfigRepository
-import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
-import es.uniovi.eii.contacttracker.repositories.PositiveRepository
-import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -24,10 +20,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class NotifyPositiveViewModel @Inject constructor(
-    private val positiveRepository: PositiveRepository,
-    private val locationRepository: LocationRepository,
-    private val personalDataRepository: PersonalDataRepository,
-    private val configRepository: ConfigRepository
+    private val positiveManager: PositiveManager,
+    private val personalDataRepository: PersonalDataRepository
 ) : ViewModel() {
 
     /**
@@ -35,17 +29,6 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     private val _notifyPositiveResult = MutableLiveData<NotifyPositiveResult>()
     val notifyPositiveResult: LiveData<NotifyPositiveResult> = _notifyPositiveResult
-
-    /**
-     * Flag para adjuntar los datos personales.
-     */
-    private val _flagAddPersonalData = MutableLiveData(false)
-    val flagAddPersonalData: LiveData<Boolean> = _flagAddPersonalData
-
-    /**
-     * Datos personales (pueden ser NULL).
-     */
-    val personalData = MutableLiveData<PersonalData?>()
 
     /**
      * LiveData para la configuración del rastreo.
@@ -76,40 +59,22 @@ class NotifyPositiveViewModel @Inject constructor(
     /**
      * Notifica un nuevo positivo en el sistema. Esto implica subir todas las
      * localizaciones del usuario registradas en el dispositivo en los últimos
-     * días.
+     * días, asociando opcionalmente los datos personales del usuario.
+     *
+     * @param addPersonalData Flag que indica si se deben añadir o no los datos personales.
      */
-    fun notifyPositive() {
-        _isLoading.value = true
+    fun notifyPositive(addPersonalData: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            // Periodo de infectividad
-            val infectivityPeriod = _notifyConfig.value?.infectivityPeriod ?: DEFAULT_INFECTIVITY_PERIOD
-            // Obtener localizaciones desde los últimos X días
-            val startDate = DateUtils.formatDate(DateUtils.addToDate(Date(), Calendar.DATE, -1*infectivityPeriod), "yyyy-MM-dd")
-            val locations = locationRepository.getLastLocationsSince(infectivityPeriod)
-            // Obtener fechas a las que se corresponden las localizaciones.
-            val locationDates = locationRepository.getLastLocationDatesSince(startDate)
-            // Crear el objeto con las localizaciones del positivo, incluyendo los datos personales
-            val personalData: PersonalData? = if(_flagAddPersonalData.value!!) getPersonalData() else null
-            val positiveLocations = Positive(null, Date(), locations, locationDates, personalData)
-            // Subir los datos al servidor
-            when(val result = positiveRepository.notifyPositive(positiveLocations)) {
+            _isLoading.postValue(true)
+            // Datos personales
+            val personalData = if(addPersonalData) getPersonalData() else null
+            when(val result = positiveManager.notifyPositive(personalData)){
                 is APIResult.NetworkError -> { _networkError.postValue(result) }
                 is APIResult.GenericError -> { _notifyError.postValue(result) }
-                is APIResult.Success -> {
-                    result.value.let { _notifyPositiveResult.postValue(it) }
-                }
+                is APIResult.Success -> { _notifyPositiveResult.postValue(result.value) }
             }
             _isLoading.postValue(false)
         }
-    }
-
-    /**
-     * Establece el valor para el flag que indica si se añaden
-     * o no los datos personales del usuario.
-     * @param isChecked valor true o false según el estado del Checkbox.
-     */
-    fun setAddPersonalData (isChecked: Boolean){
-        _flagAddPersonalData.value = isChecked
     }
 
     /**
@@ -129,14 +94,4 @@ class NotifyPositiveViewModel @Inject constructor(
     fun getPersonalData(): PersonalData {
         return personalDataRepository.get()
     }
-
-    /**
-     * Recupera la configuración de la notificación de positivos desde el Backend.
-     */
-    fun getTrackerConfig() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _notifyConfig.postValue(configRepository.getNotifyPositiveConfig())
-        }
-    }
-
 }
