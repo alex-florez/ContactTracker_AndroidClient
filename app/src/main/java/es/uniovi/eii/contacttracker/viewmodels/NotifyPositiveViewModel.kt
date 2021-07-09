@@ -9,6 +9,7 @@ import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.positive.PositiveManager
+import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NotifyPositiveViewModel @Inject constructor(
     private val positiveManager: PositiveManager,
-    private val personalDataRepository: PersonalDataRepository
+    private val personalDataRepository: PersonalDataRepository,
+    private val configRepository: ConfigRepository
 ) : ViewModel() {
 
     /**
@@ -31,10 +33,10 @@ class NotifyPositiveViewModel @Inject constructor(
     val notifyPositiveResult: LiveData<NotifyPositiveResult> = _notifyPositiveResult
 
     /**
-     * LiveData para la configuración del rastreo.
+     * LiveData para el periodo de infectividad.
      */
-    private val _notifyConfig = MutableLiveData<NotifyPositiveConfig>()
-    val notifyConfig: LiveData<NotifyPositiveConfig> = _notifyConfig
+    private val _infectivityPeriod = MutableLiveData<Int>()
+    val infectivityPeriod: LiveData<Int> = _infectivityPeriod
 
     /**
      * Error de RED
@@ -93,5 +95,15 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     fun getPersonalData(): PersonalData {
         return personalDataRepository.get()
+    }
+
+    /**
+     * Carga desde la configuración el número de días
+     * correspondientes al periodo de infectividad.
+     */
+    fun loadInfectivityPeriod() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _infectivityPeriod.postValue(configRepository.getNotifyPositiveConfig().infectivityPeriod)
+        }
     }
 }

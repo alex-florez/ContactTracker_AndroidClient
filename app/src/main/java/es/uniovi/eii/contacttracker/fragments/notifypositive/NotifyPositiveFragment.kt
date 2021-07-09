@@ -52,6 +52,11 @@ class NotifyPositiveFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadInfectivityPeriod() // Leer el periodo de infectividad de la configuración.
+    }
+
     /**
      * Configura los listeners para los componentes
      * de la UI.
@@ -88,8 +93,8 @@ class NotifyPositiveFragment : Fragment() {
             })
 
             // Periodo de infectividad
-            notifyConfig.observe(viewLifecycleOwner) {
-                val text = "${it.infectivityPeriod} días"
+            infectivityPeriod.observe(viewLifecycleOwner) {
+                val text = "${it} días"
                 binding.txtInfectivityPeriod.text = text
             }
 
