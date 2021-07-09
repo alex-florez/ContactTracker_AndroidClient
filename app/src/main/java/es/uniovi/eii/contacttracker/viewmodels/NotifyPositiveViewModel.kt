@@ -12,6 +12,7 @@ import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -56,6 +57,10 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     private val _isLoading = MutableLiveData(false)
     val isLoading : LiveData<Boolean> = _isLoading
+
+    /* Icono de carga del periodo de infectividad */
+    private val _loadingInfectivity = MutableLiveData(false)
+    val loadingInfectivity: LiveData<Boolean> = _loadingInfectivity
 
 
     /**
@@ -103,7 +108,9 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     fun loadInfectivityPeriod() {
         viewModelScope.launch(Dispatchers.IO) {
+            _loadingInfectivity.postValue(true)
             _infectivityPeriod.postValue(configRepository.getNotifyPositiveConfig().infectivityPeriod)
+            _loadingInfectivity.postValue(false)
         }
     }
 }

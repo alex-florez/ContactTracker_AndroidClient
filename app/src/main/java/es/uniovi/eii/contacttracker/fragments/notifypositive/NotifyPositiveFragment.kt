@@ -108,7 +108,7 @@ class NotifyPositiveFragment : Fragment() {
                 }
             })
 
-            // Icono de carga
+            // Icono de carga de la notificación del positivo.
             isLoading.observe(viewLifecycleOwner) {isLoading ->
                 if(isLoading){
                     binding.notifyPositiveProgress.visibility = View.VISIBLE
@@ -120,6 +120,17 @@ class NotifyPositiveFragment : Fragment() {
                     binding.notifyPositiveLoadingPlaceholder.visibility = View.GONE
                     binding.btnNotifyPositive.isEnabled = true
                     binding.btnNotifyPositive.setBackgroundColor(getColor(requireContext(), R.color.orange))
+                }
+            }
+
+            // Icono de carga del periodo de infectividad.
+            loadingInfectivity.observe(viewLifecycleOwner) {
+                if(it) {
+                    binding.txtInfectivityPeriod.visibility = View.GONE
+                    binding.loadingInfectivity.visibility = View.VISIBLE
+                } else {
+                    binding.txtInfectivityPeriod.visibility = View.VISIBLE
+                    binding.loadingInfectivity.visibility = View.GONE
                 }
             }
         }
