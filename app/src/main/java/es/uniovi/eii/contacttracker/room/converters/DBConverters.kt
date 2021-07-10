@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.room.converters
 
 import androidx.room.TypeConverter
 import es.uniovi.eii.contacttracker.model.RiskLevel
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,12 +17,18 @@ class DBConverters {
     /* FECHAS */
     @TypeConverter
     fun dateFromString(dateString: String): Date {
-        return df.parse(dateString) ?: Date()
+        return try {
+            df.parse(dateString) ?: Date()
+        } catch (e: Exception) {
+            Date()
+        }
     }
 
     @TypeConverter
-    fun dateToString(date: Date): String {
-        return df.format(date)
+    fun dateToString(date: Date?): String {
+        if(date != null)
+            return df.format(date)
+        return ""
     }
 
     @TypeConverter

@@ -32,7 +32,7 @@ class RiskContact(
         var exposeTime: Long = 0L, /* Tiempo de exposición total en formato de milisegundos */
         var meanProximity: Double = 0.0, /* Proximidad media (metros) */
         var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
-        var startDate: Date = Date(), /* Fecha de inicio del contacto. (Aproximada) */
+        var startDate: Date = Date() , /* Fecha de inicio del contacto. (Aproximada) */
         var endDate: Date = Date(), /* Fecha de fin de contacto. (Aproximada) */
         @Ignore var config: RiskContactConfig = RiskContactConfig() /* Configuración de la comprobación */
 ) : Parcelable {

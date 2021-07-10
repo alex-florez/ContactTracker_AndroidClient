@@ -115,9 +115,18 @@ class ResultDetailsFragment : Fragment() {
             val riskiestContact = it.getHighestRiskContact()
             binding.apply {
                 /* Contacto de mayor riesgo */
-                txtContactDate.text = DateUtils.formatDate(riskiestContact.startDate, "dd/MM/yyyy")
-                txtContactStartHour.text = DateUtils.formatDate(riskiestContact.startDate, "HH:mm:ss")
-                txtContactEndHour.text = DateUtils.formatDate(riskiestContact.endDate, "HH:mm:ss")
+                if(riskiestContact.startDate == null){
+                    txtContactDate.text = "##/##/####"
+                    txtContactStartHour.text = "##/##/##"
+                } else {
+                    txtContactDate.text = DateUtils.formatDate(riskiestContact.startDate!!, "dd/MM/yyyy")
+                    txtContactStartHour.text = DateUtils.formatDate(riskiestContact.startDate!!, "HH:mm:ss")
+                }
+                if(riskiestContact.endDate != null) {
+                    txtContactEndHour.text = DateUtils.formatDate(riskiestContact.endDate!!, "HH:mm:ss")
+                } else {
+                    txtContactEndHour.text = "##:##:##"
+                }
                 // Tiempo de exposición
                 val exposeTime = DateUtils.getMinuteSecond(riskiestContact.exposeTime)
                 val exposeTimeText = "${exposeTime[0]} min ${exposeTime[1]} sec"
