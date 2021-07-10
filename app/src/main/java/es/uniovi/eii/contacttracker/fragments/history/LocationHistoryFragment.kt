@@ -132,7 +132,8 @@ class LocationHistoryFragment : Fragment() {
 
         // Input Text para el filtro de fecha
         binding.txtInputEditTextHistoryDate.setOnClickListener {
-            showDatePicker()
+            if(!datePicker.isVisible)
+                showDatePicker()
         }
 
         // Botón para mostrar el mapa
