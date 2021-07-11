@@ -7,7 +7,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactDiffCallback
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.util.NumberUtils.round
 import kotlinx.parcelize.Parcelize
 import java.util.Date
@@ -47,9 +46,9 @@ class RiskContact(
      */
     fun addContactLocations(userLocation: UserLocation, positiveLocation: UserLocation) {
         contactLocations.add(RiskContactLocation(
-                userContactPointName = userLocation.id.toString(),
+                userContactPointName = userLocation.userlocationID.toString(),
                 userContactPoint = Point(userLocation.lat(), userLocation.lng(), userLocation.timestamp()),
-                positiveContactPointName = positiveLocation.id.toString(),
+                positiveContactPointName = positiveLocation.userlocationID.toString(),
                 positiveContactPoint = Point(positiveLocation.lat(), positiveLocation.lng(), positiveLocation.timestamp())
         ))
         calculateExposeTime() // Recalcular tiempo de exposición.

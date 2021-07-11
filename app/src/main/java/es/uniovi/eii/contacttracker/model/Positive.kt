@@ -1,7 +1,13 @@
 package es.uniovi.eii.contacttracker.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import es.uniovi.eii.contacttracker.util.DateUtils
+import es.uniovi.eii.contacttracker.util.LocationUtils
 import java.util.Date
 
 /**
@@ -10,25 +16,27 @@ import java.util.Date
  * ha notificado ser positivo, como las fechas correspondientes a dichas localizaciones.
  * Opcionalmente, puede contener los datos personales del usuario.
  */
-class Positive(
+@Entity(tableName = "positives")
+data class Positive(
+
+        // ID único de la base de datos local
+        @PrimaryKey(autoGenerate = true) var positiveID: Long? = null,
 
         @Expose
-        @SerializedName("id")
-        val id: String?, // ID autogenerado por Firestore
+        @SerializedName("positiveCode")
+        var positiveCode: String? = null, // Código autogenerado por Firestore
 
         @Expose
         @SerializedName("timestamp")
-        val timestamp: Date, // Fecha de notificación del positivo
+        var timestamp: Date = Date(), // Fecha de notificación del positivo
 
         @Expose
         @SerializedName("locations")
-        val locations: List<UserLocation>, // Localizaciones registradas
-
-        @Expose
-        @SerializedName("locationDates")
-        val locationDates: List<String>, // Lista de fechas correspondientes a las localizaciones
+        @Ignore
+        var locations: List<UserLocation> = mutableListOf(), // Localizaciones registradas
 
         @Expose
         @SerializedName("personalData")
-        val personalData: PersonalData? // Datos personales (Opcional)
+        @Embedded
+        var personalData: PersonalData? = null // Datos personales (Opcional)
 )

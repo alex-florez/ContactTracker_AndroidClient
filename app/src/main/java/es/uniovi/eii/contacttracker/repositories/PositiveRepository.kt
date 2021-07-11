@@ -5,6 +5,9 @@ import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.apiCall
 import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.model.Positive
+import es.uniovi.eii.contacttracker.room.mappers.toPositive
+import es.uniovi.eii.contacttracker.room.daos.PositiveDao
+import es.uniovi.eii.contacttracker.room.relations.PositiveUserLocationCrossRef
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -15,7 +18,8 @@ import javax.inject.Inject
  * del cliente de la API Rest del Backend.
  */
 class PositiveRepository @Inject constructor(
-    private val positiveAPI: PositiveAPI
+    private val positiveAPI: PositiveAPI,
+    private val positiveDao: PositiveDao
 ) {
 
 
@@ -44,6 +48,32 @@ class PositiveRepository @Inject constructor(
     suspend fun getPositivesFromLastDays(lastDays: Int): APIResult<List<Positive>> {
         return apiCall(Dispatchers.IO) {
             positiveAPI.getPositives(lastDays)
+        }
+    }
+
+    /**
+     * Inserta el positivo pasado como parámetro en la base
+     * de datos local.
+     *
+     * @param positive Objeto Positive con las localizaciones.
+     */
+    suspend fun insertPositive(positive: Positive) {
+        val positiveID = positiveDao.insert(positive) // Insertar el objeto Positive
+        positive.locations.forEach {
+            if(it.userlocationID != null){
+                val crossRef = PositiveUserLocationCrossRef(positiveID, it.userlocationID!!) // Insertar la referencia cruzada
+                positiveDao.insert(crossRef)
+            }
+        }
+    }
+
+    /**
+     * Devuelve todos los positivos almacenados en local.
+     */
+    suspend fun getAllLocalPositives(): List<Positive> {
+        val wrapper = positiveDao.getAllPositives()
+        return wrapper.map {
+            toPositive(it)
         }
     }
 

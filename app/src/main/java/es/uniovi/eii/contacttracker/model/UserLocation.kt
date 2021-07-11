@@ -16,7 +16,7 @@ import java.util.Date
 @Parcelize
 @Entity(tableName = "user_locations")
 data class UserLocation (
-    @PrimaryKey(autoGenerate = true) var id: Long?,
+    @PrimaryKey(autoGenerate = true) var userlocationID: Long?,
     @Embedded val point: Point,
     val accuracy: Double,
     val provider: String
@@ -44,7 +44,7 @@ data class UserLocation (
 
         other as UserLocation
 
-        if (id != other.id) return false
+        if (userlocationID != other.userlocationID) return false
         if (point != other.point) return false
         if (accuracy != other.accuracy) return false
         if (provider != other.provider) return false
@@ -53,7 +53,7 @@ data class UserLocation (
     }
 
     override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
+        var result = userlocationID?.hashCode() ?: 0
         result = 31 * result + point.hashCode()
         result = 31 * result + accuracy.hashCode()
         result = 31 * result + provider.hashCode()
@@ -61,7 +61,7 @@ data class UserLocation (
     }
 
     override fun toString(): String {
-        return "UserLocation(id=$id, point=$point, accuracy=$accuracy, provider='$provider')"
+        return "UserLocation(id=$userlocationID, point=$point, accuracy=$accuracy, provider='$provider')"
     }
 
 }

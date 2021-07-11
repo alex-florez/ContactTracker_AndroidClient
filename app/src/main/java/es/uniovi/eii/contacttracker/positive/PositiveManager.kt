@@ -1,11 +1,11 @@
 package es.uniovi.eii.contacttracker.positive
 
+import android.util.Log
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
-import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import javax.inject.Inject
 import java.util.Date
@@ -31,16 +31,21 @@ class PositiveManager @Inject constructor(
         val infectivityPeriod = getInfectivityPeriod() // Periodo de infectividad
         // Obtener las localizaciones de los últimos días.
         val locations = locationRepository.getLastLocationsSince(infectivityPeriod)
-        // Obtener las distintas fechas de las localizaciones de los últimos días.
-        val locationDates = locationRepository.getLastLocationDatesSince(infectivityPeriod)
-        val positive = Positive(
+        val positive = Positive(null,
             null,
             Date(),
             locations,
-            locationDates,
             personalData
         )
-        return positiveRepository.notifyPositive(positive)
+        val result = positiveRepository.notifyPositive(positive)
+        if(result is APIResult.Success){
+            // Establecer ID y almacenar en la base de datos local.
+            positive.positiveCode = result.value.positiveCode
+            positiveRepository.insertPositive(positive)
+            val poss = positiveRepository.getAllLocalPositives()
+            Log.d("asd", poss.size.toString())
+        }
+        return result
     }
 
     /**

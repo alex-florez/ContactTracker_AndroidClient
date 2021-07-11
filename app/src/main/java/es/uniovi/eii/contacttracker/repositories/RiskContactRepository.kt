@@ -6,11 +6,9 @@ import androidx.lifecycle.Transformations
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
-import es.uniovi.eii.contacttracker.room.relations.ResultWithRiskContacts
 import es.uniovi.eii.contacttracker.model.RiskContactResult
-import es.uniovi.eii.contacttracker.repositories.mappers.toResultWithRiskContacts
-import es.uniovi.eii.contacttracker.repositories.mappers.toRiskContactResult
-import es.uniovi.eii.contacttracker.room.relations.RiskContactWithLocations
+import es.uniovi.eii.contacttracker.room.mappers.toResultWithRiskContacts
+import es.uniovi.eii.contacttracker.room.mappers.toRiskContactResult
 import es.uniovi.eii.contacttracker.room.daos.RiskContactDao
 import javax.inject.Inject
 import java.util.Date

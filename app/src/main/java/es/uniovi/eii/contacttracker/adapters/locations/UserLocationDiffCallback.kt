@@ -9,10 +9,10 @@ import es.uniovi.eii.contacttracker.model.UserLocation
  */
 class UserLocationDiffCallback : DiffUtil.ItemCallback<UserLocation>() {
     override fun areItemsTheSame(oldItem: UserLocation, newItem: UserLocation): Boolean {
-        if(oldItem.id == null || newItem.id == null){
+        if(oldItem.userlocationID == null || newItem.userlocationID == null){
             return false
         }
-        return oldItem.id == newItem.id
+        return oldItem.userlocationID == newItem.userlocationID
     }
 
     override fun areContentsTheSame(oldItem: UserLocation, newItem: UserLocation): Boolean {

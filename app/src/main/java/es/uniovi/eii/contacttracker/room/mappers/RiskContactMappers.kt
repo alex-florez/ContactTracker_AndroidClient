@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.repositories.mappers
+package es.uniovi.eii.contacttracker.room.mappers
 
 import es.uniovi.eii.contacttracker.room.relations.ResultWithRiskContacts
 import es.uniovi.eii.contacttracker.model.RiskContact

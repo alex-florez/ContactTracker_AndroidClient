@@ -6,8 +6,6 @@ import es.uniovi.eii.contacttracker.model.RiskContactConfig
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
-import es.uniovi.eii.contacttracker.util.FileUtils
-import es.uniovi.eii.contacttracker.util.TestUtils
 import es.uniovi.eii.contacttracker.util.TestUtils.parseItinerary
 import org.junit.Assert.*
 import org.junit.Before
@@ -51,7 +49,7 @@ class DetectorUnitTest {
             UserLocation(3, Point(43.532031, -5.9124588, Date()), 0.0, "")
         )
         closest = detector.findClosestLocation(location, list)
-        assertEquals(3L, closest.first?.id)
+        assertEquals(3L, closest.first?.userlocationID)
         assertEquals(2.403, closest.second, 0.1)
     }
 

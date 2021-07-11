@@ -144,7 +144,7 @@ object LocationUtils {
      * de localización de usuario pasado como parámetro.
      */
     fun format(userLocation: UserLocation): String {
-        return "Localización {ID: ${userLocation.id} Lat: ${userLocation.lat()}, Lng: ${userLocation.lng()}" +
+        return "Localización {ID: ${userLocation.userlocationID} Lat: ${userLocation.lat()}, Lng: ${userLocation.lng()}" +
                 " Acc: ${userLocation.accuracy}, Date: ${dateFormatter.format(userLocation.timestamp())}}"
     }
 
@@ -331,4 +331,5 @@ object LocationUtils {
         }
         return locations
     }
+
 }

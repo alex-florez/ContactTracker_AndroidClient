@@ -7,11 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
-import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import kotlinx.coroutines.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import javax.inject.Inject
 
 /**
@@ -70,7 +67,7 @@ class RegisterLocationCallback @Inject constructor(
             val id = locationRepository.insertUserLocation(LocationUtils.parse(location))
             // Enviar BROADCAST
             // ----------------
-            userLocation.id = id
+            userLocation.userlocationID = id
             sendBroadcast(userLocation)
         }
     }
