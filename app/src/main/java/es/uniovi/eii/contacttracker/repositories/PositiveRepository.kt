@@ -77,4 +77,13 @@ class PositiveRepository @Inject constructor(
         }
     }
 
+    /**
+     * Devuelve todos los códigos de los positivos notificados
+     * por el propio usuario, es decir, los positivos almacenados
+     * en el dispositivo.
+     */
+    suspend fun getAllLocalPositiveCodes(): List<String> {
+        return positiveDao.getAllPositiveCodes()
+    }
+
 }

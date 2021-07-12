@@ -21,4 +21,11 @@ interface PositiveDao {
     @Transaction
     @Query("SELECT * FROM positives ORDER BY timestamp DESC")
     suspend fun getAllPositives(): List<PositiveWithLocations>
+
+    /**
+     * Devuelve una lista de Strings con todos los códigos de
+     * los positivos almacenados en el almacenamiento local.
+     */
+    @Query("SELECT positiveCode FROM positives")
+    suspend fun getAllPositiveCodes(): List<String>
 }
