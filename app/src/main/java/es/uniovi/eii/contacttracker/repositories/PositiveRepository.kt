@@ -8,8 +8,10 @@ import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.room.mappers.toPositive
 import es.uniovi.eii.contacttracker.room.daos.PositiveDao
 import es.uniovi.eii.contacttracker.room.relations.PositiveUserLocationCrossRef
+import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
+import java.util.Date
 
 /**
  * Repositorio de Positivos en COVID-19.
@@ -84,6 +86,18 @@ class PositiveRepository @Inject constructor(
      */
     suspend fun getAllLocalPositiveCodes(): List<String> {
         return positiveDao.getAllPositiveCodes()
+    }
+
+    /**
+     * Consulta el número de positivos que fueron notificados en
+     * la fecha pasada como parámetro.
+     *
+     * @param date Fecha por la que filtrar.
+     * @return Número de positivos notificados en la fecha indicada.
+     */
+    suspend fun getNumberOfLocalPositivesNotifiedAt(date: Date): Int {
+        val formattedDate = DateUtils.formatDate(date, "yyyy-MM-dd")
+        return positiveDao.getNumberOfNotifiedPositivesAt(formattedDate)
     }
 
 }

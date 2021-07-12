@@ -28,32 +28,41 @@ class PositiveManager @Inject constructor(
      * @return APIResult que envuelve al resultado de la notificación.
      */
     suspend fun notifyPositive(personalData: PersonalData?): APIResult<NotifyPositiveResult> {
-        val infectivityPeriod = getInfectivityPeriod() // Periodo de infectividad
-        // Obtener las localizaciones de los últimos días.
-        val locations = locationRepository.getLastLocationsSince(infectivityPeriod)
-        val positive = Positive(null,
-            null,
-            Date(),
-            locations,
-            personalData
-        )
-        val result = positiveRepository.notifyPositive(positive)
-        if(result is APIResult.Success){
-            // Establecer ID y almacenar en la base de datos local.
-            positive.positiveCode = result.value.positiveCode
-            positiveRepository.insertPositive(positive)
-            val poss = positiveRepository.getAllLocalPositives()
-            Log.d("asd", poss.size.toString())
+        // Configuración de la notificación de positivos.
+        val config = configRepository.getNotifyPositiveConfig()
+        // Comprobar límite de notificación de positivos.
+        if(checkNotifyLimit(config.notifyLimit)){
+            // Obtener las localizaciones de los últimos días.
+            val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod)
+            val positive = Positive(null,
+                null,
+                Date(),
+                locations,
+                personalData
+            )
+            val result = positiveRepository.notifyPositive(positive)
+            if(result is APIResult.Success){
+                // Establecer ID y almacenar en la base de datos local.
+                positive.positiveCode = result.value.positiveCode
+                positiveRepository.insertPositive(positive)
+                val poss = positiveRepository.getAllLocalPositives()
+                Log.d("asd", poss.size.toString())
+            }
+            return result
+        } else {
+            return APIResult.Success(NotifyPositiveResult(
+                null, 0, true
+            ))
         }
-        return result
     }
 
     /**
-     * Obtiene la configuración de la notificación de positivos
-     * y devuelve el periodo de infectividad establecido actualmente.
+     * Comprueba que no se haya superado el límite de
+     * notificación de positivos.
      */
-    private suspend fun getInfectivityPeriod(): Int {
-        val config = configRepository.getNotifyPositiveConfig()
-        return config.infectivityPeriod
+    private suspend fun checkNotifyLimit(limit: Int): Boolean {
+        // N.º de positivos notificados en la fecha de hoy.
+        val notifiedPositivesToday = positiveRepository.getNumberOfLocalPositivesNotifiedAt(Date())
+        return notifiedPositivesToday < limit
     }
 }

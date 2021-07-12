@@ -101,9 +101,16 @@ class NotifyPositiveFragment : Fragment() {
             // Resultado de NOTIFICAR POSITIVO
             notifyPositiveResult.observe(viewLifecycleOwner, {
                 if(it != null){
-                    Snackbar.make(binding.root, "Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG).let { s ->
-                        s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                        s.show()
+                    if(!it.limitExceeded){
+                        Snackbar.make(binding.root, "Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG).let { s ->
+                            s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                            s.show()
+                        }
+                    } else {
+                        Snackbar.make(binding.root, "Se ha superado el límite de notificación de positivos. No podrás notificar más positivos hasta mañana.", Snackbar.LENGTH_LONG).let { s ->
+                            s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
+                            s.show()
+                        }
                     }
                 }
             })

@@ -28,4 +28,11 @@ interface PositiveDao {
      */
     @Query("SELECT positiveCode FROM positives")
     suspend fun getAllPositiveCodes(): List<String>
+
+    /**
+     * Devuelve el número de positivos notificados en el día
+     * de la fecha pasada como parámetro.
+     */
+    @Query("SELECT count(*) FROM positives WHERE date(timestamp) = :date")
+    suspend fun getNumberOfNotifiedPositivesAt(date: String): Int
 }
