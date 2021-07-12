@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -72,12 +73,19 @@ class RiskContactManager @Inject constructor(
 //        val userItinerary = pruebaUser()
         val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope))
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
-        var positives = mutableListOf<Positive>()
+        var positives: List<Positive> = mutableListOf<Positive>()
         when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
             is APIResult.Success -> {
-                positives = positivesResult.value.toMutableList()
+                positives = filterPositives(positivesResult.value.toList())
             }
-            else -> { // Error en la comprobación
+            is APIResult.GenericError -> {
+                Log.d("APIERROR", positivesResult.responseError.toString())
+                with(NotificationManagerCompat.from(ctx)){
+                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
+                }
+                return // Dejar de ejecutar la comprobación
+            }
+            is APIResult.NetworkError -> {
                 with(NotificationManagerCompat.from(ctx)){
                     notify(RESULT_NOTIFICATION_ID, createErrorNotification())
                 }
@@ -140,6 +148,21 @@ class RiskContactManager @Inject constructor(
     fun disablePeriodicCheck(){
         checkAlarmIntent?.let {
             alarmManager.cancel(checkAlarmIntent)
+        }
+    }
+
+    /**
+     * Compara los positivos obtenidos de la nube con los positivos almacenados
+     * en el propio dispositivo (local) mediante el CÓDIGO de POSITIVO. Devuelve
+     * solo aquellos positivos que no hayan sido notificados por el propio usuario y que
+     * por tanto no estén almacenados en local.
+     * @param positives Lista con todos los positivos recuperados de la nube.
+     * @return Lista filtrada con los positivos que no hayan sido notificados por el propio usuario.
+     */
+    private suspend fun filterPositives(positives: List<Positive>): List<Positive> {
+        val localPositives = positiveRepository.getAllLocalPositiveCodes()
+        return positives.filter {
+            !localPositives.contains(it.positiveCode)
         }
     }
 
