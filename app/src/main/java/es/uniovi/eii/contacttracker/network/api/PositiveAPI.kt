@@ -11,9 +11,9 @@ import retrofit2.http.*
 interface PositiveAPI {
 
     @Headers("Content-Type: application/json")
-    @POST("/notifyPositive")
+    @POST("/positive/notifyPositive")
     suspend fun notifyPositive(@Body positive: Positive): NotifyPositiveResult
 
-    @GET("/getPositives/{lastDays}")
+    @GET("/positive/getPositives/{lastDays}")
     suspend fun getPositives(@Path("lastDays") lastDays: Int): List<Positive>
 }
