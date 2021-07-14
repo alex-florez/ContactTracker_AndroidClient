@@ -249,6 +249,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
      */
     private fun changeMapType(mapType: Int) {
         map.mapType = mapType
+        onChangeMapTypeClicked()
     }
 
     /**
