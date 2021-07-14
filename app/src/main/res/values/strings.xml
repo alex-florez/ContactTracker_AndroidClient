@@ -62,6 +62,11 @@
     <string name="locationTrackerTitle">Rastreo de Ubicación</string>
     <string name="labelStartStopTracker">Servicio para rastrear la ubicación</string>
 
+    <!-- Títulos de las Tabs de la opción de menú de rastreo -->
+    <string name="tabTracker">Rastreador</string>
+    <string name="tabAlarms">Alarmas</string>
+    <string name="tabMap">Mapa</string>
+
     <!-- Fragment de Información del rastreo de ubicación -->
     <string name="labelNoLocations">No hay localizaciones que mostrar.</string>
 

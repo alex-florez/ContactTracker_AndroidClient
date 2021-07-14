@@ -58,9 +58,9 @@ class TrackLocationTabsFragment : Fragment() {
      */
     private fun setTabLayout(){
         /**
-         * Títulos de página.
+         * Títulos de las Tabs
          */
-        val tabTitles = arrayListOf("Rastreador", "Alarmas")
+        val tabTitles = arrayListOf(getString(R.string.tabTracker), getString(R.string.tabMap), getString(R.string.tabAlarms))
         val tabLayout = binding.trackLocationTabLayout
 
         TabLayoutMediator(tabLayout, viewPager) {tab, position -> tab.text = tabTitles[position]}.attach()

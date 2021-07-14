@@ -4,21 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.history.MapsFragment">
+    tools:context=".fragments.maps.MapsFragment">
 
-    <!-- Mapa de Google Maps -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/map_fragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <!-- Vista con el mapa de Google Maps -->
+    <es.uniovi.eii.contacttracker.fragments.maps.MapViewSwipeBorder
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-    </androidx.fragment.app.FragmentContainerView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- FAB buttons para las capas -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,11 +25,11 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_layers"
-        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
+        app:layout_constraintBottom_toBottomOf="@+id/map_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/map_fragment"
+        app:layout_constraintTop_toTopOf="@+id/map_view"
         app:layout_constraintVertical_bias="0.95"
         android:contentDescription="@string/fabMapTypeDescription" />
 
@@ -87,7 +83,7 @@
         android:padding="6dp"
         android:text="@string/ocultar_marcadores"
         android:textAppearance="?attr/textAppearanceSubtitle2"
-        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
+import es.uniovi.eii.contacttracker.fragments.maps.MapsFragment
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
