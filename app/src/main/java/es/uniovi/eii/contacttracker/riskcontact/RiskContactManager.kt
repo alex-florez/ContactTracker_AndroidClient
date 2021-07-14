@@ -73,13 +73,13 @@ class RiskContactManager @Inject constructor(
 //        val userItinerary = pruebaUser()
         val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope))
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
-        var positives: List<Positive> = mutableListOf<Positive>()
+        var positives: List<Positive> = mutableListOf()
         when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
             is APIResult.Success -> {
+                // Filtrar positivos: ignorar aquellos que hayan sido notificados por el propio usuario.
                 positives = filterPositives(positivesResult.value.toList())
             }
             is APIResult.GenericError -> {
-                Log.d("APIERROR", positivesResult.responseError.toString())
                 with(NotificationManagerCompat.from(ctx)){
                     notify(RESULT_NOTIFICATION_ID, createErrorNotification())
                 }
