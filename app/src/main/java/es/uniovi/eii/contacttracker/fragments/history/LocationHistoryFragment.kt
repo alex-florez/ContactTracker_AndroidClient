@@ -17,6 +17,7 @@ import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
 import es.uniovi.eii.contacttracker.fragments.maps.MapsFragment
 import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel
@@ -99,10 +100,8 @@ class LocationHistoryFragment : Fragment() {
 
         // Observer para la eliminación de localizaciones
         viewModel.deletedRows.observe(viewLifecycleOwner, {
-            Snackbar.make(binding.root, "Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG).let { snack ->
-                snack.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                snack.show()
-            }
+            AndroidUtils.snackbar("Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG,
+                binding.root, requireActivity())
         })
         return binding.root
     }

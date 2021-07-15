@@ -23,7 +23,7 @@ import es.uniovi.eii.contacttracker.databinding.FragmentTrackerBinding
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel
 import java.util.*
@@ -121,7 +121,7 @@ class TrackerFragment : Fragment() {
         // Permiso de localización principal concedido
         if(permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true) {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){ // Versión de Android >= Q?
-                if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
+                if(AndroidUtils.check(requireContext(), android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
                     startLocationService()
                 } else { // Solicitar permisos de localización en 2o plano
                     LocationUtils.createBackgroundLocationAlertDialog(requireContext(), { // Aceptar
@@ -229,6 +229,8 @@ class TrackerFragment : Fragment() {
         if(!LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio no esté ya ejecutándose
             sendCommandToLocationService(Constants.ACTION_START_LOCATION_SERVICE)
             viewModel.setIsLocationServiceActive(true)
+            AndroidUtils.snackbar(getString(R.string.labelStartedService), Snackbar.LENGTH_LONG,
+                binding.root, requireActivity())
         } else {
             Log.d(TAG, "Ya se está ejecutando un servicio de localización")
         }
@@ -240,10 +242,9 @@ class TrackerFragment : Fragment() {
     private fun stopLocationService(){
         if(LocationUtils.isLocationServiceRunning(requireContext())) { // Comprobar que el servicio se esté ejecutando.
             sendCommandToLocationService(Constants.ACTION_STOP_LOCATION_SERVICE)
-            Snackbar.make(binding.root, R.string.labelStoppedService, Snackbar.LENGTH_LONG).let{ // Mostrar Snackbar
-                it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView) // Mostrarlo encima del BottomNavView
-                it.show()
-            }
+            // Mostrar Snackbar
+            AndroidUtils.snackbar(getString(R.string.labelStoppedService), Snackbar.LENGTH_LONG,
+                binding.root, requireActivity())
             userLocationAdapter.clearLocations() // Vaciar Adapter de localizaciones
             viewModel.setIsLocationServiceActive(false) // Notificar al LiveData de servicio activo
             viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable()) // Notificar al LiveData de disponibilidad de localizaciones
@@ -283,7 +284,7 @@ class TrackerFragment : Fragment() {
      * @param failCallback callback de llamada si hay fracaso.
      */
     private fun doLocationChecks(successCallback: () -> Unit, failCallback: () -> Unit) {
-        if(PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permiso PRINCIPAL de localización
+        if(AndroidUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){ // Permiso PRINCIPAL de localización
             if(LocationUtils.checkGPS(requireContext())){ // Comprobar GPS activado
                 successCallback()
             } else {

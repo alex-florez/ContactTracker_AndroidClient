@@ -12,6 +12,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.RiskContactViewModel
 import java.util.*
@@ -104,10 +105,8 @@ class RiskContactFragment : Fragment() {
             btnApplyCheckHour.setOnClickListener {
                 viewModel.checkHour.value?.let { date ->
                     viewModel.setPeriodicCheck(date)
-                    Snackbar.make(binding.root, getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG).let {
-                        it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                        it.show()
-                    }
+                    AndroidUtils.snackbar(getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG,
+                        binding.root, requireActivity())
                 }
             }
         }

@@ -22,7 +22,7 @@ import es.uniovi.eii.contacttracker.location.listeners.intents.LocationReceivedI
 import es.uniovi.eii.contacttracker.location.trackers.LocationTracker
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -236,7 +236,7 @@ class LocationForegroundService : Service(){
      * son correctos.
      */
     private fun checkLocationSettings(): Boolean {
-        return PermissionUtils.check(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        return AndroidUtils.check(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 &&
                 LocationUtils.checkGPS(applicationContext)
     }

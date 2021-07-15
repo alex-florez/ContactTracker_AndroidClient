@@ -58,6 +58,7 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="labelStartStop">Iniciar o Detener el rastreador de ubicación</string>
+    <string name="labelStartedService">Servicio de localización iniciado.</string>
     <string name="labelStoppedService">Servicio de localización detenido.</string>
     <string name="locationTrackerTitle">Rastreo de Ubicación</string>
     <string name="labelStartStopTracker">Servicio para rastrear la ubicación</string>
@@ -110,6 +111,7 @@
     <string name="btnNotifyPositive">He dado positivo</string>
     <string name="addPersonalData">Adjuntar mis datos personales</string>
     <string name="loadingPlaceholderNotifyPositive">Subiendo tus localizaciones a la nube...</string>
+    <string name="errorNotifyLimitExceeded">Se ha superado el límite de notificación de positivos. No podrás notificar más positivos hasta mañana.</string>
 
     <!-- Formulario de Datos Personales -->
     <string name="personalDataTitle">Introduce tus datos personales</string>

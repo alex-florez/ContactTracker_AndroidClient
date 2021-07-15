@@ -9,7 +9,7 @@ import es.uniovi.eii.contacttracker.location.LocationUpdateMode
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateCallback
 import es.uniovi.eii.contacttracker.location.listeners.callbacks.LogLocationCallback
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 
 /**
  * Clase abstracta que agrupa el código común de los distintos tipos
@@ -56,7 +56,7 @@ abstract class AbstractLocationTracker(private val ctx: Context) : LocationTrack
 
     override fun start(mode: LocationUpdateMode): Boolean {
         if(!isActive){
-            if(PermissionUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION) &&
+            if(AndroidUtils.check(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION) &&
                     LocationUtils.checkGPS(ctx)){
                         if(startLocationUpdates(mode)) {
                             Log.d(getTrackerTag(), "Rastreo de ubicación iniciado. (Modo: ${mode.name})")

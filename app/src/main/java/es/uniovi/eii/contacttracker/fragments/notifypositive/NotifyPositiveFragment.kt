@@ -14,6 +14,7 @@ import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataConsentDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
 import es.uniovi.eii.contacttracker.model.PersonalData
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
 
 
@@ -78,18 +79,14 @@ class NotifyPositiveFragment : Fragment() {
         viewModel.apply {
             // Error de RED
             networkError.observe(viewLifecycleOwner, {
-                Snackbar.make(binding.root, getString(R.string.network_error), Snackbar.LENGTH_LONG).let { s ->
-                    s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                    s.show()
-                }
+                AndroidUtils.snackbar(getString(R.string.network_error), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             })
 
             // Error GENÉRICO al notificar positivo
             notifyError.observe(viewLifecycleOwner, {
-                Snackbar.make(binding.root, getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG).let { s ->
-                    s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                    s.show()
-                }
+                AndroidUtils.snackbar(getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             })
 
             // Periodo de infectividad
@@ -102,15 +99,11 @@ class NotifyPositiveFragment : Fragment() {
             notifyPositiveResult.observe(viewLifecycleOwner, {
                 if(it != null){
                     if(!it.limitExceeded){
-                        Snackbar.make(binding.root, "Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG).let { s ->
-                            s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                            s.show()
-                        }
+                        AndroidUtils.snackbar("Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG,
+                            binding.root, requireActivity())
                     } else {
-                        Snackbar.make(binding.root, "Se ha superado el límite de notificación de positivos. No podrás notificar más positivos hasta mañana.", Snackbar.LENGTH_LONG).let { s ->
-                            s.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                            s.show()
-                        }
+                        AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
+                            binding.root, requireActivity())
                     }
                 }
             })

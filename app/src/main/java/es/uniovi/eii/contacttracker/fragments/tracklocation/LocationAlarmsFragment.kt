@@ -23,7 +23,7 @@ import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListen
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.util.LocationUtils
-import es.uniovi.eii.contacttracker.util.PermissionUtils
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.LocationAlarmsViewModel
 import java.util.Date
@@ -182,19 +182,15 @@ class LocationAlarmsFragment : Fragment() {
         // Flag de validez de horas de INICIO y de FIN
         viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
             if(!validHours){
-                Snackbar.make(binding.root, getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG).let {
-                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                    it.show()
-                }
+                AndroidUtils.snackbar(getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             }
         })
         // Flag de colisión de alarmas.
         viewModel.flagAlarmCollision.observe(viewLifecycleOwner, { collisions ->
             if(collisions){
-                Snackbar.make(binding.root, getString(R.string.errorAlarmCollision), Snackbar.LENGTH_LONG).let {
-                    it.anchorView = requireActivity().findViewById(R.id.bottomNavigationView)
-                    it.show()
-                }
+                AndroidUtils.snackbar(getString(R.string.errorAlarmCollision), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             }
         })
     }
@@ -257,7 +253,7 @@ class LocationAlarmsFragment : Fragment() {
      */
     private fun checkLocationSettings(){
         val dialogBuilder = AlertDialog.Builder(requireContext())
-        if(!PermissionUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){
+        if(!AndroidUtils.check(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)){
             dialogBuilder.setTitle("Permiso de localización")
             dialogBuilder.setMessage("Recuerda que debes conceder los permisos de localización para poder obtener tu ubicación. De otro modo las alarmas programadas no funcionarán.")
             dialogBuilder.setPositiveButton("Ajustes de ubicación") { dialog, which ->
