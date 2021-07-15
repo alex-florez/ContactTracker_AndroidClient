@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
@@ -12,8 +13,25 @@ import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskLevel
 import es.uniovi.eii.contacttracker.util.DateUtils
 
+/**
+ * Callback de diferencias para los contactos
+ * de riesgo, utilizado en el ListAdapter.
+ */
+class RiskContactDiffCallback : DiffUtil.ItemCallback<RiskContact>() {
+    override fun areContentsTheSame(oldItem: RiskContact, newItem: RiskContact): Boolean {
+        if(oldItem.riskContactId == null || newItem.riskContactId == null)
+            return false
+        return oldItem.riskContactId == newItem.riskContactId
+    }
+
+    override fun areItemsTheSame(oldItem: RiskContact, newItem: RiskContact): Boolean {
+        return oldItem == newItem
+    }
+}
+
 /* Constantes */
 private const val DEFAULT_HOUR = "##:##:##" // Hora por defecto
+private val DIFF_CALLBACK = RiskContactDiffCallback() // Instancia del DIFF Callback
 
 /**
  * Adapter para los items del recycler view
@@ -21,7 +39,7 @@ private const val DEFAULT_HOUR = "##:##:##" // Hora por defecto
  */
 class RiskContactAdapter(
     private val onShowInMapClick: OnShowInMapClick
-) : ListAdapter<RiskContact, RiskContactAdapter.RiskContactViewHolder>(RiskContact.DIFF_CALLBACK) {
+) : ListAdapter<RiskContact, RiskContactAdapter.RiskContactViewHolder>(DIFF_CALLBACK) {
 
     /**
      * Interfaz listener del Click sobre el botón

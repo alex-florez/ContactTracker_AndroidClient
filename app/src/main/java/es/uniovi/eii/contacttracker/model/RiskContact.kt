@@ -246,9 +246,4 @@ class RiskContact(
         return result
     }
 
-    companion object {
-        /* Constante estática con el DiffUtil para el ListAdapter */
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<RiskContact> = RiskContactDiffCallback()
-    }
-
 }

@@ -3,6 +3,7 @@ package es.uniovi.eii.contacttracker.adapters.locations
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
@@ -12,12 +13,32 @@ import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.util.NumberUtils.round
 
 /**
+ * Clase que implementa el Callback para comprobar diferencias
+ * entre dos objetos UserLocation.
+ */
+class UserLocationDiffCallback : DiffUtil.ItemCallback<UserLocation>() {
+    override fun areItemsTheSame(oldItem: UserLocation, newItem: UserLocation): Boolean {
+        if(oldItem.userlocationID == null || newItem.userlocationID == null){
+            return false
+        }
+        return oldItem.userlocationID == newItem.userlocationID
+    }
+
+    override fun areContentsTheSame(oldItem: UserLocation, newItem: UserLocation): Boolean {
+        return oldItem == newItem // Igualdad por contenido
+    }
+}
+
+/* Instancia del DIFF CALLBACK */
+private val DIFF_CALLBACK = UserLocationDiffCallback()
+
+/**
  * Adapter para los objetos UserLocation que almacenan
  * información sobre la localización del usuario.
  */
 class UserLocationAdapter(
    private val onClickListener: OnUserLocationItemClick
-): ListAdapter<UserLocation, UserLocationAdapter.UserLocationViewHolder>(UserLocation.DIFF_CALLBACK){
+): ListAdapter<UserLocation, UserLocationAdapter.UserLocationViewHolder>(DIFF_CALLBACK){
 
     /**
      * Declaración interna de la interfaz para los eventos

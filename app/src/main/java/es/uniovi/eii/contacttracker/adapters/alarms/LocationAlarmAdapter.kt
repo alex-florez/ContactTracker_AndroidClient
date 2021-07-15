@@ -3,6 +3,7 @@ package es.uniovi.eii.contacttracker.adapters.alarms
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
@@ -11,12 +12,31 @@ import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
+ * Clase que implementa un callback para comprobar diferencias
+ * entre alarmas de localización, para actualizar el adapter de
+ * alarmas.
+ */
+class LocationAlarmDiffCallback : DiffUtil.ItemCallback<LocationAlarm>() {
+
+    override fun areItemsTheSame(oldItem: LocationAlarm, newItem: LocationAlarm): Boolean {
+        return oldItem === newItem
+    }
+
+    override fun areContentsTheSame(oldItem: LocationAlarm, newItem: LocationAlarm): Boolean {
+        return oldItem == newItem // Igualdad por contenido
+    }
+}
+
+/* Instancia del DIFF Callback */
+private val DIFF_CALLBACK = LocationAlarmDiffCallback()
+
+/**
  * Adapter de tipo lista para las alarmas de localización.
  */
 class LocationAlarmAdapter(
         private val onRemoveListener: OnRemoveAlarmClickListener,
         private val onAlarmStateChangedListener: OnAlarmStateChangedListener
-) : ListAdapter<LocationAlarm, LocationAlarmAdapter.LocationAlarmViewHolder>(LocationAlarm.DIFF_CALLBACK) {
+) : ListAdapter<LocationAlarm, LocationAlarmAdapter.LocationAlarmViewHolder>(DIFF_CALLBACK) {
 
     /**
      * Listener para el botón de eliminar una

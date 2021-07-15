@@ -25,15 +25,6 @@ data class RiskContactResult(
         var timestamp: Date = Date() /* Timestamp de finalización de la comprobación */
 ) : Parcelable {
 
-    companion object {
-        /**
-         * Variable estática que almacena el callback de diferencias para los objetos de
-         * resultados de contactos de riesgo.
-         */
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<RiskContactResult> = RiskContactResultDiffCallback()
-    }
-
-
     /**
      * Devuelve el contacto de riesgo de mayor peligro, es decir,
      * el que tenga mayor Score de riesgo.

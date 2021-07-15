@@ -92,9 +92,4 @@ data class LocationAlarm(
         result = 31 * result + active.hashCode()
         return result
     }
-
-    companion object {
-        // Vble estática que almacena el callback de diferencias
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<LocationAlarm> = LocationAlarmDiffCallback()
-    }
 }

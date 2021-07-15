@@ -22,13 +22,6 @@ data class UserLocation (
     val provider: String
 ) : Parcelable {
 
-    companion object {
-        /**
-         * Variable estática que almacena el callback de diferencias.
-         */
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<UserLocation> = UserLocationDiffCallback()
-    }
-
     /* Devuelve la latitud */
     fun lat(): Double = point.lat
 
