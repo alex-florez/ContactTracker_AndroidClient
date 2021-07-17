@@ -129,4 +129,22 @@ object DateUtils {
         val formatter = SimpleDateFormat(format)
         return formatter.parse(stringDate)
     }
+
+
+    /**
+     * Modifica los campos de una fecha pasada como parámetro. Se puede
+     * modificar el AÑO, el MES y el DÍA.
+     *
+     * @param date Fecha a modificar.
+     * @param year Nuevo año.
+     * @param month Nuevo mes.
+     * @param day Nuevo día.
+     * @return Fecha modificada.
+     */
+    fun modifyDate(date: Date, year: Int, month: Int, day: Int): Date {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        cal.set(year, month, day)
+        return cal.time
+    }
 }

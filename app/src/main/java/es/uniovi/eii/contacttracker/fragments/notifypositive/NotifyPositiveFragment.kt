@@ -91,16 +91,15 @@ class NotifyPositiveFragment : Fragment() {
 
             // Periodo de infectividad
             infectivityPeriod.observe(viewLifecycleOwner) {
-                val text = "${it} días"
-                binding.txtInfectivityPeriod.text = text
+                binding.txtInfectivityPeriod.text = resources.getQuantityString(R.plurals.daysText, it, it)
             }
 
             // Resultado de NOTIFICAR POSITIVO
             notifyPositiveResult.observe(viewLifecycleOwner, {
                 if(it != null){
                     if(!it.limitExceeded){
-                        AndroidUtils.snackbar("Se han subido ${it.uploadedLocations} localizaciones a la nube.", Snackbar.LENGTH_LONG,
-                            binding.root, requireActivity())
+                        AndroidUtils.snackbar(getString(R.string.notifyPositiveResultText, it.uploadedLocations),
+                            Snackbar.LENGTH_LONG, binding.root, requireActivity())
                     } else {
                         AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
                             binding.root, requireActivity())

@@ -62,13 +62,12 @@ class RiskContactResultAdapter(
             binding.apply {
                 txtResultDate.text = DateUtils.formatDate(riskContactResult.timestamp, "dd/MM/yyyy")
                 txtResultHour.text = DateUtils.formatDate(riskContactResult.timestamp, "HH:mm")
-                val positivesString = if(riskContactResult.numberOfPositives > 1
-                                        || riskContactResult.numberOfPositives == 0) "${riskContactResult.numberOfPositives} positivos"
-                                        else "${riskContactResult.numberOfPositives} positivo"
-                txtNumberOfPositives.text = positivesString
+                txtNumberOfPositives.text = binding.root.context.resources
+                    .getQuantityString(R.plurals.positivesText, riskContactResult.numberOfPositives,
+                        riskContactResult.numberOfPositives)
                 // Porcentaje de riesgo más alto
-                val riskiestPercentText = "${riskContactResult.getHighestRiskContact().riskPercent}%"
-                txtHighestRiskPercent.text = riskiestPercentText
+                txtHighestRiskPercent.text = binding.root.context
+                    .getString(R.string.percentText, riskContactResult.getHighestRiskContact().riskPercent)
             }
             // Listener de Click.
             itemView.setOnClickListener{

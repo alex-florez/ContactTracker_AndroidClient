@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.adapters.riskcontact
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardRiskContactBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
@@ -96,24 +98,24 @@ class RiskContactAdapter(
          */
         private fun setExposeTime(riskContact: RiskContact) {
             val minSecs = DateUtils.getMinuteSecond(riskContact.exposeTime)
-            val exposeTime = "${minSecs[0]} min ${minSecs[1]} sec"
-            binding.txtContactExposeTime.text = exposeTime
+            binding.txtContactExposeTime.text = binding.root.context.
+                getString(R.string.minSecsText, minSecs[0], minSecs[1])
         }
 
         /**
          * Establece la proximidad media del contacto.
          */
         private fun setMeanProximity(riskContact: RiskContact) {
-            val meanProximity = "${riskContact.meanProximity} m"
-            binding.txtContactMeanProximity.text = meanProximity
+            binding.txtContactMeanProximity.text = binding.root.context.resources
+                .getQuantityString(R.plurals.metersText, riskContact.meanProximity.toInt(), riskContact.meanProximity)
         }
 
         /**
          * Establece el porcentaje de riesgo del contacto.
          */
         private fun setRiskPercent(riskContact: RiskContact) {
-            val riskPercent = "${riskContact.riskPercent} %"
-            binding.txtRiskPercent.text = riskPercent
+            binding.txtRiskPercent.text = binding.root.context
+                .getString(R.string.percentText, riskContact.riskPercent)
         }
 
         /**

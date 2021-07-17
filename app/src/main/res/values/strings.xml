@@ -12,6 +12,23 @@
     <string name="lng">Longitud</string>
     <string name="hour">Hora</string>
     <string name="accuracy">Precisión</string>
+    <string name="minSecsText">%1$d min %2$d sec</string>
+    <string name="percentText">%.2f %%</string>
+    <!-- Strings de cantidad / plurales -->
+    <plurals name="daysText">
+        <item quantity="one">%d día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <plurals name="metersText">
+        <item quantity="one">%.2f metro</item>
+        <item quantity="other">%.2f metros</item>
+    </plurals>
+    <plurals name="positivesText">
+        <item quantity="one">%d positivo</item>
+        <item quantity="other">%d positivos</item>
+    </plurals>
+
+
 
     <!-- Errores genéricos -->
     <string name="network_error">Ha habido un error de red en la solicitud.</string>
@@ -79,6 +96,7 @@
     <string name="history_date_picker_title">Selecciona una fecha</string>
     <string name="showInMap">Visualizar en el mapa</string>
     <string name="locations">localizaciones</string>
+    <string name="deleteLocationsText">Se han eliminado %d localizaciones.</string>
 
     <!-- Alarmas de localización -->
     <string name="locationAlarmsTitle">Alarmas de localización</string>
@@ -111,7 +129,9 @@
     <string name="btnNotifyPositive">He dado positivo</string>
     <string name="addPersonalData">Adjuntar mis datos personales</string>
     <string name="loadingPlaceholderNotifyPositive">Subiendo tus localizaciones a la nube...</string>
+    <string name="notifyPositiveResultText">Se han subido %d localizaciones a la nube.</string>
     <string name="errorNotifyLimitExceeded">Se ha superado el límite de notificación de positivos. No podrás notificar más positivos hasta mañana.</string>
+
 
     <!-- Formulario de Datos Personales -->
     <string name="personalDataTitle">Introduce tus datos personales</string>

@@ -319,10 +319,12 @@ object LocationUtils {
             val lat = data[1].toDouble()
             val lng = data[0].toDouble()
             val timestamp = DateUtils.toDate(data[2], "dd/MM/yyyy HH:mm:ss") ?: Date()
+            // Fecha modificada.
+            val date = DateUtils.modifyDate(timestamp, 2021, 6, 16)
             locations.add(
                 UserLocation(
                     counter.toLong(),
-                    Point(lat, lng, timestamp),
+                    Point(lat, lng, date),
                     0.0,
                     "file"
                 )

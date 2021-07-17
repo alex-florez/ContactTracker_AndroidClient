@@ -99,15 +99,4 @@ class LocationAlarmAdapter(
         val alarm = getItem(position)
         return alarm.id ?: 0
     }
-
-
-    /**
-     * Se encarga de añadir una nueva alarma de localización
-     * a la lista gestionada por el Adapter.
-     */
-    fun addAlarm(alarm: LocationAlarm) {
-        val copy = currentList.toMutableList()
-        copy.add(alarm)
-        submitList(copy)
-    }
 }

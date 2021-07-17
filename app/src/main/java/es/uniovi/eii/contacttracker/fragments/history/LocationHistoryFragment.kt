@@ -100,7 +100,7 @@ class LocationHistoryFragment : Fragment() {
 
         // Observer para la eliminación de localizaciones
         viewModel.deletedRows.observe(viewLifecycleOwner, {
-            AndroidUtils.snackbar("Se han eliminado $it localizaciones", Snackbar.LENGTH_LONG,
+            AndroidUtils.snackbar(getString(R.string.deleteLocationsText, it), Snackbar.LENGTH_LONG,
                 binding.root, requireActivity())
         })
         return binding.root
