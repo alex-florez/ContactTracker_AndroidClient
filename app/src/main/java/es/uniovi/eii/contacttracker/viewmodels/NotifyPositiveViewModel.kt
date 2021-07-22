@@ -12,7 +12,6 @@ import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,8 +47,8 @@ class NotifyPositiveViewModel @Inject constructor(
     /**
      * Error GENÉRICO enviado desde el Servidor al notificar un positivo
      */
-    private val _notifyError = MutableLiveData<APIResult.GenericError>()
-    val notifyError: LiveData<APIResult.GenericError> = _notifyError
+    private val _notifyError = MutableLiveData<APIResult.HttpError>()
+    val notifyError: LiveData<APIResult.HttpError> = _notifyError
 
 
     /**
@@ -77,7 +76,7 @@ class NotifyPositiveViewModel @Inject constructor(
             val personalData = if(addPersonalData) getPersonalData() else null
             when(val result = positiveManager.notifyPositive(personalData)){
                 is APIResult.NetworkError -> { _networkError.postValue(result) }
-                is APIResult.GenericError -> { _notifyError.postValue(result) }
+                is APIResult.HttpError -> { _notifyError.postValue(result) }
                 is APIResult.Success -> { _notifyPositiveResult.postValue(result.value) }
             }
             _isLoading.postValue(false)

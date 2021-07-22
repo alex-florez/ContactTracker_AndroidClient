@@ -27,9 +27,9 @@ suspend fun <T> apiCall(dispatcher: CoroutineDispatcher, call: suspend () -> T):
                     // Parsear datos del error al objeto de Dominio
                     val code = throwable.code()
                     val responseError = Gson().fromJson(throwable.response()?.errorBody()?.charStream(), ResponseError::class.java)
-                    APIResult.GenericError(code, responseError)
+                    APIResult.HttpError(code, responseError)
                 }
-                else -> APIResult.GenericError(null, null)
+                else -> APIResult.HttpError(null, null)
             }
         }
     }

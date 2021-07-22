@@ -10,8 +10,8 @@ sealed class APIResult<out T> {
     data class Success<out T>(val value: T): APIResult<T>()
 
     /* Error GENÉRICO HTTP */
-    data class GenericError(val code: Int? = null,
-                            val responseError: ResponseError?): APIResult<Nothing>()
+    data class HttpError(val code: Int? = null,
+                         val responseError: ResponseError?): APIResult<Nothing>()
 
     /* Error de RED */
     object NetworkError: APIResult<Nothing>()

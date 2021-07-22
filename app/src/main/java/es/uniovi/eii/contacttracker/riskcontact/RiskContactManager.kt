@@ -9,7 +9,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -79,7 +78,7 @@ class RiskContactManager @Inject constructor(
                 // Filtrar positivos: ignorar aquellos que hayan sido notificados por el propio usuario.
                 positives = filterPositives(positivesResult.value.toList())
             }
-            is APIResult.GenericError -> {
+            is APIResult.HttpError -> {
                 with(NotificationManagerCompat.from(ctx)){
                     notify(RESULT_NOTIFICATION_ID, createErrorNotification())
                 }
