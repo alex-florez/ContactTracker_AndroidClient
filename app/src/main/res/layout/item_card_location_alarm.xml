@@ -1,93 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="6dp"
-    app:cardElevation="10dp"
-    app:cardCornerRadius="8dp"
-    app:strokeWidth="2dp"
-    app:strokeColor="@color/grey1">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="alarm"
+            type="es.uniovi.eii.contacttracker.model.LocationAlarm" />
+        <variable
+            name="du"
+            type="es.uniovi.eii.contacttracker.util.DateUtils" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:layout_marginBottom="6dp"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="8dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/grey1">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/startHour"
+                android:orientation="vertical">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/purple_700"
-                    android:text="##:##"
-                    android:textAppearance="?attr/textAppearanceHeadline4"/>
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="10dp">
+                    <!-- Hora de INICIO -->
+                    <TextView
+                        android:id="@+id/startHour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/purple_700"
+                        android:text='@{du.formatDate(alarm.startDate, "HH:mm")}'
+                        android:textAppearance="?attr/textAppearanceHeadline4"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-"
-                    android:textColor="@color/purple_700"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:textAppearance="?attr/textAppearanceHeadline4"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/purple_700"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:textAppearance="?attr/textAppearanceHeadline4"/>
 
+                    <!-- Hora de FIN -->
+                    <TextView
+                        android:id="@+id/endHour"
+                        android:layout_width="wrap_content"
+                        android:textColor="@color/purple_700"
+                        android:layout_height="wrap_content"
+                        android:text='@{du.formatDate(alarm.endDate, "HH:mm")}'
+                        android:textAppearance="?attr/textAppearanceHeadline4"/>
+                </LinearLayout>
+
+                <!-- Día de la alarma -->
                 <TextView
-                    android:id="@+id/endHour"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/purple_700"
+                    android:id="@+id/alarmDate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="##:##"
-                    android:textAppearance="?attr/textAppearanceHeadline4"/>
+                    android:paddingStart="16dp"
+                    android:paddingBottom="4dp"
+                    android:text='@{du.formatDate(alarm.startDate, "dd/MM/yyyy")}'/>
             </LinearLayout>
-            <TextView
-                android:id="@+id/alarmDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingBottom="4dp"
-                android:text=""/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:orientation="vertical"
+                android:layout_marginEnd="2dp">
+
+                <ImageButton
+                    android:id="@+id/btnRemoveAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_clear"
+                    android:contentDescription="@string/contentDescriptionBtnRemoveAlarm" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchLocationAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:gravity="end"
-            android:orientation="vertical"
-            android:layout_marginEnd="2dp">
-
-            <ImageButton
-                android:id="@+id/btnRemoveAlarm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="6dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_clear"
-                android:contentDescription="@string/contentDescriptionBtnRemoveAlarm" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchLocationAlarm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-</com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

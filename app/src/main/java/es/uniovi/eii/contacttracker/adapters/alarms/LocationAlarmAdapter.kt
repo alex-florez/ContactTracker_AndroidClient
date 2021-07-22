@@ -71,16 +71,20 @@ class LocationAlarmAdapter(
                               onRemoveListener: OnRemoveAlarmClickListener,
                               onAlarmStateChangedListener: OnAlarmStateChangedListener
         ) {
-            binding.startHour.text = DateUtils.formatDate(alarm.startDate, "HH:mm")
-            binding.endHour.text = DateUtils.formatDate(alarm.endDate, "HH:mm")
+            // Vincular datos con el XML
+            binding.alarm = alarm
+            binding.du = DateUtils
+
+            // Deshabilitar el listener del Switch para evitar que se disparen eventos
+            binding.switchLocationAlarm.setOnCheckedChangeListener(null)
             binding.switchLocationAlarm.isChecked = alarm.active
-            binding.alarmDate.text = DateUtils.formatDate(alarm.startDate, "dd/MM/yyyy")
+
             // Listeners
-            binding.btnRemoveAlarm.setOnClickListener{ // Eliminar alarma
-                onRemoveListener.onRemove(alarm)
+            binding.btnRemoveAlarm.setOnClickListener{
+                onRemoveListener.onRemove(alarm) // Eliminar alarma
             }
             binding.switchLocationAlarm.setOnCheckedChangeListener { _, isChecked ->
-                onAlarmStateChangedListener.onChanged(alarm, isChecked)
+                onAlarmStateChangedListener.onChanged(alarm, isChecked) // Alternar estado de la alarma
             }
         }
     }

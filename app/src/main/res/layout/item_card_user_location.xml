@@ -1,124 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="8dp"
-    app:cardElevation="10dp"
-    app:cardCornerRadius="6dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/grey1">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="du"
+            type="es.uniovi.eii.contacttracker.util.DateUtils" />
+        <variable
+            name="nu"
+            type="es.uniovi.eii.contacttracker.util.NumberUtils" />
+        <variable
+            name="location"
+            type="es.uniovi.eii.contacttracker.model.UserLocation" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:baselineAligned="false">
+        android:layout_marginBottom="8dp"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="6dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/grey1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:padding="8dp"
             android:baselineAligned="false">
-            <!-- Latitud -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lat"
-                    android:paddingEnd="10dp"/>
-                <TextView
-                    android:id="@+id/txtLocationLat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-14.00"
-                    android:textAppearance="?attr/textAppearanceSubtitle2"
-                    android:textColor="@color/red1"/>
-            </LinearLayout>
 
-            <!-- Longitud -->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lng"
-                    android:paddingRight="10dp"/>
-                <TextView
-                    android:id="@+id/txtLocationLng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="14.092"
-                    android:textAppearance="?attr/textAppearanceSubtitle2"
-                    android:textColor="@color/red1"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!-- Fecha -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:paddingEnd="12dp"/>
-                <TextView
-                    android:id="@+id/txtLocationDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12/12/2020"
-                    android:textAppearance="?attr/textAppearanceSubtitle2"/>
-            </LinearLayout>
-            <!-- Hora -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hour"
-                    android:paddingEnd="12dp"/>
-                <TextView
-                    android:id="@+id/txtLocationHour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12:00"
-                    android:textAppearance="?attr/textAppearanceSubtitle2"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/accuracy"
-                android:paddingEnd="10dp"/>
-            <TextView
-                android:id="@+id/txtLocationAccuracy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="10"
-                android:textAppearance="?attr/textAppearanceSubtitle2"/>
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                <!-- Latitud -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lat"
+                        android:paddingEnd="10dp"/>
+                    <TextView
+                        android:id="@+id/txtLocationLat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{Double.toString(nu.round(location.lat(), 6))}"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        android:textColor="@color/red1"/>
+                </LinearLayout>
+
+                <!-- Longitud -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lng"
+                        android:paddingRight="10dp"/>
+                    <TextView
+                        android:id="@+id/txtLocationLng"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{Double.toString(nu.round(location.lng(), 6))}"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        android:textColor="@color/red1"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!-- Fecha -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date"
+                        android:paddingEnd="12dp"/>
+                    <TextView
+                        android:id="@+id/txtLocationDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text='@{du.formatDate(location.timestamp(), "dd/MM/yyyy")}'
+                        android:textAppearance="?attr/textAppearanceSubtitle2"/>
+                </LinearLayout>
+                <!-- Hora -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hour"
+                        android:paddingEnd="12dp"/>
+                    <TextView
+                        android:id="@+id/txtLocationHour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text='@{du.formatDate(location.timestamp(), "HH:mm:ss")}'
+                        android:textAppearance="?attr/textAppearanceSubtitle2"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/accuracy"
+                    android:paddingEnd="10dp"/>
+                <TextView
+                    android:id="@+id/txtLocationAccuracy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{Double.toString(nu.round(location.accuracy, 2))}"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

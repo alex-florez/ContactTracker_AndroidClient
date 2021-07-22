@@ -10,6 +10,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardUserLocationBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.DateUtils
+import es.uniovi.eii.contacttracker.util.NumberUtils
 import es.uniovi.eii.contacttracker.util.NumberUtils.round
 
 /**
@@ -63,18 +64,11 @@ class UserLocationAdapter(
          * los componentes de la vista del ViewHolder.
          */
         fun bindUserLocation(location: UserLocation, onClickListener: OnUserLocationItemClick){
-            val formattedDate = DateUtils.formatDate(location.timestamp(), "dd/MM/yyyy")
-            val formattedHour = DateUtils.formatDate(location.timestamp(), "HH:mm:ss")
-            binding.apply {
-                txtLocationLat.text = round(location.lat(), 6).toString()
-                txtLocationLng.text = round(location.lng(), 6).toString()
-                txtLocationAccuracy.text = location.accuracy.toString()
-                txtLocationDate.text = formattedDate
-                txtLocationHour.text = formattedHour
-            }
-            itemView.setOnClickListener{
-                onClickListener.onClick(location)
-            }
+            // Vincular datos con el XML
+            binding.location = location
+            binding.du = DateUtils
+            binding.nu = NumberUtils
+            itemView.setOnClickListener{ onClickListener.onClick(location) }
         }
     }
 
