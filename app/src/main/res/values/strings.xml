@@ -14,6 +14,8 @@
     <string name="accuracy">Precisión</string>
     <string name="minSecsText">%1$d min %2$d sec</string>
     <string name="percentText">%.2f %%</string>
+    <string name="genericError">Ha ocurrido un error</string>
+
     <!-- Strings de cantidad / plurales -->
     <plurals name="daysText">
         <item quantity="one">%d día</item>

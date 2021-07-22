@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -32,16 +33,10 @@ class LocationAlarmsViewModel @Inject constructor(
     val endTime: LiveData<Date> = _endTime
 
     /**
-     * Flag de validez de las horas de INICIO y de FIN.
+     * Resultado de programar una alarma.
      */
-    private val _flagValidHours = MutableLiveData(true)
-    val flagValidHours: LiveData<Boolean> = _flagValidHours
-
-    /**
-     * Flag de COLISIONES entre alarmas de localización.
-     */
-    private val _flagAlarmCollision = MutableLiveData(false)
-    val flagAlarmCollision: LiveData<Boolean> = _flagAlarmCollision
+    private val _alarmSetResult = MutableLiveData<ValueWrapper<Unit>>()
+    val alarmSetResult: LiveData<ValueWrapper<Unit>> = _alarmSetResult
 
     // SETTERS para los placeholders de hora de INICIO y FIN.
     fun setStartTime(date: Date){
@@ -74,9 +69,8 @@ class LocationAlarmsViewModel @Inject constructor(
     }
 
     /**
-     * Crea e inserta una nueva alarma a partir de
-     * las horas de inicio y de fin seleccionadas desde
-     * el Fragment.
+     * Crea e inserta una nueva alarma a partir de las horas de inicio y
+     * de fin seleccionadas desde la interfaz de usuario.
      */
     fun addNewAlarm() {
         // Comprobar valores no nulos.
@@ -88,20 +82,8 @@ class LocationAlarmsViewModel @Inject constructor(
                 endDate,
                 true // Activada por defecto
         )
-        // Comprobar que la alarma es válida.
-        if(alarm.isValid()){
-            _flagValidHours.value = true
-            viewModelScope.launch {
-                // Comprobar colisiones
-                if(locationAlarmManager.checkAlarmCollisions(alarm).isNotEmpty()){
-                    _flagAlarmCollision.value = true
-                } else {
-                    locationAlarmManager.setAlarm(alarm)
-                    _flagAlarmCollision.value = false
-                }
-            }
-        } else {
-            _flagValidHours.value = false
+        viewModelScope.launch {
+            _alarmSetResult.value = locationAlarmManager.setAlarm(alarm)
         }
     }
 
@@ -112,7 +94,11 @@ class LocationAlarmsViewModel @Inject constructor(
      * @param locationAlarm alarma de localización a eliminar.
      */
     fun deleteAlarm(locationAlarm: LocationAlarm) {
-        locationAlarmManager.deleteAlarm(locationAlarm)
+        viewModelScope.launch {
+            locationAlarm.id?.let {
+                locationAlarmManager.deleteAlarm(it)
+            }
+        }
     }
 
     /**
@@ -124,7 +110,9 @@ class LocationAlarmsViewModel @Inject constructor(
      * @param enable flag para modificar el estado de la alarma de localización.
      */
     fun toggleAlarmState(locationAlarm: LocationAlarm, enable: Boolean) {
-        locationAlarm.id?.let {locationAlarmManager.toggleAlarm(it, enable)}
+        viewModelScope.launch {
+            locationAlarm.id?.let {locationAlarmManager.toggleAlarm(it, enable)}
+        }
     }
 
 }

@@ -45,16 +45,16 @@ class App : Application() {
     /**
      * Referencia a las Shared Preferences.
      */
-    private lateinit var sharedPrefs:SharedPreferences
+    private lateinit var sharedPrefs: SharedPreferences
 
 
     override fun onCreate() {
         super.onCreate()
-        deleteDatabase("contacttracker.db")
+//        deleteDatabase("contacttracker.db")
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         createNotificationChannels()
         initSharedPrefs()
-        simulate()
+//        simulate()
     }
 
 

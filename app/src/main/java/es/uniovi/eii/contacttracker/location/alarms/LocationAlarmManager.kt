@@ -9,8 +9,10 @@ import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
+import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,19 +20,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Clase que representa el Manager para gestionar
- * las alarmas de localización.
+ * Manager para gestionar y programar las alarmas de localización.
  */
 class LocationAlarmManager @Inject constructor(
         private val alarmManager: AlarmManager,
         private val alarmRepository: AlarmRepository,
         @ApplicationContext val ctx: Context
 ) {
-
-    /**
-     * Scope para la corrutina.
-     */
-    private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
     /**
      * Devuelve un LiveData con la lista de todas
@@ -41,38 +37,16 @@ class LocationAlarmManager @Inject constructor(
     }
 
     /**
-     * Devuelve una alarma de localización a partir de su ID.
+     * Elimina la alarma de ID pasado como parámetro. Cancela dicha alarma
+     * en el framework de Android y además la elimina de la base de datos.
      *
-     * @param id ID de la alarma de localización.
-     * @return alarma de localización.
+     * @param alarmID ID de la alarma de localización a eliminar.
      */
-    suspend fun getAlarmByID(id: Long): LocationAlarm? {
-        return alarmRepository.getAlarmByID(id)
-    }
-
-    /**
-     * Elimina todas las alarmas de localización.
-     */
-    fun deleteAllAlarms() {
-        scope.launch {
-            alarmRepository.deleteAllAlarms()
-        }
-    }
-
-    /**
-     * Elimina la alarma cuyo ID coincide con el
-     * de la alarma pasada como paráemtro.
-     *
-     * @param locationAlarm alarma de localización a eliminar.
-     */
-    fun deleteAlarm(locationAlarm: LocationAlarm) {
-        val alarmID = locationAlarm.id ?: return
-        scope.launch {
-            // Cancelar alarma en el sistema Android.
-            cancelAndroidAlarm(locationAlarm)
-            // Eliminar alarma de la BDD
-            alarmRepository.deleteAlarmByID(alarmID)
-        }
+    suspend fun deleteAlarm(alarmID: Long) {
+        // Cancelar alarma en el sistema Android.
+        cancelAndroidAlarm(alarmID)
+        // Eliminar alarma de la BDD
+        alarmRepository.deleteAlarmByID(alarmID)
     }
 
     /**
@@ -82,7 +56,7 @@ class LocationAlarmManager @Inject constructor(
      * @param locationAlarm alarma de localización.
      * @return lista con las alarmas con las que existe colisión.
      */
-    suspend fun checkAlarmCollisions(locationAlarm: LocationAlarm): List<LocationAlarm> {
+    private suspend fun checkAlarmCollisions(locationAlarm: LocationAlarm): List<LocationAlarm> {
         return alarmRepository.getAlarmCollisions(locationAlarm)
     }
 
@@ -92,16 +66,22 @@ class LocationAlarmManager @Inject constructor(
      * nueva alarma en Android.
      *
      * @param locationAlarm alarma de localización.
+     * @return Objeto ValueWrapper con Éxito o Fallo.
      */
-    fun setAlarm(locationAlarm: LocationAlarm) {
-        scope.launch {
-            // Actualizar horas de la alarma (si es necesario)
-            locationAlarm.updateHours()
-            // Insertar alarma en el repositorio
-            val alarmID = alarmRepository.insertLocationAlarm(locationAlarm)
-            // Configurar alarma en Android
-            val insertedAlarm = alarmRepository.getAlarmByID(alarmID)
-            insertedAlarm?.let { setAndroidAlarm(it) }
+    suspend fun setAlarm(locationAlarm: LocationAlarm): ValueWrapper<Unit> {
+        locationAlarm.updateHours() // Actualizar horas de la alarma (si es necesario)
+        if(locationAlarm.isValid()){ // Comprobar las horas de la alarma
+            if(checkAlarmCollisions(locationAlarm).isEmpty()) { // Comprobar colisiones
+                // Insertar alarma en el repositorio
+                val alarmID = alarmRepository.insertLocationAlarm(locationAlarm)
+                // Configurar alarma en Android
+                val insertedAlarm = alarmRepository.getAlarmByID(alarmID)
+                insertedAlarm?.let { setAndroidAlarm(it) }
+                return ValueWrapper.Success(Unit)
+            }
+            return ValueWrapper.Fail(Error.ALARM_COLLISION)
+        } else {
+            return ValueWrapper.Fail(Error.INVALID_ALARM)
         }
     }
 
@@ -111,35 +91,20 @@ class LocationAlarmManager @Inject constructor(
      * @param alarmID ID de la alarma a modificar.
      * @param enable flag para habilitar/deshabilitar la alarma de localización.
      */
-    fun toggleAlarm(alarmID: Long, enable: Boolean){
-        scope.launch {
-            // Obtener la alarma de localización
-            val alarm = alarmRepository.getAlarmByID(alarmID)
-            alarm?.let {
-                // Actualizar la alarma de localización
-                alarm.updateHours()
-                alarm.active = enable
-                alarmRepository.updateLocationAlarm(alarm)
-                // Activar o Desactivar alarma en Android.
-                if(enable)
-                    setAndroidAlarm(alarm) // Programar alarma
-                else
-                    cancelAndroidAlarm(alarm) // Cancelar alarma
-            }
+    suspend fun toggleAlarm(alarmID: Long, enable: Boolean){
+        // Obtener la alarma de localización
+        val alarm = alarmRepository.getAlarmByID(alarmID)
+        alarm?.let {
+            // Actualizar la alarma de localización en la base de datos
+            alarm.updateHours()
+            alarm.active = enable
+            alarmRepository.updateLocationAlarm(alarm)
+            // Activar o Desactivar alarma en Android.
+            if(enable)
+                setAndroidAlarm(alarm) // Programar alarma
+            else
+                cancelAndroidAlarm(alarmID) // Cancelar alarma
         }
-    }
-
-    /**
-     * Cancela las alarmas de localización.
-     */
-    fun cancel(){
-        val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        startServiceIntent.action = Constants.ACTION_START_LOCATION_SERVICE
-        alarmManager.cancel(getPendingIntentService(startServiceIntent, 999))
-
-        val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        stopServiceIntent.action = Constants.ACTION_STOP_LOCATION_SERVICE
-        alarmManager.cancel(getPendingIntentService(stopServiceIntent, 999))
     }
 
     /**
@@ -192,10 +157,9 @@ class LocationAlarmManager @Inject constructor(
      * Utiliza el AlarmManager para cancelar la alarma pasada
      * como parámetro.
      *
-     * @param locationAlarm Alarma de localización a cancelar.
+     * @param alarmID ID de la alarma de localización a cancelar.
      */
-    private fun cancelAndroidAlarm(locationAlarm: LocationAlarm) {
-        val alarmID = locationAlarm.id ?: return
+    private fun cancelAndroidAlarm(alarmID: Long) {
         // Cancelar INICIO
         val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
         startServiceIntent.action = Constants.ACTION_START_LOCATION_SERVICE

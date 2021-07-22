@@ -21,10 +21,12 @@ import es.uniovi.eii.contacttracker.adapters.alarms.LocationAlarmAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentLocationAlarmsBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
+import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import es.uniovi.eii.contacttracker.viewmodels.LocationAlarmsViewModel
 import java.util.Date
 import java.util.*
@@ -167,36 +169,58 @@ class LocationAlarmsFragment : Fragment() {
      * para observar los datos del ViewModel.
      */
     private fun setObservers(){
-        // PlaceHolder de hora de INICIO
-        viewModel.starTime.observe(viewLifecycleOwner, {
-            updateStartHour(it)
-        })
-        // PlaceHolder de hora de FIN
-        viewModel.endTime.observe(viewLifecycleOwner, {
-            updateEndHour(it)
-        })
-        // Lista de todas las alarmas programadas
-        viewModel.getAllAlarms().observe(viewLifecycleOwner, {
-            updateAlarmsAdapter(it)
-        })
-        // Flag de validez de horas de INICIO y de FIN
-        viewModel.flagValidHours.observe(viewLifecycleOwner, { validHours ->
-            if(!validHours){
-                AndroidUtils.snackbar(getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
+        viewModel.apply {
+            // PlaceHolder de hora de INICIO
+            starTime.observe(viewLifecycleOwner, {
+                updateStartHour(it)
+            })
+
+            // PlaceHolder de hora de FIN
+            endTime.observe(viewLifecycleOwner, {
+                updateEndHour(it)
+            })
+
+            // Lista de todas las alarmas programadas
+            getAllAlarms().observe(viewLifecycleOwner, {
+                updateAlarmsAdapter(it)
+            })
+
+            // Resultado de programar una alarma.
+            alarmSetResult.observe(viewLifecycleOwner) {
+                if(it is ValueWrapper.Fail) // Comprobar si ha habido errores
+                    processError(it.error)
             }
-        })
-        // Flag de colisión de alarmas.
-        viewModel.flagAlarmCollision.observe(viewLifecycleOwner, { collisions ->
-            if(collisions){
-                AndroidUtils.snackbar(getString(R.string.errorAlarmCollision), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            }
-        })
+        }
+
     }
 
     /**
-     * Actualiza los componentes de la UI con la
+     * Método encargado de procesar el error indicado según corresponda.
+     *
+     * @param error Objeto Error que representa alguno de los posibles errores.
+     */
+    private fun processError(error: Error) {
+        when(error) {
+            /* Horas inválidas */
+            Error.INVALID_ALARM -> {
+                AndroidUtils.snackbar(getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            /* Colisión entre alarmas */
+            Error.ALARM_COLLISION -> {
+                AndroidUtils.snackbar(getString(R.string.errorAlarmCollision), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            /* Otros */
+            else -> {
+                AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+        }
+    }
+
+    /**
+     * Actualiza el campo de texto de la hora de inicio con la
      * hora de INICIO pasada como parámetro.
      *
      * @param date hora de inicio.
@@ -210,7 +234,7 @@ class LocationAlarmsFragment : Fragment() {
     }
 
     /**
-     * Actualiza los componentes de la UI con la
+     * Actualiza el campo de texto de la hora de fin con la
      * hora de FIN pasada como parámetro.
      *
      * @param date hora de fin.

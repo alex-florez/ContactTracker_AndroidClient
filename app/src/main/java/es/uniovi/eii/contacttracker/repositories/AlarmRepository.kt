@@ -43,8 +43,8 @@ class AlarmRepository @Inject constructor(
      * Actualiza los campos de la alarma cuyo ID coincide con el ID de
      * la alarma pasada como parámetro.
      *
-     * @param alarma con los datos a actualizar.
-     * @return nº de filas modificadas.
+     * @param locationAlarm Alarma con los nuevos datos a actualizar.
+     * @return N.º de filas modificadas.
      */
     suspend fun updateLocationAlarm(locationAlarm: LocationAlarm): Int {
         return locationAlarmDao.update(locationAlarm)
@@ -80,7 +80,7 @@ class AlarmRepository @Inject constructor(
     /**
      * Elimina la alarma de ID pasado como parámetro.
      *
-     * @param ID de la alarma a eliminar.
+     * @param id ID de la alarma a eliminar.
      */
     suspend fun deleteAlarmByID(id: Long) {
         locationAlarmDao.deleteById(id)

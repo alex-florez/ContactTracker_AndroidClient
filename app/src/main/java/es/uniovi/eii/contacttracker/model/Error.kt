@@ -10,4 +10,6 @@ enum class Error {
     TIMEOUT,
 
     /* Alarmas de localización */
+    INVALID_ALARM,
+    ALARM_COLLISION
 }

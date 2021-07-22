@@ -27,6 +27,7 @@ import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -142,7 +143,9 @@ class LocationForegroundService : Service(){
             // Comprobar configuración de localización
             if(!checkLocationSettings()) {
                 // Desactivar alarma
-                locationAlarmManager.toggleAlarm(alarmID, false)
+                scope.launch {
+                    locationAlarmManager.toggleAlarm(alarmID, false)
+                }
             } else {
                 Log.d(TAG, "Iniciando servicio de localización en 1er plano.")
                 startForeground(SERVICE_ID, notification)
@@ -170,7 +173,9 @@ class LocationForegroundService : Service(){
             isActive = false
             if(alarmID != -1L){ // Si es ejecutado desde una alarma.
                 sendBroadcast(Constants.ACTION_STOP_LOCATION_SERVICE) // Enviar broadcast a la UI.
-                locationAlarmManager.toggleAlarm(alarmID, false) // Desactivar la alarma
+                scope.launch {
+                    locationAlarmManager.toggleAlarm(alarmID, false) // Desactivar la alarma
+                }
             }
         }
     }
