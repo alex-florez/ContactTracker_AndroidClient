@@ -81,36 +81,10 @@ class NotifyPositiveFragment : Fragment() {
      */
     private fun setObservers(){
         viewModel.apply {
-            // Error de RED
-//            networkError.observe(viewLifecycleOwner, {
-//                AndroidUtils.snackbar(getString(R.string.network_error), Snackbar.LENGTH_LONG,
-//                    binding.root, requireActivity())
-//            })
-//
-//            // Error GENÉRICO al notificar positivo
-//            notifyError.observe(viewLifecycleOwner, {
-//                AndroidUtils.snackbar(getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG,
-//                    binding.root, requireActivity())
-//            })
-
             // Periodo de infectividad
             infectivityPeriod.observe(viewLifecycleOwner) {
                 binding.txtInfectivityPeriod.text = resources.getQuantityString(R.plurals.daysText, it, it)
             }
-
-            // Resultado de NOTIFICAR POSITIVO
-//            notifyPositiveResult.observe(viewLifecycleOwner, {
-//                if(it != null){
-//                    if(!it.limitExceeded){
-//                        AndroidUtils.snackbar(getString(R.string.notifyPositiveResultText, it.uploadedLocations),
-//                            Snackbar.LENGTH_LONG, binding.root, requireActivity())
-//                    } else {
-//                        AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
-//                            binding.root, requireActivity())
-//                    }
-//                }
-//            })
-
             notifyResult.observe(viewLifecycleOwner) {
                 when(it){
                     is ValueWrapper.Success -> {
