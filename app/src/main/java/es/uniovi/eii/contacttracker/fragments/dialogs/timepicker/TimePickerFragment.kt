@@ -9,23 +9,23 @@ import androidx.fragment.app.DialogFragment
 import java.util.*
 
 /**
- * Fragment que presenta un diálogo al usuario para mostrar
- * un TimePricker.
+ * Fragment que muestra al usuario un TimePricker que permite seleccionar una hora.
  */
 class TimePickerFragment(
     private val listener: OnTimeSetListener,
     private val title: String
 ) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
-    /**
-     * Horas y minutos
-     */
+    /* Horas y minutos */
     var hours: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     var minutes: Int = Calendar.getInstance().get(Calendar.MINUTE)
 
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val timePickerDialog = TimePickerDialog(requireActivity(), this, hours, minutes,
+        // Crear el diálogo del time picker
+        val timePickerDialog = TimePickerDialog(requireActivity(),
+            this,
+            hours,
+            minutes,
             DateFormat.is24HourFormat(requireActivity()))
         timePickerDialog.setTitle(title)
         return timePickerDialog

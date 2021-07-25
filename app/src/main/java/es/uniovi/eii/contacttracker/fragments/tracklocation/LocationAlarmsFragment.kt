@@ -71,6 +71,9 @@ class LocationAlarmsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = FragmentLocationAlarmsBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.du = DateUtils
 
         setListeners()
         setObservers()
@@ -82,7 +85,6 @@ class LocationAlarmsFragment : Fragment() {
         super.onResume()
         // Foco inicial en la hora de inicio
         binding.layoutCardLocationAlarm.txtStartAutoTracking.requestFocus()
-        toggleLabelNoAlarms()
         viewModel.initAlarmPlaceHolders()
 
         // Comprobar ajustes de localizacion
@@ -129,8 +131,6 @@ class LocationAlarmsFragment : Fragment() {
                 locationAlarm.id?.let { viewModel.toggleAlarmState(locationAlarm, isChecked) }
             }
         })
-        // IDs estables para reutilizar ViewHolders.
-        locationAlarmsAdapter.setHasStableIds(true)
     }
 
     /**
@@ -150,17 +150,18 @@ class LocationAlarmsFragment : Fragment() {
      */
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(){
-        // TextFields para las horas de Inicio y de Fin.
-        binding.layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
-           startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
-        }
-
-        binding.layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
-            endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
-        }
-
-        binding.layoutCardLocationAlarm.btnAddLocationAlarm.setOnClickListener{
-            addNewAlarm()
+        binding.apply {
+            // TextFields para las horas de Inicio y de Fin.
+            layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
+                startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
+            }
+            layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
+                endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
+            }
+            // Botón para añadir una nueva alarma
+            layoutCardLocationAlarm.btnAddLocationAlarm.setOnClickListener{
+                addNewAlarm()
+            }
         }
     }
 
@@ -181,7 +182,7 @@ class LocationAlarmsFragment : Fragment() {
             })
 
             // Lista de todas las alarmas programadas
-            getAllAlarms().observe(viewLifecycleOwner, {
+            alarms.observe(viewLifecycleOwner, {
                 updateAlarmsAdapter(it)
             })
 
@@ -226,9 +227,6 @@ class LocationAlarmsFragment : Fragment() {
      * @param date hora de inicio.
      */
     private fun updateStartHour(date: Date) {
-        binding.layoutCardLocationAlarm
-                    .txtStartAutoTracking.setText(DateUtils.formatDate(date, "HH:mm"))
-            // Establecer Horas y minutos en el TimePicker.
             startTimePicker.hours = DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY)
             startTimePicker.minutes = DateUtils.getFromDate(date, Calendar.MINUTE)
     }
@@ -240,9 +238,6 @@ class LocationAlarmsFragment : Fragment() {
      * @param date hora de fin.
      */
     private fun updateEndHour(date: Date) {
-        binding.layoutCardLocationAlarm
-                .txtEndAutoTracking.setText(DateUtils.formatDate(date, "HH:mm"))
-        // Establecer Horas y minutos en el TimePicker.
         endTimePicker.hours = DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY)
         endTimePicker.minutes = DateUtils.getFromDate(date, Calendar.MINUTE)
     }
@@ -252,22 +247,9 @@ class LocationAlarmsFragment : Fragment() {
      * pasada como parámetro.
      */
     private fun updateAlarmsAdapter(alarms: List<LocationAlarm>){
-        locationAlarmsAdapter.submitList(alarms.toList())
-        if(alarms.isEmpty())
-            binding.txtLabelNoAlarms.visibility = TextView.VISIBLE
-        else
-            binding.txtLabelNoAlarms.visibility = TextView.GONE
-    }
-
-    /**
-     * Cambia la visibilidad de la etiqueta de texto que indica
-     * que no hay alarmas de localización si el adapter está vacío.
-     */
-    private fun toggleLabelNoAlarms(){
-        if(locationAlarmsAdapter.currentList.isEmpty())
-            binding.txtLabelNoAlarms.visibility = TextView.VISIBLE
-        else
-            binding.txtLabelNoAlarms.visibility = TextView.GONE
+        locationAlarmsAdapter.submitList(alarms.toList()) {
+            binding.recyclerViewLocationAlarms.scrollToPosition(0)
+        }
     }
 
     /**

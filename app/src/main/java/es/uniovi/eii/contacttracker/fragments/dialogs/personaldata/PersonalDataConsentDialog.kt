@@ -17,7 +17,8 @@ class PersonalDataConsentDialog(
 ) : DialogFragment(){
 
     /**
-     * Interfaz listener
+     * Interfaz listener para los eventos del diálogo
+     * de consentimiento del interesado.
      */
     interface PrivacyPolicyListener {
 
@@ -42,17 +43,27 @@ class PersonalDataConsentDialog(
         binding = DialogPersonalDataConsentBinding.inflate(inflater)
         val builder = AlertDialog.Builder(requireActivity())
         // Listeners
-        binding.acceptAgreement.setOnClickListener {
-            privacyPolicyListener.onAcceptPolicy()
-            dismiss()
-        }
-        binding.rejectAgreement.setOnClickListener {
-            privacyPolicyListener.onRejectPolicy()
-            dismiss()
-        }
+        setListeners()
         builder.setView(binding.root)
         return builder.create()
     }
 
+
+    /**
+     * Establece los listeners de click para los botones de
+     * aceptar o rechazar la política de privacidad.
+     */
+    private fun setListeners() {
+        binding.apply {
+            acceptAgreement.setOnClickListener {
+                privacyPolicyListener.onAcceptPolicy()
+                dismiss()
+            }
+            rejectAgreement.setOnClickListener {
+                privacyPolicyListener.onRejectPolicy()
+                dismiss()
+            }
+        }
+    }
 
 }

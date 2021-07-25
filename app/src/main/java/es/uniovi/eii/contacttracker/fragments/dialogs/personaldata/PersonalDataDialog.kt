@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputLayout
@@ -22,37 +23,43 @@ class PersonalDataDialog(
 ) : DialogFragment() {
 
     /**
-     * Interfaz Listener para el diálogo
-     * de datos personales.
+     * Interfaz Listener para el diálogo de datos personales.
      */
     interface PersonalDataListener {
         fun onAccept(personalData: PersonalData)
     }
 
-    /**
-     * View Binding
-     */
+    /* View Binding */
     private lateinit var binding: DialogPersonalDataBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireActivity())
+        // Inicializar Binding
         val inflater = requireActivity().layoutInflater
         binding = DialogPersonalDataBinding.inflate(inflater)
-        builder.setView(binding.root)
-                .setPositiveButton(R.string.accept,null)
-                .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {dialog, _ ->
-                    dialog.cancel()
-                })
+        binding.data = defaultPersonalData
+        return initDialog(binding.root)
+    }
 
-        setPersonalData()
+    /**
+     * Crea e inicializa el diálogo de datos personales.
+     *
+     * @param view Vista que contendrá el Alert Dialog.
+     * @return AlertDialog.
+     */
+    private fun initDialog(view: View): AlertDialog {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(view)
+            .setPositiveButton(R.string.accept, null)
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.cancel()
+            }
         val dialog = builder.create()
         // Listener para el Botón Positivo para que no se cierre el diálogo.
         dialog.setOnShowListener {
             val positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE)
             positiveButton.setOnClickListener {
-                // Validar los datos
                 val personalData = getPersonalData()
-                if(validateData(personalData)){
+                if(validateData(personalData)){ // Validar los datos
                     listener.onAccept(personalData)
                     dialog.dismiss()
                 }
@@ -75,23 +82,6 @@ class PersonalDataDialog(
                     it.txtPhoneNumberEditText.text.toString(),
                     it.txtCityEditText.text.toString(),
                     it.txtCPEditText.text.toString())
-        }
-    }
-
-    /**
-     * Establece los datos personales por defecto pasado
-     * como parámetro en los campos del diálogo.
-     */
-    private fun setPersonalData() {
-        defaultPersonalData?.apply {
-            binding.apply {
-                txtDNIEditText.setText(dni)
-                txtNameEditText.setText(name)
-                txtSurnameEditText.setText(surname)
-                txtPhoneNumberEditText.setText(phoneNumber)
-                txtCityEditText.setText(city)
-                txtCPEditText.setText(cp)
-            }
         }
     }
 
@@ -144,7 +134,7 @@ class PersonalDataDialog(
      * que haya actualmente visibles.
      */
     private fun removeErrors(){
-        val textInputs = arrayListOf<TextInputLayout>(
+        val textInputs = arrayListOf(
             binding.txtNameLayout, binding.txtSurnameLayout, binding.txtDNILayout,
             binding.txtPhoneNumberLayout, binding.txtCityLayout, binding.txtCPLayout)
 
@@ -152,15 +142,5 @@ class PersonalDataDialog(
             it.error = null
             it.isErrorEnabled = false
         }
-    }
-
-    /**
-     * Se encarga de validar todos los datos del formulario
-     * de datos personales.
-     *
-     * @return true si todos los datos del formulario son válidos.
-     */
-    private fun validatePersonalData(): Boolean {
-        return false
     }
 }

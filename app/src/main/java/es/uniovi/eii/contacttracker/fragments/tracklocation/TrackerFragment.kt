@@ -150,8 +150,10 @@ class TrackerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTrackerBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         setListeners()
-        setObservers()
         initLocationsRecyclerView()
         return binding.root
     }
@@ -177,23 +179,6 @@ class TrackerFragment : Fragment() {
         // Switch para Activar/Desactivar el servicio de localización.
         binding.layoutCardLocationTracker.switchTrackLocation.setOnCheckedChangeListener{_, isChecked ->
             toggleLocationService(isChecked)
-        }
-    }
-
-    /**
-     * Método encargado de configurar los observers
-     * para observar los datos del ViewModel.
-     */
-    private fun setObservers(){
-        viewModel.apply {
-            // Flag de servicio de localización activo
-            isLocationServiceActive.observe(viewLifecycleOwner) {isActive ->
-                binding.layoutCardLocationTracker.switchTrackLocation.isChecked = isActive
-            }
-            // Flag para la lista de localizaciones vacía
-            areLocationsAvailable.observe(viewLifecycleOwner) { available ->
-                binding.labelNoLocations.visibility = if (available) View.GONE else View.VISIBLE
-            }
         }
     }
 

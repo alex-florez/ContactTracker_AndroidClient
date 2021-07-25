@@ -1,9 +1,7 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.location.Location
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.model.LocationAlarm
@@ -23,13 +21,13 @@ class LocationAlarmsViewModel @Inject constructor(
     /**
      * Placeholder Hora de INICIO
      */
-    private val _startTime = MutableLiveData<Date>()
+    private val _startTime = MutableLiveData(Date())
     val starTime: LiveData<Date> = _startTime
 
     /**
      * Placeholder Hora de FIN
      */
-    private val _endTime = MutableLiveData<Date>()
+    private val _endTime = MutableLiveData(Date())
     val endTime: LiveData<Date> = _endTime
 
     /**
@@ -37,6 +35,17 @@ class LocationAlarmsViewModel @Inject constructor(
      */
     private val _alarmSetResult = MutableLiveData<ValueWrapper<Unit>>()
     val alarmSetResult: LiveData<ValueWrapper<Unit>> = _alarmSetResult
+
+    /**
+     * Alarmas actualmente programadas.
+     */
+    val alarms: LiveData<List<LocationAlarm>> = locationAlarmManager.getAllAlarms()
+
+    /**
+     * MediatorLiveData para la lista de alarmas vacía.
+     */
+    private val _noAlarms = MediatorLiveData<Boolean>()
+    val noAlarms: MediatorLiveData<Boolean> = _noAlarms
 
     // SETTERS para los placeholders de hora de INICIO y FIN.
     fun setStartTime(date: Date){
@@ -58,14 +67,6 @@ class LocationAlarmsViewModel @Inject constructor(
         cal.add(Calendar.HOUR_OF_DAY, 1) // Sumar una hora
         _startTime.value = actualDate
         _endTime.value = cal.time
-    }
-
-    /**
-     * Devuelve un LiveData con la lista de todas las
-     * alarmas de localización programadas por el usuario.
-     */
-    fun getAllAlarms(): LiveData<List<LocationAlarm>> {
-        return locationAlarmManager.getAllAlarms()
     }
 
     /**
@@ -112,6 +113,13 @@ class LocationAlarmsViewModel @Inject constructor(
     fun toggleAlarmState(locationAlarm: LocationAlarm, enable: Boolean) {
         viewModelScope.launch {
             locationAlarm.id?.let {locationAlarmManager.toggleAlarm(it, enable)}
+        }
+    }
+
+    init {
+        // Agregar fuente al LiveData para la lista de alarmas vacía
+        noAlarms.addSource(alarms) {
+            _noAlarms.value = it.isEmpty()
         }
     }
 

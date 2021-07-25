@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
-    app:cardElevation="5dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/grey1"
-    app:cardCornerRadius="4dp">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="viewModel"
+            type="es.uniovi.eii.contacttracker.viewmodels.TrackerViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/grey1"
+        app:cardCornerRadius="4dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/locationTrackerTitle"
-            android:textColor="@color/teal_700"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:drawableEndCompat="@drawable/ic_location_tracker_2" />
+            android:orientation="vertical"
+            android:padding="8dp">
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchTrackLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:checked="false"
-            android:text="@string/labelStartStopTracker"
-            app:switchPadding="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/locationTrackerTitle"
+                android:textColor="@color/teal_700"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:drawableEndCompat="@drawable/ic_location_tracker_2" />
 
-    </LinearLayout>
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchTrackLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:checked="@{viewModel.isLocationServiceActive}"
+                android:text="@string/labelStartStopTracker"
+                app:switchPadding="20dp" />
+        </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

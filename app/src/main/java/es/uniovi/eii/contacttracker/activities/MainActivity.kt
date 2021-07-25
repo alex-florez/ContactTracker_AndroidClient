@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /* Re-establecer el theme principal (quitar SplashScreen)*/
+        /* Re-establecer el theme principal (quitar SplashScreen) */
         setTheme(R.style.Theme_ContactTracker)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
