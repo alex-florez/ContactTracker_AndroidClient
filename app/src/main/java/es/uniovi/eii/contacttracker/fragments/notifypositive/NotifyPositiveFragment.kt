@@ -13,8 +13,10 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataConsentDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
+import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.util.AndroidUtils
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
 
 
@@ -47,6 +49,8 @@ class NotifyPositiveFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = FragmentNotifyPositiveBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         setListeners()
         setObservers()
@@ -78,16 +82,16 @@ class NotifyPositiveFragment : Fragment() {
     private fun setObservers(){
         viewModel.apply {
             // Error de RED
-            networkError.observe(viewLifecycleOwner, {
-                AndroidUtils.snackbar(getString(R.string.network_error), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            })
-
-            // Error GENÉRICO al notificar positivo
-            notifyError.observe(viewLifecycleOwner, {
-                AndroidUtils.snackbar(getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            })
+//            networkError.observe(viewLifecycleOwner, {
+//                AndroidUtils.snackbar(getString(R.string.network_error), Snackbar.LENGTH_LONG,
+//                    binding.root, requireActivity())
+//            })
+//
+//            // Error GENÉRICO al notificar positivo
+//            notifyError.observe(viewLifecycleOwner, {
+//                AndroidUtils.snackbar(getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG,
+//                    binding.root, requireActivity())
+//            })
 
             // Periodo de infectividad
             infectivityPeriod.observe(viewLifecycleOwner) {
@@ -95,42 +99,55 @@ class NotifyPositiveFragment : Fragment() {
             }
 
             // Resultado de NOTIFICAR POSITIVO
-            notifyPositiveResult.observe(viewLifecycleOwner, {
-                if(it != null){
-                    if(!it.limitExceeded){
-                        AndroidUtils.snackbar(getString(R.string.notifyPositiveResultText, it.uploadedLocations),
-                            Snackbar.LENGTH_LONG, binding.root, requireActivity())
-                    } else {
-                        AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
-                            binding.root, requireActivity())
-                    }
-                }
-            })
+//            notifyPositiveResult.observe(viewLifecycleOwner, {
+//                if(it != null){
+//                    if(!it.limitExceeded){
+//                        AndroidUtils.snackbar(getString(R.string.notifyPositiveResultText, it.uploadedLocations),
+//                            Snackbar.LENGTH_LONG, binding.root, requireActivity())
+//                    } else {
+//                        AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
+//                            binding.root, requireActivity())
+//                    }
+//                }
+//            })
 
-            // Icono de carga de la notificación del positivo.
-            isLoading.observe(viewLifecycleOwner) {isLoading ->
-                if(isLoading){
-                    binding.notifyPositiveProgress.visibility = View.VISIBLE
-                    binding.notifyPositiveLoadingPlaceholder.visibility = View.VISIBLE
-                    binding.btnNotifyPositive.isEnabled = false
-                    binding.btnNotifyPositive.setBackgroundColor(getColor(requireContext(), R.color.disabledOrange))
-                } else {
-                    binding.notifyPositiveProgress.visibility = View.GONE
-                    binding.notifyPositiveLoadingPlaceholder.visibility = View.GONE
-                    binding.btnNotifyPositive.isEnabled = true
-                    binding.btnNotifyPositive.setBackgroundColor(getColor(requireContext(), R.color.orange))
+            notifyResult.observe(viewLifecycleOwner) {
+                when(it){
+                    is ValueWrapper.Success -> {
+                        AndroidUtils.snackbar(getString(R.string.notifyPositiveResultText, it.value.uploadedLocations),
+                            Snackbar.LENGTH_LONG, binding.root, requireActivity())
+                    }
+                    is ValueWrapper.Fail -> { processError(it.error) }
                 }
             }
+        }
+    }
 
-            // Icono de carga del periodo de infectividad.
-            loadingInfectivity.observe(viewLifecycleOwner) {
-                if(it) {
-                    binding.txtInfectivityPeriod.visibility = View.GONE
-                    binding.loadingInfectivity.visibility = View.VISIBLE
-                } else {
-                    binding.txtInfectivityPeriod.visibility = View.VISIBLE
-                    binding.loadingInfectivity.visibility = View.GONE
-                }
+    /**
+     * Se encarga de procesar los posibles errores que surjan durante
+     * la notificación de un positivo.
+     */
+    private fun processError(error: Error) {
+        when(error) {
+            Error.TIMEOUT -> {
+                AndroidUtils.snackbar(getString(R.string.network_error), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            Error.CANNOT_NOTIFY -> {
+                AndroidUtils.snackbar(getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            Error.NOTIFICATION_LIMIT_EXCEEDED -> {
+                AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            Error.NO_LOCATIONS_TO_NOTIFY -> {
+                AndroidUtils.snackbar(getString(R.string.errorNotifyNoLocations), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            else -> {
+                AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             }
         }
     }

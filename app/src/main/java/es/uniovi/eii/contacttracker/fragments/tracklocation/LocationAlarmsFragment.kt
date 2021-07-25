@@ -244,7 +244,8 @@ class LocationAlarmsFragment : Fragment() {
 
     /**
      * Actualiza el adapter de alarmas de localización con la lista
-     * pasada como parámetro.
+     * pasada como parámetro. En el callback de actualización del adapter, se
+     * mueve el recyclerview hasta el primer elemento de la lista.
      */
     private fun updateAlarmsAdapter(alarms: List<LocationAlarm>){
         locationAlarmsAdapter.submitList(alarms.toList()) {

@@ -1,12 +1,15 @@
 package es.uniovi.eii.contacttracker.positive
 
 import android.util.Log
+import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.model.Positive
+import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import javax.inject.Inject
 import java.util.Date
 
@@ -24,35 +27,46 @@ class PositiveManager @Inject constructor(
      * Recupera las últimas localizaciones del usuario que ha dado positivo en
      * función del periodo de infectividad obtenido de la configuración y hace
      * una petición al backend para almacenarlas.
+     *
      * @param personalData Datos personales del positivo (opcionales)
-     * @return APIResult que envuelve al resultado de la notificación.
+     * @return ValueWrapper que envuelve el resultado de la notificación.
      */
-    suspend fun notifyPositive(personalData: PersonalData?): APIResult<NotifyPositiveResult> {
+    suspend fun notifyPositive(personalData: PersonalData?): ValueWrapper<NotifyPositiveResult> {
         // Configuración de la notificación de positivos.
         val config = configRepository.getNotifyPositiveConfig()
         // Comprobar límite de notificación de positivos.
         if(checkNotifyLimit(config.notifyLimit)){
             // Obtener las localizaciones de los últimos días.
             val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod)
-            val positive = Positive(null,
-                null,
-                Date(),
-                locations,
-                personalData
-            )
-            val result = positiveRepository.notifyPositive(positive)
-            if(result is APIResult.Success){
-                // Establecer ID y almacenar en la base de datos local.
-                positive.positiveCode = result.value.positiveCode
-                positiveRepository.insertPositive(positive)
-                val poss = positiveRepository.getAllLocalPositives()
-                Log.d("asd", poss.size.toString())
+            if(checkLocations(locations)){ // Comprobar que existan localizaciones
+                val positive = Positive(null,
+                    null,
+                    Date(),
+                    locations,
+                    personalData
+                )
+                val result = positiveRepository.notifyPositive(positive)
+                when(result){
+                    is APIResult.Success -> {
+                        // Establecer ID y almacenar en la base de datos local.
+                        positive.positiveCode = result.value.positiveCode
+                        positiveRepository.insertPositive(positive)
+                        return ValueWrapper.Success(result.value)
+                    }
+                    is APIResult.NetworkError -> {
+                        return ValueWrapper.Fail(Error.TIMEOUT)
+                    }
+                    is APIResult.HttpError -> {
+                        return ValueWrapper.Fail(Error.CANNOT_NOTIFY)
+                    }
+                }
+            } else {
+                // No hay localizaciones para notificar
+                return ValueWrapper.Fail(Error.NO_LOCATIONS_TO_NOTIFY)
             }
-            return result
         } else {
-            return APIResult.Success(NotifyPositiveResult(
-                null, 0, true
-            ))
+            // Se ha excedido el límite de notificación
+            return ValueWrapper.Fail(Error.NOTIFICATION_LIMIT_EXCEEDED)
         }
     }
 
@@ -64,5 +78,12 @@ class PositiveManager @Inject constructor(
         // N.º de positivos notificados en la fecha de hoy.
         val notifiedPositivesToday = positiveRepository.getNumberOfLocalPositivesNotifiedAt(Date())
         return notifiedPositivesToday < limit
+    }
+
+    /**
+     * Comprueba que la lista de localizaciones indicada no esté vacía.
+     */
+    private fun checkLocations(locations: List<UserLocation>): Boolean {
+        return locations.isNotEmpty()
     }
 }

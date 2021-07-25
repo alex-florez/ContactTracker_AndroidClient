@@ -11,6 +11,7 @@ import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,6 +38,12 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     private val _infectivityPeriod = MutableLiveData<Int>()
     val infectivityPeriod: LiveData<Int> = _infectivityPeriod
+
+    /**
+     * LiveData con el resultado de la notificación de positivo.
+     */
+    private val _notifyResult = MutableLiveData<ValueWrapper<NotifyPositiveResult>>()
+    val notifyResult: LiveData<ValueWrapper<NotifyPositiveResult>> = _notifyResult
 
     /**
      * Error de RED
@@ -74,11 +81,12 @@ class NotifyPositiveViewModel @Inject constructor(
             _isLoading.postValue(true)
             // Datos personales
             val personalData = if(addPersonalData) getPersonalData() else null
-            when(val result = positiveManager.notifyPositive(personalData)){
-                is APIResult.NetworkError -> { _networkError.postValue(result) }
-                is APIResult.HttpError -> { _notifyError.postValue(result) }
-                is APIResult.Success -> { _notifyPositiveResult.postValue(result.value) }
-            }
+            _notifyResult.postValue(positiveManager.notifyPositive(personalData))
+//            when(val result = positiveManager.notifyPositive(personalData)){
+//                is APIResult.NetworkError -> { _networkError.postValue(result) }
+//                is APIResult.HttpError -> { _notifyError.postValue(result) }
+//                is APIResult.Success -> { _notifyPositiveResult.postValue(result.value) }
+//            }
             _isLoading.postValue(false)
         }
     }

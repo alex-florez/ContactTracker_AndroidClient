@@ -1,142 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.notifypositive.NotifyPositiveFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:text="@string/notifyAPositive"
-        android:textAppearance="?attr/textAppearanceHeadline4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.172"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+    <data>
+        <variable
+            name="viewModel"
+            type="es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel" />
+    </data>
 
-    <TextView
-        android:id="@+id/textView2"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/notifyExplanation1"
-        android:justificationMode="inter_word"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.888"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.025" />
-
-    <CheckBox
-        android:id="@+id/checkBoxAddPersonalData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:checked="false"
-        android:text="@string/addPersonalData"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="20dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxAddPersonalData" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_height="match_parent"
+        tools:context=".fragments.notifypositive.NotifyPositiveFragment">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/notifyAPositive"
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.172"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.023" />
+
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="8dp"
+            android:text="@string/notifyExplanation1"
             android:justificationMode="inter_word"
-            android:text="@string/notifyExplanation2" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.888"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="0.025" />
 
-        <TextView
-            android:id="@+id/txtInfectivityPeriod"
+        <CheckBox
+            android:id="@+id/checkBoxAddPersonalData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:text=""
-            android:gravity="center"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="@android:color/holo_red_dark" />
+            android:checked="false"
+            android:text="@string/addPersonalData"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/loadingInfectivity"
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxAddPersonalData" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:indeterminateAnimationType="disjoint"
-            app:indicatorColor="@android:color/holo_red_dark"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-    </LinearLayout>
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:layout_constraintVertical_bias="0.0">
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.48000002">
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="8dp"
+                android:justificationMode="inter_word"
+                android:text="@string/notifyExplanation2" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNotifyPositive"
+            <TextView
+                android:id="@+id/txtInfectivityPeriod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:text=""
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceHeadline5"
+                android:textColor="@android:color/holo_red_dark"
+                app:visibility="@{!viewModel.loadingInfectivity}"/>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/loadingInfectivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:indeterminateAnimationType="disjoint"
+                app:indicatorColor="@android:color/holo_red_dark"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:visibility="@{viewModel.loadingInfectivity}"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="@color/orange"
-            android:text="@string/btnNotifyPositive"
-            android:textColor="@color/orangeText" />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:layout_constraintVertical_bias="0.45">
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/notifyPositiveProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="visible"
-            app:indeterminateAnimationType="disjoint"
-            app:indicatorColor="@color/teal_700" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNotifyPositive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@{viewModel.isLoading ? @color/disabledOrange : @color/orange}"
+                android:enabled="@{!viewModel.isLoading}"
+                android:text="@string/btnNotifyPositive"
+                android:textColor="@color/orangeText" />
 
-        <TextView
-            android:id="@+id/notifyPositiveLoadingPlaceholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loadingPlaceholderNotifyPositive"
-            android:visibility="gone" />
-    </LinearLayout>
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/notifyPositiveProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="visible"
+                app:indeterminateAnimationType="disjoint"
+                app:indicatorColor="@color/teal_700"
+                app:visibility="@{viewModel.isLoading}" />
 
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/notifyPositiveLoadingPlaceholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loadingPlaceholderNotifyPositive"
+                android:visibility="gone"
+                app:visibility="@{viewModel.isLoading}" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

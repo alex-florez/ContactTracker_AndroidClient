@@ -9,7 +9,13 @@ enum class Error {
     SERVER_ERROR,
     TIMEOUT,
 
-    /* Alarmas de localización */
+    /* Alarmas de Localización */
     INVALID_ALARM,
-    ALARM_COLLISION
+    ALARM_COLLISION,
+
+    /* Notificación de Positivos */
+    CANNOT_NOTIFY,
+    NO_LOCATIONS_TO_NOTIFY,
+    NOTIFICATION_LIMIT_EXCEEDED
+
 }

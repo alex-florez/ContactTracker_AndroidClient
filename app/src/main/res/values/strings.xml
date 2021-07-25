@@ -133,6 +133,7 @@
     <string name="loadingPlaceholderNotifyPositive">Subiendo tus localizaciones a la nube...</string>
     <string name="notifyPositiveResultText">Se han subido %d localizaciones a la nube.</string>
     <string name="errorNotifyLimitExceeded">Se ha superado el límite de notificación de positivos. No podrás notificar más positivos hasta mañana.</string>
+    <string name="errorNotifyNoLocations">No se ha podido notificar el positivo: no existen localizaciones registradas en el periodo de infectividad. Activa el servicio de rastreo para registrar localizaciones.</string>
 
 
     <!-- Formulario de Datos Personales -->
