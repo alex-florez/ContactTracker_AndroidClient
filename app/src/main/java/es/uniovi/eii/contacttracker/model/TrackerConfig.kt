@@ -9,8 +9,8 @@ const val DEFAULT_MIN_INTERVAL = 3000L
 const val DEFAULT_SMALLEST_DISPLACEMENT = 0f
 
 /* Claves de las Shared Preferences */
-const val TRACKER_MIN_INTERVAL_KEY = "TrackerMinInterval"
-const val TRACKER_SMALLEST_DISPLACEMENT_KEY = "TrackerSmallestDisplacementKey"
+const val TRACKER_MIN_INTERVAL_KEY = "TrackerConfigMinInterval"
+const val TRACKER_SMALLEST_DISPLACEMENT_KEY = "TrackerConfigSmallestDisplacementKey"
 
 /**
  * Representa los parámetros de configuración del rastreo de ubicación.

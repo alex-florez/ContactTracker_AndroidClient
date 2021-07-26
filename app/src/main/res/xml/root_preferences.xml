@@ -13,9 +13,10 @@
             app:minValueSeconds="0"
             app:maxValueSeconds="59"
             app:defValSeconds="3"
-            app:title="@string/time_interval_title"
+            app:prefTitle="@string/time_interval_title"
             app:wrapSelectorWheel="true"
-            app:prefId="@string/shared_prefs_tracker_config_min_interval"/>
+            app:prefKey="@string/shared_prefs_tracker_config_min_interval"
+            app:prefDescription="@string/time_interval_description"/>
 
         <es.uniovi.eii.contacttracker.fragments.settings.NumberPickerPreference
             android:selectable="true"
@@ -25,8 +26,9 @@
             app:defVal="5"
             app:prefTitle="@string/min_displacement_title"
             app:pickerTitle="Metros"
-            app:wrapSelectorWheelNp="true"
+            app:wrapSelectorWheel="true"
             app:prefKey="@string/shared_prefs_tracker_config_smallest_displacement"
+            app:prefDescription="@string/min_displacement_description"
             app:valueUnit="m"/>
     </PreferenceCategory>
 
@@ -40,8 +42,9 @@
             app:defVal="3"
             app:prefTitle="@string/check_scope_title"
             app:pickerTitle="Días"
-            app:wrapSelectorWheelNp="true"
+            app:wrapSelectorWheel="true"
             app:prefKey="@string/shared_prefs_risk_contact_check_scope"
+            app:prefDescription="@string/check_scope_description"
             app:valueUnit="días"/>
     </PreferenceCategory>
 

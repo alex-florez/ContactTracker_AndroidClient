@@ -4,11 +4,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="70dp"
+    android:paddingHorizontal="40dp"
     android:paddingVertical="20dp"
     android:hapticFeedbackEnabled="false"
     android:background="?attr/selectableItemBackground">
 
+    <!-- Título del Ajuste -->
     <TextView
         android:id="@+id/prefTitle"
         android:layout_width="match_parent"
@@ -16,11 +17,22 @@
         android:text="Título"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
+    <!-- Descripción del Ajuste -->
+    <TextView
+        android:id="@+id/prefDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textSize="12sp"/>
+
+    <!-- Valor del Ajuste -->
     <TextView
         android:id="@+id/prefValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Valor"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
 </LinearLayout>

@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Atributos XML para la custom preference del NumberPicker -->
+
+    <!-- Atributos comunes -->
+    <attr name="prefDescription" format="string"/>
+    <attr name="prefKey" format="string"/>
+    <attr name="prefTitle" format="string"/>
+    <attr name="wrapSelectorWheel" format="boolean"/>
+
+    <!-- Atributos XML para la Custom Preference del Minute Seconds Picker -->
     <declare-styleable name="MinuteSecondsPickerPreference">
+        <attr name="prefDescription"/>
+        <attr name="prefKey"/>
+        <attr name="prefTitle"/>
+        <attr name="wrapSelectorWheel"/>
         <attr name="minValueMinutes" format="integer|reference"/>
         <attr name="maxValueMinutes" format="integer|reference"/>
         <attr name="defValMinutes" format="integer|reference"/>
         <attr name="minValueSeconds" format="integer|reference"/>
         <attr name="maxValueSeconds" format="integer|reference"/>
         <attr name="defValSeconds" format="integer|reference"/>
-        <attr name="prefId" format="string"/>
-        <attr name="title" format="string" />
-        <attr name="wrapSelectorWheel" format="boolean"/>
     </declare-styleable>
 
+    <!-- Atributos XML para la Custom Preference del NumberPicker -->
     <declare-styleable name="NumberPickerPreference">
+        <attr name="prefDescription"/>
+        <attr name="prefKey"/>
+        <attr name="prefTitle"/>
+        <attr name="wrapSelectorWheel"/>
         <attr name="minValue" format="integer|reference"/>
         <attr name="maxValue" format="integer|reference"/>
         <attr name="defVal" format="integer|reference"/>
-        <attr name="prefKey" format="string"/>
-        <attr name="prefTitle" format="string" />
-        <attr name="wrapSelectorWheelNp" format="boolean"/>
         <attr name="pickerTitle" format="string"/>
         <attr name="valueUnit" format="string"/>
     </declare-styleable>

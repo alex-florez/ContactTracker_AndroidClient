@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.NumberPicker
+import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import es.uniovi.eii.contacttracker.R
@@ -37,8 +38,12 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
     private var wrapSelectorWheel = false
     /* Títulos */
     private var title = ""
+
     /* ID de la Shared Preference */
     private lateinit var prefId: String
+
+    /* Descripción del Ajuste */
+    private lateinit var prefDescription: String
 
     /* View Binding */
     private lateinit var binding: CustomPreferenceLayoutBinding
@@ -54,8 +59,9 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
             maxValueSeconds = a.getInteger(R.styleable.MinuteSecondsPickerPreference_maxValueSeconds, 10)
             defaultValueSeconds = a.getInteger(R.styleable.MinuteSecondsPickerPreference_defValSeconds, 0)
             wrapSelectorWheel = a.getBoolean(R.styleable.MinuteSecondsPickerPreference_wrapSelectorWheel, true)
-            title = a.getString(R.styleable.MinuteSecondsPickerPreference_title) ?: "title"
-            prefId = a.getString(R.styleable.MinuteSecondsPickerPreference_prefId) ?: "id"
+            title = a.getString(R.styleable.MinuteSecondsPickerPreference_prefTitle) ?: "title"
+            prefId = a.getString(R.styleable.MinuteSecondsPickerPreference_prefKey) ?: "id"
+            prefDescription = a.getString(R.styleable.MinuteSecondsPickerPreference_prefDescription) ?: "description"
             a.recycle()
         }
     }
@@ -84,9 +90,8 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
         minutesValue = min
         secondsValue = sec
         val millis = DateUtils.getMillis(min, sec)
-        with(sharedPrefs.edit()){
+        sharedPrefs.edit {
             putLong(prefId, millis)
-            apply()
         }
         // Actualizar componente de la Preference
         val text = "$min min $sec sec"
@@ -139,5 +144,6 @@ class MinuteSecondsPickerPreference(context: Context?, attrs: AttributeSet?) :
         val text = "$minutesValue min $secondsValue sec"
         binding.prefValue.text = text
         binding.prefTitle.text = title
+        binding.prefDescription.text = prefDescription
     }
 }

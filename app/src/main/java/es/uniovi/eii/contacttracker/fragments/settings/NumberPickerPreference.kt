@@ -8,6 +8,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.NumberPicker
+import android.widget.TextView
+import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import es.uniovi.eii.contacttracker.R
@@ -34,6 +36,9 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
     /* ID de la Shared Preference */
     private lateinit var prefId: String
 
+    /* Descripción del Ajuste */
+    private lateinit var prefDescription: String
+
     /* View Binding */
     private lateinit var binding: CustomPreferenceLayoutBinding
 
@@ -48,7 +53,8 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
             pickerTitle = a.getString(R.styleable.NumberPickerPreference_pickerTitle) ?: "pickerTitle"
             valueUnit = a.getString(R.styleable.NumberPickerPreference_valueUnit) ?: ""
             prefId = a.getString(R.styleable.NumberPickerPreference_prefKey) ?: "id"
-            wrapSelectorWheel = a.getBoolean(R.styleable.NumberPickerPreference_wrapSelectorWheelNp, true)
+            wrapSelectorWheel = a.getBoolean(R.styleable.NumberPickerPreference_wrapSelectorWheel, true)
+            prefDescription = a.getString(R.styleable.NumberPickerPreference_prefDescription) ?: "description"
             a.recycle()
         }
     }
@@ -74,9 +80,8 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
      */
     private fun persist(value: Int){
         this.value = value
-        with(sharedPrefs.edit()){
+        sharedPrefs.edit {
             putInt(prefId, value)
-            apply()
         }
         // Actualizar componente de la Preference
         val textValue = "$value $valueUnit"
@@ -91,11 +96,14 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
         val view = inflater.inflate(R.layout.number_picker_layout, binding.root, false)
         /* Number Picker */
         val picker = view.findViewById<NumberPicker>(R.id.numberPicker)
+        val title = view.findViewById<TextView>(R.id.numberPickerTitle)
         /* Valores mínimo, máximo y actual */
         picker.minValue = minValue
         picker.maxValue = maxValue
         picker.value = value
         picker.wrapSelectorWheel = wrapSelectorWheel
+        /* Título del Picker */
+        title.text = pickerTitle
         val builder = AlertDialog.Builder(context)
         builder.setView(view)
         builder.setPositiveButton(context.getString(R.string.accept)){_, _ ->
@@ -116,5 +124,6 @@ class NumberPickerPreference(context: Context?, attrs: AttributeSet?) :
         val valueText = "$value $valueUnit"
         binding.prefValue.text = valueText
         binding.prefTitle.text = title
+        binding.prefDescription.text = prefDescription
     }
 }
