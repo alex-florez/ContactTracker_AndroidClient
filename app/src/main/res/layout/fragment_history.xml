@@ -1,119 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.history.LocationHistoryFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <data>
+        <variable
+            name="du"
+            type="es.uniovi.eii.contacttracker.util.DateUtils" />
+        <variable
+            name="viewModel"
+            type="es.uniovi.eii.contacttracker.viewmodels.LocationHistoryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:context=".fragments.history.LocationHistoryFragment">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtInputLayoutHistoryDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:hint="@string/date">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtInputEditTextHistoryDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/date"
-                android:inputType="date"
-                android:text="12/12/2020" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Caja con datos generales y botón de mostrar mapa -->
         <LinearLayout
-            android:id="@+id/historyDataBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="invisible">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginHorizontal="10dp">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="bottom">
-                    <TextView
-                        android:id="@+id/txtNumberOfLocations"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="bottom"
-                        android:text="10"
-                        android:textColor="@color/red1"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/locations"
-                        android:layout_gravity="bottom"
-                        android:layout_marginEnd="8dp"/>
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShowMap"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_gravity="center"
-                    style="?attr/materialButtonOutlinedStyle"
-                    app:icon="@android:drawable/ic_dialog_map"/>
-                <ImageButton
-                    android:id="@+id/btnDeleteLocationsByDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:backgroundTint="@color/red1"
-                    android:src="@drawable/ic_delete_bin"
-                    android:contentDescription="@string/contentDescriptionDeleteLocationsByDate" />
-            </LinearLayout>
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="@android:color/darker_gray"/>
-        </LinearLayout>
-        <!-- RecyclerView con las localizaciones -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewUserLocations"
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp" />
-    </LinearLayout>
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/labelHistoryNoLocations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/labelHistoryNoLocations"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtInputLayoutHistoryDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:hint="@string/date">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtInputEditTextHistoryDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/date"
+                    android:inputType="date"
+                    android:text='@{du.formatDate(viewModel.dateFilter, "dd/MM/yyyy")}' />
+            </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Caja con datos generales y botón de mostrar mapa -->
+            <LinearLayout
+                android:id="@+id/historyDataBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                app:visibility="@{viewModel.numberOfLocations > 0}">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="10dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="bottom">
+                        <TextView
+                            android:id="@+id/txtNumberOfLocations"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_gravity="bottom"
+                            android:text="@{viewModel.numberOfLocations.toString()}"
+                            android:textColor="@color/red1"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/locations"
+                            android:layout_gravity="bottom"
+                            android:layout_marginEnd="8dp"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnShowMap"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        android:layout_marginEnd="2dp"
+                        android:layout_gravity="center"
+                        style="?attr/materialButtonOutlinedStyle"
+                        app:icon="@android:drawable/ic_dialog_map"/>
+                    <ImageButton
+                        android:id="@+id/btnDeleteLocationsByDate"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:backgroundTint="@color/red1"
+                        android:src="@drawable/ic_delete_bin"
+                        android:contentDescription="@string/contentDescriptionDeleteLocationsByDate" />
+                </LinearLayout>
+                <!-- Spacer -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@android:color/darker_gray"/>
+            </LinearLayout>
+            <!-- RecyclerView con las localizaciones -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewUserLocations"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- Label para lista de localizaciones vacía -->
+        <TextView
+            android:id="@+id/labelHistoryNoLocations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/labelHistoryNoLocations"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            app:visibility="@{viewModel.noLocations}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -49,12 +49,6 @@ class LocationHistoryFragment : Fragment() {
     private lateinit var userLocationAdapter: UserLocationAdapter
 
     /**
-     * Fecha seleccionada.
-     */
-    private lateinit var selectedDate: Date
-
-
-    /**
      * Material DatePicker
      */
     private val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
@@ -78,38 +72,24 @@ class LocationHistoryFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.du = DateUtils
 
         initRecyclerView()
         setDatePicker()
         setListeners()
+        setObservers()
 
-        // Llamada al ViewModel para obtener las localizaciones por fecha.
-        Transformations.switchMap(viewModel.dateFilter){date ->
-            selectedDate = date
-            viewModel.getAllUserLocationsByDate(date)
-        }.observe(viewLifecycleOwner, { locationList ->
-            // Comprobar el scroll
-            userLocationAdapter.submitList(locationList) {
-                binding.recyclerViewUserLocations.scrollToPosition(0)
-            }
-            toggleNoLocationsLabel(locationList) // Etiqueta de lista vacía
-            showNumberOfLocations(locationList.size) // Caja de información general
-        })
 
-        // Observer para la eliminación de localizaciones
-        viewModel.deletedRows.observe(viewLifecycleOwner, {
-            AndroidUtils.snackbar(getString(R.string.deleteLocationsText, it), Snackbar.LENGTH_LONG,
-                binding.root, requireActivity())
-        })
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        updateSelectedDate(Date())
-        viewModel.deletedRows.value// Restaurar LiveData de localizaciones eliminadas
+        updateSelectedDate(Date()) // Establecer la fecha actual como seleccionada.
     }
 
     /**
@@ -143,29 +123,23 @@ class LocationHistoryFragment : Fragment() {
     }
 
     /**
-     * Comprueba si hay datos para mostrar en el adapter de
-     * localizaciones y si no hay muestra el label de texto
-     * correspondiente.
-     *
-     * @param locationList lista de localizaciones.
+     * Inicializa y configura los observers para escuchar los
+     * eventos de los LiveData del ViewModel.
      */
-    private fun toggleNoLocationsLabel(locationList: List<UserLocation>){
-        if(locationList.isEmpty())
-            binding.labelHistoryNoLocations.visibility = TextView.VISIBLE
-        else
-            binding.labelHistoryNoLocations.visibility = TextView.GONE
-    }
+    private fun setObservers() {
+        viewModel.apply {
+            locations.observe(viewLifecycleOwner) { locationList ->
+                // Comprobar el scroll
+                userLocationAdapter.submitList(locationList) {
+                    binding.recyclerViewUserLocations.scrollToPosition(0)
+                }
+            }
 
-    /**
-     * Muestra el número de localizaciones registradas
-     * hasta el momento.
-     */
-    private fun showNumberOfLocations(number: Int){
-        if(number == 0){
-            binding.historyDataBox.visibility = View.INVISIBLE
-        } else {
-            binding.historyDataBox.visibility = View.VISIBLE
-            binding.txtNumberOfLocations.text = number.toString()
+            // Eliminación de localizaciones
+            deletedRows.observe(viewLifecycleOwner, {
+                AndroidUtils.snackbar(getString(R.string.deleteLocationsText, it), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            })
         }
     }
 
@@ -176,11 +150,10 @@ class LocationHistoryFragment : Fragment() {
         val actualDate = Date()
         datePickerBuilder.setTitleText(R.string.history_date_picker_title)
         datePickerBuilder.setSelection(actualDate.time)
-        selectedDate = actualDate
         datePicker = datePickerBuilder.build()
-        // Listener
-        datePicker.addOnPositiveButtonClickListener {
-            updateSelectedDate(Date(it as Long))
+        // Listener de selección de fecha.
+        datePicker.addOnPositiveButtonClickListener { date ->
+            updateSelectedDate(Date(date as Long))
         }
     }
 
@@ -203,12 +176,11 @@ class LocationHistoryFragment : Fragment() {
     }
 
     /**
-     * Se encarga de actualizar el filtro con la fecha
-     * seleccionada mediante el DatePicker.
+     * Se encarga de actualizar el filtro de fecha del ViewModel
+     * con la fecha pasada como parámetro.
      */
     private fun updateSelectedDate(date: Date){
-        viewModel.dateFilter.value = date
-        binding.txtInputEditTextHistoryDate.setText(DateUtils.formatDate(date, "dd/MM/YYYY"))
+        viewModel.setDateFilter(date)
     }
 
     /**
@@ -217,16 +189,15 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun showMap(){
         // Recuperar las localizaciones de la fecha seleccionada
-        viewModel.getAllUserLocationsByDate(selectedDate).observe(viewLifecycleOwner) { locations ->
+        viewModel.locations.value?.let {
             requireActivity().supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .replace(R.id.main_fragment_container, MapsFragment.newInstance(locations))
+                .replace(R.id.main_fragment_container, MapsFragment.newInstance(it))
                 .addToBackStack("MapsFragment")
                 .commit()
         }
     }
-
 
     companion object {
         /**
