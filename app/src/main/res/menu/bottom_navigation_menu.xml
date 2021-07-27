@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/bottomMenuOption1"
+        android:id="@+id/tracker"
         android:title="@string/bottom_menu_item_1"
         android:icon="@drawable/ic_location_tracker"/>
     <item
-        android:id="@+id/bottomMenuOption2"
+        android:id="@+id/notifyPositive"
         android:title="@string/bottom_menu_item_2"
         android:icon="@drawable/ic_pcr"/>
     <item
-        android:id="@+id/bottomMenuOption3"
+        android:id="@+id/riskContacts"
         android:title="@string/bottom_menu_item_3"
         android:icon="@drawable/ic_riskcontacts"/>
     <item
-        android:id="@+id/bottomMenuOption4"
+        android:id="@+id/locationHistory"
         android:title="@string/bottom_menu_item_4"
         android:icon="@drawable/ic_location_history"/>
 </menu>

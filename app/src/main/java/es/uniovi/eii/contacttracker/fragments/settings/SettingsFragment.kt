@@ -24,10 +24,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        // Esconder menú de la Toolbar
-        for(item in menu.iterator()){
-            item.isVisible = false
-        }
-        super.onPrepareOptionsMenu(menu)
+//        // Esconder menú de la Toolbar
+//        for(item in menu.iterator()){
+//            item.isVisible = false
+//        }
+//        super.onPrepareOptionsMenu(menu)
     }
 }

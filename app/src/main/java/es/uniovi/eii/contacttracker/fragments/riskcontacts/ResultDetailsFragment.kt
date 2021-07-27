@@ -180,12 +180,12 @@ class ResultDetailsFragment : Fragment() {
      * Muestra el contacto de riesgo indicado en un mapa de Google Maps.
      */
     private fun showRiskContactInMap(riskContact: RiskContact) {
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            .replace(R.id.main_fragment_container, RiskContactMapFragment.newInstance(riskContact))
-            .addToBackStack("RiskContactMapFragment")
-            .commit()
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+//            .replace(R.id.main_fragment_container, RiskContactMapFragment.newInstance(riskContact))
+//            .addToBackStack("RiskContactMapFragment")
+//            .commit()
     }
 
     companion object {

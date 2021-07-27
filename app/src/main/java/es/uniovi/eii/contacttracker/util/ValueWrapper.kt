@@ -14,4 +14,6 @@ sealed class ValueWrapper<out T> {
 
     /* Error */
     data class Fail(val error: Error): ValueWrapper<Nothing>()
+
+
 }

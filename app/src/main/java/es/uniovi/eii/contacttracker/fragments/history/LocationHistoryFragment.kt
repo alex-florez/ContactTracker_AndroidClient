@@ -189,14 +189,14 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun showMap(){
         // Recuperar las localizaciones de la fecha seleccionada
-        viewModel.locations.value?.let {
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .replace(R.id.main_fragment_container, MapsFragment.newInstance(it))
-                .addToBackStack("MapsFragment")
-                .commit()
-        }
+//        viewModel.locations.value?.let {
+//            requireActivity().supportFragmentManager
+//                .beginTransaction()
+//                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+//                .replace(R.id.main_fragment_container, MapsFragment.newInstance(it))
+//                .addToBackStack("MapsFragment")
+//                .commit()
+//        }
     }
 
     companion object {

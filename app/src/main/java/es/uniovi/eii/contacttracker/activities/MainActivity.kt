@@ -8,6 +8,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
@@ -33,14 +40,29 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var binding: ActivityMainBinding
 
+    /**
+     * Nav Controller: Controla y gestiona la navegación a través
+     * del Grafo de Navegación general de la app.
+     */
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         /* Re-establecer el theme principal (quitar SplashScreen) */
         setTheme(R.style.Theme_ContactTracker)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUp()
+
+        initNavController() // Referencia al NavController
+        setUpAppBar() // Configurar App Bar
+        setUpBottomNavigation() // Configurar Bottom Navigation
+
         processIntent(intent)
+    }
+
+    /* Redefine el comportamiento al pulsar sobre la flecha de atrás. */
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     /**
@@ -63,21 +85,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Callback para los eventos de Click sobre las opciones
-     * del menú de la Toolbar.
+     * Callback para los eventos de Click sobre las opciones del menú de la Toolbar.
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.appSettings -> {
-                goToSettings()
-
-                true
-            }
-            R.id.privacyPolicy -> {
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+        // Derivar en el NavController la navegación de las opciones de menú
+        return item.onNavDestinationSelected(navController)
+                || super.onOptionsItemSelected(item)
     }
 
     /**
@@ -85,11 +98,44 @@ class MainActivity : AppCompatActivity() {
      * aplicación.
      */
     private fun goToSettings(){
-        supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.slide_out_top)
-            .replace(R.id.main_fragment_container, SettingsFragment())
-            .addToBackStack("Settings")
-            .commit()
+//        supportFragmentManager.beginTransaction()
+//            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.slide_out_top)
+//            .replace(R.id.main_fragment_container, SettingsFragment())
+//            .addToBackStack("Settings")
+//            .commit()
+    }
+
+    /**
+     * Inicializa y recupera una referencia al Nav Controller.
+     */
+    private fun initNavController() {
+        // NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+    }
+
+    /**
+     * Inicializa y configura la AppBar junto con el Nav Controller.
+     */
+    private fun setUpAppBar() {
+        // Varios destinos de alto nivel (sin Back Button)
+        val appBarConfig = AppBarConfiguration(setOf(
+            R.id.tracker,
+            R.id.notifyPositive,
+            R.id.riskContacts,
+            R.id.locationHistory))
+        // Vincular NavController con la ActionBar
+        setupActionBarWithNavController(navController, appBarConfig)
+    }
+
+    /**
+     * Inicializa y configura la navegación principal de la aplicación.
+     * Vincula el Bottom Navigation View junto con las opciones de menú y
+     * el Navigation Controller que gestiona el grafo de navegación.
+     */
+    private fun setUpBottomNavigation() {
+        // Vincular BottomNavigationView + NavController
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
     }
 
     /**
@@ -114,68 +160,11 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showRiskContactResult(extras: Bundle) {
         val riskContactResult = extras.getParcelable<RiskContactResult>(Constants.EXTRA_RISK_CONTACT_RESULT)
-        if(riskContactResult != null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
-                .commit()
-        }
-    }
-
-    /**
-     * Se encarga de realizar las operaciones iniciales
-     * una vez creada la Activity.
-     */
-    private fun setUp(){
-        setListeners() // Listeners
-
-        // Establecer el fragment inicial como seleccionado
-        binding.bottomNavigationView.selectedItemId = R.id.bottomMenuOption1
-    }
-
-    /**
-     * Método encargado de establecer y registrar los listeners
-     * correspondientes a los componentes de la vista.
-     */
-    private fun setListeners(){
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
-            setFragment(it.itemId)
-            true
-        }
-    }
-
-    /**
-     * Reemplaza el fragment actual en el contenedor principal de Fragments
-     * por el fragment asociado al id del item de menú pasado como parámetro.
-     *
-     * @param itemId id del item del menú inferior.
-     */
-    private fun setFragment(itemId: Int){
-        supportFragmentManager.beginTransaction().apply {
-           getMenuFragment(itemId).let{
-                replace(R.id.main_fragment_container, it)
-                commit()
-            }
-        }
-    }
-
-    /**
-     * Recibe como parámetro un id que se corresponde con los
-     * ID's de los items de menú, y devuelve una nueva instancia
-     * del Fragment asociado a dicha opción de menú.
-     */
-    private fun getMenuFragment(id: Int): Fragment {
-        val fm = supportFragmentManager
-        // Vaciar BackStack
-        for(i in 0..fm.backStackEntryCount){
-            fm.popBackStack()
-        }
-        return when(id){
-            R.id.bottomMenuOption1 -> TrackLocationTabsFragment()
-            R.id.bottomMenuOption2 -> NotifyPositiveFragment()
-            R.id.bottomMenuOption3 -> RiskContactTabsFragment()
-            R.id.bottomMenuOption4 -> LocationHistoryFragment()
-            else -> DefaultBlankFragment()
-        }
+//        if(riskContactResult != null) {
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
+//                .commit()
+//        }
     }
 
 }

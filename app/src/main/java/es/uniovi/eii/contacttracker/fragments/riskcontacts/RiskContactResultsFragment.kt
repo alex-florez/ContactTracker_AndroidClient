@@ -127,12 +127,12 @@ class RiskContactResultsFragment : Fragment() {
      * @param riskContactResult Resultado de la comprobación.
      */
     private fun showResultDetails(riskContactResult: RiskContactResult){
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
-            .addToBackStack("ResultDetailsFragment")
-            .commit()
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+//            .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
+//            .addToBackStack("ResultDetailsFragment")
+//            .commit()
     }
 
     companion object {
