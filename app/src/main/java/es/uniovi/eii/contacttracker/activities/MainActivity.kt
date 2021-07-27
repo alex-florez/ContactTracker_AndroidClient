@@ -94,18 +94,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Muestra el fragmento de configuración general de la
-     * aplicación.
-     */
-    private fun goToSettings(){
-//        supportFragmentManager.beginTransaction()
-//            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.slide_out_top)
-//            .replace(R.id.main_fragment_container, SettingsFragment())
-//            .addToBackStack("Settings")
-//            .commit()
-    }
-
-    /**
      * Inicializa y recupera una referencia al Nav Controller.
      */
     private fun initNavController() {

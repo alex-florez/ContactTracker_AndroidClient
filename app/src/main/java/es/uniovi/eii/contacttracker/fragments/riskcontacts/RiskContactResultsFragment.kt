@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -121,18 +122,13 @@ class RiskContactResultsFragment : Fragment() {
     }
 
     /**
-     * Inicia una transacción para mostrar el fragment con los
-     * detalles de un resultado de la comprobación.
+     * Navega hasta el fragment que muestra los detalles de un resultado.
      *
      * @param riskContactResult Resultado de la comprobación.
      */
     private fun showResultDetails(riskContactResult: RiskContactResult){
-//        requireActivity().supportFragmentManager
-//            .beginTransaction()
-//            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-//            .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
-//            .addToBackStack("ResultDetailsFragment")
-//            .commit()
+        val action = RiskContactTabsFragmentDirections.showResultDetails(riskContactResult)
+        findNavController().navigate(action)
     }
 
     companion object {

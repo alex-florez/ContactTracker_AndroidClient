@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.fragments.maps
+package es.uniovi.eii.contacttracker.views
 
 import android.content.Context
 import android.util.AttributeSet

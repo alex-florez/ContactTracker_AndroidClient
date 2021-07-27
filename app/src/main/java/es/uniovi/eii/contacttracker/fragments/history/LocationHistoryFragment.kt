@@ -5,9 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Transformations
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -15,7 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.adapters.locations.UserLocationAdapter
 import es.uniovi.eii.contacttracker.databinding.FragmentHistoryBinding
-import es.uniovi.eii.contacttracker.fragments.maps.MapsFragment
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.LocationUtils
@@ -189,14 +187,10 @@ class LocationHistoryFragment : Fragment() {
      */
     private fun showMap(){
         // Recuperar las localizaciones de la fecha seleccionada
-//        viewModel.locations.value?.let {
-//            requireActivity().supportFragmentManager
-//                .beginTransaction()
-//                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-//                .replace(R.id.main_fragment_container, MapsFragment.newInstance(it))
-//                .addToBackStack("MapsFragment")
-//                .commit()
-//        }
+        viewModel.locations.value?.let {
+            val action = LocationHistoryFragmentDirections.showLocationsInMap(it.toTypedArray())
+            findNavController().navigate(action)
+        }
     }
 
     companion object {

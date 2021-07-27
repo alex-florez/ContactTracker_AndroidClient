@@ -11,7 +11,7 @@
         android:id="@+id/tracker"
         android:name="es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment"
         android:label="Rastreo de ubicación"
-        tools:layout="@layout/fragment_track_location_tabs"/>
+        tools:layout="@layout/fragment_tracker"/>
 
     <fragment
         android:id="@+id/notifyPositive"
@@ -23,13 +23,29 @@
         android:id="@+id/riskContacts"
         android:name="es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactTabsFragment"
         android:label="Contactos de Riesgo"
-        tools:layout="@layout/fragment_risk_contact_tabs"/>
+        tools:layout="@layout/fragment_risk_contact">
+        <action
+            android:id="@+id/showResultDetails"
+            app:destination="@id/resultDetailsFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/locationHistory"
         android:name="es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment"
         android:label="Histórico"
-        tools:layout="@layout/fragment_history"/>
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/showLocationsInMap"
+            app:destination="@id/historyMapsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
 
     <!-- Fragmentos del menú de opciones de la Toolbar -->
     <fragment
@@ -37,5 +53,28 @@
         android:name="es.uniovi.eii.contacttracker.fragments.settings.SettingsFragment"
         android:label="Configuración"
         tools:layout="@layout/custom_preference_layout"/>
+
+
+    <!-- Fragmento de Detalles de un Resultado de la comprobación de contactos de riesgo -->
+    <fragment
+        android:id="@+id/resultDetailsFragment"
+        android:name="es.uniovi.eii.contacttracker.fragments.riskcontacts.ResultDetailsFragment"
+        android:label="Detalles del resultado"
+        tools:layout="@layout/fragment_result_details" >
+        <argument
+            android:name="result"
+            app:argType="es.uniovi.eii.contacttracker.model.RiskContactResult" />
+    </fragment>
+
+    <!-- Fragmento del Mapa de Localizaciones del Histórico -->
+    <fragment
+        android:id="@+id/historyMapsFragment"
+        android:name="es.uniovi.eii.contacttracker.fragments.history.HistoryMapFragment"
+        android:label="Mapa"
+        tools:layout="@layout/fragment_tracker_maps" >
+        <argument
+            android:name="locations"
+            app:argType="es.uniovi.eii.contacttracker.model.UserLocation[]" />
+    </fragment>
 
 </navigation>

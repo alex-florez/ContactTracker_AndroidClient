@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
-import es.uniovi.eii.contacttracker.fragments.maps.MapsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.LocationAlarmsFragment
 import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
+import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerMapFragment
 
 private const val NUM_PAGES = 3
 
@@ -26,7 +26,7 @@ class TrackLocationTabsPageAdapter(
     override fun createFragment(position: Int): Fragment {
         when(position){
             0 -> return TrackerFragment()
-            1 -> return MapsFragment()
+            1 -> return TrackerMapFragment()
             2 -> return LocationAlarmsFragment()
         }
         return DefaultBlankFragment()

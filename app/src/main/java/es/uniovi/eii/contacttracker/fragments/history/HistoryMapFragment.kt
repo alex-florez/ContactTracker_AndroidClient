@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.fragments.maps
+package es.uniovi.eii.contacttracker.fragments.history
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,23 +11,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.databinding.FragmentMapsBinding
+import es.uniovi.eii.contacttracker.databinding.FragmentHistoryMapsBinding
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.util.LocationUtils
 
 
 /**
  * Fragmento que contiene un mapa de Google Maps para visualizar
- * un itinerario de localizaciones mediante el trazado de una línea,
- * además de recibir actualizaciones en tiempo real de localizaciones.
+ * un itinerario con el Histórico de localizaciones mediante el trazado de una línea.
+ *
+ * Recibe actualizaciones de localización cuando el rastreador de ubicación está activado.
  */
 @AndroidEntryPoint
-class MapsFragment : Fragment(), OnMapReadyCallback {
+class HistoryMapFragment : Fragment(), OnMapReadyCallback {
 
     /**
      * Referencia al mapa.
@@ -42,7 +44,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     /**
      * View binding.
      */
-    private lateinit var binding: FragmentMapsBinding
+    private lateinit var binding: FragmentHistoryMapsBinding
 
     /**
      * Animaciones de los FABs para seleccionar la capa.
@@ -79,6 +81,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private var newLocationBroadcastReceiver: NewLocationBroadcastReceiver? = null
 
     /**
+     * Argumentos.
+     */
+    private val args: HistoryMapFragmentArgs by navArgs()
+
+    /**
      * Broadcast receiver para las localizaciones obtenidas
      * mediante el servicio de localización actualmente activo.
      */
@@ -97,11 +104,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentMapsBinding.inflate(inflater, container, false)
+        binding = FragmentHistoryMapsBinding.inflate(inflater, container, false)
+
         // Inicializar Map View
         initMap(savedInstanceState)
-        // Recuperar localizaciones
-        locations = arguments?.getParcelableArrayList(LOCATIONS) ?: listOf()
+
+        // Recuperar las localizaciones recibidas como argumento
+        locations = args.locations.toList()
+
         setListeners()
         return binding.root
     }
@@ -369,7 +379,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
          */
         @JvmStatic
         fun newInstance(userLocations: List<UserLocation>) =
-            MapsFragment().apply {
+            HistoryMapFragment().apply {
                 val list = arrayListOf<UserLocation>()
                 list.addAll(userLocations)
                 arguments = Bundle().apply {

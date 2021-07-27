@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.history.HistoryMapFragment">
+
+    <!-- Vista con el mapa de Google Maps -->
+    <es.uniovi.eii.contacttracker.views.MapViewSwipeBorder
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- FAB buttons para las capas -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMapType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#B4DEF3"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_layers"
+        app:layout_constraintBottom_toBottomOf="@+id/map_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map_view"
+        app:layout_constraintVertical_bias="0.95"
+        android:contentDescription="@string/fabMapTypeDescription" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabTypeNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:clickable="true"
+        android:contentDescription="@string/fabMapNormalDescription"
+        android:focusable="true"
+        android:src="@android:drawable/ic_menu_mapmode"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/fabMapType"
+        app:layout_constraintEnd_toEndOf="@+id/fabMapType" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabTypeSatellite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:contentDescription="@string/fabMapSatelliteDescription"
+        android:focusable="true"
+        android:src="@drawable/ic_satellite"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/fabTypeNormal"
+        app:layout_constraintEnd_toEndOf="@+id/fabTypeNormal" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabTypeTerrain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/fabMapSatelliteDescription"
+        android:focusable="true"
+        android:src="@drawable/ic_terrain"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/fabTypeSatellite"
+        app:layout_constraintEnd_toEndOf="@+id/fabTypeSatellite" />
+
+    <!-- Checkbox para ocultar los marcadores -->
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkboxHideMarkers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:background="@color/grey2"
+        android:padding="6dp"
+        android:text="@string/ocultar_marcadores"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
