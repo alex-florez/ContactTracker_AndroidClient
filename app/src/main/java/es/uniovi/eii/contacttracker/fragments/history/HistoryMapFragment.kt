@@ -180,8 +180,8 @@ class HistoryMapFragment : Fragment(), OnMapReadyCallback {
             }
 
             // Checkbox para ocultar marcadores
-            checkboxHideMarkers.setOnCheckedChangeListener { _, isChecked ->
-                toggleMarkers(!isChecked)
+            chipShowMarkers.setOnCheckedChangeListener { _, isChecked ->
+                toggleMarkers(isChecked)
             }
         }
     }
@@ -197,8 +197,8 @@ class HistoryMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     /**
-     * Alterna entre activar o desactivar los marcadores
-     * del mapa.
+     * Alterna entre activar o desactivar los marcadores del mapa. Si recibe true
+     * como parámetro, se muestran todos los marcadores.
      */
     private fun toggleMarkers(flag: Boolean) {
         markersEnabled = flag

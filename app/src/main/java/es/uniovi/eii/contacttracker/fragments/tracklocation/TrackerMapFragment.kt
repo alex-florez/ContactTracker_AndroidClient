@@ -170,8 +170,8 @@ class TrackerMapFragment : Fragment(), OnMapReadyCallback {
             }
 
             // Checkbox para ocultar marcadores
-            checkboxHideMarkers.setOnCheckedChangeListener { _, isChecked ->
-                toggleMarkers(!isChecked)
+            chipShowMarkers.setOnCheckedChangeListener { _, isChecked ->
+                toggleMarkers(isChecked)
             }
         }
     }

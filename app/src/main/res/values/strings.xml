@@ -152,7 +152,10 @@
     <string name="fabMapNormalDescription">FAB para seleccionar tipo normal de mapa</string>
     <string name="fabMapSatelliteDescription">FAB para seleccionar tipo satélite de mapa</string>
     <string name="showInMapContentDescription">Visualizar en el mapa</string>
-    <string name="ocultar_marcadores">Ocultar marcadores</string>
+    <string name="hide_markers">Ocultar marcadores</string>
+    <string name="show_markers">Mostrar marcadores</string>
+    <string name="markers">Marcadores</string>
+
 
     <!-- Política de Privacidad -->
     <string name="personalDataConsent">Consentimiento de Protección de Datos</string>
