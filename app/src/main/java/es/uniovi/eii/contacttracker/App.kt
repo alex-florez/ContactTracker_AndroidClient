@@ -54,7 +54,7 @@ class App : Application() {
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         createNotificationChannels()
         initSharedPrefs()
-//        simulate()
+        simulate()
     }
 
 
@@ -124,8 +124,10 @@ class App : Application() {
         } else {
             val locations = LocationUtils.parseLocationsFile("user.txt", this)
             scope.launch {
-                locations.forEach {
-                    repo.insertUserLocation(it)
+                if(repo.getAllUserLocationsList().isEmpty()) {
+                    locations.forEach {
+                        repo.insertUserLocation(it)
+                    }
                 }
             }
         }

@@ -9,9 +9,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.NavDeepLinkBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.Constants
@@ -106,8 +109,8 @@ class RiskContactManager @Inject constructor(
             }
         }
         /* Almacenar el resultado en la base de datos local. */
-        riskContactRepository.insert(result)
-
+        val id = riskContactRepository.insert(result)
+        result.resultId = id
         /* Mostrar Notificación con los resultados. */
         with(NotificationManagerCompat.from(ctx)){
             notify(RESULT_NOTIFICATION_ID, createNotification(result))
@@ -213,11 +216,16 @@ class RiskContactManager @Inject constructor(
             ctx.getString(R.string.resultNotificationHealthy)
         }
         // Intent para ver los resultados de la comprobación.
-        val pendingIntent: PendingIntent = Intent(ctx, MainActivity::class.java).let {
-            it.action = Constants.ACTION_SHOW_RISK_CONTACT_RESULT
-            it.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
-            PendingIntent.getActivity(ctx, 0, it, 0)
-        }
+//        val pendingIntent: PendingIntent = Intent(ctx, MainActivity::class.java).let {
+//            it.action = Constants.ACTION_SHOW_RISK_CONTACT_RESULT
+//            it.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
+//            PendingIntent.getActivity(ctx, 0, it, 0)
+//        }
+        val pendingIntent = NavDeepLinkBuilder(ctx)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.resultDetailsFragment)
+            .setArguments(bundleOf("result" to riskContactResult))
+            .createPendingIntent()
 
         return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
             .setContentTitle(ctx.getString(R.string.resultNotificationTitle))

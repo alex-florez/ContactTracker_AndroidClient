@@ -25,6 +25,9 @@ interface UserLocationDao {
     @Query("SELECT * FROM user_locations ORDER BY timestamp DESC")
     fun getAll(): LiveData<List<UserLocation>>
 
+    @Query("SELECT * from user_locations ORDER BY timestamp DESC")
+    fun getAllList(): List<UserLocation>
+
     @Query("SELECT * FROM user_locations WHERE date(timestamp) = :date ORDER BY timestamp DESC")
     fun getAllByDateString(date: String): LiveData<List<UserLocation>>
 

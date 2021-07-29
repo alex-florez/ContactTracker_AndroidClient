@@ -31,11 +31,12 @@ class RiskContactRepository @Inject constructor(
 
     /**
      * Inserta en la base de datos el resultado de la comprobación
-     * de contactos de riesgo.
+     * de contactos de riesgo. Devuelve el ID del resultado recién insertado.
      *
      * @param riskContactResult Resultado de la comprobación de contactos de riesgo.
+     * @return ID del Resultado de la comprobación.
      */
-    suspend fun insert(riskContactResult: RiskContactResult) {
+    suspend fun insert(riskContactResult: RiskContactResult): Long {
         val wrapper = toResultWithRiskContacts(riskContactResult)
         // Insertar Resultado
         val resultId = riskContactDao.insert(wrapper.riskContactResult)
@@ -49,6 +50,7 @@ class RiskContactRepository @Inject constructor(
             }
             riskContactDao.insertRiskContactLocations(it.riskContactLocations)
         }
+        return resultId
     }
 
     /**

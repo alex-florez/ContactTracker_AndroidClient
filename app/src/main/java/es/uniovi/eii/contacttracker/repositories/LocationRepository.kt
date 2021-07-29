@@ -48,6 +48,8 @@ class LocationRepository @Inject constructor(
         return userLocationDao.getAllByDateString(dateString)
     }
 
+    fun getAllUserLocationsList(): List<UserLocation> = userLocationDao.getAllList()
+
     /**
      * Elimina todas las localizaciones del usuario de
      * la base de datos y devuelve el número de filas eliminadas.

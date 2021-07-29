@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let{
-            processIntent(it)
+//            processIntent(it)
         }
     }
 
