@@ -15,34 +15,31 @@
         android:layout_height="match_parent"
         tools:context=".fragments.notifypositive.NotifyPositiveFragment">
 
+        <!-- Párrafos explicativos -->
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="@string/notifyAPositive"
-            android:textAppearance="?attr/textAppearanceHeadline4"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:justificationMode="inter_word"
+            android:text="@string/notifyExplanation1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.172"
+            app:layout_constraintHorizontal_bias="0.47"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.023" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/notifyExplanation1"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
             android:justificationMode="inter_word"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/notifyExplanation2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.888"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.025" />
+            app:layout_constraintTop_toBottomOf="@id/textView1"/>
 
         <CheckBox
             android:id="@+id/checkBoxAddPersonalData"
@@ -56,62 +53,61 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout5"
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:justificationMode="inter_word"
+            android:text="@string/notifyExplanation3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkBoxAddPersonalData"/>
+
+        <!-- Botón para ver la política de privacidad -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btnPrivacyPolicy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:text="@string/privacyPolicy"
+            android:layout_marginStart="20dp"
+            app:chipIcon="@drawable/ic_privacy"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.18"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxAddPersonalData">
+            app:layout_constraintTop_toBottomOf="@id/textView3" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/seePrivacyPolicy"
-                android:layout_marginEnd="10dp"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/btnPrivacyPolicy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/privacyPolicy"
-                app:chipIcon="@drawable/ic_privacy"/>
-        </LinearLayout>
-
+        <!-- Separador -->
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="20dp"
             android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout5"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@id/btnPrivacyPolicy" />
 
+        <!-- Indicador del Periodo de Infectividad -->
         <LinearLayout
             android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+            app:layout_constraintTop_toBottomOf="@+id/view"
             app:layout_constraintVertical_bias="0.02">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="8dp"
                 android:justificationMode="inter_word"
-                android:text="@string/notifyExplanation2" />
+                android:text="@string/notifyExplanation4" />
 
             <TextView
                 android:id="@+id/txtInfectivityPeriod"
@@ -136,17 +132,19 @@
                 app:visibility="@{viewModel.loadingInfectivity}" />
         </LinearLayout>
 
+        <!-- Botón para notificar el Positivo -->
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
-            app:layout_constraintVertical_bias="0.17">
+            app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNotifyPositive"

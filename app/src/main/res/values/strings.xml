@@ -125,8 +125,10 @@
     <!-- Fragment para Notificar POSITIVOS -->
     <string name="notifyAPositive">Notificar un positivo</string>
     <string name="genericErrorNotifyPositive">Ha habido un error al notificar el positivo. No ha sido posible subir las localizaciones a la nube.</string>
-    <string name="notifyExplanation1">Registra que has dado positivo en la aplicación para que tus localizaciones se suban a la nube. Opcionalmente puedes adjuntar tus datos personales, que se asociarán a tus localizaciones facilitando así las tareas de rastreo.</string>
-    <string name="notifyExplanation2">Se subirán a la nube todas tus localizaciones registradas en los últimos:</string>
+    <string name="notifyExplanation1">Registra que has dado positivo en la aplicación para que tus localizaciones registradas en los últimos días se suban a la nube.</string>
+    <string name="notifyExplanation2">Opcionalmente puedes adjuntar tus datos personales, los cuales quedarán asociados a tus localizaciones. De este modo, contribuyes a facilitar las tareas de rastreo realizadas por el personal sanitario.</string>
+    <string name="notifyExplanation3">Tus datos personales están protegidos de acuerdo con nuestra política de privacidad.</string>
+    <string name="notifyExplanation4">Se subirán a la nube todas tus localizaciones registradas en los últimos:</string>
     <string name="btnNotifyPositive">He dado positivo</string>
     <string name="addPersonalData">Adjuntar mis datos personales</string>
     <string name="loadingPlaceholderNotifyPositive">Subiendo tus localizaciones a la nube...</string>
