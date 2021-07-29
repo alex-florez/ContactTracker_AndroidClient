@@ -6,7 +6,7 @@
         android:title="@string/settings"
         android:menuCategory="secondary"/>
 
-    <item android:id="@+id/privacyPolicy"
+    <item android:id="@+id/privacyPolicyFragment"
         android:title="@string/privacyPolicy"
         android:menuCategory="secondary"/>
 </menu>

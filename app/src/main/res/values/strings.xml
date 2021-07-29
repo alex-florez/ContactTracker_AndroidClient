@@ -31,7 +31,6 @@
     </plurals>
 
 
-
     <!-- Errores genéricos -->
     <string name="network_error">Ha habido un error de red en la solicitud.</string>
     <string name="request_error">Error en la solicitud</string>
@@ -134,7 +133,7 @@
     <string name="notifyPositiveResultText">Se han subido %d localizaciones a la nube.</string>
     <string name="errorNotifyLimitExceeded">Se ha superado el límite de notificación de positivos. No podrás notificar más positivos hasta mañana.</string>
     <string name="errorNotifyNoLocations">No se ha podido notificar el positivo: no existen localizaciones registradas en el periodo de infectividad. Activa el servicio de rastreo para registrar localizaciones.</string>
-
+    <string name="seePrivacyPolicy">Consulta nuestra</string>
 
     <!-- Formulario de Datos Personales -->
     <string name="personalDataTitle">Introduce tus datos personales</string>
@@ -145,9 +144,6 @@
     <string name="phoneNumber">Número de teléfono</string>
     <string name="city">Localidad</string>
     <string name="cp">Código Postal</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
     <!-- Fragment: Map -->
     <string name="fabMapTypeDescription">FAB para desplegar tipos de mapa</string>
@@ -208,6 +204,8 @@
     <string name="riskContactCheckingPlaceholder">Comparando tus localizaciones con las de otros positivos...</string>
     <string name="checkAlarmSetSnackbar">Alarma de comprobación programada correctamente.</string>
 
+    <!-- Fragment: Política de Privacidad -->
+
     <!-- Notificaciones: Resultados de la Comprobación de Contactos de Riesgo -->
     <string name="resultNotificationTitle">Resultados de la comprobación</string>
     <string name="resultNotificationHealthy">No has tenido contacto con ningún positivo.</string>
@@ -234,4 +232,5 @@
     <!-- Preferencias de Comprobación de Contactos -->
     <string name="check_scope_title">Alcance de la comprobación</string>
     <string name="check_scope_description">Número de días que se tienen en cuenta a la hora de comprobar los contactos de riesgo. Se comparan las localizaciones registradas en los anteriores días especificados.</string>
+
 </resources>

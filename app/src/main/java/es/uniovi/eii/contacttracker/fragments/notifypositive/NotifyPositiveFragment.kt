@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
@@ -72,6 +73,10 @@ class NotifyPositiveFragment : Fragment() {
             // Botón de notificar un positivo
             btnNotifyPositive.setOnClickListener{
                 notifyPositiveClick()
+            }
+            // Botón para consultar la política de privacidad
+            btnPrivacyPolicy.setOnClickListener {
+                showPrivacyPolicy()
             }
         }
     }
@@ -175,9 +180,22 @@ class NotifyPositiveFragment : Fragment() {
         return PersonalDataDialog(onAccept, viewModel.getPersonalData())
     }
 
+    /**
+     * Construye el diálogo modal que contiene la cláusula de consentimiento
+     * para el tratamiento de los datos personales del usuario.
+     */
     private fun createPersonalDataAgreementDialog(privacyPolicyListener: PersonalDataConsentDialog.PrivacyPolicyListener): PersonalDataConsentDialog {
         return PersonalDataConsentDialog(privacyPolicyListener)
     }
+
+    /**
+     * Navega hasta el fragmento que contiene la Política de Privacidad de la App.
+     */
+    private fun showPrivacyPolicy() {
+        val action = NotifyPositiveFragmentDirections.showPrivacyPolicy()
+        findNavController().navigate(action)
+    }
+
 
     companion object {
         /**

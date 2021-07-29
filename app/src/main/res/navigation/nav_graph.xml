@@ -17,7 +17,15 @@
         android:id="@+id/notifyPositive"
         android:name="es.uniovi.eii.contacttracker.fragments.notifypositive.NotifyPositiveFragment"
         android:label="Notificar un positivo"
-        tools:layout="@layout/fragment_notify_positive"/>
+        tools:layout="@layout/fragment_notify_positive">
+        <action
+            android:id="@+id/showPrivacyPolicy"
+            app:destination="@id/privacyPolicyFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
 
     <fragment
         android:id="@+id/riskContacts"
@@ -76,5 +84,12 @@
             android:name="locations"
             app:argType="es.uniovi.eii.contacttracker.model.UserLocation[]" />
     </fragment>
+
+    <!-- Fragmento con la Política de Privacidad -->
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="es.uniovi.eii.contacttracker.fragments.notifypositive.PrivacyPolicyFragment"
+        android:label="@string/privacyPolicy"
+        tools:layout="@layout/fragment_privacy_policy" />
 
 </navigation>

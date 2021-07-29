@@ -56,27 +56,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.18"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxAddPersonalData">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seePrivacyPolicy"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnPrivacyPolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/privacyPolicy"
+                app:chipIcon="@drawable/ic_privacy"/>
+        </LinearLayout>
+
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="20dp"
             android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxAddPersonalData" />
+            app:layout_constraintTop_toBottomOf="@id/linearLayout5"
+            app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
             android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+            app:layout_constraintVertical_bias="0.02">
 
             <TextView
                 android:id="@+id/textView3"
@@ -93,22 +118,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:text=""
                 android:gravity="center"
+                android:text=""
                 android:textAppearance="?attr/textAppearanceHeadline5"
                 android:textColor="@android:color/holo_red_dark"
-                app:visibility="@{!viewModel.loadingInfectivity}"/>
+                app:visibility="@{!viewModel.loadingInfectivity}" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/loadingInfectivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:indeterminate="true"
+                android:visibility="gone"
                 app:indeterminateAnimationType="disjoint"
                 app:indicatorColor="@android:color/holo_red_dark"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:visibility="@{viewModel.loadingInfectivity}"/>
+                app:visibility="@{viewModel.loadingInfectivity}" />
         </LinearLayout>
 
         <LinearLayout
@@ -118,9 +143,10 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintVertical_bias="0.45">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+            app:layout_constraintVertical_bias="0.17">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNotifyPositive"
