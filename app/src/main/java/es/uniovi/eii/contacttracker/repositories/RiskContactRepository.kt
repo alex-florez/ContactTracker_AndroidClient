@@ -100,30 +100,6 @@ class RiskContactRepository @Inject constructor(
     }
 
     /**
-     * Establece la hora de la comprobación
-     * almacenándola en las SharedPrefs.
-     *
-     * @param date Fecha de la comprobación.
-     */
-    fun setCheckHour(date: Date){
-        with(sharedPrefs.edit()){
-            putLong(ctx.getString(R.string.shared_prefs_risk_contact_check_hour), date.time)
-            apply()
-        }
-    }
-
-    /**
-     * Devuelve la fecha con la hora de la comprobación
-     * actualmente almacenada en las SharedPrefs.
-     *
-     * @return Fecha con la hora de la comprobación.
-     */
-    fun getCheckHour(): Date {
-        val time = sharedPrefs.getLong(ctx.getString(R.string.shared_prefs_risk_contact_check_hour), Date().time)
-        return Date(time)
-    }
-
-    /**
      * Inserta la alarma de comprobación de contactos en la base de datos.
      *
      * @param alarm Alarma de comprobación de contactos.

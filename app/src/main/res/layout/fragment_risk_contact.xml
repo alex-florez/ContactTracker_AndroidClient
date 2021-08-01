@@ -153,8 +153,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
                 android:text="@string/scheduledAlarms"
-                android:layout_marginStart="14dp"/>
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="bold"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -166,9 +169,17 @@
                 android:id="@+id/alarmChipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="14dp">
-            </com.google.android.material.chip.ChipGroup>
+                android:layout_marginHorizontal="14dp"
+                android:visibility="gone"/>
 
+            <!-- Label para lista de alarmas vacía -->
+            <TextView
+                android:id="@+id/labelNoAlarms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/noAlarm"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

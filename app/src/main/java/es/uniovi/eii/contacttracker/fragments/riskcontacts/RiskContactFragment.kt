@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
@@ -70,7 +71,7 @@ class RiskContactFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateUI(viewModel.getCheckMode()) // Leer el modo de comprobación de las SharedPrefs
-        updateCheckHour(viewModel.getCheckHour()) // Leer la hora de la comprobación de las SharedPrefs
+        viewModel.loadAlarms() // Cargar alarmas de comprobación actuales
     }
 
     /**
@@ -127,6 +128,7 @@ class RiskContactFragment : Fragment() {
                     is ValueWrapper.Success -> {
                         // Crear un nuevo chip
                         binding.alarmChipGroup.addView(createAlarmChip(it.value))
+                        viewModel.setLabelNoAlarms(binding.alarmChipGroup.isEmpty())
                         AndroidUtils.snackbar(getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG,
                             binding.root, requireActivity())
                     }
@@ -134,6 +136,22 @@ class RiskContactFragment : Fragment() {
                         AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
                             binding.root, requireActivity())
                     }
+                }
+            }
+
+            /* Listado de alarmas de comprobación */
+            alarms.observe(viewLifecycleOwner) {
+                loadAlarms(it)
+            }
+
+            /* Flag de lista de alarmas vacía */
+            emptyAlarms.observe(viewLifecycleOwner) { empty ->
+                if(empty){
+                    binding.labelNoAlarms.visibility = View.VISIBLE
+                    binding.alarmChipGroup.visibility = View.GONE
+                } else {
+                    binding.labelNoAlarms.visibility = View.GONE
+                    binding.alarmChipGroup.visibility = View.VISIBLE
                 }
             }
         }
@@ -166,6 +184,7 @@ class RiskContactFragment : Fragment() {
             chip.setOnCloseIconClickListener { // Callback para el botón de eliminar
                 binding.alarmChipGroup.removeView(it)
                 viewModel.removeAlarm(alarmID)
+                viewModel.setLabelNoAlarms(binding.alarmChipGroup.isEmpty())
             }
             return chip
         }
@@ -231,6 +250,19 @@ class RiskContactFragment : Fragment() {
         }
     }
 
+    /**
+     * Muestra para cada alarma de comprobación pasada en la lista como parámetro,
+     * un Chip con la hora de la comprobación que será almacenado en el ChipGroup.
+     *
+     * @param alarms Alarmas de comprobación.
+     */
+    private fun loadAlarms(alarms: List<RiskContactAlarm>) {
+        binding.alarmChipGroup.removeAllViews()
+        alarms.forEach { alarm ->
+            val chip = createAlarmChip(alarm)
+            binding.alarmChipGroup.addView(chip)
+        }
+    }
 
     /**
      * Habilita/Deshabilita el modo manual, cambiando el estado

@@ -20,6 +20,7 @@ import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
+import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.*
@@ -121,44 +122,21 @@ class RiskContactManager @Inject constructor(
     }
 
     /**
-     * Establece una nueva alarma de Android para realizar la
-     * comprobación de contactos de riesgo.
+     * Establece el modo de comprobación.
      *
-     * @param date Fecha de disparo de la alarma.
+     * @param checkMode Nuevo modo de comprobación.
      */
-    fun setPeriodicCheck(date: Date){
-        // Crear hora de inicio
-        val cal = Calendar.getInstance()
-        cal.set(Calendar.HOUR_OF_DAY, DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY))
-        cal.set(Calendar.MINUTE, DateUtils.getFromDate(date, Calendar.MINUTE))
-        cal.set(Calendar.SECOND, 0)
-        val startTime = cal.timeInMillis
-        // Establecer pending intent
-//        checkAlarmIntent = getPendingIntentService(
-//            Intent(ctx, RiskContactForegroundService::class.java),
-//            CHECK_ALARM_ID
-//        )
-        checkAlarmIntent = PendingIntent.getBroadcast(
-            ctx,
-            CHECK_ALARM_ID,
-            Intent(ctx,  StartRiskContactCheckReceiver::class.java),
-            0
-        )
-
-        // Establecer alarma
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, AlarmManager.INTERVAL_DAY, checkAlarmIntent)
+    fun setCheckMode(checkMode: CheckMode) {
+        riskContactRepository.setCheckMode(checkMode)
     }
 
-
-
     /**
-     * Cancela la alarma de comprobación actualmente
-     * establecida.
+     * Devuelve el modo de comprobación actual.
+     *
+     * @return Modo de comprobación actual.
      */
-    fun disablePeriodicCheck(){
-        checkAlarmIntent?.let {
-            alarmManager.cancel(checkAlarmIntent)
-        }
+    fun getCheckMode(): CheckMode {
+        return riskContactRepository.getCheckMode()
     }
 
     /**

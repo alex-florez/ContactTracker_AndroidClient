@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
-import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
@@ -24,10 +23,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class RiskContactViewModel @Inject constructor(
-    private val locationRepository: LocationRepository,
     private val riskContactManager: RiskContactManager,
-    private val riskContactAlarmManager: RiskContactAlarmManager,
-    private val riskContactRepository: RiskContactRepository
+    private val riskContactAlarmManager: RiskContactAlarmManager
 ): ViewModel() {
 
     /**
@@ -39,7 +36,7 @@ class RiskContactViewModel @Inject constructor(
     /**
      * LiveData para la hora de la comprobación.
      */
-    private val _checkHour = MutableLiveData<Date>()
+    private val _checkHour = MutableLiveData(Date())
     val checkHour: LiveData<Date> = _checkHour
 
     /**
@@ -47,6 +44,18 @@ class RiskContactViewModel @Inject constructor(
      */
     private val _addAlarmResult = MutableLiveData<ValueWrapper<RiskContactAlarm>>()
     val addAlarmResult: LiveData<ValueWrapper<RiskContactAlarm>> = _addAlarmResult
+
+    /**
+     * Listado inicial con las alarmas de comprobación establecidas.
+     */
+    private val _alarms = MutableLiveData<List<RiskContactAlarm>>()
+    val alarms: LiveData<List<RiskContactAlarm>> = _alarms
+
+    /**
+     * Etiqueta utilizada cuando no hay alarmas de comprobación.
+     */
+    private val _emptyAlarms = MutableLiveData(true)
+    val emptyAlarms: LiveData<Boolean> = _emptyAlarms
 
     /**
      * Hace uso del manager de contactos de riesgo para
@@ -62,12 +71,21 @@ class RiskContactViewModel @Inject constructor(
    }
 
     /**
+     * Actualiza la hora de la comprobación.
+     *
+     * @param date Nueva hora de comprobación.
+     */
+    fun setCheckHour(date: Date) {
+        _checkHour.value = date
+    }
+
+    /**
      * Establece el modo de comprobación.
      *
      * @param checkMode Nuevo modo de comprobación.
      */
     fun setCheckMode(checkMode: CheckMode) {
-        riskContactRepository.setCheckMode(checkMode)
+        riskContactManager.setCheckMode(checkMode)
     }
 
     /**
@@ -76,29 +94,7 @@ class RiskContactViewModel @Inject constructor(
      * @return Modo de comprobación actual.
      */
     fun getCheckMode(): CheckMode {
-        return riskContactRepository.getCheckMode()
-    }
-
-    /**
-     * Actualiza la hora de la comprobación.
-     *
-     * @param date Nueva hora de comprobación.
-     */
-    fun setCheckHour(date: Date) {
-        // Actualizar livedata
-        _checkHour.value = date
-        // Guardar en las SharedPrefs
-        riskContactRepository.setCheckHour(date)
-    }
-
-    /**
-     * Devuelve la fecha con la hora establecida para
-     * realizar la comprobación de contactos de riesgo.
-     *
-     * @return Fecha con la hora de la comprobación.
-     */
-    fun getCheckHour(): Date {
-        return riskContactRepository.getCheckHour()
+        return riskContactManager.getCheckMode()
     }
 
     /**
@@ -135,4 +131,23 @@ class RiskContactViewModel @Inject constructor(
         }
     }
 
+
+    /**
+     * Carga inicialmente todas las alarmas de comprobación
+     * almacenadas en la base de datos.
+     */
+    fun loadAlarms() {
+        viewModelScope.launch {
+            _alarms.value = riskContactAlarmManager.getAllAlarms()
+            _emptyAlarms.value = _alarms.value?.isEmpty() ?: true
+        }
+    }
+
+    /**
+     * Actualiza el valor de LiveData que contiene el flag para
+     * la etiqueta de lista de alarmas vacía.
+     */
+    fun setLabelNoAlarms(value: Boolean) {
+        _emptyAlarms.value = value
+    }
 }

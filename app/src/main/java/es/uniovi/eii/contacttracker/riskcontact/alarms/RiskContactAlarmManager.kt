@@ -88,4 +88,14 @@ class RiskContactAlarmManager @Inject constructor(
             }
         }
     }
+
+    /**
+     * Devuelve una lista con todas las alarmas de comprobación
+     * establecidas actualmente.
+     *
+     * @return Lista con las alarmas de comprobación.
+     */
+    suspend fun getAllAlarms(): List<RiskContactAlarm> {
+        return riskContactRepository.getAlarms()
+    }
 }
