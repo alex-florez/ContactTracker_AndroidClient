@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.core.view.isEmpty
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
@@ -260,6 +261,12 @@ class RiskContactFragment : Fragment() {
         binding.alarmChipGroup.removeAllViews()
         alarms.forEach { alarm ->
             val chip = createAlarmChip(alarm)
+            // Deshabilitar el chip si se está en el modo manual
+            if(chip != null && viewModel.getCheckMode() == CheckMode.MANUAL){
+                chip.isEnabled = false
+                chip.isCloseIconVisible = false
+            }
+
             binding.alarmChipGroup.addView(chip)
         }
     }
@@ -286,6 +293,13 @@ class RiskContactFragment : Fragment() {
             txtViewPeriodic.isEnabled = isEnabled
             txtInputLayoutCheckHour.isEnabled = isEnabled
             btnApplyCheckHour.isEnabled = isEnabled
+            labelScheduledAlarms.isEnabled = isEnabled
+            labelNoAlarms.isEnabled = isEnabled
+            alarmChipGroup.children.forEach {
+                val chip = it as Chip
+                chip.isEnabled = isEnabled
+                chip.isCloseIconVisible = isEnabled
+            }
         }
     }
 
