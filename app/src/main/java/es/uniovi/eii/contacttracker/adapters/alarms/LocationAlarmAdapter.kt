@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ItemCardLocationAlarmBinding
-import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**

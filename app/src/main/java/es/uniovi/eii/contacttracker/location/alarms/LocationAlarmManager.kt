@@ -6,18 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.Error
-import es.uniovi.eii.contacttracker.model.LocationAlarm
 import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.util.ValueWrapper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**

@@ -14,10 +14,7 @@ import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.room.AppDatabase
-import es.uniovi.eii.contacttracker.room.daos.LocationAlarmDao
-import es.uniovi.eii.contacttracker.room.daos.PositiveDao
-import es.uniovi.eii.contacttracker.room.daos.RiskContactDao
-import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
+import es.uniovi.eii.contacttracker.room.daos.*
 import javax.inject.Singleton
 
 /**
@@ -71,6 +68,13 @@ object DBModule {
     fun providePositiveDao(appDB: AppDatabase): PositiveDao {
         return appDB.positiveDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideRiskContactAlarmDao(appDB: AppDatabase): RiskContactAlarmDao {
+        return appDB.riskContactAlarmDao()
+    }
+
 
     // Repositories
     // ******************

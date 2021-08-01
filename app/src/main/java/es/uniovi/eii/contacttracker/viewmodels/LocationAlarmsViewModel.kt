@@ -1,10 +1,9 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import android.location.Location
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
-import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.launch
 import java.util.*

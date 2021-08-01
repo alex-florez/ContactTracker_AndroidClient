@@ -203,6 +203,7 @@
     <string name="manualCheck">Comprobación manual</string>
     <string name="periodicCheck">Comprobación periódica</string>
     <string name="checkRiskContacts">Comprobar contactos de riesgo</string>
+    <string name="scheduledAlarms">Alarmas programadas</string>
     <string name="manualCheckExplanation">Inicia una comprobación manualmente para detectar posibles contactos de riesgo con otros positivos.</string>
     <string name="periodicCheckExplanation">Programa una hora concreta del día para realizar la comprobación. Esta comprobación se repetirá todos los días a la hora indicada.</string>
     <string name="checkHour">Hora de la comprobación</string>

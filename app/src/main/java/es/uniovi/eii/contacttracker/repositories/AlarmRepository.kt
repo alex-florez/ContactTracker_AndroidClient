@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.room.daos.LocationAlarmDao
 import es.uniovi.eii.contacttracker.util.DateUtils
 import java.util.Date
@@ -67,14 +67,6 @@ class AlarmRepository @Inject constructor(
      */
     suspend fun getAlarmByID(id: Long): LocationAlarm? {
         return locationAlarmDao.getByID(id)
-    }
-
-    /**
-     * Elimina todas las alarmas programadas
-     * por el usuario y devuelve el nº de alarmas eliminadas.
-     */
-    suspend fun deleteAllAlarms(): Int {
-        return locationAlarmDao.deleteAll()
     }
 
     /**

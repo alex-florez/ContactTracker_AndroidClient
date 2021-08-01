@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +21,7 @@ import es.uniovi.eii.contacttracker.databinding.FragmentLocationAlarmsBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
 import es.uniovi.eii.contacttracker.model.Error
-import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils

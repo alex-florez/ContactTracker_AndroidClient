@@ -6,7 +6,7 @@
     <data>
         <variable
             name="alarm"
-            type="es.uniovi.eii.contacttracker.model.LocationAlarm" />
+            type="es.uniovi.eii.contacttracker.location.alarms.LocationAlarm" />
         <variable
             name="du"
             type="es.uniovi.eii.contacttracker.util.DateUtils" />

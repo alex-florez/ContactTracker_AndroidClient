@@ -1,10 +1,8 @@
-package es.uniovi.eii.contacttracker.model
+package es.uniovi.eii.contacttracker.location.alarms
 
 import android.os.Parcelable
-import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import es.uniovi.eii.contacttracker.adapters.alarms.LocationAlarmDiffCallback
 import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.parcelize.Parcelize
 import java.util.*

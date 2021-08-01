@@ -9,10 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /* ID del Servicio */
@@ -60,6 +57,11 @@ class RiskContactForegroundService : Service() {
         }
 
         return START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
 
 

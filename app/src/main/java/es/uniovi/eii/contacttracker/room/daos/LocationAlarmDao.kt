@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import es.uniovi.eii.contacttracker.model.LocationAlarm
+import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 
 /**
  * Data Access Object para acceder a los datos

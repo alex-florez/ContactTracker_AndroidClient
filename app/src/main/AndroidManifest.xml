@@ -55,6 +55,7 @@
 
         <!-- Broadcast Receivers -->
         <receiver android:name=".location.receivers.LocationAlarmCommandBroadcastReceiver" />
+        <receiver android:name=".riskcontact.alarms.StartRiskContactCheckReceiver" />
     </application>
 
 </manifest>

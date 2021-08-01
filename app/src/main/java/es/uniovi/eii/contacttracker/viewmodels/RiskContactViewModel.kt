@@ -9,6 +9,9 @@ import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
+import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
+import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarmManager
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ import javax.inject.Inject
 class RiskContactViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val riskContactManager: RiskContactManager,
+    private val riskContactAlarmManager: RiskContactAlarmManager,
     private val riskContactRepository: RiskContactRepository
 ): ViewModel() {
 
@@ -37,6 +41,12 @@ class RiskContactViewModel @Inject constructor(
      */
     private val _checkHour = MutableLiveData<Date>()
     val checkHour: LiveData<Date> = _checkHour
+
+    /**
+     * ValueWrapper con el resultado de añadir una alarma de comprobación.
+     */
+    private val _addAlarmResult = MutableLiveData<ValueWrapper<RiskContactAlarm>>()
+    val addAlarmResult: LiveData<ValueWrapper<RiskContactAlarm>> = _addAlarmResult
 
     /**
      * Hace uso del manager de contactos de riesgo para
@@ -92,21 +102,37 @@ class RiskContactViewModel @Inject constructor(
     }
 
     /**
-     * Invoca al manager de contactos de riesgo para
-     * establecer una nueva alarma de comprobación que
-     * se dispare en la fecha indicada.
+     * Invoca al manager de alarmas de contactos de riesgo para establecer una
+     * nueva alarma de comprobación que se dispare en la fecha indicada.
      *
-     * @param Fecha en la que se debe ejecutar la alarma de comprobación.
+     * @param date Fecha en la que se debe ejecutar la alarma de comprobación.
      */
-    fun setPeriodicCheck(date: Date){
-        riskContactManager.setPeriodicCheck(date)
+    fun addAlarm(date: Date){
+        viewModelScope.launch {
+            _addAlarmResult.value = riskContactAlarmManager.set(RiskContactAlarm(null, date, true))
+        }
     }
 
     /**
-     * Deshabilita la alarma de comprobación establecida.
+     * Elimina la alarma de comprobación cuyo ID coincide con el ID pasado como parámetro.
+     *
+     * @param alarmID ID de la alarma de comprobación a eliminar.
      */
-    fun disablePeriodicCheck(){
-        riskContactManager.disablePeriodicCheck()
+    fun removeAlarm(alarmID: Long) {
+        viewModelScope.launch {
+            riskContactAlarmManager.remove(alarmID)
+        }
+    }
+
+    /**
+     * Activa o desactiva las alarmas de comprobación actualmente existentes.
+     *
+     * @param activate Flag para activar o desactivar las alarmas de comprobación.
+     */
+    fun toggleCheckAlarms(activate: Boolean) {
+        viewModelScope.launch {
+            riskContactAlarmManager.toggle(activate)
+        }
     }
 
 }

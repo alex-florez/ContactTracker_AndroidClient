@@ -6,14 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
+import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
+import es.uniovi.eii.contacttracker.util.ValueWrapper
 import es.uniovi.eii.contacttracker.viewmodels.RiskContactViewModel
 import java.util.*
 
@@ -50,12 +53,6 @@ class RiskContactFragment : Fragment() {
      */
     private lateinit var checkHourTimePicker: TimePickerFragment
 
-    /**
-     * Modo de comprobación seleccionado.
-     */
-    private var checkMode = CheckMode.MANUAL
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createTimePicker()
@@ -72,13 +69,12 @@ class RiskContactFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        selectMode(viewModel.getCheckMode()) // Leer el modo de comprobación de las SharedPrefs
+        updateUI(viewModel.getCheckMode()) // Leer el modo de comprobación de las SharedPrefs
         updateCheckHour(viewModel.getCheckHour()) // Leer la hora de la comprobación de las SharedPrefs
     }
 
     /**
-     * Establece los listeners de eventos para los componentes
-     * de la UI.
+     * Establece los listeners de eventos para los componentes de la UI.
      */
     private fun setListeners(){
         binding.apply {
@@ -101,13 +97,9 @@ class RiskContactFragment : Fragment() {
                 checkHourTimePicker.show(requireActivity().supportFragmentManager, "CheckHour")
             }
 
-            /* Botón para aplicar la alarma de comprobación */
+            /* Botón para añadir una alarma de comprobación */
             btnApplyCheckHour.setOnClickListener {
-                viewModel.checkHour.value?.let { date ->
-                    viewModel.setPeriodicCheck(date)
-                    AndroidUtils.snackbar(getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG,
-                        binding.root, requireActivity())
-                }
+                addNewAlarm()
             }
         }
     }
@@ -129,7 +121,55 @@ class RiskContactFragment : Fragment() {
                     riskContactCheckLoading.visibility = if(it) View.VISIBLE else View.GONE // Línea de progreso
                 }
             }
+            /* Resultado de añadir una alarma de comprobación */
+            addAlarmResult.observe(viewLifecycleOwner) {
+                when(it) {
+                    is ValueWrapper.Success -> {
+                        // Crear un nuevo chip
+                        binding.alarmChipGroup.addView(createAlarmChip(it.value))
+                        AndroidUtils.snackbar(getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG,
+                            binding.root, requireActivity())
+                    }
+                    is ValueWrapper.Fail -> {
+                        AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
+                            binding.root, requireActivity())
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * Añade una nueva alarma de comprobación con la hora seleccionada
+     * en el campo de texto.
+     */
+    private fun addNewAlarm() {
+        viewModel.checkHour.value?.let { date ->
+            viewModel.addAlarm(date)
+        }
+    }
+
+
+    /**
+     * Crea un chip que representa la alarma de comprobación pasada como parámetro.
+     *
+     * @param alarm Nueva alarma de comprobación.
+     * @return Componente Chip configurado.
+     */
+    private fun createAlarmChip(alarm: RiskContactAlarm): Chip? {
+        alarm.id?.let { alarmID ->
+            // Texto con la hora
+            val chip = layoutInflater.inflate(R.layout.alarm_chip_layout, binding.alarmChipGroup, false) as Chip
+            chip.id = alarmID.toInt()
+            chip.text = DateUtils.formatDate(alarm.startDate, "HH:mm")
+            chip.setChipBackgroundColorResource(R.color.orange)
+            chip.setOnCloseIconClickListener { // Callback para el botón de eliminar
+                binding.alarmChipGroup.removeView(it)
+                viewModel.removeAlarm(alarmID)
+            }
+            return chip
+        }
+        return null
     }
 
     /**
@@ -162,14 +202,27 @@ class RiskContactFragment : Fragment() {
      * @param newCheckMode Nuevo modo de comprobación.
      */
     private fun selectMode(newCheckMode: CheckMode){
-        this.checkMode = newCheckMode
         viewModel.setCheckMode(newCheckMode) // Guardar el modo de comprobación en las SharedPrefs
         // Gestionar estado de los radio buttons
-        when(newCheckMode){
+        updateUI(newCheckMode)
+        // Activar/Desactivar alarmas de comprobación
+        when(newCheckMode) {
+            CheckMode.MANUAL -> { viewModel.toggleCheckAlarms(false) }
+            CheckMode.PERIODIC -> { viewModel.toggleCheckAlarms(true) }
+        }
+    }
+
+    /**
+     * Actualiza los componentes de la interfaz de usuario en función
+     * del modo de comprobación seleccionado.
+     *
+     * @param checkMode Modo de comprobación.
+     */
+    private fun updateUI(checkMode: CheckMode) {
+        when(checkMode){
             CheckMode.MANUAL -> {
                 toggleManualCheck(true)
                 togglePeriodicCheck(false)
-                viewModel.disablePeriodicCheck() // Cancelar alarma de comprobación
             }
             CheckMode.PERIODIC -> {
                 togglePeriodicCheck(true)

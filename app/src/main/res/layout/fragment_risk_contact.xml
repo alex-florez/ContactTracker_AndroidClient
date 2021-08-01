@@ -116,32 +116,59 @@
                 android:text="@string/periodicCheckExplanation"
                 android:layout_marginBottom="8dp"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtInputLayoutCheckHour"
+            <!-- Campo de texto para seleccionar una hora -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/checkHour"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtCheckHour"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:text="15:50"
-                    android:editable="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnApplyCheckHour"
-                style="?attr/materialButtonOutlinedStyle"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtInputLayoutCheckHour"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:hint="@string/checkHour"
+                    android:layout_marginStart="14dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtCheckHour"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="15:50"
+                        android:editable="false"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnApplyCheckHour"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    app:strokeWidth="2dp"
+                    android:backgroundTint="@color/greenOk"
+                    android:src="@drawable/ic_add"/>
+            </LinearLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:text="@string/apply"
-                app:icon="@drawable/ic_check"
-                app:strokeWidth="2dp" />
+                android:text="@string/scheduledAlarms"
+                android:layout_marginStart="14dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginHorizontal="14dp"/>
+
+            <!-- Grupo de Chips con las alarmas programadas -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/alarmChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="14dp">
+            </com.google.android.material.chip.ChipGroup>
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

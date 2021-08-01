@@ -23,6 +23,7 @@ import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.*
+import es.uniovi.eii.contacttracker.riskcontact.alarms.StartRiskContactCheckReceiver
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.service.RiskContactForegroundService
 import es.uniovi.eii.contacttracker.util.DateUtils
@@ -133,10 +134,17 @@ class RiskContactManager @Inject constructor(
         cal.set(Calendar.SECOND, 0)
         val startTime = cal.timeInMillis
         // Establecer pending intent
-        checkAlarmIntent = getPendingIntentService(
-            Intent(ctx, RiskContactForegroundService::class.java),
-            CHECK_ALARM_ID
+//        checkAlarmIntent = getPendingIntentService(
+//            Intent(ctx, RiskContactForegroundService::class.java),
+//            CHECK_ALARM_ID
+//        )
+        checkAlarmIntent = PendingIntent.getBroadcast(
+            ctx,
+            CHECK_ALARM_ID,
+            Intent(ctx,  StartRiskContactCheckReceiver::class.java),
+            0
         )
+
         // Establecer alarma
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, AlarmManager.INTERVAL_DAY, checkAlarmIntent)
     }

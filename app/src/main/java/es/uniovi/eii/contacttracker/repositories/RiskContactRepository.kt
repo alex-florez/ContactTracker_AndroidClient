@@ -7,6 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
 import es.uniovi.eii.contacttracker.model.RiskContactResult
+import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
+import es.uniovi.eii.contacttracker.room.daos.RiskContactAlarmDao
 import es.uniovi.eii.contacttracker.room.mappers.toResultWithRiskContacts
 import es.uniovi.eii.contacttracker.room.mappers.toRiskContactResult
 import es.uniovi.eii.contacttracker.room.daos.RiskContactDao
@@ -14,11 +16,12 @@ import javax.inject.Inject
 import java.util.Date
 
 /**
- * Repositorio que gestiona todas las operaciones
- * relacionadas con los Contactos de Riesgo.
+ * Repositorio que gestiona todas las operaciones relacionadas con
+ * los Contactos de Riesgo, incluidas las alarmas de comprobación de contactos.
  */
 class RiskContactRepository @Inject constructor(
         private val riskContactDao: RiskContactDao,
+        private val riskContactAlarmDao: RiskContactAlarmDao,
         @ApplicationContext private val ctx: Context
 ){
 
@@ -118,5 +121,45 @@ class RiskContactRepository @Inject constructor(
     fun getCheckHour(): Date {
         val time = sharedPrefs.getLong(ctx.getString(R.string.shared_prefs_risk_contact_check_hour), Date().time)
         return Date(time)
+    }
+
+    /**
+     * Inserta la alarma de comprobación de contactos en la base de datos.
+     *
+     * @param alarm Alarma de comprobación de contactos.
+     * @return ID de la alarma recién insertada.
+     */
+    suspend fun insertAlarm(alarm: RiskContactAlarm): Long {
+        return riskContactAlarmDao.insert(alarm)
+    }
+
+    /**
+     * Elimina la alarma de comprobación de ID pasado como parámetro de la
+     * base de datos.
+     *
+     * @param alarmID ID de la alarma de comprobación.
+     */
+    suspend fun removeAlarm(alarmID: Long) {
+        riskContactAlarmDao.remove(alarmID)
+    }
+
+    /**
+     * Actualiza las alarmas de comprobación con los nuevos datos incluidos
+     * en la lista de alarmas de comprobación pasada como parámetro.
+     *
+     * @param riskContactAlarms Lista con las nuevas alarmas de comprobación.
+     */
+    suspend fun updateAlarms(riskContactAlarms: List<RiskContactAlarm>) {
+        riskContactAlarmDao.update(riskContactAlarms)
+    }
+
+    /**
+     * Devuelve todas las alarmas de comprobación almacenadas actualmente
+     * en la base de datos.
+     *
+     * @return Lista con todas las alarmas de comprobación.
+     */
+    suspend fun getAlarms(): List<RiskContactAlarm> {
+        return riskContactAlarmDao.getAll()
     }
 }
