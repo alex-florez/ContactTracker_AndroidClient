@@ -22,11 +22,17 @@ data class RiskContactAlarm (
     /**
      * Comprueba si la fecha de comienzo de la alarma es anterior a
      * la fecha actual, y de ser así, incrementa en un día la fecha.
+     *
+     * También establece los segundos de la fecha a 0.
      */
     fun updateHours() {
         if(startDate.before(Date())){
             startDate = DateUtils.addToDate(startDate, Calendar.DATE, 1)
         }
-
+        // Eliminar segundos
+        val cal = Calendar.getInstance()
+        cal.time = startDate
+        cal.set(Calendar.SECOND, 0)
+        startDate = cal.time
     }
 }

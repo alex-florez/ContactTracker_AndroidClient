@@ -13,6 +13,10 @@ enum class Error {
     INVALID_ALARM,
     ALARM_COLLISION,
 
+    /* Alarmas de Comprobación de Contactos de Riesgo */
+    RISK_CONTACT_ALARM_COLLISION,
+    RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED,
+
     /* Notificación de Positivos */
     CANNOT_NOTIFY,
     NO_LOCATIONS_TO_NOTIFY,

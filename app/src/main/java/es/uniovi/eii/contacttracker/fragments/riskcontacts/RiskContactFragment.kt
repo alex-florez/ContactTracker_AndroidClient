@@ -15,7 +15,10 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.OnTimeSetListener
 import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragment
+import es.uniovi.eii.contacttracker.model.Error
+import es.uniovi.eii.contacttracker.riskcontact.alarms.MAX_ALARM_COUNT
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
+import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarmManager
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
@@ -134,8 +137,7 @@ class RiskContactFragment : Fragment() {
                             binding.root, requireActivity())
                     }
                     is ValueWrapper.Fail -> {
-                        AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
-                            binding.root, requireActivity())
+                        processError(it.error)
                     }
                 }
             }
@@ -154,6 +156,28 @@ class RiskContactFragment : Fragment() {
                     binding.labelNoAlarms.visibility = View.GONE
                     binding.alarmChipGroup.visibility = View.VISIBLE
                 }
+            }
+        }
+    }
+
+    /**
+     * Procesa el error determinado pasado como parámetro.
+     *
+     * @param error Error de algún tipo relacionado con la comprobación de contactos.
+     */
+    private fun processError(error: Error) {
+        when(error) {
+            Error.RISK_CONTACT_ALARM_COLLISION -> {
+                AndroidUtils.snackbar(getString(R.string.checkAlarmErrorCollision), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED -> {
+                AndroidUtils.snackbar(getString(R.string.checkAlarmErrorCountLimit, MAX_ALARM_COUNT), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            else -> {
+                AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             }
         }
     }

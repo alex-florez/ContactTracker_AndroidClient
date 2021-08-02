@@ -23,4 +23,7 @@ interface RiskContactAlarmDao {
 
     @Query("SELECT * FROM risk_contact_alarms")
     suspend fun getAll(): List<RiskContactAlarm>
+
+    @Query("SELECT * FROM risk_contact_alarms WHERE time(startDate) = :hour")
+    suspend fun getAlarmsBySetHour(hour: String): List<RiskContactAlarm>
 }

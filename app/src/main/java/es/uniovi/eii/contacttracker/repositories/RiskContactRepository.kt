@@ -12,6 +12,7 @@ import es.uniovi.eii.contacttracker.room.daos.RiskContactAlarmDao
 import es.uniovi.eii.contacttracker.room.mappers.toResultWithRiskContacts
 import es.uniovi.eii.contacttracker.room.mappers.toRiskContactResult
 import es.uniovi.eii.contacttracker.room.daos.RiskContactDao
+import es.uniovi.eii.contacttracker.util.DateUtils
 import javax.inject.Inject
 import java.util.Date
 
@@ -137,5 +138,17 @@ class RiskContactRepository @Inject constructor(
      */
     suspend fun getAlarms(): List<RiskContactAlarm> {
         return riskContactAlarmDao.getAll()
+    }
+
+    /**
+     * Devuelve una lista con todas las alarmas de comprobación establecidas en la hora
+     * que coincide con la hora de la fecha pasada como parámetro.
+     *
+     * @param date Fecha por la que filtrar.
+     * @return Lista con las alarmas de comprobación cuya hora coincide con la indicada.
+     */
+    suspend fun getAlarmsBySetHour(date: Date): List<RiskContactAlarm> {
+        val dateString = DateUtils.formatDate(date, "HH:mm:ss")
+        return riskContactAlarmDao.getAlarmsBySetHour(dateString)
     }
 }

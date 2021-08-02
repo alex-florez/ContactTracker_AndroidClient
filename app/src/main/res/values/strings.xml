@@ -205,10 +205,14 @@
     <string name="checkRiskContacts">Comprobar contactos de riesgo</string>
     <string name="scheduledAlarms">Alarmas programadas</string>
     <string name="manualCheckExplanation">Inicia una comprobación manualmente para detectar posibles contactos de riesgo con otros positivos.</string>
-    <string name="periodicCheckExplanation">Programa una hora concreta del día para realizar la comprobación. Esta comprobación se repetirá todos los días a la hora indicada.</string>
+    <string name="periodicCheckExplanation">Programa horas concretas del día para realizar la comprobación de contactos de riesgo. Esta comprobación se repetirá todos los días a la horas indicadas.</string>
     <string name="checkHour">Hora de la comprobación</string>
     <string name="riskContactCheckingPlaceholder">Comparando tus localizaciones con las de otros positivos...</string>
     <string name="checkAlarmSetSnackbar">Alarma de comprobación programada correctamente.</string>
+    <string name="checkAlarmErrorCollision">Ya existen alarmas de comprobación programadas para esa hora.</string>
+    <string name="checkAlarmErrorCountLimit">No puedes programar más de %d alarmas de comprobación.</string>
+    <string name="addRiskContactAlarmBtnDescription">Añadir alarma de comprobación.</string>
+
 
     <!-- Fragment: Política de Privacidad -->
 
@@ -238,5 +242,4 @@
     <!-- Preferencias de Comprobación de Contactos -->
     <string name="check_scope_title">Alcance de la comprobación</string>
     <string name="check_scope_description">Número de días que se tienen en cuenta a la hora de comprobar los contactos de riesgo. Se comparan las localizaciones registradas en los anteriores días especificados.</string>
-
 </resources>

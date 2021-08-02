@@ -25,14 +25,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp">
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/radioBtnManualCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
                 android:text="@string/manualCheck"
                 android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
@@ -41,16 +41,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/manualCheckExplanation"
-                android:paddingStart="20dp"
-                android:paddingEnd="16dp"/>
+                android:justificationMode="inter_word" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnManualCheck"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
                 android:text="@string/checkRiskContacts"
                 app:strokeWidth="2dp" />
             <!-- ICONO DE CARGA -->
@@ -96,14 +94,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp">
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/radioBtnPeriodicCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
                 android:text="@string/periodicCheck"
                 android:textAppearance="?attr/textAppearanceSubtitle2" />
 
@@ -111,16 +109,16 @@
                 android:id="@+id/txtViewPeriodic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
-                android:paddingEnd="8dp"
                 android:text="@string/periodicCheckExplanation"
+                android:justificationMode="inter_word"
                 android:layout_marginBottom="8dp"/>
 
             <!-- Campo de texto para seleccionar una hora -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtInputLayoutCheckHour"
@@ -128,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:hint="@string/checkHour"
-                    android:layout_marginStart="14dp">
+                    android:layout_marginEnd="4dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtCheckHour"
                         android:layout_width="match_parent"
@@ -141,20 +139,19 @@
                 <ImageButton
                     android:id="@+id/btnApplyCheckHour"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.2"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
                     app:strokeWidth="2dp"
+                    android:src="@drawable/ic_add"
                     android:backgroundTint="@color/greenOk"
-                    android:src="@drawable/ic_add"/>
+                    android:contentDescription="@string/addRiskContactAlarmBtnDescription" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/labelScheduledAlarms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
                 android:text="@string/scheduledAlarms"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textStyle="bold" />
@@ -162,15 +159,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_marginHorizontal="14dp"/>
+                android:background="@android:color/darker_gray"/>
 
             <!-- Grupo de Chips con las alarmas programadas -->
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/alarmChipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="14dp"
                 android:visibility="gone"/>
 
             <!-- Label para lista de alarmas vacía -->
@@ -180,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/noAlarm"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"/>
+                android:layout_margin="8dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

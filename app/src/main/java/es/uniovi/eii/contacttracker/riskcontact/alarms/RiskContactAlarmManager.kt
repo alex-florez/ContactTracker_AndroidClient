@@ -5,9 +5,16 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import javax.inject.Inject
+
+
+/* Constantes */
+
+/* N.º máximo de alarmas de comprobación que pueden ser establecidas. */
+const val MAX_ALARM_COUNT = 3
 
 /**
  * Clase encargada de gestionar la programación periódica de alarmas
@@ -29,17 +36,25 @@ class RiskContactAlarmManager @Inject constructor(
      * @return ValueWrapper con la nueva alarma de comprobación o un error determinado.
      */
     suspend fun set(riskContactAlarm: RiskContactAlarm): ValueWrapper<RiskContactAlarm> {
-        // Actualizar las horas de la alarma si es necesario
+        // Actualizar las horas de la alarma si es necesario y eliminar segundos
         riskContactAlarm.updateHours()
-        // Insertar alarma en la base de datos
-        val alarmID = riskContactRepository.insertAlarm(riskContactAlarm)
-        riskContactAlarm.id = alarmID
-        // Crear PendingIntent
-        val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
-        // Configurar alarma de Android
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
-        return ValueWrapper.Success(riskContactAlarm)
+        if(checkAlarmsCollision(riskContactAlarm)) { // Comprobar si existen colisiones entre alarmas.
+            return if(checkAlarmCount()) { // Comprobar si se ha superado el límite de alarmas.
+                // Insertar alarma en la base de datos
+                val alarmID = riskContactRepository.insertAlarm(riskContactAlarm)
+                riskContactAlarm.id = alarmID
+                // Crear PendingIntent
+                val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
+                // Configurar alarma de Android
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
+                ValueWrapper.Success(riskContactAlarm)
+            } else {
+                ValueWrapper.Fail(Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED)
+            }
+        } else {
+            return ValueWrapper.Fail(Error.RISK_CONTACT_ALARM_COLLISION)
+        }
     }
 
     /**
@@ -98,4 +113,23 @@ class RiskContactAlarmManager @Inject constructor(
     suspend fun getAllAlarms(): List<RiskContactAlarm> {
         return riskContactRepository.getAlarms()
     }
+
+    /**
+     * Comprueba que si existen colisiones entre las alarmas de comprobación,
+     * es decir, si hay varias alarmas establecidas a la misma hora.
+     *
+     * @param alarm Alarma de comprobación a checkear.
+     * @return Devuelve true si existen colisiones.
+     */
+    private suspend fun checkAlarmsCollision(alarm: RiskContactAlarm): Boolean {
+        return riskContactRepository.getAlarmsBySetHour(alarm.startDate).isEmpty()
+    }
+
+    /**
+     * Comprueba si se supera el límite de alarmas que se permiten establecer.
+     */
+    private suspend fun checkAlarmCount(): Boolean {
+        return riskContactRepository.getAlarms().size < MAX_ALARM_COUNT
+    }
+
 }
