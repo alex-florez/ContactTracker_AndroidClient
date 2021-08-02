@@ -5,8 +5,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import javax.inject.Inject
 
@@ -45,6 +47,7 @@ class RiskContactAlarmManager @Inject constructor(
                 riskContactAlarm.id = alarmID
                 // Crear PendingIntent
                 val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
+                i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, AndroidUtils.toByteArray(riskContactAlarm))
                 val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
                 // Configurar alarma de Android
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
@@ -94,6 +97,7 @@ class RiskContactAlarmManager @Inject constructor(
         alarms.forEach { alarm ->
             alarm.id?.let { alarmID ->
                 val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
+                i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, alarm)
                 val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
                 if(activate) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.startDate.time, pendingIntent)
@@ -112,6 +116,27 @@ class RiskContactAlarmManager @Inject constructor(
      */
     suspend fun getAllAlarms(): List<RiskContactAlarm> {
         return riskContactRepository.getAlarms()
+    }
+
+    /**
+     * Reestablece la alarma de comprobación indicada posponiendo la hora
+     * para el día siguiente y actualizándola en la base de datos, además de
+     * volver a programar la alarma de Android.
+     *
+     * @param riskContactAlarm Alarma de comprobación a resetear.
+     */
+    suspend fun reset(riskContactAlarm: RiskContactAlarm) {
+        riskContactAlarm.id?.let { alarmID ->
+            // Actualizar horas (posponer para el día siguiente)
+            riskContactAlarm.updateHours()
+            // Actualizar alarma en la base de datos
+            riskContactRepository.updateAlarms(listOf(riskContactAlarm))
+            // Programar una nueva alarma de Android
+            val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
+            i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, riskContactAlarm)
+            val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
+        }
     }
 
     /**

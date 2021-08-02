@@ -34,6 +34,9 @@ object Constants {
     const val ACTION_GET_RISK_CONTACT_RESULT = "getRiskContactResult" // Acción para obtener el resultado de la comprobación.
     const val EXTRA_RISK_CONTACT_RESULT = "extraRiskContactResult" // Extra para el resultado de la comprobación.
 
+    // BROADCAST RECEIVER PARA LA ALARMA DE COMPROBACIÓN DE CONTACTOS
+    // **************************************************************
+    const val EXTRA_RISK_CONTACT_ALARM = "extraRiskContactAlarm" // Extra para la alarma de comprobación de contactos
 
     // PARÁMETROS DE CONFIGURACIÓN
     // ***************************
