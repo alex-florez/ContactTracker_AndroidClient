@@ -13,7 +13,7 @@ interface LocationTracker {
     /**
      * Inicia las actualizaciones de localización.
      *
-     *@param mode modo de recepción de actualizaciones de localización.
+     * @param mode modo de recepción de actualizaciones de localización.
      * @return true si se ha iniciado con éxito.
      */
     fun start(mode: LocationUpdateMode): Boolean
@@ -28,6 +28,7 @@ interface LocationTracker {
 
     /**
      * Establece una nueva petición de ubicación.
+     *
      * @param request petición de ubicación
      */
     fun setLocationRequest(request: LocationTrackRequest)
@@ -35,6 +36,7 @@ interface LocationTracker {
     /**
      * Establece el callback de llamada que será invocado cada
      * vez que se obtiene una nueva actualización de localización.
+     *
      * @param callback callback para las actualizaciones de localización.
      */
     fun setCallback(callback: LocationUpdateCallback)
@@ -52,6 +54,7 @@ interface LocationTracker {
     /**
      * Establece el tipo de provider que se utilizará para obtener
      * los datos de localización.
+     *
      * @param provider fuente de localización.
      */
     fun setLocationProvider(provider: String)

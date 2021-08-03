@@ -13,7 +13,7 @@ import es.uniovi.eii.contacttracker.util.ValueWrapper
 import javax.inject.Inject
 
 
-/* Constantes */
+// CONSTANTES
 
 /* N.º máximo de alarmas de comprobación que pueden ser establecidas. */
 const val MAX_ALARM_COUNT = 3

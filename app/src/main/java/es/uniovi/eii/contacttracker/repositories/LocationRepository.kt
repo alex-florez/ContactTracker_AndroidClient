@@ -9,10 +9,10 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * Repositorio de Localización.
+ * Repositorio de Datos de Localización.
  *
- * Contiene todas las operaciones y funcionalidades relacionadas
- * con los servicios de ubicación y obtención de localizaciones almacenadas.
+ * Contiene todas las operaciones y funcionalidades relacionadas con
+ * el almacenamiento y obtención de localizaciones proporcionadas por el tracker.
  */
 class LocationRepository @Inject constructor(
     private val userLocationDao: UserLocationDao
