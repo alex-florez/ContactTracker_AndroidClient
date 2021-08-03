@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
-import es.uniovi.eii.contacttracker.repositories.AlarmRepository
+import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import javax.inject.Singleton
 
 /**
@@ -26,13 +26,5 @@ object AlarmModule {
             @ApplicationContext ctx: Context
     ): AlarmManager {
         return ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
-
-    @Provides
-    @Singleton
-    fun provideLocationAlarmManager(am: AlarmManager,
-                                    alarmRepository: AlarmRepository,
-                                    @ApplicationContext ctx: Context): LocationAlarmManager {
-        return LocationAlarmManager(am, alarmRepository, ctx)
     }
 }

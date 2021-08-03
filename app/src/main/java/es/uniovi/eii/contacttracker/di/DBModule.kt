@@ -10,7 +10,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
-import es.uniovi.eii.contacttracker.repositories.AlarmRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.room.AppDatabase
@@ -80,15 +79,9 @@ object DBModule {
     // ******************
     @Provides
     @Singleton
-    fun provideLocationRepository(userLocationDao: UserLocationDao): LocationRepository {
-        return LocationRepository(userLocationDao)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAlarmRepository(@ApplicationContext ctx: Context,
-                               locationAlarmDao: LocationAlarmDao): AlarmRepository {
-        return AlarmRepository(ctx, locationAlarmDao)
+    fun provideLocationRepository(userLocationDao: UserLocationDao,
+                                    locationAlarmDao: LocationAlarmDao): LocationRepository {
+        return LocationRepository(userLocationDao, locationAlarmDao)
     }
 
     @Provides
