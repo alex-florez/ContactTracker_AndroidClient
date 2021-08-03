@@ -7,9 +7,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
-import es.uniovi.eii.contacttracker.repositories.LocationRepository
-import javax.inject.Singleton
 
 /**
  * Módulo de inyección de dependencias para las alarmas

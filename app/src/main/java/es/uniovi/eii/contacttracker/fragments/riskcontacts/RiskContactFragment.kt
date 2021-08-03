@@ -18,7 +18,6 @@ import es.uniovi.eii.contacttracker.fragments.dialogs.timepicker.TimePickerFragm
 import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.riskcontact.alarms.MAX_ALARM_COUNT
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
-import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarmManager
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
@@ -66,6 +65,10 @@ class RiskContactFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = FragmentRiskContactBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.du = DateUtils
+        binding.viewModel = viewModel
+
         setListeners()
         setObservers()
 
@@ -94,7 +97,7 @@ class RiskContactFragment : Fragment() {
 
             /* Botón de Comprobación manual*/
             btnManualCheck.setOnClickListener {
-                viewModel.startChecking()
+                this@RiskContactFragment.viewModel.startChecking()
             }
 
             /* EditText para la hora de la comprobación */
@@ -117,15 +120,9 @@ class RiskContactFragment : Fragment() {
         viewModel.apply {
             /* Hora de la comprobación */
             checkHour.observe(viewLifecycleOwner) {
-                updateCheckHour(it)
+                updateTimePicker(it)
             }
-            /* Icono de carga */
-            isChecking.observe(viewLifecycleOwner) {
-                binding.apply {
-                    btnManualCheck.isEnabled = !it // Deshabilitar botón
-                    riskContactCheckLoading.visibility = if(it) View.VISIBLE else View.GONE // Línea de progreso
-                }
-            }
+
             /* Resultado de añadir una alarma de comprobación */
             addAlarmResult.observe(viewLifecycleOwner) {
                 when(it) {
@@ -144,18 +141,7 @@ class RiskContactFragment : Fragment() {
 
             /* Listado de alarmas de comprobación */
             alarms.observe(viewLifecycleOwner) {
-                loadAlarms(it)
-            }
-
-            /* Flag de lista de alarmas vacía */
-            emptyAlarms.observe(viewLifecycleOwner) { empty ->
-                if(empty){
-                    binding.labelNoAlarms.visibility = View.VISIBLE
-                    binding.alarmChipGroup.visibility = View.GONE
-                } else {
-                    binding.labelNoAlarms.visibility = View.GONE
-                    binding.alarmChipGroup.visibility = View.VISIBLE
-                }
+                addAlarmsToChipGroup(it)
             }
         }
     }
@@ -217,12 +203,12 @@ class RiskContactFragment : Fragment() {
     }
 
     /**
-     * Actualiza el campo de texto con la nueva hora de comprobación,
-     * además de actualizar las horas y minutos del TimePicker.
+     * Actualiza el TimePicker con las horas y minutos seleccionados
+     * desde el campo de texto de la Hora de la Comprobación.
+     *
+     * @param date Fecha seleccionada mediante el TimePicker.
      */
-    private fun updateCheckHour(date: Date) {
-        val checkHourText = DateUtils.formatDate(date, "HH:mm")
-        binding.txtCheckHour.setText(checkHourText)
+    private fun updateTimePicker(date: Date) {
         checkHourTimePicker.hours = DateUtils.getFromDate(date, Calendar.HOUR_OF_DAY)
         checkHourTimePicker.minutes = DateUtils.getFromDate(date, Calendar.MINUTE)
     }
@@ -281,7 +267,7 @@ class RiskContactFragment : Fragment() {
      *
      * @param alarms Alarmas de comprobación.
      */
-    private fun loadAlarms(alarms: List<RiskContactAlarm>) {
+    private fun addAlarmsToChipGroup(alarms: List<RiskContactAlarm>) {
         binding.alarmChipGroup.removeAllViews()
         alarms.forEach { alarm ->
             val chip = createAlarmChip(alarm)
