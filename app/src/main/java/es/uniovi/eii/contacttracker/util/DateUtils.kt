@@ -21,7 +21,7 @@ object DateUtils {
      * @return string con la fecha ya formateada.
      */
     fun formatDate(date: Date, format: String): String {
-        val formatter = SimpleDateFormat(format)
+        val formatter = SimpleDateFormat(format, Locale.getDefault())
         return formatter.format(date)
     }
 
