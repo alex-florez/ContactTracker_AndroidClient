@@ -1,181 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.riskcontacts.RiskContactFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Comprobación manual -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
+    <data>
+        <variable
+            name="du"
+            type="es.uniovi.eii.contacttracker.util.DateUtils" />
+        <variable
+            name="viewModel"
+            type="es.uniovi.eii.contacttracker.viewmodels.RiskContactViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:strokeColor="@color/grey1"
-        app:strokeWidth="1dp">
+        android:layout_height="match_parent"
+        tools:context=".fragments.riskcontacts.RiskContactFragment">
 
-        <LinearLayout
+        <!-- Comprobación manual -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp">
+            android:layout_margin="8dp"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:strokeColor="@color/grey1"
+            app:strokeWidth="1dp">
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/radioBtnManualCheck"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/manualCheck"
-                android:textAppearance="?attr/textAppearanceSubtitle2"/>
-
-            <TextView
-                android:id="@+id/txtViewManual"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/manualCheckExplanation"
-                android:justificationMode="inter_word" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnManualCheck"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/checkRiskContacts"
-                app:strokeWidth="2dp" />
-            <!-- ICONO DE CARGA -->
             <LinearLayout
-                android:id="@+id/riskContactCheckLoading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!-- Placeholder para la línea de progreso -->
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/radioBtnManualCheck"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/manualCheck"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
                 <TextView
+                    android:id="@+id/txtViewManual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/riskContactCheckingPlaceholder"
-                    android:textAlignment="center"
-                    android:textSize="13sp"/>
+                    android:text="@string/manualCheckExplanation"
+                    android:justificationMode="inter_word" />
 
-                <!-- Línea de progreso -->
-                <com.google.android.material.progressindicator.LinearProgressIndicator
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnManualCheck"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:indeterminateAnimationType="disjoint"/>
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/checkRiskContacts"
+                    app:strokeWidth="2dp"
+                    app:visibility="@{!viewModel.isChecking}"/>
 
-    <!-- Comprobación periódica -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        app:layout_constraintVertical_bias="0.0"
-        app:strokeColor="@color/grey1"
-        app:strokeWidth="1dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp">
-
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/radioBtnPeriodicCheck"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/periodicCheck"
-                android:textAppearance="?attr/textAppearanceSubtitle2" />
-
-            <TextView
-                android:id="@+id/txtViewPeriodic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/periodicCheckExplanation"
-                android:justificationMode="inter_word"
-                android:layout_marginBottom="8dp"/>
-
-            <!-- Campo de texto para seleccionar una hora -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutCheckHour"
-                    android:layout_width="0dp"
+                <!-- ICONO DE CARGA -->
+                <LinearLayout
+                    android:id="@+id/riskContactCheckLoading"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:hint="@string/checkHour"
-                    android:layout_marginEnd="4dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtCheckHour"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="vertical"
+                    app:visibility="@{viewModel.isChecking}">
+                    <!-- Placeholder para la línea de progreso -->
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="15:50"
-                        android:editable="false"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="@string/riskContactCheckingPlaceholder"
+                        android:textAlignment="center"
+                        android:textSize="13sp"/>
 
-                <ImageButton
-                    android:id="@+id/btnApplyCheckHour"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:layout_gravity="center"
-                    app:strokeWidth="2dp"
-                    android:src="@drawable/ic_add"
-                    android:backgroundTint="@color/greenOk"
-                    android:contentDescription="@string/addRiskContactAlarmBtnDescription" />
+                    <!-- Línea de progreso -->
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        app:indeterminateAnimationType="disjoint"/>
+                </LinearLayout>
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/labelScheduledAlarms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/scheduledAlarms"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textStyle="bold" />
+        <!-- Comprobación periódica -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+            app:layout_constraintVertical_bias="0.0"
+            app:strokeColor="@color/grey1"
+            app:strokeWidth="1dp">
 
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-
-            <!-- Grupo de Chips con las alarmas programadas -->
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/alarmChipGroup"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp">
 
-            <!-- Label para lista de alarmas vacía -->
-            <TextView
-                android:id="@+id/labelNoAlarms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/noAlarm"
-                android:layout_gravity="center"
-                android:layout_margin="8dp"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/radioBtnPeriodicCheck"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/periodicCheck"
+                    android:textAppearance="?attr/textAppearanceSubtitle2" />
+
+                <TextView
+                    android:id="@+id/txtViewPeriodic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/periodicCheckExplanation"
+                    android:justificationMode="inter_word"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Campo de texto para seleccionar una hora -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtInputLayoutCheckHour"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:hint="@string/checkHour"
+                        android:layout_marginEnd="4dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/txtCheckHour"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text='@{du.formatDate(viewModel.checkHour, "HH:mm")}'
+                            android:editable="false"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/btnApplyCheckHour"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:layout_gravity="center"
+                        app:strokeWidth="2dp"
+                        android:src="@drawable/ic_add"
+                        android:backgroundTint="@color/greenOk"
+                        android:contentDescription="@string/addRiskContactAlarmBtnDescription" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/labelScheduledAlarms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/scheduledAlarms"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"/>
+
+                <!-- Grupo de Chips con las alarmas programadas -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/alarmChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:visibility="@{!viewModel.emptyAlarms}"/>
+
+                <!-- Label para lista de alarmas vacía -->
+                <TextView
+                    android:id="@+id/labelNoAlarms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/noAlarm"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    app:visibility="@{viewModel.emptyAlarms}"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
