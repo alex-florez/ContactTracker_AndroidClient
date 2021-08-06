@@ -73,16 +73,18 @@ class RiskContactResultAdapter(
         private val binding = ItemCardRiskContactResultBinding.bind(itemView)
 
         fun bindRiskContactResult(riskContactResult: RiskContactResult, onRiskContactResultClick: OnRiskContactResultClick) {
-            binding.apply {
-                txtResultDate.text = DateUtils.formatDate(riskContactResult.timestamp, "dd/MM/yyyy")
-                txtResultHour.text = DateUtils.formatDate(riskContactResult.timestamp, "HH:mm")
-                txtNumberOfPositives.text = binding.root.context.resources
-                    .getQuantityString(R.plurals.positivesText, riskContactResult.numberOfPositives,
-                        riskContactResult.numberOfPositives)
-                // Porcentaje de riesgo más alto
-                txtHighestRiskPercent.text = binding.root.context
-                    .getString(R.string.percentText, riskContactResult.getHighestRiskContact().riskPercent)
-            }
+            binding.result = riskContactResult
+            binding.du = DateUtils
+//            binding.apply {
+//                txtResultDate.text = DateUtils.formatDate(riskContactResult.timestamp, "dd/MM/yyyy")
+//                txtResultHour.text = DateUtils.formatDate(riskContactResult.timestamp, "HH:mm")
+//                txtNumberOfPositives.text = binding.root.context.resources
+//                    .getQuantityString(R.plurals.positivesText, riskContactResult.numberOfPositives,
+//                        riskContactResult.numberOfPositives)
+//                // Porcentaje de riesgo más alto
+//                txtHighestRiskPercent.text = binding.root.context
+//                    .getString(R.string.percentText, riskContactResult.getHighestRiskContact().riskPercent)
+//            }
             // Listener de Click.
             itemView.setOnClickListener{
                 onRiskContactResultClick.onClick(riskContactResult)

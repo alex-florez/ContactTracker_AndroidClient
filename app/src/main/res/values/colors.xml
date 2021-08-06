@@ -22,6 +22,7 @@
     <color name="orangeText">#7A4A03</color>
     <color name="orange2">#F60418</color>
     <color name="grey">#DCD7D8</color>
+    <color name="orange3">#E36A19</color>
 
     <!-- Colores para los resultados de la comprobación -->
     <color name="greenOk">#9BDC6C</color>

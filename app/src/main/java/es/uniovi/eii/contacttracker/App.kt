@@ -50,7 +50,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        deleteDatabase("contacttracker.db")
+        deleteDatabase("contacttracker.db")
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         createNotificationChannels()
         initSharedPrefs()
