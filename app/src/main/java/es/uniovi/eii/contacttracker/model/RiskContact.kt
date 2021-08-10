@@ -33,6 +33,7 @@ class RiskContact(
         var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
         var startDate: Date = Date() , /* Fecha de inicio del contacto. (Aproximada) */
         var endDate: Date = Date(), /* Fecha de fin de contacto. (Aproximada) */
+        var positiveLabel: String = "", /* Etiqueta del positivo con el que se tuvo el contacto de riesgo. */
         @Ignore var config: RiskContactConfig = RiskContactConfig() /* Configuración de la comprobación */
 ) : Parcelable {
 

@@ -38,6 +38,7 @@ fun toRiskContact(riskContactWithLocations: RiskContactWithLocations): RiskConta
     riskContact.riskContactId = rc.riskContactId
     riskContact.riskContactResultId = rc.riskContactResultId
     riskContact.riskLevel = rc.riskLevel
+    riskContact.riskScore = rc.riskScore
     riskContact.riskPercent = rc.riskPercent
     riskContact.exposeTime = rc.exposeTime
     riskContact.meanProximity = rc.meanProximity
@@ -45,6 +46,7 @@ fun toRiskContact(riskContactWithLocations: RiskContactWithLocations): RiskConta
     riskContact.startDate = rc.startDate
     riskContact.endDate = rc.endDate
     riskContact.contactLocations = riskContactWithLocations.riskContactLocations.toMutableList()
+    riskContact.positiveLabel = rc.positiveLabel
     riskContact.config = rc.config
     return riskContact
 }

@@ -85,6 +85,16 @@ data class RiskContactResult(
         return round(mean/riskContacts.size, 4)
     }
 
+    /**
+     * Ordena la lista de contactos de riesgo obtenidos mediante la comprobación,
+     * en función del Score (puntuación) de riesgo.
+     */
+    fun orderRiskContactsByRisk() {
+        riskContacts.sortByDescending {
+            it.riskScore
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

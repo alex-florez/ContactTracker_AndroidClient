@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -31,7 +32,7 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
     /**
      * Contacto de Riesgo.
      */
-    private var riskContact: RiskContact? = null
+    private lateinit var riskContact: RiskContact
 
     /**
      * ViewBinding
@@ -43,18 +44,16 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
      */
     private lateinit var map: GoogleMap
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            riskContact = it.getParcelable(ARG_RISK_CONTACT)
-        }
-    }
+    /* Argumentos */
+    private val args: RiskContactMapFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRiskContactMapBinding.inflate(inflater, container, false)
+        // Argumentos
+        riskContact = args.riskContact
         // Inicializar el mapa
         val mapFragment: SupportMapFragment = childFragmentManager
             .findFragmentById(R.id.riskContactMapFragment) as SupportMapFragment

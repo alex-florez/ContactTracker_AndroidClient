@@ -75,7 +75,7 @@ class RiskContactManager @Inject constructor(
         /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */
 //        val userItinerary = locationRepository.getItinerarySince(config.checkScope)
 //        val userItinerary = pruebaUser()
-        val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope))
+        val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope), "Usuario")
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives: List<Positive> = mutableListOf()
         when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
@@ -98,10 +98,12 @@ class RiskContactManager @Inject constructor(
         }
 //        positives.add(Positive(null, Date(), listOf(), listOf(), null))
         /* Hacer la comprobación para cada positivo */
+        var index = 0
         positives.forEach { positive ->
+            index++
             // Itinerario del positivo
 //            val positiveItinerary = positive.getItinerary()
-            val positiveItinerary = Itinerary(positive.locations)
+            val positiveItinerary = Itinerary(positive.locations, "Positivo $index")
 //            val positiveItinerary = pruebaPositive()
             val contacts = detector.startChecking(userItinerary, positiveItinerary)
             if(contacts.isNotEmpty()){
@@ -202,11 +204,6 @@ class RiskContactManager @Inject constructor(
             ctx.getString(R.string.resultNotificationHealthy)
         }
         // Intent para ver los resultados de la comprobación.
-//        val pendingIntent: PendingIntent = Intent(ctx, MainActivity::class.java).let {
-//            it.action = Constants.ACTION_SHOW_RISK_CONTACT_RESULT
-//            it.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
-//            PendingIntent.getActivity(ctx, 0, it, 0)
-//        }
         val pendingIntent = NavDeepLinkBuilder(ctx)
             .setGraph(R.navigation.nav_graph)
             .setDestination(R.id.resultDetailsFragment)

@@ -6,12 +6,12 @@ import es.uniovi.eii.contacttracker.util.DateUtils
 const val dateFormat = "yyyy-MM-dd"
 
 /**
- * Clase que representa un itinerario formado
- * por localizaciones agrupadas por días en las
- * que fueron registradas.
+ * Clase que representa un itinerario formado por localizaciones
+ * agrupadas por días en las que fueron registradas.
  */
 class Itinerary(
-        locations: List<UserLocation>
+        locations: List<UserLocation>,
+        val label: String /* Etiqueta del itinerario */
 ) {
 
         /* Mapa con las localizaciones clasificadas por fecha */

@@ -14,6 +14,7 @@
     <string name="accuracy">Precisión</string>
     <string name="minSecsText">%1$d min %2$d sec</string>
     <string name="percentText">%.2f %%</string>
+    <string name="m">%.2f m</string>
     <string name="genericError">Ha ocurrido un error</string>
 
     <!-- Strings de cantidad / plurales -->
@@ -29,7 +30,14 @@
         <item quantity="one">%d positivo</item>
         <item quantity="other">%d positivos</item>
     </plurals>
-
+    <plurals name="positivesTextWithNoValue">
+        <item quantity="one">positivo</item>
+        <item quantity="other">positivos</item>
+    </plurals>
+    <plurals name="riskContactTextWithNoValue">
+        <item quantity="one">contacto de riesgo con</item>
+        <item quantity="other">contactos de riesgo con</item>
+    </plurals>
 
     <!-- Errores genéricos -->
     <string name="network_error">Ha habido un error de red en la solicitud.</string>
@@ -190,16 +198,18 @@
     <!-- Fragment: Detalles de un resultado de la comprobación -->
     <string name="riskiestContact">Contacto de mayor riesgo</string>
     <string name="riskPercent">Riesgo</string>
-    <string name="startHour">Hora de inicio</string>
-    <string name="endHour">Hora de fin</string>
+    <string name="startHour">Inicio</string>
+    <string name="endHour">Fin</string>
     <string name="exposeTime">Tiempo de exposición</string>
     <string name="meanProximity">Proximidad media</string>
     <string name="riskContacts">Contactos de riesgo</string>
     <string name="numberPositives">Número de positivos</string>
-    <string name="totalMeanRisk">Riesgo medio total</string>
-    <string name="totalMeanExposeTime">Tiempo de exposición medio</string>
-    <string name="totalMeanProximity">Proximidad media total</string>
+    <string name="meanValues">Valores medios</string>
+    <string name="totalMeanRisk">Riesgo</string>
+    <string name="totalMeanExposeTime">Tiempo de exposición</string>
+    <string name="totalMeanProximity">Proximidad</string>
     <string name="generalData">Datos generales</string>
+    <string name="riskContactInMap">Contacto de riesgo</string>
 
     <!-- Fragment: Comprobación de contactos de riesgo -->
     <string name="manualCheck">Comprobación manual</string>

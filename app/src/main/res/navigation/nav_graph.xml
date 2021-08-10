@@ -72,6 +72,13 @@
         <argument
             android:name="result"
             app:argType="es.uniovi.eii.contacttracker.model.RiskContactResult" />
+        <action
+            android:id="@+id/showRiskContactInMap"
+            app:destination="@id/riskContactMapFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
     </fragment>
 
     <!-- Fragmento del Mapa de Localizaciones del Histórico -->
@@ -91,5 +98,15 @@
         android:name="es.uniovi.eii.contacttracker.fragments.notifypositive.PrivacyPolicyFragment"
         android:label="@string/privacyPolicy"
         tools:layout="@layout/fragment_privacy_policy" />
+
+    <fragment
+        android:id="@+id/riskContactMapFragment"
+        android:name="es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactMapFragment"
+        android:label="@string/riskContactInMap"
+        tools:layout="@layout/fragment_risk_contact_map" >
+        <argument
+            android:name="riskContact"
+            app:argType="es.uniovi.eii.contacttracker.model.RiskContact" />
+    </fragment>
 
 </navigation>

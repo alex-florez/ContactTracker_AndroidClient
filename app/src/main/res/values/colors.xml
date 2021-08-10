@@ -23,10 +23,11 @@
     <color name="orange2">#F60418</color>
     <color name="grey">#DCD7D8</color>
     <color name="orange3">#E36A19</color>
+    <color name="deepGreen">#109C05</color>
 
     <!-- Colores para los resultados de la comprobación -->
-    <color name="greenOk">#9BDC6C</color>
-    <color name="yellowWarning">#F3EB57</color>
-    <color name="orangeWarning">#FF934A</color>
-    <color name="redDanger">#D83434</color>
+    <color name="greenOk">#5BBA16</color>
+    <color name="yellowWarning">#E6DC1D</color>
+    <color name="orangeWarning">#F36200</color>
+    <color name="redDanger">#EA1A1A</color>
 </resources>

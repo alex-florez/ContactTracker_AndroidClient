@@ -44,7 +44,7 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
                         && checkTimeProximity(userLocation, closestLocation, riskContactConfig.timeDifferenceMargin) // Cercanía en el TIEMPO
                     ) {
                         if(riskContact == null){ /* Registrar nuevo contacto */
-                            riskContact = RiskContact(config = riskContactConfig) // Iniciar nuevo Tramo de contacto.
+                            riskContact = RiskContact(config = riskContactConfig, positiveLabel = positive.label) // Iniciar nuevo Tramo de contacto.
                         }
                         /* Actualizar Contacto de Riesgo si ya se estaba en un tramo de contacto */
                         riskContact?.addContactLocations(userLocation, closestLocation)

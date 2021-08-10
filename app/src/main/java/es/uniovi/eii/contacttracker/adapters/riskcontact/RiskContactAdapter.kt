@@ -14,6 +14,7 @@ import es.uniovi.eii.contacttracker.databinding.ItemCardRiskContactBinding
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskLevel
 import es.uniovi.eii.contacttracker.util.DateUtils
+import java.sql.Date
 
 /**
  * Callback de diferencias para los contactos
@@ -65,78 +66,9 @@ class RiskContactAdapter(
          * los componentes del Card.
          */
         fun bindRiskContact(riskContact: RiskContact, onShowInMapClick: OnShowInMapClick) {
-            setDates(riskContact)
-            setExposeTime(riskContact)
-            setMeanProximity(riskContact)
-            setRiskPercent(riskContact)
-            setCardColor(riskContact)
+            binding.du = DateUtils
+            binding.rc = riskContact
             setListeners(riskContact, onShowInMapClick)
-        }
-
-        /**
-         * Establece las fechas de inicio y fin del contacto
-         * en el Card.
-         */
-        private fun setDates(riskContact: RiskContact) {
-            val startDate = DateUtils.formatDate(riskContact.startDate, "dd/MM/yyyy")
-            var startHour = DEFAULT_HOUR
-            var endHour = DEFAULT_HOUR
-            if(riskContact.contactLocations.size > 1){ // Si hay más de un pto de contacto
-                startHour = DateUtils.formatDate(riskContact.startDate, "HH:mm:ss")
-                endHour = DateUtils.formatDate(riskContact.endDate, "HH:mm:ss")
-            }
-            binding.apply {
-                txtContactDate.text = startDate
-                txtContactStartHour.text = startHour
-                txtContactEndHour.text = endHour
-            }
-        }
-
-        /**
-         * Establece el tiempo de exposición del contacto
-         * en el Card.
-         */
-        private fun setExposeTime(riskContact: RiskContact) {
-            val minSecs = DateUtils.getMinuteSecond(riskContact.exposeTime)
-            binding.txtContactExposeTime.text = binding.root.context.
-                getString(R.string.minSecsText, minSecs[0], minSecs[1])
-        }
-
-        /**
-         * Establece la proximidad media del contacto.
-         */
-        private fun setMeanProximity(riskContact: RiskContact) {
-            binding.txtContactMeanProximity.text = binding.root.context.resources
-                .getQuantityString(R.plurals.metersText, riskContact.meanProximity.toInt(), riskContact.meanProximity)
-        }
-
-        /**
-         * Establece el porcentaje de riesgo del contacto.
-         */
-        private fun setRiskPercent(riskContact: RiskContact) {
-            binding.txtRiskPercent.text = binding.root.context
-                .getString(R.string.percentText, riskContact.riskPercent)
-        }
-
-        /**
-         * Cambia el color del card en función
-         * del nivel de riesgo del contacto.
-         */
-        private fun setCardColor(riskContact: RiskContact){
-            val color = when(riskContact.riskLevel) {
-                RiskLevel.AMARILLO -> {
-                    ContextCompat.getDrawable(itemView.context, R.color.yellowWarning)
-                }
-                RiskLevel.NARANJA -> {
-                    ContextCompat.getDrawable(itemView.context, R.color.orangeWarning)
-                }
-                RiskLevel.ROJO -> {
-                    ContextCompat.getDrawable(itemView.context, R.color.redDanger)
-                }
-                else -> ContextCompat.getDrawable(itemView.context, R.color.greenOk)
-            }
-            if(color != null)
-                binding.cardRiskContact.background = color
         }
 
         /**
@@ -149,8 +81,6 @@ class RiskContactAdapter(
             }
         }
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RiskContactViewHolder {
         val itemView = LayoutInflater.from(parent.context)
