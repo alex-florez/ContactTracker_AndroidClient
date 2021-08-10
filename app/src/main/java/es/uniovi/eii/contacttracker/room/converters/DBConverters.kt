@@ -16,11 +16,11 @@ class DBConverters {
 
     /* FECHAS */
     @TypeConverter
-    fun dateFromString(dateString: String): Date {
+    fun dateFromString(dateString: String): Date? {
         return try {
-            df.parse(dateString) ?: Date()
+            df.parse(dateString)
         } catch (e: Exception) {
-            Date()
+            null
         }
     }
 

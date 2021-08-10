@@ -31,8 +31,9 @@ class RiskContact(
         var exposeTime: Long = 0L, /* Tiempo de exposición total en formato de milisegundos */
         var meanProximity: Double = 0.0, /* Proximidad media (metros) */
         var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
-        var startDate: Date = Date() , /* Fecha de inicio del contacto. (Aproximada) */
-        var endDate: Date = Date(), /* Fecha de fin de contacto. (Aproximada) */
+
+        var startDate: Date? = null, /* Fecha de inicio del contacto. (Aproximada) */
+        var endDate: Date? = null, /* Fecha de fin de contacto. (Aproximada) */
         var positiveLabel: String = "", /* Etiqueta del positivo con el que se tuvo el contacto de riesgo. */
         @Ignore var config: RiskContactConfig = RiskContactConfig() /* Configuración de la comprobación */
 ) : Parcelable {
@@ -72,11 +73,11 @@ class RiskContact(
             // Calcular el límite superior en inferior de la intersección.
             val (inferior, superior) = getIntersection(firstUserLocation.timestamp, lastUserLocation.timestamp,
                     firstPositiveLocation.timestamp, lastPositiveLocation.timestamp)
+            // Asignar fechas de inicio y fin de contacto.
+            startDate = inferior
+            endDate = superior
             if(inferior != null && superior != null) {
                 exposeTime = abs(inferior.time - superior.time) // Diferencia de tiempo en milisegundos.
-                // Asignar fechas de inicio y fin de contacto.
-                startDate = inferior
-                endDate = superior
             }
         }
     }

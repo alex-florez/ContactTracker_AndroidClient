@@ -79,7 +79,7 @@
                             android:id="@+id/txtContactStartHour"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text='@{rc.contactLocations.size() > 1 ? du.formatDate(rc.startDate, "HH:mm:ss") : "##:##:##"}'
+                            android:text='@{rc.startDate != null ? du.formatDate(rc.startDate, "HH:mm:ss") : "##:##:##"}'
                             android:textAppearance="?attr/textAppearanceSubtitle2"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -99,7 +99,7 @@
                             android:id="@+id/txtContactEndHour"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text='@{rc.contactLocations.size() > 1 ? du.formatDate(rc.endDate, "HH:mm:ss") : "##:##:##"}'
+                            android:text='@{rc.startDate != null ? du.formatDate(rc.endDate, "HH:mm:ss") : "##:##:##"}'
                             android:textAppearance="?attr/textAppearanceSubtitle2"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -153,6 +153,11 @@
                             android:textSize="20sp"/>
                     </LinearLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.valueOf(rc.contactLocations.size())}"/>
             </LinearLayout>
 
             <View
