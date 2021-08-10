@@ -233,6 +233,12 @@
     <string name="resultNotificationHealthy">No has tenido contacto con ningún positivo.</string>
     <string name="resultNotificationCheckingErrorTitle">Error durante la comprobación de contactos</string>
     <string name="resultNotificationCheckingError">No ha sido posible realizar la comprobación de contactos de riesgo.</string>
+    <plurals name="resultNotificationRiskContact">
+        <item quantity="one">Has estado en contacto con %d positivo.</item>
+        <item quantity="other">Has estado en contacto con %d positivos.</item>
+    </plurals>
+    <string name="resultNotificationHighestRiskPercent">Porcentaje de riesgo más alto: %.2f %%
+    </string>
 
     <!-- Notificaciones: Servicio de rastreo de ubicación -->
     <string name="locationServiceTitle">Servicio de rastreo de ubicación</string>

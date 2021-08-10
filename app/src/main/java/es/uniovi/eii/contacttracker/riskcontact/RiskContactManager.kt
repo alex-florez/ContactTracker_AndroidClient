@@ -10,6 +10,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -33,14 +34,14 @@ import javax.inject.Inject
 
 /* ID de la notificación con los resultados de la comprobación */
 private const val RESULT_NOTIFICATION_ID = 1999
-/* ID de la alarma de comprobación de contactos de riesgo */
-private const val CHECK_ALARM_ID = 2999
-
 
 /**
- * Clase que contiene toda la funcionalidad para gestionar
- * las comprobaciones de contactos de riesgo, incluyendo el
- * servicio en primer plano y las alarmas para las comprobaciones periódicas.
+ * Clase que gestiona la comprobación de contactos de riesgo. Recupera las localizaciones
+ * del propio usuario almacenadas en local y las localizaciones de los positivos de la
+ * nube para compararlas y detectar contactos de riesgo.
+ *
+ * Utiliza los parámetros de la configuración de la comprobación de contactos almacenados
+ * tanto en el dispositivo local como en los ajustes de la nube modificados por los administradores.
  */
 class RiskContactManager @Inject constructor(
         private val detector: RiskContactDetector, // Detector de contactos de riesgo.
@@ -48,14 +49,8 @@ class RiskContactManager @Inject constructor(
         private val positiveRepository: PositiveRepository, // Repositorio de positivos.
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
         private val configRepository: ConfigRepository, // Repositorio de configuración
-        private val alarmManager: AlarmManager, // Manager de alarmas de Android
         @ApplicationContext private val ctx: Context
 ) {
-
-    /**
-     * Pending intent de la alarma de comprobación.
-     */
-    private var checkAlarmIntent: PendingIntent? = null
 
     /**
      * Ejecuta la comprobación de contactos de riesgo teniendo en cuenta los
@@ -156,7 +151,6 @@ class RiskContactManager @Inject constructor(
         }
     }
 
-
     /**
      * Crea una notificación visible para el usuario a partir de los resultados
      * obtenidos en la comprobación.
@@ -166,40 +160,17 @@ class RiskContactManager @Inject constructor(
      */
     private fun createNotification(riskContactResult: RiskContactResult): Notification {
         // Color e icono grande de la notificación
-        var color = ctx.getColor(R.color.greenOk)
+        val colorIcon = getNotificationColorAndIcon(riskContactResult.getHighestRiskContact().riskLevel)
         var largeIcon: Bitmap? = null
-        when(riskContactResult.getHighestRiskContact().riskLevel){
-            RiskLevel.VERDE -> {
-                color = ctx.getColor(R.color.greenOk)
-                ContextCompat.getDrawable(ctx, R.drawable.ic_healthy)?.let {
-                    largeIcon = drawableToBitmap(it)
-                }
-            }
-            RiskLevel.AMARILLO -> {
-                color = ctx.getColor(R.color.yellowWarning)
-                ContextCompat.getDrawable(ctx, R.drawable.ic_yellow_warning)?.let {
-                    largeIcon = drawableToBitmap(it)
-                }
-            }
-            RiskLevel.NARANJA -> {
-                color = ctx.getColor(R.color.orangeWarning)
-                ContextCompat.getDrawable(ctx, R.drawable.ic_orange_warning)?.let {
-                    largeIcon = drawableToBitmap(it)
-                }
-            }
-            RiskLevel.ROJO -> {
-                color = ctx.getColor(R.color.redDanger)
-                ContextCompat.getDrawable(ctx, R.drawable.ic_danger)?.let {
-                    largeIcon = drawableToBitmap(it)
-                }
-            }
+        ContextCompat.getDrawable(ctx, colorIcon.second)?.let {
+            largeIcon = drawableToBitmap(it)
         }
+
         // Contenido de texto
-        var textContent = ""
-        var positivesText = if(riskContactResult.numberOfPositives > 1) "positivos" else "positivo"
-        textContent = if(riskContactResult.riskContacts.isNotEmpty()){
-            "Has estado en contacto con ${riskContactResult.numberOfPositives} " + positivesText +
-                            ". Porcentaje de riesgo más alto: ${riskContactResult.getHighestRiskContact().riskPercent} %."
+        val textContent = if(riskContactResult.riskContacts.isNotEmpty()){ // Peligro: contactos de riesgo detectados.
+            ctx.resources.getQuantityString(R.plurals.resultNotificationRiskContact,
+                riskContactResult.numberOfPositives, riskContactResult.numberOfPositives) + " " +
+                    ctx.getString(R.string.resultNotificationHighestRiskPercent, riskContactResult.getHighestRiskContact().riskPercent)
         } else { // No ha habido contactos de riesgo.
             ctx.getString(R.string.resultNotificationHealthy)
         }
@@ -217,10 +188,41 @@ class RiskContactManager @Inject constructor(
             .setSmallIcon(R.mipmap.ic_launcher)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setColorized(true)
-            .setColor(color)
+            .setColor(colorIcon.first)
             .setLargeIcon(largeIcon)
             .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
             .build()
+    }
+
+    /**
+     * Devuelve un par con el color y el icono correspondiente al
+     * nivel de riesgo pasado como parámetro.
+     *
+     * @param riskLevel Nivel de riesgo.
+     * @return Par con el color y el icono correspondiente al nivel de riesgo.
+     */
+    private fun getNotificationColorAndIcon(riskLevel: RiskLevel): Pair<Int, Int> {
+        var color = ctx.getColor(R.color.greenOk)
+        var icon = R.drawable.ic_healthy
+        when(riskLevel) {
+            RiskLevel.VERDE -> {
+                color = ctx.getColor(R.color.greenOk)
+                icon = R.drawable.ic_healthy
+            }
+            RiskLevel.AMARILLO -> {
+                color = ctx.getColor(R.color.yellowWarning)
+                icon = R.drawable.ic_yellow_warning
+            }
+            RiskLevel.NARANJA -> {
+                color = ctx.getColor(R.color.orangeWarning)
+                icon = R.drawable.ic_orange_warning
+            }
+            RiskLevel.ROJO -> {
+                color = ctx.getColor(R.color.redDanger)
+                icon = R.drawable.ic_danger
+            }
+        }
+        return Pair(color, icon)
     }
 
     /**
