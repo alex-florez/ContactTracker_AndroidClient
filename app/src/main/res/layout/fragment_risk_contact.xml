@@ -158,11 +158,12 @@
                         android:id="@+id/btnApplyCheckHour"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.2"
+                        android:layout_weight="0.13"
                         android:layout_gravity="center"
+                        android:layout_margin="2dp"
+                        android:backgroundTint="@color/add_button"
                         app:strokeWidth="2dp"
                         android:src="@drawable/ic_add"
-                        android:backgroundTint="@color/greenOk"
                         android:contentDescription="@string/addRiskContactAlarmBtnDescription" />
                 </LinearLayout>
 
