@@ -68,8 +68,6 @@ class RiskContactManager @Inject constructor(
         detector.setConfig(config) // Establecer la configuración al detector.
 
         /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */
-//        val userItinerary = locationRepository.getItinerarySince(config.checkScope)
-//        val userItinerary = pruebaUser()
         val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope), "Usuario")
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives: List<Positive> = mutableListOf()
@@ -97,9 +95,7 @@ class RiskContactManager @Inject constructor(
         positives.forEach { positive ->
             index++
             // Itinerario del positivo
-//            val positiveItinerary = positive.getItinerary()
             val positiveItinerary = Itinerary(positive.locations, "Positivo $index")
-//            val positiveItinerary = pruebaPositive()
             val contacts = detector.startChecking(userItinerary, positiveItinerary)
             if(contacts.isNotEmpty()){
                 // Actualizar el resultado.
@@ -141,6 +137,7 @@ class RiskContactManager @Inject constructor(
      * en el propio dispositivo (local) mediante el CÓDIGO de POSITIVO. Devuelve
      * solo aquellos positivos que no hayan sido notificados por el propio usuario y que
      * por tanto no estén almacenados en local.
+     *
      * @param positives Lista con todos los positivos recuperados de la nube.
      * @return Lista filtrada con los positivos que no hayan sido notificados por el propio usuario.
      */
@@ -236,23 +233,6 @@ class RiskContactManager @Inject constructor(
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setStyle(NotificationCompat.BigTextStyle().bigText(ctx.getString(R.string.resultNotificationCheckingError)))
             .build()
-    }
-
-    /**
-     * Método privado que devuelve el PendingIntent correspondiente
-     * al Intent pasado como parámetro en función de la versión
-     * del dispositivo.
-     *
-     * @param intent Intent con el servicio de localización.
-     * @param id Id asociado al PendingIntent.
-     *
-     */
-    private fun getPendingIntentService(intent: Intent, id: Int): PendingIntent {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            PendingIntent.getForegroundService(ctx, id, intent, 0)
-        } else {
-            PendingIntent.getService(ctx, id, intent, 0)
-        }
     }
 
     /**
