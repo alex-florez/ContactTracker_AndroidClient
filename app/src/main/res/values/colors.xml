@@ -25,6 +25,7 @@
     <color name="orange3">#E36A19</color>
     <color name="deepGreen">#109C05</color>
     <color name="disabledGreenOk">#B3D39D</color>
+    <color name="transparentGrey">#BCEFF4EC</color>
 
     <!-- Colores para los resultados de la comprobación -->
     <color name="greenOk">#5BBA16</color>

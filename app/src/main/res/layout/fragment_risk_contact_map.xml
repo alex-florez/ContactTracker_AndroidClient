@@ -1,20 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.riskcontacts.RiskContactMapFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Mapa de Google Maps -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/riskContactMapFragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <data>
+        <variable
+            name="rc"
+            type="es.uniovi.eii.contacttracker.model.RiskContact" />
+        <variable
+            name="exposeTimeMins"
+            type="Integer" />
+        <variable
+            name="exposeTimeSecs"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:context=".fragments.riskcontacts.RiskContactMapFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Mapa de Google Maps -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/riskContactMapFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <!-- Caja con las características del contacto -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparentGrey"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/riskContactMapFragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/riskContactMapFragment"
+            app:layout_constraintVertical_bias="0.0">
+
+            <!-- Porcentaje de riesgo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/percentText(rc.riskPercent)}"
+                android:layout_marginHorizontal="6dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:drawablePadding="5dp"
+                app:drawableLeftCompat="@drawable/ic_orange_warning" />
+            <!-- Proximidad media -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/m(rc.meanProximity)}"
+                android:layout_marginHorizontal="6dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:drawablePadding="5dp"
+                app:drawableLeftCompat="@drawable/ic_proximity" />
+
+            <!-- Tiempo de exposición -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{String.format("%d min %d sec", exposeTimeMins, exposeTimeSecs)}'
+                android:layout_marginHorizontal="6dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:drawablePadding="5dp"
+                app:drawableLeftCompat="@drawable/ic_time" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

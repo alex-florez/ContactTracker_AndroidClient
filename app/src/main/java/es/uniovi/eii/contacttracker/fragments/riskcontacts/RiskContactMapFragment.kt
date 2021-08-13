@@ -17,6 +17,8 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentRiskContactMapBinding
 import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.RiskContact
+import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
  * Contacto de Riesgo.
@@ -24,7 +26,7 @@ import es.uniovi.eii.contacttracker.model.RiskContact
 private const val ARG_RISK_CONTACT = "argRiskContact"
 
 /**
- * Fragmento con un mapa de Google Maps para reflejar los
+ * Fragmento con un mapa de Google Maps que refleja los
  * Tramos de Contactos de Riesgo obtenidos mediante la comprobación.
  */
 @AndroidEntryPoint
@@ -54,6 +56,13 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
         binding = FragmentRiskContactMapBinding.inflate(inflater, container, false)
         // Argumentos
         riskContact = args.riskContact
+
+        // Enviar datos al XML
+        val minSecs = DateUtils.getMinuteSecond(riskContact.exposeTime)
+        binding.rc = riskContact
+        binding.exposeTimeMins = minSecs[0]
+        binding.exposeTimeSecs = minSecs[1]
+
         // Inicializar el mapa
         val mapFragment: SupportMapFragment = childFragmentManager
             .findFragmentById(R.id.riskContactMapFragment) as SupportMapFragment
@@ -73,23 +82,26 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
      * de riesgo en el mapa.
      */
     private fun drawContact(){
-        riskContact?.let {
-            val userLocations = mutableListOf<Point>()
-            val positiveLocations = mutableListOf<Point>()
-            // Crear listas con las localizaciones del usuario y del positivo.
-            it.contactLocations.forEach { contactLocation ->
-                userLocations.add(contactLocation.userContactPoint)
-                positiveLocations.add(contactLocation.positiveContactPoint)
-            }
-            /* Dibujar Localizaciones del usuario */
-            drawLocations(userLocations, requireContext().getColor(R.color.blue1))
-            /* Dibujar localizciones del positivo */
-            drawLocations(positiveLocations, requireContext().getColor(R.color.red1))
-            if(userLocations.isNotEmpty()){
-                /* Mover la cámara */
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                    LatLng(userLocations[0].lat, userLocations[0].lng), Constants.DEFAULT_ZOOM))
-            }
+        val userLocations = mutableListOf<Point>()
+        val positiveLocations = mutableListOf<Point>()
+        // Crear listas con las localizaciones del usuario y del positivo.
+        riskContact.contactLocations.forEach { contactLocation ->
+            userLocations.add(contactLocation.userContactPoint)
+            positiveLocations.add(contactLocation.positiveContactPoint)
+        }
+        /* Dibujar Localizaciones del usuario */
+        drawLocations(userLocations, requireContext().getColor(R.color.blue1))
+        /* Dibujar localizciones del positivo */
+        drawLocations(positiveLocations, requireContext().getColor(R.color.red1))
+
+        /* Dibujar marcadores */
+        drawMarkers(userLocations, BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+        drawMarkers(positiveLocations, BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+
+        if(userLocations.isNotEmpty()){
+            /* Mover la cámara */
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                LatLng(userLocations[0].lat, userLocations[0].lng), 20f))
         }
     }
 
@@ -113,12 +125,29 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
             .addAll(points))
         path.width = 12f
         path.color = color
-        // Dibujar marcador de inicio y de fin
-        if(points.isNotEmpty()){
-            val startMarker = map.addMarker(MarkerOptions()
-                .position(points[0]))
-            val endMarker = map.addMarker(MarkerOptions()
-                .position(points[points.size-1]))
+    }
+
+    /**
+     * Dibuja un marcador de inicio y de fin en las localizaciones primera
+     * y última respectivamente de la lista pasada como parámetro y con el
+     * icono indicado.
+     *
+     * @param locations Lista de localizaciones.
+     * @param icon Icono del marcador.
+     */
+    private fun drawMarkers(locations: List<Point>, icon: BitmapDescriptor) {
+        val points = locations.map {
+            LatLng(it.lat, it.lng)
+        }
+        if(points.isNotEmpty()) {
+            // Marcador de inicio
+            map.addMarker(MarkerOptions()
+                .position(points[0])
+                .icon(icon))
+            // Marcador de fin
+            map.addMarker(MarkerOptions()
+                .position(points.last())
+                .icon(icon))
         }
     }
 
