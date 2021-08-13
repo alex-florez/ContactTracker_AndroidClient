@@ -53,10 +53,10 @@ interface RiskContactDetector {
      *
      * @param pointA Localización A.
      * @param pointB Localización B.
-     * @param time Margen de tiempo en MINUTOS con el que se hace la comparación.
+     * @param time Margen de tiempo en SEGUNDOS con el que se hace la comparación.
      * @return True si la diferencia temporal es menor o igual que el margen de tiempo especificado.
      */
-    fun checkTimeProximity(pointA: UserLocation, pointB: UserLocation, time:Double): Boolean
+    fun checkTimeProximity(pointA: UserLocation, pointB: UserLocation, time: Int): Boolean
 
     /**
      * Establece la configuración de la comprobación con la nueva

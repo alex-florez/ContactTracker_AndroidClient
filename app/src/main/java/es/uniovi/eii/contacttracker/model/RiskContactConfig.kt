@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 /* Valores por defecto */
 const val SCOPE = 3
 private const val SECURITY_DISTANCE_MARGIN = 5.0
-private const val TIME_DIFFERENCE_MARGIN = 5.0
+private const val TIME_DIFFERENCE_MARGIN = 5
 private val EXPOSE_TIME_RANGE = arrayOf(0L, 900000L)
 private val MEAN_PROXIMITY_RANGE = arrayOf(0.0, 10.0)
 private val MEAN_TIME_INTERVAL_RANGE = arrayOf(0L, 600000L)
@@ -26,7 +26,7 @@ const val RISK_CONTACT_CHECK_SCOPE_KEY = "RiskContactCheckScope"
 data class RiskContactConfig(
     var checkScope: Int = SCOPE, // Alcance de la comprobación en días.
     val securityDistanceMargin: Double = SECURITY_DISTANCE_MARGIN, // Margen de diferencia de Distancia de seguridad
-    val timeDifferenceMargin: Double = TIME_DIFFERENCE_MARGIN, // Margen de diferencia temporal
+    val timeDifferenceMargin: Int = TIME_DIFFERENCE_MARGIN, // Margen de diferencia temporal
     val exposeTimeRange: Array<Long> = EXPOSE_TIME_RANGE, // Rango de tiempo de exposición (milisegundos)
     val meanProximityRange: Array<Double> = MEAN_PROXIMITY_RANGE, // Rango de proximidad media (metros)
     val meanTimeIntervalRange: Array<Long> = MEAN_TIME_INTERVAL_RANGE, // Rango de intervalo de tiempo medio (milisegundos)
