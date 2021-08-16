@@ -38,5 +38,13 @@ data class Positive(
         @Expose
         @SerializedName("personalData")
         @Embedded
-        var personalData: PersonalData? = null // Datos personales (Opcional)
+        var personalData: PersonalData? = null, // Datos personales (Opcional)
+
+        @Expose
+        @SerializedName("asymptomatic")
+        var asymptomatic: Boolean = false, // Indica si el positivo es asintomático.
+
+        @Expose
+        @SerializedName("vaccinated")
+        var vaccinated: Boolean = false // Indica si el positivo está vacunado.
 )

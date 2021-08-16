@@ -16,6 +16,8 @@
     <string name="percentText">%.2f %%</string>
     <string name="m">%.2f m</string>
     <string name="genericError">Ha ocurrido un error</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
 
     <!-- Strings de cantidad / plurales -->
     <plurals name="daysText">
@@ -260,4 +262,13 @@
     <!-- Preferencias de Comprobación de Contactos -->
     <string name="check_scope_title">Alcance de la comprobación</string>
     <string name="check_scope_description">Número de días que se tienen en cuenta a la hora de comprobar los contactos de riesgo. Se comparan las localizaciones registradas en los anteriores días especificados.</string>
+
+    <!-- Diálogo de preguntas de notificación de positivos -->
+    <string name="question_asymptomatic">¿Has tenido síntomas de COVID-19?</string>
+    <string name="answer_asymptomatic_1">Sí, he tenido síntomas.</string>
+    <string name="answer_asymptomatic_2">No, soy asintomático.</string>
+    <string name="question_vaccinated">¿Estás vacunado contra el COVID-19?</string>
+    <string name="answer_vaccinated_1">Sí, estoy vacunado.</string>
+    <string name="answer_vaccinated_2">No, aún no estoy vacunado.</string>
+
 </resources>

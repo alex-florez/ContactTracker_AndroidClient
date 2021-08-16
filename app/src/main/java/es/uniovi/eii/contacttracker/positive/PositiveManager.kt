@@ -1,6 +1,8 @@
 package es.uniovi.eii.contacttracker.positive
 
 import android.util.Log
+import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.ASYMPTOMATIC_QUESTION
+import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED_QUESTION
 import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.model.Positive
@@ -29,40 +31,30 @@ class PositiveManager @Inject constructor(
      * una petición al backend para almacenarlas.
      *
      * @param personalData Datos personales del positivo (opcionales)
+     * @param answers Respuestas a las preguntas solicitadas al notificar un positivo.
      * @return ValueWrapper que envuelve el resultado de la notificación.
      */
-    suspend fun notifyPositive(personalData: PersonalData?): ValueWrapper<NotifyPositiveResult> {
+    suspend fun notifyPositive(personalData: PersonalData?,
+                                answers: Map<String, Boolean>): ValueWrapper<NotifyPositiveResult> {
         // Configuración de la notificación de positivos.
         val config = configRepository.getNotifyPositiveConfig()
         // Comprobar límite de notificación de positivos.
         if(checkNotifyLimit(config.notifyLimit)){
             // Obtener las localizaciones de los últimos días.
             val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod)
-            if(checkLocations(locations)){ // Comprobar que existan localizaciones
+            return if(checkLocations(locations)){ // Comprobar que existan localizaciones
                 val positive = Positive(null,
                     null,
                     Date(),
                     locations,
-                    personalData
+                    personalData,
+                    answers[ASYMPTOMATIC_QUESTION] ?: false,
+                    answers[VACCINATED_QUESTION] ?: false
                 )
-                val result = positiveRepository.notifyPositive(positive)
-                when(result){
-                    is APIResult.Success -> {
-                        // Establecer ID y almacenar en la base de datos local.
-                        positive.positiveCode = result.value.positiveCode
-                        positiveRepository.insertPositive(positive)
-                        return ValueWrapper.Success(result.value)
-                    }
-                    is APIResult.NetworkError -> {
-                        return ValueWrapper.Fail(Error.TIMEOUT)
-                    }
-                    is APIResult.HttpError -> {
-                        return ValueWrapper.Fail(Error.CANNOT_NOTIFY)
-                    }
-                }
+                processNotifyResult(positiveRepository.notifyPositive(positive), positive)
             } else {
                 // No hay localizaciones para notificar
-                return ValueWrapper.Fail(Error.NO_LOCATIONS_TO_NOTIFY)
+                ValueWrapper.Fail(Error.NO_LOCATIONS_TO_NOTIFY)
             }
         } else {
             // Se ha excedido el límite de notificación
@@ -85,5 +77,33 @@ class PositiveManager @Inject constructor(
      */
     private fun checkLocations(locations: List<UserLocation>): Boolean {
         return locations.isNotEmpty()
+    }
+
+    /**
+     * Procesa el resultado de notificar un positivo mediante la API
+     * de positivos. Si hay éxito, actualiza el positivo pasado como parámetro
+     * con el código de positivo recibido mediante la API, y lo almacena en la base
+     * de datos, devolviendo un ValueWrapper de éxito. Por el contrario, devuelve un
+     * ValueWrapper de fallo con el error correspondiente.
+     *
+     * @param result Resultado de la API de notificar un positivo.
+     * @param positive Positivo a notificar.
+     * @return ValueWrapper que envuelve un objeto de éxito o de fallo.
+     */
+    private suspend fun processNotifyResult(result: APIResult<NotifyPositiveResult>, positive: Positive): ValueWrapper<NotifyPositiveResult> {
+        return when(result) {
+            is APIResult.Success -> {
+                // Establecer ID y almacenar en la base de datos local.
+                positive.positiveCode = result.value.positiveCode
+                positiveRepository.insertPositive(positive)
+                ValueWrapper.Success(result.value)
+            }
+            is APIResult.NetworkError -> {
+                ValueWrapper.Fail(Error.TIMEOUT)
+            }
+            is APIResult.HttpError -> {
+                ValueWrapper.Fail(Error.CANNOT_NOTIFY)
+            }
+        }
     }
 }

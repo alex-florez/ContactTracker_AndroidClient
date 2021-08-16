@@ -72,21 +72,18 @@ class NotifyPositiveViewModel @Inject constructor(
     /**
      * Notifica un nuevo positivo en el sistema. Esto implica subir todas las
      * localizaciones del usuario registradas en el dispositivo en los últimos
-     * días, asociando opcionalmente los datos personales del usuario.
+     * días, asociando opcionalmente los datos personales del usuario. También se
+     * incluyen las respuestas a las preguntas realizadas al usuario.
      *
      * @param addPersonalData Flag que indica si se deben añadir o no los datos personales.
+     * @param answers Respuestas a las preguntas del último diálogo para notificar un positivo.
      */
-    fun notifyPositive(addPersonalData: Boolean) {
+    fun notifyPositive(addPersonalData: Boolean, answers: Map<String, Boolean>) {
         viewModelScope.launch(Dispatchers.IO) {
             _isLoading.postValue(true)
             // Datos personales
             val personalData = if(addPersonalData) getPersonalData() else null
-            _notifyResult.postValue(positiveManager.notifyPositive(personalData))
-//            when(val result = positiveManager.notifyPositive(personalData)){
-//                is APIResult.NetworkError -> { _networkError.postValue(result) }
-//                is APIResult.HttpError -> { _notifyError.postValue(result) }
-//                is APIResult.Success -> { _notifyPositiveResult.postValue(result.value) }
-//            }
+            _notifyResult.postValue(positiveManager.notifyPositive(personalData, answers))
             _isLoading.postValue(false)
         }
     }

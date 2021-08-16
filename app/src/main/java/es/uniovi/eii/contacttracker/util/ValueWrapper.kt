@@ -3,8 +3,10 @@ package es.uniovi.eii.contacttracker.util
 import es.uniovi.eii.contacttracker.model.Error
 
 /**
- * Clase sellada que envuelve un objeto de Éxito que contiene el valor esperado
- * o un objeto de Fallo con un Error específico.
+ * Clase sellada genérica que envuelve un objeto de Éxito o un objeto de Fallo,
+ * en función de si ha habido algún error. Si no hay errores, el objeto de Éxito contiene
+ * el valor del tipo genérico definido. Si hay errores, se devuelve un objeto de Fallo
+ * que contiene el error concreto en cada caso.
  *
  * Utilizada para modelar el flujo de información de la lógica de negocio.
  */
@@ -14,6 +16,4 @@ sealed class ValueWrapper<out T> {
 
     /* Error */
     data class Fail(val error: Error): ValueWrapper<Nothing>()
-
-
 }

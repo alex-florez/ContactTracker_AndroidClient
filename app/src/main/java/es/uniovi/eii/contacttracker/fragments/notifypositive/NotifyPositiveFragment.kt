@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
+import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.NotifyQuestionsDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataConsentDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
 import es.uniovi.eii.contacttracker.model.Error
@@ -140,8 +141,24 @@ class NotifyPositiveFragment : Fragment() {
         if(binding.checkBoxAddPersonalData.isChecked){ // Agregar datos personales
             notifyPositiveWithPersonalData()
         } else {  // Notificar sin aportar datos personales
-            viewModel.notifyPositive(false)
+           notifyPositive(false)
         }
+    }
+
+    /**
+     * Invoca al método de ViewModel para notificar el positivo. Recibe como
+     * parámetro un flag que indica si se van a incluir los datos personales.
+     *
+     * @param addPersonalData Indica si se van a incluir los datos personales.
+     */
+    private fun notifyPositive(addPersonalData: Boolean) {
+        // Crear el diálogo con las preguntas.
+        createNotifyQuestionsDialog(object : NotifyQuestionsDialog.QuestionsListener {
+            override fun onAccept(answers: Map<String, Boolean>) {
+                // Pasarle las respuestas a las preguntas.
+                viewModel.notifyPositive(addPersonalData, answers)
+            }
+        }).show(requireActivity().supportFragmentManager, "Notify Questions")
     }
 
     /**
@@ -158,7 +175,7 @@ class NotifyPositiveFragment : Fragment() {
                 createPersonalDataAgreementDialog(
                     object : PersonalDataConsentDialog.PrivacyPolicyListener {
                         override fun onAcceptPolicy() { // Política aceptada
-                           viewModel.notifyPositive(true)
+                          notifyPositive(true)
                         }
 
                         override fun onRejectPolicy() { // Política rechazada
@@ -186,6 +203,14 @@ class NotifyPositiveFragment : Fragment() {
      */
     private fun createPersonalDataAgreementDialog(privacyPolicyListener: PersonalDataConsentDialog.PrivacyPolicyListener): PersonalDataConsentDialog {
         return PersonalDataConsentDialog(privacyPolicyListener)
+    }
+
+    /**
+     * Crea e inicializa el diálogo modal que contiene las preguntas para el usuario
+     * acerca de si ha tenido síntomas y si está vacunado.
+     */
+    private fun createNotifyQuestionsDialog(questionsListener: NotifyQuestionsDialog.QuestionsListener): NotifyQuestionsDialog {
+        return NotifyQuestionsDialog(questionsListener)
     }
 
     /**
