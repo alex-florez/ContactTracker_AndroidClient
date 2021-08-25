@@ -71,6 +71,9 @@
     <string name="shared_prefs_risk_contact_check_hour">RiskContactCheckHour</string>
     <string name="shared_prefs_risk_contact_check_scope">RiskContactCheckScope</string>
 
+    <!-- Preferences: flag de 1a vez iniciada la app -->
+    <string name="shared_prefs_new_install">NewInstall</string>
+
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
     <string name="bottom_menu_item_2">Positivo</string>

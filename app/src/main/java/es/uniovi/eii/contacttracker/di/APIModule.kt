@@ -10,6 +10,7 @@ import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.network.api.ConfigAPI
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
+import es.uniovi.eii.contacttracker.network.api.StatisticsAPI
 import es.uniovi.eii.contacttracker.network.converters.PointConverter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -51,5 +52,16 @@ object APIModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(ConfigAPI::class.java)
+    }
+
+    /* API Rest para las estadísticas de la aplicación */
+    @Provides
+    @Singleton
+    fun provideStatisticsAPI(): StatisticsAPI {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(StatisticsAPI::class.java)
     }
 }

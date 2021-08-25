@@ -8,9 +8,11 @@ import android.content.SharedPreferences
 import android.location.Location
 import android.os.Build
 import android.util.Log
+import androidx.core.content.edit
 import dagger.hilt.android.HiltAndroidApp
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import es.uniovi.eii.contacttracker.repositories.StatisticsRepository
 import es.uniovi.eii.contacttracker.util.FileUtils.readFile
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +49,8 @@ class App : Application() {
      */
     private lateinit var sharedPrefs: SharedPreferences
 
+    /* Repositorio de Estadísticas */
+    @Inject lateinit var statisticsRepository: StatisticsRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -55,6 +59,9 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         simulate()
+        scope.launch {
+            statisticsRepository.registerNewInstall()
+        }
     }
 
 
@@ -95,7 +102,8 @@ class App : Application() {
      * si aún no existen.
      */
     private fun initSharedPrefs(){
-        with(sharedPrefs.edit()){
+
+        sharedPrefs.edit {
             /* Intervalo de tiempo mínimo */
             if(!sharedPrefs.contains(getString(R.string.shared_prefs_tracker_config_min_interval))){
                 putLong(getString(R.string.shared_prefs_tracker_config_min_interval), 3000)
@@ -108,7 +116,10 @@ class App : Application() {
             if(!sharedPrefs.contains(getString(R.string.shared_prefs_risk_contact_check_scope))){
                 putInt(getString(R.string.shared_prefs_risk_contact_check_scope), 3)
             }
-            apply()
+            /* Flag de 1a vez iniciada la aplicación */
+            if(!sharedPrefs.contains(getString(R.string.shared_prefs_new_install))) {
+                putBoolean(getString(R.string.shared_prefs_new_install), true)
+            }
         }
     }
 
