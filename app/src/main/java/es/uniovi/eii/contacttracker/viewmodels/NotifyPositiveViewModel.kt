@@ -4,17 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 /**
  * ViewModel para el Fragmento de Notificar un positivo
@@ -28,12 +32,6 @@ class NotifyPositiveViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * Resultado exitoso de NOTIFICAR un POSITIVO.
-     */
-    private val _notifyPositiveResult = MutableLiveData<NotifyPositiveResult>()
-    val notifyPositiveResult: LiveData<NotifyPositiveResult> = _notifyPositiveResult
-
-    /**
      * LiveData para el periodo de infectividad.
      */
     private val _infectivityPeriod = MutableLiveData<Int>()
@@ -44,19 +42,6 @@ class NotifyPositiveViewModel @Inject constructor(
      */
     private val _notifyResult = MutableLiveData<ValueWrapper<NotifyPositiveResult>>()
     val notifyResult: LiveData<ValueWrapper<NotifyPositiveResult>> = _notifyResult
-
-    /**
-     * Error de RED
-     */
-    private val _networkError = MutableLiveData<APIResult.NetworkError>()
-    val networkError: LiveData<APIResult.NetworkError> = _networkError
-
-    /**
-     * Error GENÉRICO enviado desde el Servidor al notificar un positivo
-     */
-    private val _notifyError = MutableLiveData<APIResult.HttpError>()
-    val notifyError: LiveData<APIResult.HttpError> = _notifyError
-
 
     /**
      * LiveData para el icono de Carga.

@@ -92,6 +92,7 @@ class NotifyPositiveFragment : Fragment() {
             infectivityPeriod.observe(viewLifecycleOwner) {
                 binding.txtInfectivityPeriod.text = resources.getQuantityString(R.plurals.daysText, it, it)
             }
+            // Resultado de notificar un positivo
             notifyResult.observe(viewLifecycleOwner) {
                 when(it){
                     is ValueWrapper.Success -> {
@@ -109,28 +110,26 @@ class NotifyPositiveFragment : Fragment() {
      * la notificación de un positivo.
      */
     private fun processError(error: Error) {
+        val message: String
         when(error) {
             Error.TIMEOUT -> {
-                AndroidUtils.snackbar(getString(R.string.network_error), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
+                message = getString(R.string.network_error)
             }
             Error.CANNOT_NOTIFY -> {
-                AndroidUtils.snackbar(getString(R.string.genericErrorNotifyPositive), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
+                message = getString(R.string.genericErrorNotifyPositive)
             }
             Error.NOTIFICATION_LIMIT_EXCEEDED -> {
-                AndroidUtils.snackbar(getString(R.string.errorNotifyLimitExceeded), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
+                message = getString(R.string.errorNotifyLimitExceeded)
             }
             Error.NO_LOCATIONS_TO_NOTIFY -> {
-                AndroidUtils.snackbar(getString(R.string.errorNotifyNoLocations), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
+                message = getString(R.string.errorNotifyNoLocations)
             }
             else -> {
-                AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
+                message = getString(R.string.genericError)
             }
         }
+        AndroidUtils.snackbar(message, Snackbar.LENGTH_LONG,
+            binding.root, requireActivity())
     }
 
     /**
