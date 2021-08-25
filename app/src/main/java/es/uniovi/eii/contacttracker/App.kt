@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 import javax.inject.Scope
+import java.util.Date
 
 /**
  * Clase App que extiende de Application y que engloba
@@ -42,7 +43,7 @@ class App : Application() {
 
     var scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    private var positive = false
+    private var positive = true
 
     /**
      * Referencia a las Shared Preferences.
@@ -60,7 +61,7 @@ class App : Application() {
         initSharedPrefs()
         simulate()
         scope.launch {
-            statisticsRepository.registerNewInstall()
+            statisticsRepository.registerNewInstall(Date().time)
         }
     }
 

@@ -24,6 +24,7 @@ import es.uniovi.eii.contacttracker.activities.MainActivity
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
+import es.uniovi.eii.contacttracker.network.model.CheckResult
 import es.uniovi.eii.contacttracker.repositories.*
 import es.uniovi.eii.contacttracker.riskcontact.alarms.StartRiskContactCheckReceiver
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
@@ -49,6 +50,7 @@ class RiskContactManager @Inject constructor(
         private val positiveRepository: PositiveRepository, // Repositorio de positivos.
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
         private val configRepository: ConfigRepository, // Repositorio de configuración
+        private val statisticsRepository: StatisticsRepository, // Repositorio de estadísticas.
         @ApplicationContext private val ctx: Context
 ) {
 
@@ -110,6 +112,14 @@ class RiskContactManager @Inject constructor(
         with(NotificationManagerCompat.from(ctx)){
             notify(RESULT_NOTIFICATION_ID, createNotification(result))
         }
+        /* Registrar los datos principales del resultado en la nube para cometidos estadísticos */
+        statisticsRepository.registerRiskContactResult(
+            CheckResult(
+            result.timestamp.time,
+            result.getTotalMeanRisk(),
+            result.getTotalMeanExposeTime(),
+            result.getTotalMeanProximity()
+        ))
         /* Emitir un Broadcast */
         sendBroadcast(result)
     }

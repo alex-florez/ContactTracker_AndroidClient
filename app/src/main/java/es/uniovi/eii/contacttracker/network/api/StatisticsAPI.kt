@@ -1,8 +1,9 @@
 package es.uniovi.eii.contacttracker.network.api
 
-import es.uniovi.eii.contacttracker.network.model.NewInstallResponse
+import es.uniovi.eii.contacttracker.model.Installation
+import es.uniovi.eii.contacttracker.network.model.CheckResult
+import es.uniovi.eii.contacttracker.network.model.StatisticsResponse
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 /**
@@ -12,6 +13,9 @@ import retrofit2.http.POST
 interface StatisticsAPI {
 
     @POST("/statistics/registerInstall")
-    suspend fun registerNewInstall(@Body body: Any = Object()): NewInstallResponse
+    suspend fun registerNewInstall(@Body body: Installation): StatisticsResponse
+
+    @POST("/statistics/registerCheckResult")
+    suspend fun registerRiskContactResult(@Body body: CheckResult): StatisticsResponse
 
 }
