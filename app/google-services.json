@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "764582448849",
+    "project_id": "contacttracker-631f5",
+    "storage_bucket": "contacttracker-631f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764582448849:android:0b2ba41a76e2433c9ffff0",
+        "android_client_info": {
+          "package_name": "es.uniovi.eii.contacttracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764582448849-c70ib8m7v62uu7p7hup379af2ijoce08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMJJm1OKf2-7Ip3LMLLTmXkXqhw4uom0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764582448849-c70ib8m7v62uu7p7hup379af2ijoce08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
