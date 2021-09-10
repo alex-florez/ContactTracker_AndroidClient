@@ -60,15 +60,15 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         simulate()
-        scope.launch {
-            statisticsRepository.registerNewInstall(Date().time)
-        }
+//        scope.launch {
+//            statisticsRepository.registerNewInstall(Date().time)
+//        }
     }
 
 
     /**
-     * Crea los canales de notificación si la App se
-     * está ejecutando en versiones Oreo o superior.
+     * Crea los canales para las notificaciones si la App se está
+     * ejecutando en versiones Oreo o superior.
      */
     private fun createNotificationChannels(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -91,10 +91,18 @@ class App : Application() {
                 NotificationManager.IMPORTANCE_HIGH
             )
 
+            // Canal para las notificaciones FCM
+            val fcmChannel = NotificationChannel(
+                getString(R.string.fcm_channel_id),
+                "FCM Notifications Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+
             val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(locationFSChannel)
             notificationManager.createNotificationChannel(riskContactsResultChannel)
             notificationManager.createNotificationChannel(riskContactCheckingChannel)
+            notificationManager.createNotificationChannel(fcmChannel)
         }
     }
 

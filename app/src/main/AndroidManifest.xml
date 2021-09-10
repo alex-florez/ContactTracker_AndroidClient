@@ -18,7 +18,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ContactTracker">
+        android:theme="@style/Theme.ContactTracker"
+        android:usesCleartextTraffic="true">
 
         <!-- Metadatos -->
         <!-- Clave de la API de Google Maps -->
@@ -63,6 +64,21 @@
         <!-- Broadcast Receivers -->
         <receiver android:name=".location.receivers.LocationAlarmCommandBroadcastReceiver" />
         <receiver android:name=".riskcontact.alarms.StartRiskContactCheckReceiver" />
+
+        <!-- Icono por defecto de de las notificaciones FCM -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_foreground" />
+
+        <!-- Color por defecto de las notificaciones FCM -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/design_default_color_background" />
+
+        <!-- Canal por defecto para las notificaciones de FCM -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/fcm_channel_id"/>
     </application>
 
 </manifest>

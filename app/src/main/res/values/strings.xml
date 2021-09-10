@@ -274,4 +274,7 @@
     <string name="answer_vaccinated_1">Sí, estoy vacunado.</string>
     <string name="answer_vaccinated_2">No, aún no estoy vacunado.</string>
 
+    <!-- Canales de notificaciones (Android Oreo +) -->
+    <string name="fcm_channel_id">FcmNotificationChannel</string>
+
 </resources>

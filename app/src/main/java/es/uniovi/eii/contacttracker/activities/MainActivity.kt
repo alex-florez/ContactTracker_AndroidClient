@@ -15,6 +15,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
 import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         setUpBottomNavigation() // Configurar Bottom Navigation
 
         processIntent(intent)
+        subscribeToFirebaseTopic("positives")
     }
 
     /* Redefine el comportamiento al pulsar sobre la flecha de atrás. */
@@ -155,4 +158,20 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
+    /**
+     * Suscribe el cliente Android de este dispositivo al tema (topic)
+     * de FCM pasado como parámetro, para recibir notificaciones sobre ese
+     * tema.
+     *
+     * @param topic Tema al que se desea suscribir el dispositivo.
+     */
+    private fun subscribeToFirebaseTopic(topic: String) {
+        Firebase.messaging.subscribeToTopic(topic)
+            .addOnCompleteListener {
+                var msg = "Cliente Android suscrito con éxito."
+                if(!it.isSuccessful)
+                    msg = "Error al suscribir el cliente Android en el tema."
+                Log.d("FCM", msg)
+            }
+    }
 }
