@@ -52,6 +52,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
         val channelId = getString(R.string.fcm_channel_id)
         val intent = Intent(this, MainActivity::class.java)
         val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        Log.d(TAG, msg.notification?.title.toString())
         // Crear notificación
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -59,6 +60,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
             .setContentText(msg.notification?.body)
             .setAutoCancel(true)
             .setContentIntent(pi)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(msg.notification?.body))
             .build()
 
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager

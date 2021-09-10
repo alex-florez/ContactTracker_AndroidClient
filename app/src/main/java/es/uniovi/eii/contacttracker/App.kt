@@ -95,7 +95,7 @@ class App : Application() {
             val fcmChannel = NotificationChannel(
                 getString(R.string.fcm_channel_id),
                 "FCM Notifications Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
 
             val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
