@@ -74,6 +74,9 @@
     <!-- Preferences: flag de 1a vez iniciada la app -->
     <string name="shared_prefs_new_install">NewInstall</string>
 
+    <!-- Preferences: Notificaciones de positivos -->
+    <string name="shared_prefs_positives_notifications">PositivesNotifications</string>
+
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_item_1">Rastreador</string>
     <string name="bottom_menu_item_2">Positivo</string>
@@ -255,6 +258,7 @@
     <!-- Preference Titles -->
     <string name="tracker_header">Rastreo</string>
     <string name="risk_contact_header">Comprobación de contactos</string>
+    <string name="notification_header">Notificaciones</string>
 
     <!-- Preferencias de Rastreo -->
     <string name="time_interval_title">Intervalo de tiempo</string>
@@ -265,6 +269,10 @@
     <!-- Preferencias de Comprobación de Contactos -->
     <string name="check_scope_title">Alcance de la comprobación</string>
     <string name="check_scope_description">Número de días que se tienen en cuenta a la hora de comprobar los contactos de riesgo. Se comparan las localizaciones registradas en los anteriores días especificados.</string>
+
+    <!-- Preferencias de notificaciones -->
+    <string name="enable_positives_notifications_title">Notificaciones de positivos</string>
+    <string name="positives_notifications_summary">Habilita el envío de notificaciones diarias acerca del número de positivos que se han notificado ese día.</string>
 
     <!-- Diálogo de preguntas de notificación de positivos -->
     <string name="question_asymptomatic">¿Has tenido síntomas de COVID-19?</string>

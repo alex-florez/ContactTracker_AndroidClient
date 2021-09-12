@@ -48,4 +48,11 @@
             app:valueUnit="días"/>
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/notification_header">
+        <CheckBoxPreference
+            app:title="@string/enable_positives_notifications_title"
+            android:summary="@string/positives_notifications_summary"
+            app:key="@string/shared_prefs_positives_notifications" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

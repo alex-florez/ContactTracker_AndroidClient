@@ -9,6 +9,8 @@ import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.core.content.edit
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.HiltAndroidApp
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
@@ -59,6 +61,7 @@ class App : Application() {
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         createNotificationChannels()
         initSharedPrefs()
+        subscribeToTopics()
         simulate()
 //        scope.launch {
 //            statisticsRepository.registerNewInstall(Date().time)
@@ -129,6 +132,24 @@ class App : Application() {
             if(!sharedPrefs.contains(getString(R.string.shared_prefs_new_install))) {
                 putBoolean(getString(R.string.shared_prefs_new_install), true)
             }
+        }
+    }
+
+    /**
+     * Subscribe el dispositivo a los tópicos / temas de Firebase Cloud Messaging
+     * para recibir notificaciones que se envíen a esos temas, siempre y cuando
+     * la Preferencia de para enviar esas notificaciones esté habilitada.
+     */
+    private fun subscribeToTopics() {
+        /* Notificaciones acerca del n.º de positivos notificados */
+        if(sharedPrefs.getBoolean(getString(R.string.shared_prefs_positives_notifications), false)) {
+            Firebase.messaging.subscribeToTopic("positives")
+                .addOnCompleteListener {
+                    var msg = "Cliente Android suscrito al Topic 'positives'."
+                    if(!it.isSuccessful)
+                        msg = "Error al suscribir el cliente Android en el tema."
+                    Log.d("FCM", msg)
+                }
         }
     }
 

@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="40dp"
+    android:paddingHorizontal="70dp"
     android:paddingVertical="20dp"
     android:hapticFeedbackEnabled="false"
     android:background="?attr/selectableItemBackground">
