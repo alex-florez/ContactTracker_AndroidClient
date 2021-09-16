@@ -45,7 +45,7 @@ class App : Application() {
 
     var scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    private var positive = true
+    private var positive = false
 
     /**
      * Referencia a las Shared Preferences.
@@ -63,9 +63,9 @@ class App : Application() {
         initSharedPrefs()
         subscribeToTopics()
         simulate()
-//        scope.launch {
-//            statisticsRepository.registerNewInstall(Date().time)
-//        }
+        scope.launch {
+            statisticsRepository.registerNewInstall(Date().time)
+        }
     }
 
 
