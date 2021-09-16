@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.util
 
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -146,5 +147,16 @@ object DateUtils {
         cal.time = date
         cal.set(year, month, day)
         return cal.time
+    }
+
+    /**
+     * Devuelve el número de días de diferencia entre las dos fechas
+     * pasadas como parámetro.
+     *
+     * @param date1 Fecha 1.
+     * @param date2 Fecha 2.
+     */
+    fun getDaysBetweenDates(date1: Date, date2: Date): Long {
+        return Duration.between(date1.toInstant(), date2.toInstant()).toDays()
     }
 }

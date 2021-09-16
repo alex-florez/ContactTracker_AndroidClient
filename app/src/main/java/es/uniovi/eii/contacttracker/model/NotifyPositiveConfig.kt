@@ -6,7 +6,7 @@ import es.uniovi.eii.contacttracker.Constants
 
 /* Valores por defecto */
 const val DEFAULT_INFECTIVITY_PERIOD = 3
-const val DEFAULT_NOTIFY_LIMIT = 2
+const val DEFAULT_NOTIFY_WAIT_TIME = 2
 
 /**
  * Representa las opciones de configuración
@@ -22,10 +22,10 @@ data class NotifyPositiveConfig(
     val infectivityPeriod: Int = DEFAULT_INFECTIVITY_PERIOD,
 
     /**
-     * Límite de notificación: n.º máximo de positivos que se pueden notificar desde un mismo
-     * dispositivo móvil al día.
+     * Tiempo de espera de notificación: n.º de días que deben transcurrir desde la última
+     * notificación para permitir al usuario notificar otro positivo.
      */
     @Expose
-    @SerializedName("notifyLimit")
-    val notifyLimit: Int = DEFAULT_NOTIFY_LIMIT
+    @SerializedName("notifyWaitTime")
+    val notifyWaitTime: Int = DEFAULT_NOTIFY_WAIT_TIME
 )

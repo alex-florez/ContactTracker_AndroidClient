@@ -11,6 +11,7 @@ import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
+import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import javax.inject.Inject
 import java.util.Date
@@ -39,7 +40,7 @@ class PositiveManager @Inject constructor(
         // Configuración de la notificación de positivos.
         val config = configRepository.getNotifyPositiveConfig()
         // Comprobar límite de notificación de positivos.
-        if(checkNotifyLimit(config.notifyLimit)){
+        if(checkNotifyLimit(config.notifyWaitTime)){
             // Obtener las localizaciones de los últimos días.
             val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod)
             return if(checkLocations(locations)){ // Comprobar que existan localizaciones
@@ -63,13 +64,20 @@ class PositiveManager @Inject constructor(
     }
 
     /**
-     * Comprueba que no se haya superado el límite de
-     * notificación de positivos.
+     * Comprueba que hayan transcurrido al menos el número de días
+     * indicados como parámetro para poder notificar otro positivo.
+     *
+     * @param days Número de días que deben transcurrir.
      */
-    private suspend fun checkNotifyLimit(limit: Int): Boolean {
-        // N.º de positivos notificados en la fecha de hoy.
-        val notifiedPositivesToday = positiveRepository.getNumberOfLocalPositivesNotifiedAt(Date())
-        return notifiedPositivesToday < limit
+    private suspend fun checkNotifyLimit(days: Int): Boolean {
+        // Obtener el último positivo notificado
+        val lastPositive = positiveRepository.getLastNotifiedPositive()
+        lastPositive?.let { positive ->
+            // Obtener días transcurridos entre la fecha actual y la del último positivo
+            val elapsedDays = DateUtils.getDaysBetweenDates(positive.timestamp, Date())
+            return elapsedDays >= days
+        }
+        return true
     }
 
     /**

@@ -100,4 +100,10 @@ class PositiveRepository @Inject constructor(
         return positiveDao.getNumberOfNotifiedPositivesAt(formattedDate)
     }
 
+    /**
+     * Devuelve el último positivo notificado por el usuario en este dispositivo.
+     */
+    suspend fun getLastNotifiedPositive(): Positive? {
+        return positiveDao.getLastNotifiedPositive()
+    }
 }

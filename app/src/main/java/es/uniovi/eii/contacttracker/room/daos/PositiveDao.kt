@@ -35,4 +35,11 @@ interface PositiveDao {
      */
     @Query("SELECT count(*) FROM positives WHERE date(timestamp) = :date")
     suspend fun getNumberOfNotifiedPositivesAt(date: String): Int
+
+    /**
+     * Devuelve el último positivo notificado en este dispositivo según el timestamp
+     * de notificación.
+     */
+    @Query("SELECT * FROM positives ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getLastNotifiedPositive(): Positive?
 }
