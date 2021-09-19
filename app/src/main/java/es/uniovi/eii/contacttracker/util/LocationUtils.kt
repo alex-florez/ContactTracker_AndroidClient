@@ -109,6 +109,15 @@ object LocationUtils {
         return dialogBuilder.create()
     }
 
+    /**
+     * Crea un diálogo de alerta que contiene un mensaje indicando la necesidad de
+     * permitir el registro de ubicaciones en segundo plano para disfrutar de las
+     * características de la aplicacion.
+     *
+     * @param ctx Contexto de la aplicación Android.
+     * @param positiveCallback Callback para el botón de Aceptar.
+     * @param dismissCallback Callback para el botón de Cancelar.
+     */
     fun createBackgroundLocationAlertDialog(ctx: Context,
                                             positiveCallback: () -> Unit,
                                             dismissCallback: () -> Unit): AlertDialog {
