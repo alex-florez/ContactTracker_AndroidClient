@@ -48,7 +48,7 @@ object TestUtils {
             count++
         }
         // Crear itinerario
-        return Itinerary(locations)
+        return Itinerary(locations, filename)
     }
 }
 

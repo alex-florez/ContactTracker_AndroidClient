@@ -15,7 +15,6 @@ object NumberUtils {
      */
     fun round(value: Double, decimals: Int): Double {
         val multiplier = 10.0.pow(decimals)
-        val rounded = (value * multiplier).roundToLong() / multiplier
-        return rounded
+        return (value * multiplier).roundToLong() / multiplier
     }
 }

@@ -157,6 +157,6 @@ object DateUtils {
      * @param date2 Fecha 2.
      */
     fun getDaysBetweenDates(date1: Date, date2: Date): Long {
-        return Duration.between(date1.toInstant(), date2.toInstant()).toDays()
+        return abs(Duration.between(date1.toInstant(), date2.toInstant()).toDays())
     }
 }

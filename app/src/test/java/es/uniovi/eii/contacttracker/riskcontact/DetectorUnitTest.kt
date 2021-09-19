@@ -69,13 +69,13 @@ class DetectorUnitTest {
 
 
         /* No hay coincidencia */
-        assertEquals(false, detector.checkTimeProximity(l1,l4,5.0))
-        assertEquals(false, detector.checkTimeProximity(l1,l5, 6.0))
-        assertEquals(false, detector.checkTimeProximity(l1, l6, 5.0))
+        assertEquals(false, detector.checkTimeProximity(l1,l4,5))
+        assertEquals(false, detector.checkTimeProximity(l1,l5, 6))
+        assertEquals(false, detector.checkTimeProximity(l1, l6, 5))
         /* Hay coincidencia */
-        assertEquals(true, detector.checkTimeProximity(l1, l2, 5.0))
-        assertEquals(true, detector.checkTimeProximity(l2, l3, 5.0))
-        assertEquals(true, detector.checkTimeProximity(l1,l5, 7.0))
+        assertEquals(true, detector.checkTimeProximity(l1, l2, 5))
+        assertEquals(true, detector.checkTimeProximity(l2, l3, 5))
+        assertEquals(true, detector.checkTimeProximity(l1,l5, 7))
     }
 
     /**
@@ -98,8 +98,8 @@ class DetectorUnitTest {
     // ****************************************
     @Test
     fun `empty itineraries`(){
-        val positive = Itinerary(listOf())
-        val user = Itinerary(listOf())
+        val positive = Itinerary(listOf(), "positive")
+        val user = Itinerary(listOf(), "user")
         val result = detector.startChecking(user, positive)
         assertEquals(0, result.size)
     }
@@ -147,7 +147,7 @@ class DetectorUnitTest {
     fun `one contact one day`(){
         detector.setConfig(RiskContactConfig(
             securityDistanceMargin = 3.0,
-            timeDifferenceMargin = 1.0
+            timeDifferenceMargin = 1
         ))
         val i1 = parseItinerary("itinerary1.txt")
         val i5 = parseItinerary("itinerary5.txt")
@@ -180,7 +180,7 @@ class DetectorUnitTest {
     fun `multiple contacts one day`() {
         detector.setConfig(RiskContactConfig(
             securityDistanceMargin = 2.5,
-            timeDifferenceMargin = 1.0
+            timeDifferenceMargin = 1
         ))
         val i1 = parseItinerary("itinerary1.txt")
         val i6 = parseItinerary("itinerary6.txt")
@@ -224,7 +224,7 @@ class DetectorUnitTest {
     fun `multiple contacts multiple days`(){
         detector.setConfig(RiskContactConfig(
             securityDistanceMargin = 2.5,
-            timeDifferenceMargin = 1.0
+            timeDifferenceMargin = 1
         ))
         val i7 = parseItinerary("itinerary7.txt")
         val i8 = parseItinerary("itinerary8.txt")
