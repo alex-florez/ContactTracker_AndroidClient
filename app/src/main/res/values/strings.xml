@@ -285,4 +285,42 @@
     <!-- Canales de notificaciones (Android Oreo +) -->
     <string name="fcm_channel_id">FcmNotificationChannel</string>
 
+    <!-- Política de Privacidad -->
+    <string name="appOwner">Dueño de la aplicación</string>
+    <string name="appOwnerText">El dueño y responsable de la aplicación Contact Tracker es Alejandro Flórez Muñiz, en el cual reside total responsabilidad sobre el tratamiento de los datos de los interesados.El dueño y responsable de la aplicación Contact Tracker es Alejandro Flórez Muñiz, en el cual reside total responsabilidad sobre el tratamiento de los datos de los interesados.</string>
+    <string name="treatmentResponsable">Responsable del tratamiento</string>
+    <string name="treatmentResponsableText">El tratamiento de los datos es responsabilidad del dueño de la aplicación, Alejandro Flórez Muñiz, por lo que no se deriva el tratamiento de los datos a entidades de terceros. Datos de contacto del responsable:</string>
+    <string name="treatmentResponsableItem1">•	Nombre y apellidos: Alejandro Flórez Muñiz.</string>
+    <string name="treatmentResponsableItem2">•	Correo electrónico: alexflorezmuniz@gmail.com</string>
+    <string name="treatmentResponsableItem3">•	Teléfono móvil: 695 82 28 79</string>
+    <string name="treatmentResponsableItem4">•	Dirección: Villalegre, Avilés, Asturias</string>
+    <string name="treatmentResponsableItem5">•	País: España</string>
+    <string name="gatheredData">Datos recolectados</string>
+    <string name="gatheredDataText1">Esta aplicación recopila datos de geolocalización del dispositivo de forma periódica y mientras la aplicación está en segundo plano si el usuario lo permite. Los datos de geolocalización se recogen mediante los servicios de Google instalados y quedan registrados en el almacenamiento local del dispositivo. Opcionalmente, también se registran los datos personales del usuario, si este lo permite, quedando asociados a las ubicaciones registradas. Para los datos de geolocalización se registra:</string>
+    <string name="gatheredDataItem1">•	Latitud y Longitud</string>
+    <string name="gatheredDataItem2">•	Fecha y hora de la ubicación</string>
+    <string name="gatheredDataText2">Para los datos personales se registra:</string>
+    <string name="gatheredDataItem3">•	Nombre y apellidos</string>
+    <string name="gatheredDataItem4">•	DNI</string>
+    <string name="gatheredDataItem5">•	Número de teléfono</string>
+    <string name="gatheredDataItem6">•	Localidad</string>
+    <string name="gatheredDataItem7">•	Código postal</string>
+    <string name="gatheredDataText3">Todos estos datos se almacenan en local hasta que el usuario da su consentimiento para subirlos a la nube y compartirlos con el resto de usuarios, aunque los datos personales asociados a los itinerarios solo son visibles por los administradores desde el panel de control web.</string>
+    <string name="appPermissions">Permisos de la aplicación</string>
+    <string name="appPermissionsText1">La aplicación solicita una serie de permisos para acceder a los servicios de ubicación del dispositivo:</string>
+    <string name="appPermissionsItem1">1.	ACCESS_FINE_LOCATION: permite acceder a los datos sobre la ubicación precisa del usuario.</string>
+    <string name="appPermissionsItem2">2.	Activar la ubicación: se solicita al usuario que active el GPS del dispositivo para poder recibir actualizaciones de ubicación.</string>
+    <string name="appPermissionsItem3">3.	Localización en segundo plano: permite recopilar datos de ubicación mientras la aplicación no está activa.</string>
+    <string name="consent">Consentimiento del interesado</string>
+    <string name="consentText1">Para realizar cualquier operación que involucre el tratamiento de datos personales del usuario se solicita previamente su consentimiento informándole sobre la política de privacidad.</string>
+    <string name="consentText2">Antes de asociar los datos personales del usuario con sus itinerarios y subirlos a la nube, se muestra una cláusula informativa para solicitar su consentimiento.</string>
+    <string name="consentText3">Del mismo modo, para registrar las ubicaciones es necesario que el usuario conceda los permisos citados en el apartado anterior.</string>
+    <string name="purpose">Finalidad del tratamiento</string>
+    <string name="purposeText1">El tratamiento de los datos tiene como objetivo facilitar las tareas de rastreo al personal sanitario al asociar los itinerarios del usuario con sus datos personales, de forma que los profesionales puedan contactar fácilmente con estos usuarios y visualizar las zonas por las que han estado.</string>
+    <string name="purposeText2">Además, el registro de coordenadas tiene como finalidad almacenar las ubicaciones por las que ha transcurrido el usuario que ha dado positivo poniendo en peligro a otras personas, de modo que se pueda notificar a dichas personas sobre un posible contacto de riesgo.</string>
+    <string name="rights">Derechos del interesado</string>
+    <string name="rightsText">Entre los derechos que el interesado dispone frente al tratamiento de sus datos personales, se encuentran:</string>
+    <string name="rightsItem1">•	Derecho de acceso: consiste en el derecho del usuario para solicitar el acceso a sus datos personales que están siendo tratados. En el caso de que sus localizaciones hayan sido subidas a la nube de forma anónima sin ser asociadas a sus datos personales este derecho no será aplicable dada la anonimidad de los datos.</string>
+    <string name="rightsItem2">•	Derecho de rectificación: derecho del usuario para rectificar sus datos, es decir, para contactar con el responsable del tratamiento de forma que este corrija sus datos personales en caso de que no sean correctos o estén desactualizados.</string>
+    <string name="rightsItem3">•	Derecho de cancelación: se refiere al derecho del usuario para eliminar sus datos personales del sistema.</string>
 </resources>
