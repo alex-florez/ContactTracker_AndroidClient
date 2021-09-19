@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.util
+package es.uniovi.eii.contacttracker
 
 import es.uniovi.eii.contacttracker.model.Itinerary
 import es.uniovi.eii.contacttracker.model.Point
