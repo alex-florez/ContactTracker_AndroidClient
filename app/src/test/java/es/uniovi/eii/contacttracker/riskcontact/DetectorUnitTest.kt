@@ -1,12 +1,12 @@
 package es.uniovi.eii.contacttracker.riskcontact
 
+import es.uniovi.eii.contacttracker.TestUtils.parseItinerary
 import es.uniovi.eii.contacttracker.model.Itinerary
 import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.RiskContactConfig
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
-import es.uniovi.eii.contacttracker.util.TestUtils.parseItinerary
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

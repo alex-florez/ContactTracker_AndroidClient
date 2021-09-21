@@ -18,12 +18,14 @@ class LocationUtilsTest {
     private val location1 = UserLocation(1,
         Point(86.0, 120.0, df.parse("19/09/2021 12:54:45")!!), 20.0, "testing")
 
+    /* Código: LU1 */
     @Test
     fun `formatear una localización de usuario`() {
         val formattedLocation = LocationUtils.format(location1)
         assertEquals("Localización {ID: 1 Lat: 86.0, Lng: 120.0 Acc: 20.0, Date: 19/09/2021 12:54:45}", formattedLocation)
     }
 
+    /* Código: LU2 */
     @Test
     fun `convertir localización de usuario de latitud y longitud`() {
         val latLng = LocationUtils.toLatLng(location1)
@@ -31,6 +33,7 @@ class LocationUtilsTest {
         assertEquals(120.0, latLng.longitude, 0.01)
     }
 
+    /* Código: LU3 */
     @Test
     fun `obtener distancia entre dos puntos cercanos mediante Haversine`(){
         val date = df.parse("19/09/2021 12:15:05")!!
@@ -39,6 +42,7 @@ class LocationUtilsTest {
         assertEquals(7.74, LocationUtils.distance(p1, p2), 0.1)
     }
 
+    /* Código: LU4 */
     @Test
     fun `obtener distancia entre dos puntos lejanos mediante Haversine`(){
         val date = df.parse("19/09/2021 12:15:05")!!

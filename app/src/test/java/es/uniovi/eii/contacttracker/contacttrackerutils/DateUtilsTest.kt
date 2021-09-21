@@ -19,12 +19,14 @@ class DateUtilsTest {
     private val date = df.parse("19/09/2021 11:20")!!
     private val otherDate = df.parse("19/09/2021 18:35")!!
 
+    /* Código: DU1 */
     @Test
     fun `formatear fecha a dd-MM-yyyy HH-mm`() {
         val formatted = DateUtils.formatDate(date, "dd-MM-yyyy HH-mm")
         assertEquals("19-09-2021 11-20", formatted)
     }
 
+    /* Código: DU2 */
     @Test
     fun `obtener fecha de horas y minutos`() {
         val hours = 12
@@ -34,6 +36,7 @@ class DateUtilsTest {
         assertEquals("12:29:00", stringDate)
     }
 
+    /* Código: DU3 */
     @Test
     fun `obtener fecha a partir de milisegundos`() {
         val millis = date.time
@@ -41,6 +44,7 @@ class DateUtilsTest {
         assertEquals("19/09/2021 11:20", df.format(date))
     }
 
+    /* Código: DU4 */
     @Test
     fun `obtener hora del día y minutos a partir de fecha`() {
         // Probar con la fecha 1
@@ -55,6 +59,7 @@ class DateUtilsTest {
         assertEquals(35, mins)
     }
 
+    /* Código: DU5 */
     @Test
     fun `sumar días a una fecha`() {
         // Sumar un día
@@ -65,6 +70,7 @@ class DateUtilsTest {
         assertEquals("18/09/2021 11:20", df.format(newDate))
     }
 
+    /* Código: DU6 */
     @Test
     fun `sumar días a una fecha a final de mes`() {
         val dateAtTheEnd = df.parse("30/09/2021 16:30")!!
@@ -75,6 +81,7 @@ class DateUtilsTest {
         assertEquals("30/09/2021 16:30", df.format(newDate))
     }
 
+    /* Código: DU7 */
     @Test
     fun `sumar minutos a una fecha`() {
         // Sumar 45 minutos
@@ -82,6 +89,7 @@ class DateUtilsTest {
         assertEquals("19/09/2021 12:05", df.format(newDate))
     }
 
+    /* Código: DU8 */
     @Test
     fun `obtener minutos y segundos a partir de milisegundos sin llegar a completar un minuto`() {
         val millis = 54560L
@@ -90,6 +98,7 @@ class DateUtilsTest {
         assertEquals(54, minSecs[1])
     }
 
+    /* Código: DU9 */
     @Test
     fun `obtener minutos y segundos a partir de milisegundos completando un minuto`() {
         val millis = 83489L
@@ -98,6 +107,7 @@ class DateUtilsTest {
         assertEquals(23, minSecs[1])
     }
 
+    /* Código: DU10 */
     @Test
     fun `obtener minutos y segundos a partir de milisegundos completando varios minutos`() {
         val millis = 124402L
@@ -106,6 +116,7 @@ class DateUtilsTest {
         assertEquals(4, minSecs[1])
     }
 
+    /* Código: DU11 */
     @Test
     fun `obtener milisegundos a partir de minutos y segundos sin completar un minuto`() {
         var millis = DateUtils.getMillis(0, 34)
@@ -115,30 +126,35 @@ class DateUtilsTest {
         assertEquals(59000L, millis)
     }
 
+    /* Código: DU12 */
     @Test
     fun `obtener milisegundos a partir de minutos y segundos completando varios minutos`() {
-        var millis = DateUtils.getMillis(2, 80)
+        val millis = DateUtils.getMillis(2, 80)
         assertEquals(200000L, millis)
     }
 
+    /* Código: DU13 */
     @Test
     fun `diferencia en segundos entre dos fechas iguales`() {
         val date2 = df.parse("19/09/2021 11:20")!!
         assertEquals(0, DateUtils.dateDifferenceInSecs(date, date2))
     }
 
+    /* Código: DU14 */
     @Test
     fun `diferencia en segundos entre dos fechas con la misma hora y minutos`() {
         val date2 = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("19/09/2021 11:20:34")!!
         assertEquals(34, DateUtils.dateDifferenceInSecs(date, date2))
     }
 
+    /* Código: DU15 */
     @Test
     fun `diferencia en segundos entre dos fechas distintas`() {
         val date2 = df.parse("19/09/2021 11:35")!!
         assertEquals(900, DateUtils.dateDifferenceInSecs(date, date2))
     }
 
+    /* Código: DU16 */
     @Test
     fun `modificar año, mes y día de una fecha`() {
         val newYear = 2023
@@ -148,24 +164,28 @@ class DateUtilsTest {
         assertEquals("15/03/2023 11:20", df.format(newDate))
     }
 
+    /* Código: DU17 */
     @Test
     fun `obtener días entre dos fechas del mismo día`() {
         val otherDate = df.parse("19/09/2021 12:23")!!
         assertEquals(0, DateUtils.getDaysBetweenDates(date, otherDate))
     }
 
+    /* Código: DU18 */
     @Test
     fun `obtener días entre dos fechas de distintos días y misma hora`() {
         val otherDate = df.parse("15/09/2021 11:20")!!
         assertEquals(4, DateUtils.getDaysBetweenDates(date, otherDate))
     }
 
+    /* Código: DU19 */
     @Test
     fun `obtener días entre dos fechas de distintos días y distinta hora`() {
         val otherDate = df.parse("15/09/2021 12:00")!!
         assertEquals(3, DateUtils.getDaysBetweenDates(date, otherDate))
     }
 
+    /* Código: DU20 */
     @Test
     fun `obtener días entre dos fechas de distintos meses`() {
         val otherDate = df.parse("02/10/2021 12:00")!!
