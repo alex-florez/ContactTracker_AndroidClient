@@ -30,4 +30,7 @@ interface RiskContactDao {
     @Query("SELECT * FROM risk_contact_results ORDER BY timestamp DESC")
     fun getAllRiskContactResults(): LiveData<List<ResultWithRiskContacts>>
 
+    @Query("SELECT * FROM risk_contact_results WHERE resultId = :id")
+    fun getResultById(id: Long): ResultWithRiskContacts?
+
 }

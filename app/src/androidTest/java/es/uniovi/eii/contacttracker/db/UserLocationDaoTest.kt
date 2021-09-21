@@ -92,6 +92,7 @@ class UserLocationDaoTest {
         }
     }
 
+    /* Código: ULDAO1 */
     @Test
     fun add_new_user_location() = runBlockingTest {
         val newUserLoc = UserLocation(null, Point(11.0, -22.0, df.parse("20/09/2021 13:45:05")!!), 0.0, "testing")
@@ -112,6 +113,7 @@ class UserLocationDaoTest {
         }
     }
 
+    /* Código: ULDAO2 */
     @Test
     fun get_all_user_locations_list() {
         val all = userLocationDao.getAllList()
@@ -121,6 +123,7 @@ class UserLocationDaoTest {
         assertEquals(4L, all[all.size-1].userlocationID)
     }
 
+    /* Código: ULDAO3 */
     @Test
     fun get_user_location_by_id() = runBlockingTest {
         // Localización no existente
@@ -133,6 +136,7 @@ class UserLocationDaoTest {
         }
     }
 
+    /* Código: ULDAO4 */
     @Test
     fun get_user_locations_by_date_no_match() {
         val dateString = "2021-12-10"
@@ -140,6 +144,7 @@ class UserLocationDaoTest {
         assertEquals(0, locations.getOrAwaitValue().size)
     }
 
+    /* Código: ULDAO5 */
     @Test
     fun get_user_locations_by_date_match() {
         val dateString = "2021-09-19"
@@ -150,6 +155,7 @@ class UserLocationDaoTest {
         assertEquals(locations[0], filtered.getOrAwaitValue()[2])
     }
 
+    /* Código: ULDAO6 */
     @Test
     fun delete_all_user_locations() = runBlockingTest {
         val locations = userLocationDao.getAllList()
@@ -159,6 +165,7 @@ class UserLocationDaoTest {
         assertEquals(0, userLocationDao.getAllList().size)
     }
 
+    /* Código: ULDAO7 */
     @Test
     fun delete_user_locations_by_date_no_match() = runBlockingTest {
         val locations = userLocationDao.getAllList()
@@ -169,6 +176,7 @@ class UserLocationDaoTest {
         assertEquals(6, userLocationDao.getAllList().size)
     }
 
+    /* Código: ULDAO8 */
     @Test
     fun delete_user_locations_by_date_match() = runBlockingTest {
         val locations = userLocationDao.getAllList()
@@ -179,6 +187,7 @@ class UserLocationDaoTest {
         assertEquals(3, userLocationDao.getAllList().size)
     }
 
+    /* Código: ULDAO9 */
     @Test
     fun get_locations_between_dates_no_match_right() = runBlockingTest {
         val start = "2021-09-23"
@@ -187,6 +196,7 @@ class UserLocationDaoTest {
         assertEquals(0, locations.size)
     }
 
+    /* Código: ULDAO10 */
     @Test
     fun get_locations_between_dates_no_match_left() = runBlockingTest {
         val start = "2021-09-11"
@@ -195,6 +205,7 @@ class UserLocationDaoTest {
         assertEquals(0, locations.size)
     }
 
+    /* Código: ULDAO11 */
     @Test
     fun get_locations_between_dates_left_match() = runBlockingTest {
         val start = "2021-09-19"
@@ -206,6 +217,7 @@ class UserLocationDaoTest {
         assertEquals(1L, locations[2].userlocationID)
     }
 
+    /* Código: ULDAO12 */
     @Test
     fun get_locations_between_dates_inner_match() = runBlockingTest {
         val start = "2021-09-16"
@@ -218,6 +230,7 @@ class UserLocationDaoTest {
         assertEquals(5L, locations[3].userlocationID)
     }
 
+    /* Código: ULDAO13 */
     @Test
     fun get_locations_between_dates_right_match() = runBlockingTest {
         val start = "2021-09-20"
@@ -227,6 +240,7 @@ class UserLocationDaoTest {
         assertEquals(6L, locations[0].userlocationID)
     }
 
+    /* Código: ULDAO14 */
     @Test
     fun get_locations_between_dates_multiple_match() = runBlockingTest {
         val start = "2021-09-14"

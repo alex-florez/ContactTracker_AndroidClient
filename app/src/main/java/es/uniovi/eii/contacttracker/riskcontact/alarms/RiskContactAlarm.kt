@@ -24,6 +24,9 @@ class RiskContactAlarm (
         Date(parcel.readLong()),
         parcel.readByte() != 0.toByte()
     )
+//    constructor(@PrimaryKey(autoGenerate = true) id: Long?,
+//                startDate: Date,
+//                active: Boolean)
 
     /**
      * Comprueba si la fecha de comienzo de la alarma es anterior a
