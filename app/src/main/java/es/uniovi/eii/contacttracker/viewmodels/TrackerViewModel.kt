@@ -40,4 +40,8 @@ class TrackerViewModel @Inject constructor(): ViewModel() {
         _areLocationsAvailable.value = areLocations
     }
 
+    fun test(): Int {
+        return 200
+    }
+
 }

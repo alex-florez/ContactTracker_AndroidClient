@@ -1,12 +1,11 @@
 package es.uniovi.eii.contacttracker.db
 
 import android.content.Context
-import android.location.Location
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import es.uniovi.eii.contacttracker.getOrAwaitValue
+import es.uniovi.eii.contacttracker.getOrAwaitValueAndroid
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.room.daos.LocationAlarmDao
@@ -105,7 +104,7 @@ class LocationAlarmDaoTest {
     /* Código: LADAO3 */
     @Test
     fun get_all_location_alarms() = runBlockingTest {
-        val alarms = locationAlarmDao.getAll().getOrAwaitValue()
+        val alarms = locationAlarmDao.getAll().getOrAwaitValueAndroid()
         assertEquals(2, alarms.size)
         assertEquals(1L, alarms[0].id)
         assertEquals("20/09/2021 12:00:00", df.format(alarms[0].startDate))
@@ -148,10 +147,10 @@ class LocationAlarmDaoTest {
     /* Código: LADAO6 */
     @Test
     fun delete_all_location_alarms() = runBlockingTest {
-        var alarms = locationAlarmDao.getAll().getOrAwaitValue()
+        var alarms = locationAlarmDao.getAll().getOrAwaitValueAndroid()
         assertEquals(2, alarms.size)
         locationAlarmDao.deleteAll()
-        alarms = locationAlarmDao.getAll().getOrAwaitValue()
+        alarms = locationAlarmDao.getAll().getOrAwaitValueAndroid()
         assertEquals(0, alarms.size)
     }
 

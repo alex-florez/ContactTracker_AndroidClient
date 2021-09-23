@@ -21,7 +21,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
+//        testInstrumentationRunner "es.uniovi.eii.contacttracker.HiltTestRunner"
     }
 
     buildTypes {
@@ -66,6 +66,8 @@ android {
     useLibrary("android.test.runner")
 
     packagingOptions {
+        exclude "**/attach_hotspot_windows.dll"
+        exclude "META-INF/licenses/**"
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
@@ -105,7 +107,28 @@ dependencies {
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
     // Instant Task Executor para los LiveData
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+    // Robolectric
+    testImplementation 'org.robolectric:robolectric:4.5.1'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito-inline:2.28.0'
+
+
+
+    // For Robolectric tests.
+    testImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
+    // ...with Kotlin.
+    kaptTest("com.google.dagger:hilt-android-compiler:$hilt_version")
+
+    // For instrumented tests.
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
+    // ...with Kotlin.
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_version")
+
 
     /**
      * Dependencias EXTRA

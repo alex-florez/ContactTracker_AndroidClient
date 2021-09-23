@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException
  *  [https://medium.com/swlh/unit-testing-with-kotlin-coroutines-the-android-way-19289838d257]
  */
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-fun <T> LiveData<T>.getOrAwaitValue(
+fun <T> LiveData<T>.getOrAwaitValueAndroid(
     time: Long = 2,
     timeUnit: TimeUnit = TimeUnit.SECONDS,
     afterObserve: () -> Unit = {}
@@ -24,7 +24,7 @@ fun <T> LiveData<T>.getOrAwaitValue(
         override fun onChanged(o: T?) {
             data = o
             latch.countDown()
-            this@getOrAwaitValue.removeObserver(this)
+            this@getOrAwaitValueAndroid.removeObserver(this)
         }
     }
     this.observeForever(observer)

@@ -1,24 +1,34 @@
 package es.uniovi.eii.contacttracker
 
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
+import es.uniovi.eii.contacttracker.repositories.LocationRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-@RunWith(AndroidJUnit4::class)
+import java.util.Date
+
+@RunWith(MockitoJUnitRunner::class)
 class ExampleInstrumentedTest {
+
+    @Mock
+    private lateinit var locationRepository: LocationRepository
+
+    @ExperimentalCoroutinesApi
     @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("es.uniovi.eii.contacttracker", appContext.packageName)
+    fun test1() = runBlockingTest {
+        val a = LocationAlarm(1, Date(), Date(), false)
+        `when`(locationRepository.getAlarmByID(1)).thenReturn(a)
+
+        val al = locationRepository.getAlarmByID(1)
+        assertNotNull(al)
     }
 }

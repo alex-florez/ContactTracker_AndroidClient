@@ -5,13 +5,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import es.uniovi.eii.contacttracker.getOrAwaitValue
+import es.uniovi.eii.contacttracker.getOrAwaitValueAndroid
 import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.model.RiskContactLocation
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.room.AppDatabase
-import es.uniovi.eii.contacttracker.room.daos.LocationAlarmDao
 import es.uniovi.eii.contacttracker.room.daos.RiskContactDao
 import es.uniovi.eii.contacttracker.room.mappers.toResultWithRiskContacts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -173,7 +172,7 @@ class RiskContactDaoTest {
     /* Código: RCDAO3 */
     @Test
     fun get_all_results() {
-        val results = riskContactDao.getAllRiskContactResults().getOrAwaitValue()
+        val results = riskContactDao.getAllRiskContactResults().getOrAwaitValueAndroid()
         assertEquals(2, results.size)
 
         assertEquals(1L, results[0].riskContactResult.resultId)

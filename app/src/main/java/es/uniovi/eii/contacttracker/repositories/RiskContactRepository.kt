@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.repositories
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,15 +24,9 @@ import java.util.Date
 class RiskContactRepository @Inject constructor(
         private val riskContactDao: RiskContactDao,
         private val riskContactAlarmDao: RiskContactAlarmDao,
+        private val sharedPreferences: SharedPreferences,
         @ApplicationContext private val ctx: Context
 ){
-
-    /**
-     * Referencia a las SharedPreferences.
-     */
-    private val sharedPrefs = ctx.getSharedPreferences(
-        ctx.getString(R.string.shared_prefs_file_name), Context.MODE_PRIVATE)
-
 
     /**
      * Inserta en la base de datos el resultado de la comprobación
@@ -83,7 +78,7 @@ class RiskContactRepository @Inject constructor(
      * @param checkMode Nuevo modo de comprobación.
      */
     fun setCheckMode(checkMode: CheckMode){
-        with(sharedPrefs.edit()){
+        with(sharedPreferences.edit()){
             putString(ctx.getString(R.string.shared_prefs_risk_contact_check_mode), checkMode.name)
             apply()
         }
@@ -96,7 +91,7 @@ class RiskContactRepository @Inject constructor(
      * @return Modo de comprobación seleccionado.
      */
     fun getCheckMode(): CheckMode {
-        val stringMode = sharedPrefs.getString(ctx.getString(R.string.shared_prefs_risk_contact_check_mode), "MANUAL")
+        val stringMode = sharedPreferences.getString(ctx.getString(R.string.shared_prefs_risk_contact_check_mode), "MANUAL")
         return CheckMode.valueOf(stringMode!!)
     }
 

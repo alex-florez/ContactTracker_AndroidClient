@@ -5,24 +5,20 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import es.uniovi.eii.contacttracker.getOrAwaitValue
+import es.uniovi.eii.contacttracker.getOrAwaitValueAndroid
 import es.uniovi.eii.contacttracker.model.Point
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.room.AppDatabase
 import es.uniovi.eii.contacttracker.room.daos.UserLocationDao
-import es.uniovi.eii.contacttracker.util.DateUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
 import java.io.IOException
 import java.text.SimpleDateFormat
-
-import java.util.Date
 
 /**
  * Clase de pruebas Unitarias para probar el funcionamiento del DAO
@@ -141,7 +137,7 @@ class UserLocationDaoTest {
     fun get_user_locations_by_date_no_match() {
         val dateString = "2021-12-10"
         val locations = userLocationDao.getAllByDateString(dateString)
-        assertEquals(0, locations.getOrAwaitValue().size)
+        assertEquals(0, locations.getOrAwaitValueAndroid().size)
     }
 
     /* Código: ULDAO5 */
@@ -149,10 +145,10 @@ class UserLocationDaoTest {
     fun get_user_locations_by_date_match() {
         val dateString = "2021-09-19"
         val filtered = userLocationDao.getAllByDateString(dateString)
-        assertEquals(3, filtered.getOrAwaitValue().size)
-        assertEquals(locations[2], filtered.getOrAwaitValue()[0])
-        assertEquals(locations[1], filtered.getOrAwaitValue()[1])
-        assertEquals(locations[0], filtered.getOrAwaitValue()[2])
+        assertEquals(3, filtered.getOrAwaitValueAndroid().size)
+        assertEquals(locations[2], filtered.getOrAwaitValueAndroid()[0])
+        assertEquals(locations[1], filtered.getOrAwaitValueAndroid()[1])
+        assertEquals(locations[0], filtered.getOrAwaitValueAndroid()[2])
     }
 
     /* Código: ULDAO6 */

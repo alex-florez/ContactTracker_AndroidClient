@@ -1,6 +1,5 @@
 package es.uniovi.eii.contacttracker.positive
 
-import android.util.Log
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.ASYMPTOMATIC_QUESTION
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED_QUESTION
 import es.uniovi.eii.contacttracker.model.Error
@@ -25,6 +24,10 @@ class PositiveManager @Inject constructor(
     private val configRepository: ConfigRepository
 ) {
 
+    suspend fun pruebaGet(): Int {
+        val config = configRepository.getNotifyPositiveConfig()
+        return config.infectivityPeriod
+    }
 
     /**
      * Recupera las últimas localizaciones del usuario que ha dado positivo en
