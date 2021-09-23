@@ -185,38 +185,13 @@ class LocationAlarmsFragment : Fragment() {
                 updateAlarmsAdapter(it)
             })
 
-            // Resultado de programar una alarma.
-            alarmSetResult.observe(viewLifecycleOwner) {
-                if(it is ValueWrapper.Fail) // Comprobar si ha habido errores
-                    processError(it.error)
-            }
-        }
-
-    }
-
-    /**
-     * Método encargado de procesar el error indicado según corresponda.
-     *
-     * @param error Objeto Error que representa alguno de los posibles errores.
-     */
-    private fun processError(error: Error) {
-        when(error) {
-            /* Horas inválidas */
-            Error.INVALID_ALARM -> {
-                AndroidUtils.snackbar(getString(R.string.errorInvalidHours), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            }
-            /* Colisión entre alarmas */
-            Error.ALARM_COLLISION -> {
-                AndroidUtils.snackbar(getString(R.string.errorAlarmCollision), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            }
-            /* Otros */
-            else -> {
-                AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
+            // Posible error al insertar una nueva alarma
+            alarmSetError.observe(viewLifecycleOwner) { stringID ->
+                AndroidUtils.snackbar(getString(stringID), Snackbar.LENGTH_LONG,
                     binding.root, requireActivity())
             }
         }
+
     }
 
     /**

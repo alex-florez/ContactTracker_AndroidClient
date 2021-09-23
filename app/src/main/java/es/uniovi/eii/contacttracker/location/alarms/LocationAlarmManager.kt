@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.Constants
@@ -75,7 +76,9 @@ class LocationAlarmManager @Inject constructor(
                 val alarmID = locationRepository.insertLocationAlarm(locationAlarm)
                 // Configurar alarma en Android
                 val insertedAlarm = locationRepository.getAlarmByID(alarmID)
-                insertedAlarm?.let { setAndroidAlarm(it) }
+                if(insertedAlarm != null)
+                    setAndroidAlarm(insertedAlarm)
+                Log.d("alarm", insertedAlarm.toString())
                 return ValueWrapper.Success(Unit)
             }
             return ValueWrapper.Fail(Error.ALARM_COLLISION)

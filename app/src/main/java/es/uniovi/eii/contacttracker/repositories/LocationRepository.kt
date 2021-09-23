@@ -1,6 +1,7 @@
 package es.uniovi.eii.contacttracker.repositories
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.model.UserLocation

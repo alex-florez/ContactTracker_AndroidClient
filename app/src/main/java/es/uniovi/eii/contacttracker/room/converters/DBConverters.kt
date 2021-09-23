@@ -12,7 +12,7 @@ import java.util.*
  */
 class DBConverters {
 
-    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     /* FECHAS */
     @TypeConverter
