@@ -127,46 +127,27 @@ class RiskContactFragment : Fragment() {
             }
 
             /* Resultado de añadir una alarma de comprobación */
-            addAlarmResult.observe(viewLifecycleOwner) {
-                when(it) {
-                    is ValueWrapper.Success -> {
-                        // Crear un nuevo chip
-                        binding.alarmChipGroup.addView(createAlarmChip(it.value))
-                        viewModel.setLabelNoAlarms(binding.alarmChipGroup.isEmpty())
-                        AndroidUtils.snackbar(getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG,
-                            binding.root, requireActivity())
-                    }
-                    is ValueWrapper.Fail -> {
-                        processError(it.error)
-                    }
-                }
+            addAlarmSuccess.observe(viewLifecycleOwner) {
+                binding.alarmChipGroup.addView(createAlarmChip(it)) // Crear un nuevo chip
+                viewModel.setLabelNoAlarms(binding.alarmChipGroup.isEmpty())
+                AndroidUtils.snackbar(getString(R.string.checkAlarmSetSnackbar), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+
+            /* Error al insertar una alarma de comprobación */
+            addAlarmError.observe(viewLifecycleOwner) { stringError ->
+                AndroidUtils.snackbar(getString(stringError), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
+            }
+            /* Error de límite de alarmas superado */
+            alarmLimitError.observe(viewLifecycleOwner) {
+                AndroidUtils.snackbar(getString(it, MAX_ALARM_COUNT), Snackbar.LENGTH_LONG,
+                    binding.root, requireActivity())
             }
 
             /* Listado de alarmas de comprobación */
             alarms.observe(viewLifecycleOwner) {
                 addAlarmsToChipGroup(it)
-            }
-        }
-    }
-
-    /**
-     * Procesa el error determinado pasado como parámetro.
-     *
-     * @param error Error de algún tipo relacionado con la comprobación de contactos.
-     */
-    private fun processError(error: Error) {
-        when(error) {
-            Error.RISK_CONTACT_ALARM_COLLISION -> {
-                AndroidUtils.snackbar(getString(R.string.checkAlarmErrorCollision), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            }
-            Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED -> {
-                AndroidUtils.snackbar(getString(R.string.checkAlarmErrorCountLimit, MAX_ALARM_COUNT), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
-            }
-            else -> {
-                AndroidUtils.snackbar(getString(R.string.genericError), Snackbar.LENGTH_LONG,
-                    binding.root, requireActivity())
             }
         }
     }

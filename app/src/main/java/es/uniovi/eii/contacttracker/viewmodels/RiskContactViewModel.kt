@@ -4,12 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
+import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
+import es.uniovi.eii.contacttracker.riskcontact.alarms.MAX_ALARM_COUNT
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarmManager
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,10 +45,24 @@ class RiskContactViewModel @Inject constructor(
     val checkHour: LiveData<Date> = _checkHour
 
     /**
-     * ValueWrapper con el resultado de añadir una alarma de comprobación.
+     * Contiene la alarma de comprobación establecida con éxito.
      */
-    private val _addAlarmResult = MutableLiveData<ValueWrapper<RiskContactAlarm>>()
-    val addAlarmResult: LiveData<ValueWrapper<RiskContactAlarm>> = _addAlarmResult
+    private val _addAlarmSuccess = MutableLiveData<RiskContactAlarm>()
+    val addAlarmSuccess: LiveData<RiskContactAlarm> = _addAlarmSuccess
+
+    /**
+     * Contiene el código del String del error determinado
+     * al insertar una nueva alarma de comprobación.
+     */
+    private val _addAlarmError = MutableLiveData<Int>()
+    val addAlarmError: LiveData<Int> = _addAlarmError
+
+    /* Contiene el código del String del error de superar el máximo
+    * de alarmas de comprobación.
+    */
+    private val _alarmLimitError = MutableLiveData<Int>()
+    val alarmLimitError: LiveData<Int> = _alarmLimitError
+
 
     /**
      * Listado inicial con las alarmas de comprobación establecidas.
@@ -105,7 +124,14 @@ class RiskContactViewModel @Inject constructor(
      */
     fun addAlarm(date: Date){
         viewModelScope.launch {
-            _addAlarmResult.value = riskContactAlarmManager.set(RiskContactAlarm(null, date, true))
+            when(val result = riskContactAlarmManager.set(RiskContactAlarm(null, date,true))) {
+                is ValueWrapper.Success -> {
+                    _addAlarmSuccess.value = result.value
+                }
+                is ValueWrapper.Fail -> {
+                    processError(result.error)
+                }
+            }
         }
     }
 
@@ -149,5 +175,23 @@ class RiskContactViewModel @Inject constructor(
      */
     fun setLabelNoAlarms(value: Boolean) {
         _emptyAlarms.value = value
+    }
+
+    /**
+     * Rellena los LiveDatas con los códigos de error en función del
+     * error determinado de insertar una alarma de comprobación.
+     */
+    private fun processError(error: Error) {
+        when(error) {
+            Error.RISK_CONTACT_ALARM_COLLISION -> {
+                _addAlarmError.value = R.string.checkAlarmErrorCollision
+            }
+            Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED ->{
+                _alarmLimitError.value = R.string.checkAlarmErrorCountLimit
+            }
+            else -> {
+                _addAlarmError.value = R.string.genericError
+            }
+        }
     }
 }

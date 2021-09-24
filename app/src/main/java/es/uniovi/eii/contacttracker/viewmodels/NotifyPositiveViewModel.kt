@@ -38,10 +38,18 @@ class NotifyPositiveViewModel @Inject constructor(
     val infectivityPeriod: LiveData<Int> = _infectivityPeriod
 
     /**
-     * LiveData con el resultado de la notificación de positivo.
+     * Contiene un par con el Código del String de éxito de notificación
+     * y el número de localizaciones que se han subido a la nube.
      */
-    private val _notifyResult = MutableLiveData<ValueWrapper<NotifyPositiveResult>>()
-    val notifyResult: LiveData<ValueWrapper<NotifyPositiveResult>> = _notifyResult
+    private val _notifySuccess = MutableLiveData<Pair<Int, Int>>()
+    val notifySuccess: LiveData<Pair<Int, Int>> = _notifySuccess
+
+    /**
+     * LiveData con el código del String que representa un error determinado
+     * en la notificación del positivo.
+     */
+    private val _notifyError = MutableLiveData<Int>()
+    val notifyError: LiveData<Int> = _notifyError
 
     /**
      * LiveData para el icono de Carga.
@@ -68,7 +76,17 @@ class NotifyPositiveViewModel @Inject constructor(
             _isLoading.postValue(true)
             // Datos personales
             val personalData = if(addPersonalData) getPersonalData() else null
-            _notifyResult.postValue(positiveManager.notifyPositive(personalData, answers))
+            val result = positiveManager.notifyPositive(personalData, answers)
+            when(result) {
+                is ValueWrapper.Success -> {
+                    _notifySuccess.postValue(Pair(
+                        R.string.notifyPositiveResultText, // Código del String
+                        result.value.uploadedLocations)) // Localizaciones subidas
+                }
+                is ValueWrapper.Fail -> {
+                    _notifyError.postValue(processError(result.error))
+                }
+            }
             _isLoading.postValue(false)
         }
     }
@@ -100,6 +118,20 @@ class NotifyPositiveViewModel @Inject constructor(
             _loadingInfectivity.postValue(true)
             _infectivityPeriod.postValue(configRepository.getNotifyPositiveConfig().infectivityPeriod)
             _loadingInfectivity.postValue(false)
+        }
+    }
+
+    /**
+     * Procesa el error de notificación de positivo devolviendo el código
+     * del string correspondiente al error.
+     */
+    private fun processError(error: Error): Int {
+        return when(error) {
+            Error.TIMEOUT -> R.string.network_error
+            Error.CANNOT_NOTIFY -> R.string.genericErrorNotifyPositive
+            Error.NOTIFICATION_LIMIT_EXCEEDED -> R.string.errorNotifyLimitExceeded
+            Error.NO_LOCATIONS_TO_NOTIFY -> R.string.errorNotifyNoLocations
+            else -> R.string.genericError
         }
     }
 }

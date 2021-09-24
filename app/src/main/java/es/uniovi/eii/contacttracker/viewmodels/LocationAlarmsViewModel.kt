@@ -1,9 +1,13 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
 import androidx.lifecycle.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
+import es.uniovi.eii.contacttracker.model.Error
+import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.launch
 import java.util.*
@@ -29,16 +33,15 @@ class LocationAlarmsViewModel @Inject constructor(
     private val _endTime = MutableLiveData(Date())
     val endTime: LiveData<Date> = _endTime
 
-    /**
-     * Resultado de programar una alarma.
-     */
-    private val _alarmSetResult = MutableLiveData<ValueWrapper<Unit>>()
-    val alarmSetResult: LiveData<ValueWrapper<Unit>> = _alarmSetResult
+    /* Alarmas */
+    val alarms: LiveData<List<LocationAlarm>> = locationAlarmManager.getAllAlarms()
 
     /**
-     * Alarmas actualmente programadas.
+     * Posible error al añadir una nueva alarma
+     * (contiene el código del String del error)
      */
-    val alarms: LiveData<List<LocationAlarm>> = locationAlarmManager.getAllAlarms()
+    private val _alarmSetError = MutableLiveData<Int>()
+    val alarmSetError: LiveData<Int> = _alarmSetError
 
     /**
      * MediatorLiveData para la lista de alarmas vacía.
@@ -83,7 +86,23 @@ class LocationAlarmsViewModel @Inject constructor(
                 true // Activada por defecto
         )
         viewModelScope.launch {
-            _alarmSetResult.value = locationAlarmManager.setAlarm(alarm)
+            val result = locationAlarmManager.setAlarm(alarm)
+            if(result is ValueWrapper.Fail) {
+                when(result.error) {
+                    /* Horas inválidas */
+                    Error.INVALID_ALARM -> {
+                        _alarmSetError.value = R.string.errorInvalidHours
+                    }
+                    /* Colisión entre alarmas */
+                    Error.ALARM_COLLISION -> {
+                        _alarmSetError.value = R.string.errorAlarmCollision
+                    }
+                    /* Otros */
+                    else -> {
+                        _alarmSetError.value = R.string.genericError
+                    }
+                }
+            }
         }
     }
 
@@ -114,6 +133,12 @@ class LocationAlarmsViewModel @Inject constructor(
             locationAlarm.id?.let {locationAlarmManager.toggleAlarm(it, enable)}
         }
     }
+
+    /**
+     * Devuelve un LiveData con la lista de todas las alarmas de localización
+     * existentes.
+     */
+    fun getAllAlarms(): LiveData<List<LocationAlarm>> = locationAlarmManager.getAllAlarms()
 
     init {
         // Agregar fuente al LiveData para la lista de alarmas vacía

@@ -79,7 +79,6 @@ class RiskContactResultsFragment : Fragment() {
             /* Resultados de la comprobación */
             getAllRiskContactResults().observe(viewLifecycleOwner) {
                 fillAdapter(it)
-//                riskContactResultAdapter.submitList(it)
                 binding.txtLabelEmpty.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
             }
             /* Icono de carga */

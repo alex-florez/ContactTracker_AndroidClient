@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.repositories
 
+
 import androidx.lifecycle.LiveData
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.model.UserLocation
