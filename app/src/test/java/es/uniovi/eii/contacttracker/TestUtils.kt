@@ -23,7 +23,7 @@ object TestUtils {
      * @param filename Nombre del fichero.
      * @return Lista con las líneas del fichero.
      */
-    fun readFile(filename: String): List<String>{
+    private fun readFile(filename: String): List<String>{
         var list = listOf<String>()
         javaClass.classLoader?.getResourceAsStream(filename)?.bufferedReader()
             .use {
@@ -41,7 +41,6 @@ object TestUtils {
      * @return Objeto Itinerary.
      */
     fun parseItinerary(filename: String): Itinerary {
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
         val lines = readFile(filename)
         val locations = mutableListOf<UserLocation>()
         var count = 1
@@ -55,6 +54,29 @@ object TestUtils {
         }
         // Crear itinerario
         return Itinerary(locations, filename)
+    }
+
+    /**
+     * Parsea el fichero de localizaciones de nombre pasado como parámetro
+     * y devuelve una lista con dichas localizaciones transformadas a objetos
+     * UserLocation.
+     *
+     * @param filename Nombre del fichero dentro de la carpeta de recursos.
+     * @return Lista de localizaciones de usuario.
+     */
+    fun parseLocations(filename: String): List<UserLocation> {
+        val lines = readFile(filename)
+        val locations = mutableListOf<UserLocation>()
+        var count = 1
+        lines.forEach {
+            val data = it.split(",")
+            val lng = data[0].toDouble()
+            val lat = data[1].toDouble()
+            val date = df.parse(data[2])
+            locations.add(UserLocation(count.toLong(), Point(lat, lng, date!!), 0.0,""))
+            count++
+        }
+        return locations
     }
 }
 
