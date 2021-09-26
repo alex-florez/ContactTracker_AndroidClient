@@ -8,225 +8,357 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 /**
- * Clase con tests unitarios para la clase RiskContact
- * que representa un contacto de riesgo con varias localizaciones
- * de contacto con un positivo.
+ * Clase de pruebas Unitarias para la clase RiskContact.
  */
 class RiskContactUnitTest {
 
-    /* Referencia al contacto de riesgo de prueba */
+    /* Contacto de riesgo de prueba */
     private lateinit var riskContact: RiskContact
 
-    /* Date formatter*/
+    /* Date formatter */
     private val df = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
 
     @Before
     fun setUp(){
-        riskContact = RiskContact(riskContactId = null, riskContactResultId = null,
-            config = RiskContactConfig(
-                exposeTimeWeight = 0.4, meanProximityWeight = 0.45, meanTimeIntervalWeight = 0.15
-            ) )
+        /* Inicializar contacto de riesgo con configuración por defecto. */
+        val config = RiskContactConfig(exposeTimeWeight = 0.4, meanProximityWeight = 0.4, meanTimeIntervalWeight = 0.2)
+        riskContact = RiskContact(riskContactId = null, riskContactResultId = null, config = config)
     }
 
-    /**
-     * Test unitario que comprueba el cálculo del tiempo de
-     * exposición con una intersección exacta entre las horas
-     * de las localizaciones.
-     */
+    /* Código: RC1 */
     @Test
-    fun `check expose time exact intersection`(){
-        /* Intersección exacta */
+    fun `agregar un punto de contacto de riesgo amarillo`() {
         riskContact.addContactLocations(
-            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
-            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, "")
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531776, -5.911465, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.531779, -5.91148,  df.parse("21/06/2021 12:00:10")),0.0, ""),
-            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")), 0.0, "")
-        )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
-            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")), 0.0, "")
-        )
-        // Fecha de inicio y de fin
-        assertEquals("21/06/2021 12:00:00", df.format(riskContact.startDate))
-        assertEquals("21/06/2021 12:00:20", df.format(riskContact.endDate))
-        // Tiempo de exposición
-        assertEquals(20000, riskContact.exposeTime)
+        assertNull(riskContact.startDate)
+        assertNull(riskContact.endDate)
+        assertEquals(0L, riskContact.exposeTime)
+        assertEquals(4.12, riskContact.meanProximity, 0.01)
+        assertEquals(0L, riskContact.meanTimeInterval)
+        assertEquals(0.125, riskContact.riskScore, 0.01)
+        assertEquals(12.5, riskContact.riskPercent, 0.01)
+        assertEquals(RiskLevel.AMARILLO, riskContact.riskLevel)
     }
 
-    /**
-     * Test unitario que comprueba el tiempo de exposición con una
-     * intersección interna entre las fechas y horas de los puntos de contacto.
-     */
+    /* Código: RC2 */
     @Test
-    fun `check expose time internal intersection`(){
-        /* Intersección interna */
+    fun `agregar un punto de contacto de riesgo naranja`() {
         riskContact.addContactLocations(
-            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
-            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:05")),0.0, "")
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531774, -5.911489, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")),0.0, ""),
-            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:09")),0.0, "")
-        )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
-            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:15")),0.0, "")
-        )
-        // Fecha de inicio y de fin
-        assertEquals("21/06/2021 12:00:05", df.format(riskContact.startDate))
-        assertEquals("21/06/2021 12:00:15", df.format(riskContact.endDate))
-        // Tiempo de exposición
-        assertEquals(10000, riskContact.exposeTime)
+        assertNull(riskContact.startDate)
+        assertNull(riskContact.endDate)
+        assertEquals(0L, riskContact.exposeTime)
+        assertEquals(2.24, riskContact.meanProximity, 0.01)
+        assertEquals(0L, riskContact.meanTimeInterval)
+        assertEquals(0.25, riskContact.riskScore, 0.01)
+        assertEquals(25.02, riskContact.riskPercent, 0.01)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
     }
 
-    /**
-     * Test Unitario que comprueba el cálculo del tiempo
-     * de exposición con una intersección externa entre los timestamps
-     * de las localizaciones.
-     */
+    /* Código: RC3 */
     @Test
-    fun `check expose time external intersection`(){
-        /* Intersección externa */
-        riskContact.addContactLocations(
-            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
-            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 11:59:00")),0.0, "")
+    fun `agregar punto de contacto de riesgo rojo`() {
+        // Modificar la configuración para que pueda alcanzar el nivel rojo
+        riskContact.config = RiskContactConfig(
+            exposeTimeWeight = 0.1, meanProximityWeight = 0.8, meanTimeIntervalWeight = 0.1, meanProximityRange = arrayOf(0.0, 15.0)
         )
         riskContact.addContactLocations(
-            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")), 0.0, ""),
-            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:12")),0.0, "")
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
-            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:25")),0.0, "")
-        )
-        // Fecha de inicio y de fin
-        assertEquals("21/06/2021 12:00:00", df.format(riskContact.startDate))
-        assertEquals("21/06/2021 12:00:20", df.format(riskContact.endDate))
-        // Tiempo de exposición
-        assertEquals(20000, riskContact.exposeTime)
+        assertNull(riskContact.startDate)
+        assertNull(riskContact.endDate)
+        assertEquals(0L, riskContact.exposeTime)
+        assertEquals(0.83, riskContact.meanProximity, 0.01)
+        assertEquals(0L, riskContact.meanTimeInterval)
+        assertEquals(0.755, riskContact.riskScore, 0.01)
+        assertEquals(75.55, riskContact.riskPercent, 0.01)
+        assertEquals(RiskLevel.ROJO, riskContact.riskLevel)
     }
 
-    /**
-     * Comprueba el cálculo de tiempo de exposición
-     * con una intersección por la izquierda.
-     */
+    /* Código: RC4 */
     @Test
-    fun `check expose time left intersection`(){
-        /* Intersección por la izquierda */
-        riskContact.addContactLocations(
-            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")), 0.0, ""),
-            UserLocation(21, Point(43.531779, -5.91148, df.parse("21/06/2021 11:59:00")), 0.0, "")
+    fun `agregar 2 puntos de contacto con interseccion exacta entre fechas`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:00")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")),0.0, ""),
-            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:12")), 0.0, "")
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:00:05")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:00:05")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")), 0.0, ""),
-            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:15")), 0.0, "")
-        )
-        // Fecha de inicio y de fin
-        assertEquals("21/06/2021 12:00:00", df.format(riskContact.startDate))
-        assertEquals("21/06/2021 12:00:15", df.format(riskContact.endDate))
-        // Tiempo de exposición
-        assertEquals(15000, riskContact.exposeTime)
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:05", df.format(end))
+
+        assertEquals(5000L, riskContact.exposeTime)
+        assertEquals(1.15, riskContact.meanProximity, 0.01)
+        assertEquals(5000L, riskContact.meanTimeInterval)
+        assertEquals(0.5238, riskContact.riskScore, 0.01)
+        assertEquals(52.38, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
     }
 
-    /**
-     * Comprueba el cálculo del tiempo de exposición
-     * con una intersección por la derecha.
-     */
+
+    /* Código: RC5 */
     @Test
-    fun `check expose time right intersection`(){
-        /* Intersección por la derecha */
-        riskContact.addContactLocations(
-            UserLocation(11, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:00")),0.0, ""),
-            UserLocation(21, Point(43.531779, -5.91148,  df.parse("21/06/2021 12:00:05")), 0.0, "")
+    fun `agregar 2 puntos de contacto con interseccion interna entre fechas`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:02")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:10")), 0.0, ""),
-            UserLocation(22, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:12")),  0.0, "")
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:00:05")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:00:04")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:20")),0.0, ""),
-            UserLocation(23, Point(43.531779, -5.91148, df.parse("21/06/2021 12:00:25")), 0.0, "")
-        )
-        // Fecha de inicio y de fin
-        assertEquals("21/06/2021 12:00:05", df.format(riskContact.startDate))
-        assertEquals("21/06/2021 12:00:20", df.format(riskContact.endDate))
-        // Tiempo de exposición
-        assertEquals(15000, riskContact.exposeTime)
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:02", df.format(start))
+        assertEquals("26/09/2021 12:00:04", df.format(end))
+
+        assertEquals(2000L, riskContact.exposeTime)
+        assertEquals(1.15, riskContact.meanProximity, 0.01)
+        assertEquals(3500L, riskContact.meanTimeInterval)
+        assertEquals(0.5230, riskContact.riskScore, 0.01)
+        assertEquals(52.30, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
     }
 
-    /**
-     * Comprueba el cálculo de la proximidad media.
-     */
+    /* Código: RC6 */
     @Test
-    fun `check mean proximity`(){
-        assertEquals(0.0, riskContact.meanProximity, 0.01)
-        riskContact.addContactLocations(
-            UserLocation(11, Point(43.53192309009996, -5.913243243698072, df.parse("21/06/2021 12:00:00")), 0.0, ""),
-            UserLocation(21, Point(43.53191738405285, -5.913219581274731, df.parse("21/06/2021 12:00:05")), 0.0, "")
+    fun `agregar 2 puntos de contacto con interseccion externa entre fechas`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 11:59:55")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.53197138253921, -5.913188619181912, df.parse("21/06/2021 12:00:10")),  0.0, ""),
-            UserLocation(22, Point(43.53196876782065, -5.913173105925772, df.parse("21/06/2021 12:00:12")),0.0, "")
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:00:05")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:00:10")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.53202645322956, -5.913128095966302, df.parse("21/06/2021 12:00:20")), 0.0, ""),
-            UserLocation(23, Point(43.53202431557776, -5.913113403953236, df.parse("21/06/2021 12:00:25")), 0.0, "")
-        )
-        assertEquals(1.5007, riskContact.meanProximity, 0.01)
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:05", df.format(end))
+
+        assertEquals(5000L, riskContact.exposeTime)
+        assertEquals(1.15, riskContact.meanProximity, 0.01)
+        assertEquals(10000L, riskContact.meanTimeInterval)
+        assertEquals(0.5222, riskContact.riskScore, 0.01)
+        assertEquals(52.22, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
     }
 
-    /**
-     * Comprueba el cálculo de la media de intervalo de tiempo
-     * entre localizaciones.
-     */
+    /* Código: RC7 */
     @Test
-    fun `check mean time interval`(){
-        assertEquals(0, riskContact.meanTimeInterval)
-        riskContact.addContactLocations(
-            UserLocation(11, Point(43.53192309009996, -5.913243243698072,  df.parse("21/06/2021 11:59:34")), 0.0, ""),
-            UserLocation(21, Point(43.53191738405285, -5.913219581274731, df.parse("21/06/2021 12:00:05")), 0.0, "")
+    fun `agregar 2 puntos de contacto con interseccion derecha entre fechas`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.53197138253921, -5.913188619181912,  df.parse("21/06/2021 11:59:46")), 0.0, ""),
-            UserLocation(22, Point(43.53196876782065, -5.913173105925772, df.parse("21/06/2021 12:00:22")),0.0, "")
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:00:05")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:00:10")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.53202645322956, -5.913128095966302, df.parse("21/06/2021 12:00:28")), 0.0, ""),
-            UserLocation(23, Point(43.53202431557776, -5.913113403953236, df.parse("21/06/2021 12:00:35")), 0.0, "")
-        )
-        assertEquals(21000, riskContact.meanTimeInterval)
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:03", df.format(start))
+        assertEquals("26/09/2021 12:00:05", df.format(end))
+
+        assertEquals(2000L, riskContact.exposeTime)
+        assertEquals(1.15, riskContact.meanProximity, 0.01)
+        assertEquals(6000L, riskContact.meanTimeInterval)
+        assertEquals(0.5222, riskContact.riskScore, 0.01)
+        assertEquals(52.22, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
     }
 
-    /**
-     * Comprueba el cálculo de la puntuación
-     * de riesgo del contacto.
-     */
+    /* Código: RC8 */
     @Test
-    fun `check risk score`(){
-        riskContact.addContactLocations(
-            UserLocation(11, Point(43.53192309009996, -5.913243243698072,  df.parse("21/06/2021 11:59:34")), 0.0, ""),
-            UserLocation(21, Point(43.53191738405285, -5.913219581274731, df.parse("21/06/2021 12:00:05")), 0.0, "")
+    fun `agregar 2 puntos de contacto con interseccion izquierda entre fechas`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 11:59:55")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(12, Point(43.53197138253921, -5.913188619181912, df.parse("21/06/2021 11:59:46")), 0.0, ""),
-            UserLocation(22, Point(43.53196876782065, -5.913173105925772, df.parse("21/06/2021 12:00:22")), 0.0, "")
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:00:05")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        riskContact.addContactLocations(
-            UserLocation(13, Point(43.53202645322956, -5.913128095966302, df.parse("21/06/2021 12:00:28")), 0.0, ""),
-            UserLocation(23, Point(43.53202431557776, -5.913113403953236, df.parse("21/06/2021 12:00:35")), 0.0, "")
-        )
-        assertEquals(23000, riskContact.exposeTime)
-        assertEquals(1.5007, riskContact.meanProximity, 0.01)
-        assertEquals(21000, riskContact.meanTimeInterval)
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:03", df.format(end))
 
-        assertEquals(0.5374, riskContact.riskScore, 0.0001)
-        assertEquals(53.74, riskContact.riskPercent, 0.01)
+        assertEquals(3000L, riskContact.exposeTime)
+        assertEquals(1.15, riskContact.meanProximity, 0.01)
+        assertEquals(6500L, riskContact.meanTimeInterval)
+        assertEquals(0.5226, riskContact.riskScore, 0.01)
+        assertEquals(52.26, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+    }
+
+    /* Código: RC9 */
+    @Test
+    fun `agregar 2 puntos de contacto que no generen interseccion`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 11:59:50")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:00:05")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 11:59:55")!!), 0.0,"")
+        )
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNull(riskContact.startDate)
+        assertNull(riskContact.endDate)
+
+        assertEquals(0L, riskContact.exposeTime)
+        assertEquals(1.15, riskContact.meanProximity, 0.01)
+        assertEquals(5000L, riskContact.meanTimeInterval)
+        assertEquals(0.5216, riskContact.riskScore, 0.01)
+        assertEquals(52.16, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+    }
+
+    /* Código: RC10 */
+    @Test
+    fun `agregar 3 puntos de contacto que generen una interseccion interna`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:05")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:08:00")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:07:54")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 3
+            UserLocation(31, Point(43.531732, -5.911567, df.parse("26/09/2021 12:14:00")!!), 0.0, ""),
+            UserLocation(32, Point(43.531726, -5.911549, df.parse("26/09/2021 12:13:56")!!), 0.0,"")
+        )
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:05", df.format(start))
+        assertEquals("26/09/2021 12:13:56", df.format(end))
+
+        assertEquals(831000L, riskContact.exposeTime)
+        assertEquals(1.296, riskContact.meanProximity, 0.01)
+        assertEquals(417750L, riskContact.meanTimeInterval)
+        assertEquals(0.7436, riskContact.riskScore, 0.01)
+        assertEquals(74.36, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+    }
+
+    /* Código: RC11 */
+    @Test
+    fun `agregar 3 puntos de contacto que generen una interseccion externa`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 11:59:57")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:08:00")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:07:54")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 3
+            UserLocation(31, Point(43.531732, -5.911567, df.parse("26/09/2021 12:14:00")!!), 0.0, ""),
+            UserLocation(32, Point(43.531726, -5.911549, df.parse("26/09/2021 12:14:11")!!), 0.0,"")
+        )
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:14:00", df.format(end))
+
+        assertEquals(840000L, riskContact.exposeTime)
+        assertEquals(1.296, riskContact.meanProximity, 0.01)
+        assertEquals(423500L, riskContact.meanTimeInterval)
+        assertEquals(0.7457, riskContact.riskScore, 0.01)
+        assertEquals(74.57, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+    }
+
+    /* Código: RC12 */
+    @Test
+    fun `agregar 3 puntos de contacto que generen una interseccion derecha`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:05")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:08:00")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:07:54")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 3
+            UserLocation(31, Point(43.531732, -5.911567, df.parse("26/09/2021 12:14:00")!!), 0.0, ""),
+            UserLocation(32, Point(43.531726, -5.911549, df.parse("26/09/2021 12:14:11")!!), 0.0,"")
+        )
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:05", df.format(start))
+        assertEquals("26/09/2021 12:14:00", df.format(end))
+
+        assertEquals(835000L, riskContact.exposeTime)
+        assertEquals(1.296, riskContact.meanProximity, 0.01)
+        assertEquals(421500L, riskContact.meanTimeInterval)
+        assertEquals(0.7442, riskContact.riskScore, 0.01)
+        assertEquals(74.42, riskContact.riskPercent, 0.1)
+        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+    }
+
+    /* Código: RC13 */
+    @Test
+    fun `agregar 3 puntos de contacto que no generen interseccion`() {
+        riskContact.addContactLocations( // Punto de contacto 1
+            UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
+            UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:14:45")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 2
+            UserLocation(21, Point(43.531751, -5.911550, df.parse("26/09/2021 12:08:00")!!), 0.0, ""),
+            UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 12:16:00")!!), 0.0,"")
+        )
+        riskContact.addContactLocations( // Punto de contacto 3
+            UserLocation(31, Point(43.531732, -5.911567, df.parse("26/09/2021 12:14:00")!!), 0.0, ""),
+            UserLocation(32, Point(43.531726, -5.911549, df.parse("26/09/2021 12:17:10")!!), 0.0,"")
+        )
+        // Comprobar inicio y fin del contacto de riesgo.
+        assertNull(riskContact.startDate)
+        assertNull(riskContact.endDate)
+
+        assertEquals(0L, riskContact.exposeTime)
+        assertEquals(1.296, riskContact.meanProximity, 0.01)
+        assertEquals(246250L, riskContact.meanTimeInterval)
+        assertEquals(0.4315, riskContact.riskScore, 0.01)
+        assertEquals(43.15, riskContact.riskPercent, 0.1)
         assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
     }
 }

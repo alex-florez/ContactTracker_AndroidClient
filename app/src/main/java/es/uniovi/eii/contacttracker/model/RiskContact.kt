@@ -134,8 +134,11 @@ class RiskContact(
     private fun calculateRiskLevel() {
         this.riskScore = 0.0 // Valor total ponderado del riesgo.
         /* Normalizar los valores de los parámetros */
-        val (exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal) = normalize()
+        var (exposeTimeNormal, meanProximityNormal, meanTimeIntervalNormal) = normalize()
         /* Obtener valores ponderados de los parámetros */
+        // Si la proximidad es 0 o el intervalo de tiempo es 0, establecerlos a 1 para que no influyan en la ponderación.
+        meanProximityNormal = if(meanProximityNormal == 0.0) 1.0 else meanProximityNormal
+        meanTimeIntervalNormal = if(meanTimeIntervalNormal == 0.0) 1.0 else meanTimeIntervalNormal
         // Restar -1 para los parámetros que ponderan inversamente.
         this.riskScore += exposeTimeNormal * config.exposeTimeWeight +
                 (1 - meanProximityNormal) * config.meanProximityWeight +
