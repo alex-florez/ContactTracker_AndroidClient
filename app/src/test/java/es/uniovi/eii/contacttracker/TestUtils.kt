@@ -34,8 +34,9 @@ object TestUtils {
     }
 
     /**
-     * Lee los datos del fichero de nombre indicado y
-     * construye un Itinerario con las localizaciones.
+     * Lee los datos del fichero de nombre indicado almacenado en la carpeta
+     * de recuros (resources) y construye un Itinerario con las localizaciones
+     * contenidas en dicho fichero.
      *
      * @param filename Nombre del fichero.
      * @return Objeto Itinerary.
