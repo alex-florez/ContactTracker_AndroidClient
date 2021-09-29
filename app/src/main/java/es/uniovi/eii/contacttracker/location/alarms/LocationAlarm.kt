@@ -47,9 +47,11 @@ data class LocationAlarm(
      * Comprueba las horas de INICIO y de FIN de la alarma. Si
      * las horas están desfasadas con respecto la fecha actual, las actualiza para que
      * pasen a ser programadas un día más tarde.
+     *
+     * @param date Fecha con la que comparar.
      */
-    fun updateHours() {
-        if(startDate.before(Date())){ // alarma desfasada
+    fun updateHours(date: Date) {
+        if(startDate.before(date)){ // alarma desfasada
             startDate = DateUtils.addToDate(startDate, Calendar.DATE, 1)
             endDate = DateUtils.addToDate(endDate, Calendar.DATE, 1)
         }

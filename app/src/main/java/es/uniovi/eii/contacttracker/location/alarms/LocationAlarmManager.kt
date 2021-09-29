@@ -14,6 +14,7 @@ import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import javax.inject.Inject
+import java.util.Date
 
 /**
  * Manager para gestionar y programar las alarmas de localización.
@@ -69,7 +70,7 @@ class LocationAlarmManager @Inject constructor(
      * @return Objeto ValueWrapper con Éxito o Fallo.
      */
     suspend fun setAlarm(locationAlarm: LocationAlarm): ValueWrapper<Unit> {
-        locationAlarm.updateHours() // Actualizar horas de la alarma (si es necesario)
+        locationAlarm.updateHours(Date()) // Actualizar horas de la alarma (si es necesario)
         if(locationAlarm.isValid()){ // Comprobar las horas de la alarma
             if(checkAlarmCollisions(locationAlarm).isEmpty()) { // Comprobar colisiones
                 // Insertar alarma en el repositorio
@@ -99,7 +100,7 @@ class LocationAlarmManager @Inject constructor(
         val alarm = locationRepository.getAlarmByID(alarmID)
         alarm?.let {
             // Actualizar la alarma de localización en la base de datos
-            alarm.updateHours()
+            alarm.updateHours(Date())
             alarm.active = enable
             locationRepository.updateLocationAlarm(alarm)
             // Activar o Desactivar alarma en Android.
