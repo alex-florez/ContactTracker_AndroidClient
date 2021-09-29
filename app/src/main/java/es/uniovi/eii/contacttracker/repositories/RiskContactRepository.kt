@@ -136,6 +136,16 @@ class RiskContactRepository @Inject constructor(
     }
 
     /**
+     * Devuelve la alarma de comprobación de id pasado como parámetro.
+     *
+     * @param id Id de la alarma de comprobación.
+     * @return Alarma de comprobación o Null si no existe.
+     */
+    suspend fun getAlarmById(id: Long): RiskContactAlarm? {
+        return riskContactAlarmDao.getById(id)
+    }
+
+    /**
      * Devuelve una lista con todas las alarmas de comprobación establecidas en la hora
      * que coincide con la hora de la fecha pasada como parámetro.
      *

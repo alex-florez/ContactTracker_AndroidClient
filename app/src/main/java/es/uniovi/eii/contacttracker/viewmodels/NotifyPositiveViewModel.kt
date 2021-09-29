@@ -18,6 +18,7 @@ import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import java.util.Date
 import kotlin.coroutines.coroutineContext
 
 /**
@@ -76,7 +77,7 @@ class NotifyPositiveViewModel @Inject constructor(
             _isLoading.postValue(true)
             // Datos personales
             val personalData = if(addPersonalData) getPersonalData() else null
-            val result = positiveManager.notifyPositive(personalData, answers)
+            val result = positiveManager.notifyPositive(personalData, answers, Date())
             when(result) {
                 is ValueWrapper.Success -> {
                     _notifySuccess.postValue(Pair(

@@ -18,7 +18,4 @@ data class NotifyPositiveResult(
         @Expose
         @SerializedName("uploadedLocations")
         var uploadedLocations: Int,
-
-        /* Flag provisional para indicar que se ha superado el límite de notificación */
-        var limitExceeded: Boolean
 )

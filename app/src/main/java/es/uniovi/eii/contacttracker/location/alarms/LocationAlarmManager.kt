@@ -79,7 +79,7 @@ class LocationAlarmManager @Inject constructor(
                 val insertedAlarm = locationRepository.getAlarmByID(alarmID)
                 if(insertedAlarm != null)
                     setAndroidAlarm(insertedAlarm)
-                Log.d("alarm", insertedAlarm.toString())
+//                Log.d("alarm", insertedAlarm.toString())
                 return ValueWrapper.Success(Unit)
             }
             return ValueWrapper.Fail(Error.ALARM_COLLISION)
@@ -135,7 +135,7 @@ class LocationAlarmManager @Inject constructor(
      *
      * @param locationAlarm alarma de localización.
      */
-    private fun setAndroidAlarm(locationAlarm: LocationAlarm) {
+    fun setAndroidAlarm(locationAlarm: LocationAlarm) {
         val alarmID = locationAlarm.id ?: return // Si el ID es null -> salir de la función.
         // Alarma de inicio
         val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)

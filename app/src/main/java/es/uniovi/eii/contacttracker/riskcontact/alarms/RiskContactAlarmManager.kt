@@ -44,13 +44,16 @@ class RiskContactAlarmManager @Inject constructor(
             return if(checkAlarmCount()) { // Comprobar si se ha superado el límite de alarmas.
                 // Insertar alarma en la base de datos
                 val alarmID = riskContactRepository.insertAlarm(riskContactAlarm)
-                riskContactAlarm.id = alarmID
-                // Crear PendingIntent
-                val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
-                i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, AndroidUtils.toByteArray(riskContactAlarm))
-                val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
-                // Configurar alarma de Android
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
+                val insertedAlarm = riskContactRepository.getAlarmById(alarmID)
+                insertedAlarm?.let {
+                    riskContactAlarm.id = alarmID
+                    // Crear PendingIntent
+                    val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
+                    i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, AndroidUtils.toByteArray(riskContactAlarm))
+                    val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
+                    // Configurar alarma de Android
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
+                }
                 ValueWrapper.Success(riskContactAlarm)
             } else {
                 ValueWrapper.Fail(Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED)

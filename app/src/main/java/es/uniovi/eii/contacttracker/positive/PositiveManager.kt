@@ -36,14 +36,16 @@ class PositiveManager @Inject constructor(
      *
      * @param personalData Datos personales del positivo (opcionales)
      * @param answers Respuestas a las preguntas solicitadas al notificar un positivo.
+     * @param date Fecha en la que se realiza la notificación.
      * @return ValueWrapper que envuelve el resultado de la notificación.
      */
     suspend fun notifyPositive(personalData: PersonalData?,
-                                answers: Map<String, Boolean>): ValueWrapper<NotifyPositiveResult> {
+                                answers: Map<String, Boolean>,
+                                date: Date): ValueWrapper<NotifyPositiveResult> {
         // Configuración de la notificación de positivos.
         val config = configRepository.getNotifyPositiveConfig()
         // Comprobar límite de notificación de positivos.
-        if(checkNotifyLimit(config.notifyWaitTime)){
+        if(checkNotifyLimit(config.notifyWaitTime, date)){
             // Obtener las localizaciones de los últimos días.
             val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod)
             return if(checkLocations(locations)){ // Comprobar que existan localizaciones
@@ -71,13 +73,14 @@ class PositiveManager @Inject constructor(
      * indicados como parámetro para poder notificar otro positivo.
      *
      * @param days Número de días que deben transcurrir.
+     * @param date Fecha con la que comparar.
      */
-    private suspend fun checkNotifyLimit(days: Int): Boolean {
+    private suspend fun checkNotifyLimit(days: Int, date: Date): Boolean {
         // Obtener el último positivo notificado
         val lastPositive = positiveRepository.getLastNotifiedPositive()
         lastPositive?.let { positive ->
             // Obtener días transcurridos entre la fecha actual y la del último positivo
-            val elapsedDays = DateUtils.getDaysBetweenDates(positive.timestamp, Date())
+            val elapsedDays = DateUtils.getDaysBetweenDates(positive.timestamp, date)
             return elapsedDays >= days
         }
         return true
