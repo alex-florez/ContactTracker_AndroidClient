@@ -329,7 +329,7 @@ object LocationUtils {
             val lng = data[0].toDouble()
             val timestamp = DateUtils.toDate(data[2], "dd/MM/yyyy HH:mm:ss") ?: Date()
             // Fecha modificada.
-            val date = DateUtils.modifyDate(timestamp, 2021, 8, 14)
+            val date = DateUtils.modifyDate(timestamp, 2021, 9, 1)
             locations.add(
                 UserLocation(
                     counter.toLong(),
