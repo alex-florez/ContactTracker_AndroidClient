@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.managers
 
 import android.app.AlarmManager
 import android.content.Context
+import es.uniovi.eii.contacttracker.alarms.AlarmHelper
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.model.Error
@@ -34,7 +35,7 @@ class RiskContactAlarmManagerTest {
     private lateinit var manager: RiskContactAlarmManager
     /* Mocks */
     @Mock
-    lateinit var alarmManager: AlarmManager
+    lateinit var alarmHelper: AlarmHelper
     @Mock
     lateinit var riskContactRepository: RiskContactRepository
     @Mock
@@ -52,9 +53,8 @@ class RiskContactAlarmManagerTest {
     @Before
     fun setUp() {
         manager = RiskContactAlarmManager(
-            alarmManager,
             riskContactRepository,
-            ctx)
+            alarmHelper)
     }
 
     /* Código: RCAM1 */

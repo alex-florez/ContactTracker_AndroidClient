@@ -1,5 +1,7 @@
 package es.uniovi.eii.contacttracker.positive
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.ASYMPTOMATIC_QUESTION
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED_QUESTION
 import es.uniovi.eii.contacttracker.model.Error
@@ -24,11 +26,6 @@ class PositiveManager @Inject constructor(
     private val configRepository: ConfigRepository
 ) {
 
-    suspend fun pruebaGet(): Int {
-        val config = configRepository.getNotifyPositiveConfig()
-        return config.infectivityPeriod
-    }
-
     /**
      * Recupera las últimas localizaciones del usuario que ha dado positivo en
      * función del periodo de infectividad obtenido de la configuración y hace
@@ -47,11 +44,11 @@ class PositiveManager @Inject constructor(
         // Comprobar límite de notificación de positivos.
         if(checkNotifyLimit(config.notifyWaitTime, date)){
             // Obtener las localizaciones de los últimos días.
-            val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod)
+            val locations = locationRepository.getLastLocationsSince(config.infectivityPeriod, date)
             return if(checkLocations(locations)){ // Comprobar que existan localizaciones
                 val positive = Positive(null,
                     null,
-                    Date(),
+                    date,
                     locations,
                     personalData,
                     answers[ASYMPTOMATIC_QUESTION] ?: false,
@@ -67,6 +64,15 @@ class PositiveManager @Inject constructor(
             return ValueWrapper.Fail(Error.NOTIFICATION_LIMIT_EXCEEDED)
         }
     }
+
+    /**
+     * Devuelve un listado con todos los positivos notificados almacenados
+     * en el dispositivo local.
+     */
+    suspend fun getLocalPositives(): List<Positive> {
+        return positiveRepository.getAllLocalPositives()
+    }
+
 
     /**
      * Comprueba que hayan transcurrido al menos el número de días

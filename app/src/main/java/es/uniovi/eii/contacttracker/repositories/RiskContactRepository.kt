@@ -72,6 +72,20 @@ class RiskContactRepository @Inject constructor(
         }
     }
 
+    suspend fun getAllResults(): List<RiskContactResult> {
+        val wrapper = riskContactDao.getAllResults()
+        val mappedResults = mutableListOf<RiskContactResult>()
+        wrapper.forEach { result ->
+            mappedResults.add(toRiskContactResult(result))
+        }
+        return mappedResults.toList()
+    }
+
+    suspend fun getAllRes(): List<RiskContactResult> {
+        val results = riskContactDao.getResults()
+        return results
+    }
+
     /**
      * Establece el modo de comprobación.
      *

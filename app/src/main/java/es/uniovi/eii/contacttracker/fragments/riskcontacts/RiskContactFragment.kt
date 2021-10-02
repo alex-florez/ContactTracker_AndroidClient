@@ -100,7 +100,7 @@ class RiskContactFragment : Fragment() {
 
             /* Botón de Comprobación manual*/
             btnManualCheck.setOnClickListener {
-                this@RiskContactFragment.viewModel.startChecking()
+                this@RiskContactFragment.viewModel.startChecking(Date())
             }
 
             /* EditText para la hora de la comprobación */

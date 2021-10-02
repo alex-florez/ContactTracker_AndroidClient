@@ -16,6 +16,7 @@ enum class Error {
     /* Alarmas de Comprobación de Contactos de Riesgo */
     RISK_CONTACT_ALARM_COLLISION,
     RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED,
+    RISK_CONTACT_ALARM_COULD_NOT_SET,
 
     /* Notificación de Positivos */
     CANNOT_NOTIFY,

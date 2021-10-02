@@ -37,7 +37,7 @@ interface UserLocationDao {
     @Query("DELETE FROM user_locations WHERE date(timestamp) = :dateString")
     suspend fun deleteByDate(dateString: String): Int
 
-    @Query("SELECT * FROM user_locations WHERE date(timestamp) >= :startDate AND date(timestamp) <= :endDate ORDER BY timestamp DESC")
+    @Query("SELECT * FROM user_locations WHERE date(timestamp) >= :startDate AND date(timestamp) <= :endDate ORDER BY timestamp ASC")
     suspend fun getLocationsBetween(startDate: String, endDate: String): List<UserLocation>
 
 

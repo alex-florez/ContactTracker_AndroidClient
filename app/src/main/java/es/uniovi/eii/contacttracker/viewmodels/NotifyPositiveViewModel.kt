@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.R
+import es.uniovi.eii.contacttracker.di.IoDispatcher
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
@@ -15,6 +16,7 @@ import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +31,8 @@ import kotlin.coroutines.coroutineContext
 class NotifyPositiveViewModel @Inject constructor(
     private val positiveManager: PositiveManager,
     private val personalDataRepository: PersonalDataRepository,
-    private val configRepository: ConfigRepository
+    private val configRepository: ConfigRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     /**
@@ -62,6 +65,10 @@ class NotifyPositiveViewModel @Inject constructor(
     private val _loadingInfectivity = MutableLiveData(false)
     val loadingInfectivity: LiveData<Boolean> = _loadingInfectivity
 
+    /* Listado de positivos almacenados en local */
+    private val _localPositives = MutableLiveData<List<Positive>>()
+    val localPositives: LiveData<List<Positive>> = _localPositives
+
 
     /**
      * Notifica un nuevo positivo en el sistema. Esto implica subir todas las
@@ -71,13 +78,14 @@ class NotifyPositiveViewModel @Inject constructor(
      *
      * @param addPersonalData Flag que indica si se deben añadir o no los datos personales.
      * @param answers Respuestas a las preguntas del último diálogo para notificar un positivo.
+     * @param date Fecha actual en la que se notifica el positivo.
      */
-    fun notifyPositive(addPersonalData: Boolean, answers: Map<String, Boolean>) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun notifyPositive(addPersonalData: Boolean, answers: Map<String, Boolean>, date: Date) {
+        viewModelScope.launch(dispatcher) {
             _isLoading.postValue(true)
             // Datos personales
             val personalData = if(addPersonalData) getPersonalData() else null
-            val result = positiveManager.notifyPositive(personalData, answers, Date())
+            val result = positiveManager.notifyPositive(personalData, answers, date)
             when(result) {
                 is ValueWrapper.Success -> {
                     _notifySuccess.postValue(Pair(
@@ -111,11 +119,21 @@ class NotifyPositiveViewModel @Inject constructor(
     }
 
     /**
+     * Devuelve una lista de positivos almacenados en local. Utilizado para
+     * el Testing de los viewmodels.
+     */
+    fun getLocalPositives() {
+        viewModelScope.launch(dispatcher) {
+            _localPositives.postValue(positiveManager.getLocalPositives())
+        }
+    }
+
+    /**
      * Carga desde la configuración el número de días
      * correspondientes al periodo de infectividad.
      */
     fun loadInfectivityPeriod() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             _loadingInfectivity.postValue(true)
             _infectivityPeriod.postValue(configRepository.getNotifyPositiveConfig().infectivityPeriod)
             _loadingInfectivity.postValue(false)

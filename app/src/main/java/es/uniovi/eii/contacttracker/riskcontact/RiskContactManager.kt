@@ -25,6 +25,7 @@ import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.model.CheckResult
+import es.uniovi.eii.contacttracker.notifications.InAppNotificationManager
 import es.uniovi.eii.contacttracker.repositories.*
 import es.uniovi.eii.contacttracker.riskcontact.alarms.StartRiskContactCheckReceiver
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetector
@@ -49,9 +50,10 @@ class RiskContactManager @Inject constructor(
         private val locationRepository: LocationRepository, // Repositorio de localización.
         private val positiveRepository: PositiveRepository, // Repositorio de positivos.
         private val riskContactRepository: RiskContactRepository, // Repositorio de Contactos de Riesgo.
-        private val configRepository: ConfigRepository, // Repositorio de configuración
+        private val configRepository: ConfigRepository, // Repositorio de configuración.
         private val statisticsRepository: StatisticsRepository, // Repositorio de estadísticas.
-        @ApplicationContext private val ctx: Context
+        private val inAppNotificationManager: InAppNotificationManager // Manager de notificaciones internas.
+//        @ApplicationContext private val ctx: Context
 ) {
 
     /**
@@ -61,8 +63,10 @@ class RiskContactManager @Inject constructor(
      * notificados en los últimos días y también las localizaciones del propio usuario.
      *
      * Al finalizar almacena en la base de datos local los resultados obtenidos.
+     *
+     * @param date Fecha objetivo en la que se realiza la comprobación.
      */
-    suspend fun checkRiskContacts() {
+    suspend fun checkRiskContacts(date: Date) {
         // Resultado de la comprobación
         val result = RiskContactResult()
         // Recuperar la configuración de la comprobación de contactos de riesgo.
@@ -70,7 +74,7 @@ class RiskContactManager @Inject constructor(
         detector.setConfig(config) // Establecer la configuración al detector.
 
         /* Obtener el itinerario del propio usuario desde los últimos días indicados en el alcance */
-        val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope), "Usuario")
+        val userItinerary = Itinerary(locationRepository.getLastLocationsSince(config.checkScope, date), "Usuario")
         /* Obtener los positivos registrados con localizaciones de los últimos días según el alcance */
         var positives: List<Positive> = mutableListOf()
         when(val positivesResult = positiveRepository.getPositivesFromLastDays(config.checkScope)) {
@@ -79,15 +83,11 @@ class RiskContactManager @Inject constructor(
                 positives = filterPositives(positivesResult.value.toList())
             }
             is APIResult.HttpError -> {
-                with(NotificationManagerCompat.from(ctx)){
-                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
-                }
+                inAppNotificationManager.showRiskContactCheckErrorNotification()
                 return // Dejar de ejecutar la comprobación
             }
             is APIResult.NetworkError -> {
-                with(NotificationManagerCompat.from(ctx)){
-                    notify(RESULT_NOTIFICATION_ID, createErrorNotification())
-                }
+                inAppNotificationManager.showRiskContactCheckErrorNotification()
                 return // Dejar de ejecutar la comprobación
             }
         }
@@ -109,9 +109,7 @@ class RiskContactManager @Inject constructor(
         val id = riskContactRepository.insert(result)
         result.resultId = id
         /* Mostrar Notificación con los resultados. */
-        with(NotificationManagerCompat.from(ctx)){
-            notify(RESULT_NOTIFICATION_ID, createNotification(result))
-        }
+        inAppNotificationManager.showRiskContactResultNotification(result)
         /* Registrar los datos principales del resultado en la nube para cometidos estadísticos */
         statisticsRepository.registerRiskContactResult(
             CheckResult(
@@ -120,8 +118,6 @@ class RiskContactManager @Inject constructor(
             result.getTotalMeanExposeTime(),
             result.getTotalMeanProximity()
         ))
-        /* Emitir un Broadcast */
-        sendBroadcast(result)
     }
 
     /**
@@ -165,103 +161,103 @@ class RiskContactManager @Inject constructor(
      * @param riskContactResult Resultados de la comprobación de contactos de riesgo.
      * @return Notificación Android con un resumen de los resultados.
      */
-    private fun createNotification(riskContactResult: RiskContactResult): Notification {
-        // Color e icono grande de la notificación
-        val colorIcon = getNotificationColorAndIcon(riskContactResult.getHighestRiskContact().riskLevel)
-        var largeIcon: Bitmap? = null
-        ContextCompat.getDrawable(ctx, colorIcon.second)?.let {
-            largeIcon = drawableToBitmap(it)
-        }
-
-        // Contenido de texto
-        val textContent = if(riskContactResult.riskContacts.isNotEmpty()){ // Peligro: contactos de riesgo detectados.
-            ctx.resources.getQuantityString(R.plurals.resultNotificationRiskContact,
-                riskContactResult.numberOfPositives, riskContactResult.numberOfPositives) + " " +
-                    ctx.getString(R.string.resultNotificationHighestRiskPercent, riskContactResult.getHighestRiskContact().riskPercent)
-        } else { // No ha habido contactos de riesgo.
-            ctx.getString(R.string.resultNotificationHealthy)
-        }
-        // Intent para ver los resultados de la comprobación.
-        val pendingIntent = NavDeepLinkBuilder(ctx)
-            .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.resultDetailsFragment)
-            .setArguments(bundleOf("result" to riskContactResult))
-            .createPendingIntent()
-
-        return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
-            .setContentTitle(ctx.getString(R.string.resultNotificationTitle))
-            .setContentText(textContent)
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setColorized(true)
-            .setColor(colorIcon.first)
-            .setLargeIcon(largeIcon)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
-            .build()
-    }
-
-    /**
-     * Devuelve un par con el color y el icono correspondiente al
-     * nivel de riesgo pasado como parámetro.
-     *
-     * @param riskLevel Nivel de riesgo.
-     * @return Par con el color y el icono correspondiente al nivel de riesgo.
-     */
-    private fun getNotificationColorAndIcon(riskLevel: RiskLevel): Pair<Int, Int> {
-        var color = ctx.getColor(R.color.greenOk)
-        var icon = R.drawable.ic_healthy
-        when(riskLevel) {
-            RiskLevel.VERDE -> {
-                color = ctx.getColor(R.color.greenOk)
-                icon = R.drawable.ic_healthy
-            }
-            RiskLevel.AMARILLO -> {
-                color = ctx.getColor(R.color.yellowWarning)
-                icon = R.drawable.ic_yellow_warning
-            }
-            RiskLevel.NARANJA -> {
-                color = ctx.getColor(R.color.orangeWarning)
-                icon = R.drawable.ic_orange_warning
-            }
-            RiskLevel.ROJO -> {
-                color = ctx.getColor(R.color.redDanger)
-                icon = R.drawable.ic_danger
-            }
-        }
-        return Pair(color, icon)
-    }
-
-    /**
-     * Crea y devuelve una notificación de error en la comprobación.
-     */
-    private fun createErrorNotification(): Notification {
-        return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
-            .setContentTitle(ctx.getString(R.string.resultNotificationCheckingErrorTitle))
-            .setContentText(ctx.getString(R.string.resultNotificationCheckingError))
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(ctx.getString(R.string.resultNotificationCheckingError)))
-            .build()
-    }
-
-    /**
-     * Transforma el Drawable indicado como parámetro en un Bitmap.
-     *
-     * @param drawable Objeto Drawable.
-     * @return Bitmap transformado.
-     */
-    private fun drawableToBitmap(drawable: Drawable): Bitmap {
-        val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0,0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        return bitmap
-    }
+//    private fun createNotification(riskContactResult: RiskContactResult): Notification {
+//        // Color e icono grande de la notificación
+//        val colorIcon = getNotificationColorAndIcon(riskContactResult.getHighestRiskContact().riskLevel)
+//        var largeIcon: Bitmap? = null
+//        ContextCompat.getDrawable(ctx, colorIcon.second)?.let {
+//            largeIcon = drawableToBitmap(it)
+//        }
+//
+//        // Contenido de texto
+//        val textContent = if(riskContactResult.riskContacts.isNotEmpty()){ // Peligro: contactos de riesgo detectados.
+//            ctx.resources.getQuantityString(R.plurals.resultNotificationRiskContact,
+//                riskContactResult.numberOfPositives, riskContactResult.numberOfPositives) + " " +
+//                    ctx.getString(R.string.resultNotificationHighestRiskPercent, riskContactResult.getHighestRiskContact().riskPercent)
+//        } else { // No ha habido contactos de riesgo.
+//            ctx.getString(R.string.resultNotificationHealthy)
+//        }
+//        // Intent para ver los resultados de la comprobación.
+//        val pendingIntent = NavDeepLinkBuilder(ctx)
+//            .setGraph(R.navigation.nav_graph)
+//            .setDestination(R.id.resultDetailsFragment)
+//            .setArguments(bundleOf("result" to riskContactResult))
+//            .createPendingIntent()
+//
+//        return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
+//            .setContentTitle(ctx.getString(R.string.resultNotificationTitle))
+//            .setContentText(textContent)
+//            .setContentIntent(pendingIntent)
+//            .setSmallIcon(R.mipmap.ic_launcher)
+//            .setPriority(NotificationCompat.PRIORITY_MAX)
+//            .setColorized(true)
+//            .setColor(colorIcon.first)
+//            .setLargeIcon(largeIcon)
+//            .setStyle(NotificationCompat.BigTextStyle().bigText(textContent))
+//            .build()
+//    }
+//
+//    /**
+//     * Devuelve un par con el color y el icono correspondiente al
+//     * nivel de riesgo pasado como parámetro.
+//     *
+//     * @param riskLevel Nivel de riesgo.
+//     * @return Par con el color y el icono correspondiente al nivel de riesgo.
+//     */
+//    private fun getNotificationColorAndIcon(riskLevel: RiskLevel): Pair<Int, Int> {
+//        var color = ctx.getColor(R.color.greenOk)
+//        var icon = R.drawable.ic_healthy
+//        when(riskLevel) {
+//            RiskLevel.VERDE -> {
+//                color = ctx.getColor(R.color.greenOk)
+//                icon = R.drawable.ic_healthy
+//            }
+//            RiskLevel.AMARILLO -> {
+//                color = ctx.getColor(R.color.yellowWarning)
+//                icon = R.drawable.ic_yellow_warning
+//            }
+//            RiskLevel.NARANJA -> {
+//                color = ctx.getColor(R.color.orangeWarning)
+//                icon = R.drawable.ic_orange_warning
+//            }
+//            RiskLevel.ROJO -> {
+//                color = ctx.getColor(R.color.redDanger)
+//                icon = R.drawable.ic_danger
+//            }
+//        }
+//        return Pair(color, icon)
+//    }
+//
+//    /**
+//     * Crea y devuelve una notificación de error en la comprobación.
+//     */
+//    private fun createErrorNotification(): Notification {
+//        return NotificationCompat.Builder(ctx, App.CHANNEL_ID_RISK_CONTACT_RESULT)
+//            .setContentTitle(ctx.getString(R.string.resultNotificationCheckingErrorTitle))
+//            .setContentText(ctx.getString(R.string.resultNotificationCheckingError))
+//            .setPriority(NotificationCompat.PRIORITY_MAX)
+//            .setSmallIcon(R.drawable.ic_launcher_foreground)
+//            .setStyle(NotificationCompat.BigTextStyle().bigText(ctx.getString(R.string.resultNotificationCheckingError)))
+//            .build()
+//    }
+//
+//    /**
+//     * Transforma el Drawable indicado como parámetro en un Bitmap.
+//     *
+//     * @param drawable Objeto Drawable.
+//     * @return Bitmap transformado.
+//     */
+//    private fun drawableToBitmap(drawable: Drawable): Bitmap {
+//        val bitmap = Bitmap.createBitmap(
+//            drawable.intrinsicWidth,
+//            drawable.intrinsicHeight,
+//            Bitmap.Config.ARGB_8888
+//        )
+//        val canvas = Canvas(bitmap)
+//        drawable.setBounds(0,0, canvas.width, canvas.height)
+//        drawable.draw(canvas)
+//        return bitmap
+//    }
 
 //    private fun pruebaUser(): Itinerary {
 //       val df = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
@@ -307,14 +303,4 @@ class RiskContactManager @Inject constructor(
 //       positiveLocations["2021-06-08"] = positiveList
 //       return Itinerary(positiveLocations)
 //    }
-
-    /**
-     * Emite un Broadcast Receiver con el resultado de la comprobación.
-     */
-    private fun sendBroadcast(riskContactResult: RiskContactResult){
-        val intent = Intent()
-        intent.action = Constants.ACTION_GET_RISK_CONTACT_RESULT
-        intent.putExtra(Constants.EXTRA_RISK_CONTACT_RESULT, riskContactResult)
-        ctx.sendBroadcast(intent)
-    }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.R
+import es.uniovi.eii.contacttracker.di.IoDispatcher
 import es.uniovi.eii.contacttracker.fragments.riskcontacts.CheckMode
 import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
@@ -16,6 +17,7 @@ import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarmManager
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RiskContactViewModel @Inject constructor(
     private val riskContactManager: RiskContactManager,
-    private val riskContactAlarmManager: RiskContactAlarmManager
+    private val riskContactAlarmManager: RiskContactAlarmManager,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ViewModel() {
 
     /**
@@ -78,13 +81,15 @@ class RiskContactViewModel @Inject constructor(
 
     /**
      * Hace uso del manager de contactos de riesgo para
-     * comenzar una nueva comprobación.
+     * comenzar una nueva comprobación en la fecha pasada como parámetro.
+     *
+     * @param date Fecha objetivo en la que se realiza la comprobación.
      */
-   fun startChecking() {
-       viewModelScope.launch(Dispatchers.IO) {
+   fun startChecking(date: Date) {
+       viewModelScope.launch(dispatcher) {
            _isChecking.postValue(true)
-           delay(2000)
-           riskContactManager.checkRiskContacts()
+//           delay(2000)
+           riskContactManager.checkRiskContacts(date)
            _isChecking.postValue(false)
        }
    }
@@ -123,7 +128,7 @@ class RiskContactViewModel @Inject constructor(
      * @param date Fecha en la que se debe ejecutar la alarma de comprobación.
      */
     fun addAlarm(date: Date){
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             when(val result = riskContactAlarmManager.set(RiskContactAlarm(null, date,true))) {
                 is ValueWrapper.Success -> {
                     _addAlarmSuccess.value = result.value
@@ -141,7 +146,7 @@ class RiskContactViewModel @Inject constructor(
      * @param alarmID ID de la alarma de comprobación a eliminar.
      */
     fun removeAlarm(alarmID: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             riskContactAlarmManager.remove(alarmID)
         }
     }
@@ -152,7 +157,7 @@ class RiskContactViewModel @Inject constructor(
      * @param activate Flag para activar o desactivar las alarmas de comprobación.
      */
     fun toggleCheckAlarms(activate: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             riskContactAlarmManager.toggle(activate)
         }
     }

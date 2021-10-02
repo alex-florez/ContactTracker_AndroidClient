@@ -96,7 +96,7 @@ class PositiveManagerTest {
     fun `notificar positivo sin superar el limite porque no existen otros positivos`() = runBlockingTest {
         // Mocks
         `when`(positiveRepository.getLastNotifiedPositive()).thenReturn(null)
-        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod)).thenReturn(locations)
+        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod, now)).thenReturn(locations)
         `when`(positiveRepository.notifyPositive(anyObject())).thenReturn(APIResult.Success(notifyResult))
 
         val result = manager.notifyPositive(null, answers, now)
@@ -111,7 +111,7 @@ class PositiveManagerTest {
     fun `notificar positivo sin superar el limite porque han transcurrido varios dias pero no existen localizaciones`() = runBlockingTest {
         // Mocks
         `when`(positiveRepository.getLastNotifiedPositive()).thenReturn(notifiedPositive3)
-        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod)).thenReturn(listOf())
+        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod, now)).thenReturn(listOf())
 
         val result = manager.notifyPositive(null, answers, now)
         assertTrue(result is ValueWrapper.Fail)
@@ -124,7 +124,7 @@ class PositiveManagerTest {
     fun `notificar positivo con exito sin superar el limite porque han transcurrido varios dias`() = runBlockingTest {
         // Mocks
         `when`(positiveRepository.getLastNotifiedPositive()).thenReturn(notifiedPositive3)
-        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod)).thenReturn(locations)
+        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod, now)).thenReturn(locations)
         `when`(positiveRepository.notifyPositive(anyObject())).thenReturn(APIResult.Success(notifyResult))
 
         val result = manager.notifyPositive(null, answers, now)
@@ -139,7 +139,7 @@ class PositiveManagerTest {
     fun `notificar positivo con error de tiempo de espera agotado sin superar el limite porque han transcurrido varios dias`() = runBlockingTest {
         // Mocks
         `when`(positiveRepository.getLastNotifiedPositive()).thenReturn(notifiedPositive3)
-        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod)).thenReturn(locations)
+        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod, now)).thenReturn(locations)
         `when`(positiveRepository.notifyPositive(anyObject())).thenReturn(APIResult.NetworkError)
 
         val result = manager.notifyPositive(null, answers, now)
@@ -152,7 +152,7 @@ class PositiveManagerTest {
     fun `notificar positivo con error http sin superar el limite porque han transcurrido varios dias`() = runBlockingTest {
         // Mocks
         `when`(positiveRepository.getLastNotifiedPositive()).thenReturn(notifiedPositive3)
-        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod)).thenReturn(locations)
+        `when`(locationRepository.getLastLocationsSince(config.infectivityPeriod, now)).thenReturn(locations)
         `when`(positiveRepository.notifyPositive(anyObject())).thenReturn(APIResult.HttpError(403, ResponseError(403, "Esto es un error", 100)))
 
         val result = manager.notifyPositive(null, answers, now)

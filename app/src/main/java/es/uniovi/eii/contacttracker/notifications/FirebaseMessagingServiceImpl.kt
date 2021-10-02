@@ -1,4 +1,4 @@
-package es.uniovi.eii.contacttracker.fcm
+package es.uniovi.eii.contacttracker.notifications
 
 import android.app.NotificationManager
 import android.app.PendingIntent

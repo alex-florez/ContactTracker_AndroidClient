@@ -11,6 +11,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
 import kotlinx.coroutines.*
 import javax.inject.Inject
+import java.util.Date
 
 /* ID del Servicio */
 private const val SERVICE_ID = 1001
@@ -51,7 +52,7 @@ class RiskContactForegroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(SERVICE_ID, notification)
         scope.launch {
-            riskContactManager.checkRiskContacts() // Iniciar comprobación
+            riskContactManager.checkRiskContacts(Date()) // Iniciar comprobación
             stopForeground(true)
             stopSelf()
         }

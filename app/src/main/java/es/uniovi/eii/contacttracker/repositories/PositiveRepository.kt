@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.repositories
 
+import es.uniovi.eii.contacttracker.di.IoDispatcher
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.apiCall
@@ -9,6 +10,7 @@ import es.uniovi.eii.contacttracker.room.mappers.toPositive
 import es.uniovi.eii.contacttracker.room.daos.PositiveDao
 import es.uniovi.eii.contacttracker.room.relations.PositiveUserLocationCrossRef
 import es.uniovi.eii.contacttracker.util.DateUtils
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import java.util.Date
@@ -21,7 +23,8 @@ import java.util.Date
  */
 class PositiveRepository @Inject constructor(
     private val positiveAPI: PositiveAPI,
-    private val positiveDao: PositiveDao
+    private val positiveDao: PositiveDao,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
 
@@ -34,7 +37,7 @@ class PositiveRepository @Inject constructor(
      * @return result wrapper con los datos del servidor.
      */
     suspend fun notifyPositive(positive: Positive): APIResult<NotifyPositiveResult> {
-        return apiCall(Dispatchers.IO) {
+        return apiCall(dispatcher) {
             positiveAPI.notifyPositive(positive)
         }
     }
@@ -48,7 +51,7 @@ class PositiveRepository @Inject constructor(
      * @return ResultWrapper con la lista de positivos.
      */
     suspend fun getPositivesFromLastDays(lastDays: Int): APIResult<List<Positive>> {
-        return apiCall(Dispatchers.IO) {
+        return apiCall(dispatcher) {
             positiveAPI.getPositives(lastDays)
         }
     }
@@ -105,5 +108,12 @@ class PositiveRepository @Inject constructor(
      */
     suspend fun getLastNotifiedPositive(): Positive? {
         return positiveDao.getLastNotifiedPositive()
+    }
+
+    /**
+     * Actualiza el positivo con los nuevos datos.
+     */
+    suspend fun updatePositive(positive: Positive) {
+        positiveDao.update(positive)
     }
 }

@@ -75,10 +75,11 @@ class LocationRepository @Inject constructor(
      * como parámetro hasta el día de hoy.
      *
      * @param lastDays N.º de días atrás para consultar las localizaciones.
+     * @param date Fecha de referencia.
      * @return lista con las localizaciones.
      */
-    suspend fun getLastLocationsSince(lastDays: Int): List<UserLocation>{
-        val sinceDate = DateUtils.addToDate(Date(), Calendar.DATE, -1 * lastDays)
+    suspend fun getLastLocationsSince(lastDays: Int, date: Date): List<UserLocation>{
+        val sinceDate = DateUtils.addToDate(date, Calendar.DATE, -1 * lastDays)
         return userLocationDao.getLocationsBetween(
             DateUtils.formatDate(sinceDate, "yyyy-MM-dd"),
             DateUtils.formatDate(Date(), "yyyy-MM-dd"))
@@ -134,6 +135,10 @@ class LocationRepository @Inject constructor(
      */
     suspend fun deleteAlarmByID(id: Long) {
         locationAlarmDao.deleteById(id)
+    }
+
+    suspend fun deleteAllLocations() {
+        userLocationDao.deleteAll()
     }
 
     /**

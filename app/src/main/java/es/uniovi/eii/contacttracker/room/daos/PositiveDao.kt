@@ -18,6 +18,9 @@ interface PositiveDao {
     @Insert
     suspend fun insert(positive: Positive): Long
 
+    @Update
+    suspend fun update(positive: Positive)
+
     @Transaction
     @Query("SELECT * FROM positives ORDER BY timestamp DESC")
     suspend fun getAllPositives(): List<PositiveWithLocations>

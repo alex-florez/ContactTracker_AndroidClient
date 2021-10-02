@@ -21,6 +21,7 @@ import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
+import java.util.Date
 
 
 /**
@@ -127,7 +128,7 @@ class NotifyPositiveFragment : Fragment() {
         createNotifyQuestionsDialog(object : NotifyQuestionsDialog.QuestionsListener {
             override fun onAccept(answers: Map<String, Boolean>) {
                 // Pasarle las respuestas a las preguntas.
-                viewModel.notifyPositive(addPersonalData, answers)
+                viewModel.notifyPositive(addPersonalData, answers, Date())
             }
         }).show(requireActivity().supportFragmentManager, "Notify Questions")
     }
