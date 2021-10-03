@@ -14,6 +14,7 @@ interface PositiveAPI {
     @POST("/positive/notifyPositive")
     suspend fun notifyPositive(@Body positive: Positive): NotifyPositiveResult
 
-    @GET("/positive/getPositives/{lastDays}")
-    suspend fun getPositives(@Path("lastDays") lastDays: Int): List<Positive>
+    @GET("/positive/getPositives/{targetDateMillis}/{lastDays}")
+    suspend fun getPositives(@Path("targetDateMillis") targetDateMillis: Long,
+                             @Path("lastDays") lastDays: Int): List<Positive>
 }

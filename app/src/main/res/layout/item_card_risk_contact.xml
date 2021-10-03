@@ -45,7 +45,7 @@
                         android:id="@+id/txtContactDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Viernes, 12/06/2021"
+                        android:text='@{rc.startDate != null ? du.formatDate(rc.startDate, "EEEE, dd/MM/yyyy"): "Viernes, 12/06/2020"}'
                         android:textAppearance="?attr/textAppearanceSubtitle2"
                         android:textStyle="bold"/>
                     <!-- Etiqueta de positivo -->

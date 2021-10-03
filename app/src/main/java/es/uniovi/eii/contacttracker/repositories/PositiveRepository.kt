@@ -52,7 +52,7 @@ class PositiveRepository @Inject constructor(
      */
     suspend fun getPositivesFromLastDays(lastDays: Int): APIResult<List<Positive>> {
         return apiCall(dispatcher) {
-            positiveAPI.getPositives(lastDays)
+            positiveAPI.getPositives(Date().time, lastDays)
         }
     }
 

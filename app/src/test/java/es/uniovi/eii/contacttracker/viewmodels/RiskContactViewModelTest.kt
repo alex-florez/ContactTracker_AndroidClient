@@ -182,14 +182,6 @@ class RiskContactViewModelTest {
         db.close()
     }
 
-    @Test
-    fun tesst() = testCoroutineRule.runBlockingTest {
-        val locations = locationRepo.getLastLocationsSince(3, now)
-        assertEquals(8, locations.size)
-        val results = riskContactRepository.getAllResults()
-        assertEquals(1, results.size)
-    }
-
     /* Código: RCVM1234 */
     @Test
     fun `insertar alarmas de comprobacion`() = testCoroutineRule.runBlockingTest {
@@ -297,7 +289,7 @@ class RiskContactViewModelTest {
     @Test
     fun `comprobacion con localizaciones del usuario fuera del alcance de la comprobacion`() = testCoroutineRule.runBlockingTest {
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf())
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf())
         riskContactVm.startChecking(df.parse("28/06/2021 17:49:00")!!)
 
         verify(inAppNotificationManager).showRiskContactResultNotification(anyObject())
@@ -319,7 +311,7 @@ class RiskContactViewModelTest {
     @Test
     fun `comprobacion con itinerario del usuario sin positivos dentro del alcance`() = testCoroutineRule.runBlockingTest {
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf())
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf())
         riskContactVm.startChecking(now)
         verify(inAppNotificationManager).showRiskContactResultNotification(anyObject())
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
@@ -342,7 +334,7 @@ class RiskContactViewModelTest {
         // Positivos
         val positive = Positive(8, "positivo8-1", df.parse("23/06/2021 13:09:22")!!, itinerary16)
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf(positive))
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf(positive))
 
         riskContactVm.startChecking(now)
         verify(inAppNotificationManager).showRiskContactResultNotification(anyObject())
@@ -366,7 +358,7 @@ class RiskContactViewModelTest {
         // Positivos
         val positive = Positive(9, "positivo9-1", df.parse("23/06/2021 13:09:22")!!, itinerary19)
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf(positive))
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf(positive))
 
         riskContactVm.startChecking(now)
 
@@ -433,7 +425,7 @@ class RiskContactViewModelTest {
         positiveRepo.insertPositive(userPositive)
 
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf(p1, userPositive))
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf(p1, userPositive))
 
         riskContactVm.startChecking(now)
 
@@ -498,7 +490,7 @@ class RiskContactViewModelTest {
         val p3 = Positive(13, "positive11-3", df.parse("23/06/2021 12:30:00")!!, itinerary1)
 
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf(p1, p2, p3))
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf(p1, p2, p3))
 
         riskContactVm.startChecking(now)
 
@@ -566,7 +558,7 @@ class RiskContactViewModelTest {
         val p3 = Positive(14, "positive12-3", df.parse("23/06/2021 12:30:00")!!, itinerary20)
 
         // Mocks
-        `when`(positiveAPI.getPositives(checkConfig.checkScope)).thenReturn(listOf(p1, p2, p3))
+        `when`(positiveAPI.getPositives(anyLong(), anyInt())).thenReturn(listOf(p1, p2, p3))
 
         riskContactVm.startChecking(now)
 
