@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
@@ -38,9 +39,10 @@ object AndroidUtils {
      * @param view Vista padre del Snackbar.
      * @param activity Referencia a la Activity.
      */
-    fun snackbar(text: String, length: Int, view: View, activity: FragmentActivity) {
-        Snackbar.make(view, text, length).apply {
+    fun snackbar(text: String, length: Int, parentView: View, activity: FragmentActivity) {
+        Snackbar.make(parentView, text, length).apply {
             anchorView = activity.findViewById(R.id.bottomNavigationView)// Anclarlo al menú inferior
+            view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 4
             show()
         }
     }
