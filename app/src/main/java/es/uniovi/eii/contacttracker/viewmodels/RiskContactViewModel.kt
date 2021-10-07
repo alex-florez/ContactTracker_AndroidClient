@@ -131,7 +131,7 @@ class RiskContactViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             when(val result = riskContactAlarmManager.set(RiskContactAlarm(null, date,true))) {
                 is ValueWrapper.Success -> {
-                    _addAlarmSuccess.value = result.value
+                    _addAlarmSuccess.postValue(result.value)
                 }
                 is ValueWrapper.Fail -> {
                     processError(result.error)
@@ -189,13 +189,13 @@ class RiskContactViewModel @Inject constructor(
     private fun processError(error: Error) {
         when(error) {
             Error.RISK_CONTACT_ALARM_COLLISION -> {
-                _addAlarmError.value = R.string.checkAlarmErrorCollision
+                _addAlarmError.postValue(R.string.checkAlarmErrorCollision)
             }
             Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED ->{
-                _alarmLimitError.value = R.string.checkAlarmErrorCountLimit
+                _alarmLimitError.postValue(R.string.checkAlarmErrorCountLimit)
             }
             else -> {
-                _addAlarmError.value = R.string.genericError
+                _addAlarmError.postValue(R.string.genericError)
             }
         }
     }

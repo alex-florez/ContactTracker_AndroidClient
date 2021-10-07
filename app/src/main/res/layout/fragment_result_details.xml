@@ -76,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/generalRiskTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/totalMeanRisk"
@@ -86,6 +87,7 @@
                         app:drawableLeftCompat="@drawable/ic_orange_warning" />
 
                     <TextView
+                        android:id="@+id/generalRiskValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -106,6 +108,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/generalExposeTimeTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/totalMeanExposeTime"
@@ -115,6 +118,7 @@
                         android:layout_gravity="center"
                         app:drawableStartCompat="@drawable/ic_time" />
                     <TextView
+                        android:id="@+id/generalExposeTimeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text='@{String.format("%d min %d sec", meanExposeTimeMins, meanExposeTimeSecs)}'
@@ -135,6 +139,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/generalProximityTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/totalMeanProximity"
@@ -144,6 +149,7 @@
                         android:layout_gravity="center"
                         app:drawableLeftCompat="@drawable/ic_proximity" />
                     <TextView
+                        android:id="@+id/generalProximityValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{@string/m(result.getTotalMeanProximity())}"
@@ -159,6 +165,7 @@
                 android:orientation="horizontal"
                 android:gravity="center">
                 <TextView
+                    android:id="@+id/numberOfContactsDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="25sp"
@@ -172,6 +179,7 @@
                     android:textSize="18sp"
                     android:layout_gravity="center"/>
                 <TextView
+                    android:id="@+id/numberOfPositivesDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{String.valueOf(result.numberOfPositives)}"
