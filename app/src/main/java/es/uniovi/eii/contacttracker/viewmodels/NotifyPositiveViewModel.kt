@@ -15,6 +15,7 @@ import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.util.AndroidUtils
+import es.uniovi.eii.contacttracker.util.SingleLiveEvent
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -45,14 +46,14 @@ class NotifyPositiveViewModel @Inject constructor(
      * Contiene un par con el Código del String de éxito de notificación
      * y el número de localizaciones que se han subido a la nube.
      */
-    private val _notifySuccess = MutableLiveData<Pair<Int, Int>>()
+    private val _notifySuccess = SingleLiveEvent<Pair<Int, Int>>()
     val notifySuccess: LiveData<Pair<Int, Int>> = _notifySuccess
 
     /**
      * LiveData con el código del String que representa un error determinado
      * en la notificación del positivo.
      */
-    private val _notifyError = MutableLiveData<Int>()
+    private val _notifyError = SingleLiveEvent<Int>()
     val notifyError: LiveData<Int> = _notifyError
 
     /**

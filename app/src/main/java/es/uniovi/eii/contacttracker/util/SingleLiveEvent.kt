@@ -8,16 +8,13 @@ import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * A lifecycle-aware observable that sends only new updates after subscription, used for events like
- * navigation and Snackbar messages.
+ * Mutable Live Data que solo envía nuevas actualizaciones después de una subscripción
+ * por parte de un observador, para eventos de mensajes de Snackbars.
  *
+ * Es una solución al problema con los eventos de LiveData: cuando cambia la configuración
+ * de la aplicación, se disparan actualizaciones en los LiveData si el observador está activo.
  *
- * This avoids a common problem with events: on configuration change (like rotation) an update
- * can be emitted if the observer is active. This LiveData only calls the observable if there's an
- * explicit call to setValue() or call().
- *
- *
- * Note that only one observer is going to be notified of changes.
+ * Solo un observador será notificado de los eventos.
  */
 class SingleLiveEvent<T> : MutableLiveData<T>() {
     private val pending = AtomicBoolean(false)
