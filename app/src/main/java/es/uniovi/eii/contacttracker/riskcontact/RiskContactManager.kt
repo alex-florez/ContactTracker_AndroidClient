@@ -10,6 +10,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -36,6 +37,9 @@ import javax.inject.Inject
 
 /* ID de la notificación con los resultados de la comprobación */
 private const val RESULT_NOTIFICATION_ID = 1999
+
+/* TAG */
+private const val TAG = "RiskContactManager"
 
 /**
  * Clase que gestiona la comprobación de contactos de riesgo. Recupera las localizaciones
@@ -111,13 +115,20 @@ class RiskContactManager @Inject constructor(
         /* Mostrar Notificación con los resultados. */
         inAppNotificationManager.showRiskContactResultNotification(result)
         /* Registrar los datos principales del resultado en la nube para cometidos estadísticos */
-        statisticsRepository.registerRiskContactResult(
-            CheckResult(
+        val checkResult = CheckResult(
             result.timestamp.time,
             result.getTotalMeanRisk(),
             result.getTotalMeanExposeTime(),
             result.getTotalMeanProximity()
-        ))
+        )
+        when(val response = statisticsRepository.registerRiskContactResult(checkResult)) {
+            is APIResult.Success -> {
+                Log.d(TAG, response.value.msg)
+            }
+            else -> {
+                Log.d(TAG, "No se ha podido registrar el resultado de la comprobación.")
+            }
+        }
     }
 
     /**

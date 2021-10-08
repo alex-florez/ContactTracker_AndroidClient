@@ -13,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.HiltAndroidApp
 import es.uniovi.eii.contacttracker.model.UserLocation
+import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.StatisticsRepository
 import es.uniovi.eii.contacttracker.util.FileUtils.readFile
@@ -25,6 +26,9 @@ import java.text.SimpleDateFormat
 import javax.inject.Inject
 import javax.inject.Scope
 import java.util.Date
+
+// TAG de la aplicación
+private const val TAG = "ContactTrackerApp"
 
 /**
  * Clase App que extiende de Application y que engloba
@@ -40,10 +44,11 @@ class App : Application() {
         const val CHANNEL_ID_RISK_CONTACT_CHECKING = "RiskContactCheckingChannel"
     }
 
+    /* Scope para las corrutinas con Dispatacher de IO */
+    private val scope = CoroutineScope(Job() + Dispatchers.IO)
+
     @Inject
     lateinit var repo: LocationRepository
-
-    var scope = CoroutineScope(Job() + Dispatchers.IO)
 
     private var positive = false
 
@@ -63,9 +68,7 @@ class App : Application() {
         initSharedPrefs()
         subscribeToTopics()
         simulate()
-        scope.launch {
-            statisticsRepository.registerNewInstall(Date().time)
-        }
+        registerInstall()
     }
 
 
@@ -150,6 +153,24 @@ class App : Application() {
                         msg = "Error al suscribir el cliente Android en el tema."
                     Log.d("FCM", msg)
                 }
+        }
+    }
+
+    /**
+     * Si es la 1a vez que se inicia la aplicación se registra una nueva
+     * instalación en el backend. Realiza una llamada a la API REST de
+     * estadísticas.
+     */
+    private fun registerInstall() {
+        scope.launch {
+            when(val response = statisticsRepository.registerNewInstall(Date().time)) {
+                is APIResult.Success -> {
+                    Log.d(TAG, response.value.msg)
+                }
+                else -> {
+                    Log.d(TAG, "No se ha podido registrar la instalación.")
+                }
+            }
         }
     }
 
