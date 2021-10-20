@@ -59,10 +59,6 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class NotifyPositiveViewModelTest {
 
-    /* Dispatcher y Scope de Test */
-//    private val testDispatcher = TestCoroutineDispatcher()
-//    private val testScope = TestCoroutineScope(testDispatcher)
-
     /* Reglas */
     @get:Rule
     val instantTaskExecutorRule: TestRule = InstantTaskExecutorRule() // Para hacer funcionar los LiveData
@@ -226,7 +222,6 @@ class NotifyPositiveViewModelTest {
         val infectivityPeriod = vm.infectivityPeriod.getOrAwaitValue()
         assertEquals(3, infectivityPeriod)
     }
-
 
     /**
      * Rellena la base de datos ROOM en memoria con los datos de prueba necesarios.
