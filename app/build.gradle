@@ -38,13 +38,13 @@ android {
             buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:8080\""
         }
 
-        // Variante DEBUG con las peticiones realizadas en LOCAL.
+        // Variante DEBUG con las peticiones de red realizadas al servidor local.
         debugLocalhost {
             initWith debug
             buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:8080\""
         }
 
-        // Variante DEBUG con las peticiones realizadas al servidor DESPLEGADO.
+        // Variante DEBUG con las peticiones de red realizadas al servidor DESPLEGADO en remoto.
         debugDeploy {
             initWith debug
             buildConfigField "String", "BASE_URL", "\"https://contacttrackerbackend.azurewebsites.net\""
