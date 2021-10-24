@@ -32,13 +32,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                bind:viewModel="@{viewModel}"
                 app:layout_constraintBottom_toTopOf="@+id/layoutCardLocationAlarm"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.526"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.493" />
+                app:layout_constraintVertical_bias="0.493"
+                bind:viewModel="@{viewModel}" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewTrackLocationInfo"

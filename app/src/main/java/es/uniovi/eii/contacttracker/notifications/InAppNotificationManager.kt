@@ -87,7 +87,7 @@ class InAppNotificationManager @Inject constructor(
             .setContentTitle(ctx.getString(R.string.resultNotificationTitle))
             .setContentText(textContent)
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setColorized(true)
             .setColor(colorIcon.first)
@@ -105,7 +105,7 @@ class InAppNotificationManager @Inject constructor(
             .setContentTitle(ctx.getString(R.string.resultNotificationCheckingErrorTitle))
             .setContentText(ctx.getString(R.string.resultNotificationCheckingError))
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setStyle(NotificationCompat.BigTextStyle().bigText(ctx.getString(R.string.resultNotificationCheckingError)))
             .build()
     }

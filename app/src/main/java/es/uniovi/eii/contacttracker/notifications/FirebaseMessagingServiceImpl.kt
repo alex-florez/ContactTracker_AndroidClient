@@ -55,7 +55,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
         Log.d(TAG, msg.notification?.title.toString())
         // Crear notificación
         val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentTitle(msg.notification?.title)
             .setContentText(msg.notification?.body)
             .setAutoCancel(true)

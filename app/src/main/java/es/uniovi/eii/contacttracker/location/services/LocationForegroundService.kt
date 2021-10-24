@@ -198,7 +198,7 @@ class LocationForegroundService : Service(){
                 .setContentTitle(applicationContext.getString(R.string.locationServiceTitle))
                 .setContentText(body)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setTicker("Ticker!")
                 .setColorized(true)
