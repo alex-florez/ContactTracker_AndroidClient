@@ -1,30 +1,24 @@
 package es.uniovi.eii.contacttracker
 
 import android.app.Application
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.SharedPreferences
-import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.core.content.edit
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.HiltAndroidApp
-import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.StatisticsRepository
-import es.uniovi.eii.contacttracker.util.FileUtils.readFile
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import javax.inject.Inject
-import javax.inject.Scope
 import java.util.Date
 
 // TAG de la aplicación
@@ -48,9 +42,10 @@ class App : Application() {
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
     @Inject
-    lateinit var repo: LocationRepository
+    lateinit var locationRepository: LocationRepository
 
-    private var positive = false
+    /* Nombre del fichero desde el que se cargan las localizaciones de la simulación */
+    private val simulationFilename = "positive.txt"
 
     /**
      * Referencia a las Shared Preferences.
@@ -62,12 +57,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        deleteDatabase("contacttracker.db")
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs_file_name), MODE_PRIVATE)
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate()
+        simulate(simulationFilename, Triple(2021, 9, 27))
         registerInstall()
     }
 
@@ -174,23 +168,27 @@ class App : Application() {
         }
     }
 
-
-    private fun simulate() {
-        if(positive){
-            val positiveLocations = LocationUtils.parseLocationsFile("positive.txt", this)
+    /**
+     * Carga las localizaciones del fichero de nombre pasado como
+     * parámetro y las almacena en la base de datos local del
+     * dispositivo, siempre y cuando no hayan sido ya cargadas. Esto
+     * se comprueba a través de un flag almacenado en las SharedPreferences.
+     *
+     * @param filename Nombre del fichero.
+     * @param date Fecha con el año, mes (0-11) y día de las localizaciones.
+     */
+    private fun simulate(filename: String, date: Triple<Int, Int, Int>? = null) {
+        // Comprobar el flag de las shared preferences
+        if(!sharedPrefs.getBoolean(Constants.SIMULATION_LOCATIONS_LOADED, false)) {
+            val locations = LocationUtils.parseLocationsFile(filename, this, date)
             scope.launch {
-                positiveLocations.forEach {
-                    repo.insertUserLocation(it)
+                locations.forEach {
+                    locationRepository.insertUserLocation(it)
                 }
             }
-        } else {
-            val locations = LocationUtils.parseLocationsFile("user.txt", this)
-            scope.launch {
-                if(repo.getAllUserLocationsList().isEmpty()) {
-                    locations.forEach {
-                        repo.insertUserLocation(it)
-                    }
-                }
+            // Activar flag de que ya se han cargado las localizciones de la simulación.
+            sharedPrefs.edit {
+                putBoolean(Constants.SIMULATION_LOCATIONS_LOADED, true)
             }
         }
     }

@@ -314,12 +314,15 @@ object LocationUtils {
     /**
      * Parsea el fichero de texto de nombre indicado para obtener
      * una lista con las localizaciones de usuario que representa cada
-     * línea del fichero. El fichero debe estar situado en Assets.
+     * línea del fichero. El fichero debe estar situado en Assets. Si
+     * se pasa como parámetro una tripleta con el día, mes y año se
+     * establecerán como fecha de las localizaciones parseadas.
      *
      * @param filename Nombre del fichero de texto.
+     * @param date Día, mes y año de simulación para establecer en las localizaciones.
      * @return Lista con las localizaciones parseadas.
      */
-    fun parseLocationsFile(filename: String, ctx: Context): List<UserLocation>{
+    fun parseLocationsFile(filename: String, ctx: Context, date: Triple<Int, Int, Int>? = null): List<UserLocation>{
         val lines = FileUtils.readFile(ctx, filename)
         val locations = mutableListOf<UserLocation>()
         var counter = 0
@@ -327,13 +330,15 @@ object LocationUtils {
             val data = it.split(",")
             val lat = data[1].toDouble()
             val lng = data[0].toDouble()
-            val timestamp = DateUtils.toDate(data[2], "dd/MM/yyyy HH:mm:ss") ?: Date()
-            // Fecha modificada.
-            val date = DateUtils.modifyDate(timestamp, 2021, 9, 5)
+            var timestamp = DateUtils.toDate(data[2], "dd/MM/yyyy HH:mm:ss") ?: Date()
+            // Fecha modificada si se pasa una tripleta
+            if(date != null) {
+               timestamp = DateUtils.modifyDate(timestamp, date.first, date.second, date.third)
+            }
             locations.add(
                 UserLocation(
                     counter.toLong(),
-                    Point(lat, lng, date),
+                    Point(lat, lng, timestamp),
                     0.0,
                     "file"
                 )

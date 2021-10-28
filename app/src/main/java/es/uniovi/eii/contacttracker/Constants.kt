@@ -57,4 +57,8 @@ object Constants {
     // NOTIFICACIONES
     // **************************
     const val ACTION_SHOW_RISK_CONTACT_RESULT = "actionShowRiskContactResult" // Acción enviada en un Intent para mostrar los resultados de una comprobación.
+
+    /* Flag que indica la primera carga de la simulacíón */
+    const val SIMULATION_LOCATIONS_LOADED = "SimulationLocationsLoaded"
+
 }
