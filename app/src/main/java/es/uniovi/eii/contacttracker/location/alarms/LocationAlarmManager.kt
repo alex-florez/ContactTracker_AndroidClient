@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.Constants
+import es.uniovi.eii.contacttracker.alarms.AlarmHelper
 import es.uniovi.eii.contacttracker.location.services.LocationForegroundService
 import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
@@ -20,7 +21,7 @@ import java.util.Date
  * Manager para gestionar y programar las alarmas de localización.
  */
 class LocationAlarmManager @Inject constructor(
-        private val alarmManager: AlarmManager,
+        private val alarmHelper: AlarmHelper,
         private val locationRepository: LocationRepository,
         @ApplicationContext val ctx: Context
 ) {
@@ -43,7 +44,7 @@ class LocationAlarmManager @Inject constructor(
      */
     suspend fun deleteAlarm(alarmID: Long) {
         // Cancelar alarma en el sistema Android.
-        cancelAndroidAlarm(alarmID)
+        alarmHelper.cancelLocationAlarm(alarmID)
         // Eliminar alarma de la BDD
         locationRepository.deleteAlarmByID(alarmID)
     }
@@ -78,8 +79,7 @@ class LocationAlarmManager @Inject constructor(
                 // Configurar alarma en Android
                 val insertedAlarm = locationRepository.getAlarmByID(alarmID)
                 if(insertedAlarm != null)
-                    setAndroidAlarm(insertedAlarm)
-//                Log.d("alarm", insertedAlarm.toString())
+                    alarmHelper.setLocationAlarm(insertedAlarm)
                 return ValueWrapper.Success(Unit)
             }
             return ValueWrapper.Fail(Error.ALARM_COLLISION)
@@ -105,73 +105,9 @@ class LocationAlarmManager @Inject constructor(
             locationRepository.updateLocationAlarm(alarm)
             // Activar o Desactivar alarma en Android.
             if(enable)
-                setAndroidAlarm(alarm) // Programar alarma
+                alarmHelper.setLocationAlarm(alarm) // Programar alarma
             else
-                cancelAndroidAlarm(alarmID) // Cancelar alarma
+                alarmHelper.cancelLocationAlarm(alarmID)// Cancelar alarma
         }
-    }
-
-    /**
-     * Método privado que devuelve el PendingIntent correspondiente
-     * al Intent pasado como parámetro en función de la versión
-     * del dispositivo.
-     *
-     * @param intent Intent con el servicio de localización.
-     * @param id Id asociado al PendingIntent.
-     *
-     */
-    private fun getPendingIntentService(intent: Intent, id: Int): PendingIntent {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            PendingIntent.getForegroundService(ctx, id, intent, 0)
-        } else {
-            PendingIntent.getService(ctx, id, intent, 0)
-        }
-    }
-
-    /**
-     * Se encarga de configurar una alarma de Android mediante
-     * el AlarmManager con los datos de la alarma pasada como
-     * parámetro.
-     *
-     * @param locationAlarm alarma de localización.
-     */
-    fun setAndroidAlarm(locationAlarm: LocationAlarm) {
-        val alarmID = locationAlarm.id ?: return // Si el ID es null -> salir de la función.
-        // Alarma de inicio
-        val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        startServiceIntent.action = Constants.ACTION_START_LOCATION_SERVICE
-        startServiceIntent.putExtra(Constants.EXTRA_LOCATION_ALARM_ID, alarmID)
-        alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                locationAlarm.startDate.time,
-                getPendingIntentService(startServiceIntent, alarmID.toInt())
-        )
-        // Alarma de fin
-        val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        stopServiceIntent.action = Constants.ACTION_STOP_LOCATION_SERVICE
-        stopServiceIntent.putExtra(Constants.EXTRA_LOCATION_ALARM_ID, alarmID)
-        alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                locationAlarm.endDate.time,
-                getPendingIntentService(stopServiceIntent, alarmID.toInt())
-        )
-    }
-
-    /**
-     * Utiliza el AlarmManager para cancelar la alarma pasada
-     * como parámetro.
-     *
-     * @param alarmID ID de la alarma de localización a cancelar.
-     */
-    private fun cancelAndroidAlarm(alarmID: Long) {
-        // Cancelar INICIO
-        val startServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        startServiceIntent.action = Constants.ACTION_START_LOCATION_SERVICE
-        alarmManager.cancel(getPendingIntentService(startServiceIntent, alarmID.toInt()))
-
-        // Cancelar FIN
-        val stopServiceIntent = Intent(ctx, LocationForegroundService::class.java)
-        stopServiceIntent.action = Constants.ACTION_STOP_LOCATION_SERVICE
-        alarmManager.cancel(getPendingIntentService(stopServiceIntent, alarmID.toInt()))
     }
 }
