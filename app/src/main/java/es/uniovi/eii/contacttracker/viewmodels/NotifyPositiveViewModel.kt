@@ -4,17 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.di.IoDispatcher
 import es.uniovi.eii.contacttracker.model.*
-import es.uniovi.eii.contacttracker.network.model.APIResult
-import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
 import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
-import es.uniovi.eii.contacttracker.util.AndroidUtils
 import es.uniovi.eii.contacttracker.util.SingleLiveEvent
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.Date
-import kotlin.coroutines.coroutineContext
 
 /**
  * ViewModel para el Fragmento de Notificar un positivo

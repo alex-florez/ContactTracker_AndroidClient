@@ -1,6 +1,5 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import android.app.AlarmManager
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -17,23 +16,15 @@ import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED
 import es.uniovi.eii.contacttracker.getOrAwaitValue
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
-import es.uniovi.eii.contacttracker.network.apiCall
-import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.model.CheckResult
 import es.uniovi.eii.contacttracker.notifications.InAppNotificationManager
-import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
-import es.uniovi.eii.contacttracker.positive.PositiveManager
+import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResponse
 import es.uniovi.eii.contacttracker.repositories.*
 import es.uniovi.eii.contacttracker.riskcontact.RiskContactManager
-import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarm
 import es.uniovi.eii.contacttracker.riskcontact.alarms.RiskContactAlarmManager
 import es.uniovi.eii.contacttracker.riskcontact.detector.RiskContactDetectorImpl
 import es.uniovi.eii.contacttracker.room.AppDatabase
-import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -45,16 +36,10 @@ import org.mockito.*
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment.application
-import org.robolectric.Shadows
-import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowAlarmManager
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Date
 
 /**
  * Clase pruebas de Integración entre el ViewModel de notificación de positivos,
@@ -117,7 +102,7 @@ class RiskContactViewModelTest {
         "71987655H", "Alex", "Flórez",
         "695 82 28 79", "Avilés", "33400")
     /* Respuesta a la notificación con éxito */
-    private val notifyResponse = NotifyPositiveResult("AFsEwtu7SD", 10)
+    private val notifyResponse = NotifyPositiveResponse("AFsEwtu7SD", 10)
 
     /* Listas de localizaciones */
     private lateinit var itinerary15: List<UserLocation>

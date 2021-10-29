@@ -1,7 +1,5 @@
 package es.uniovi.eii.contacttracker.positive
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.ASYMPTOMATIC_QUESTION
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED_QUESTION
 import es.uniovi.eii.contacttracker.model.Error
@@ -9,6 +7,7 @@ import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.model.UserLocation
 import es.uniovi.eii.contacttracker.network.model.APIResult
+import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResponse
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
@@ -38,7 +37,7 @@ class PositiveManager @Inject constructor(
      */
     suspend fun notifyPositive(personalData: PersonalData?,
                                 answers: Map<String, Boolean>,
-                                date: Date): ValueWrapper<NotifyPositiveResult> {
+                                date: Date): ValueWrapper<NotifyPositiveResponse> {
         // Configuración de la notificación de positivos.
         val config = configRepository.getNotifyPositiveConfig()
         // Comprobar límite de notificación de positivos.
@@ -106,17 +105,17 @@ class PositiveManager @Inject constructor(
      * de datos, devolviendo un ValueWrapper de éxito. Por el contrario, devuelve un
      * ValueWrapper de fallo con el error correspondiente.
      *
-     * @param result Resultado de la API de notificar un positivo.
+     * @param response Resultado de la API de notificar un positivo.
      * @param positive Positivo a notificar.
      * @return ValueWrapper que envuelve un objeto de éxito o de fallo.
      */
-    private suspend fun processNotifyResult(result: APIResult<NotifyPositiveResult>, positive: Positive): ValueWrapper<NotifyPositiveResult> {
-        return when(result) {
+    private suspend fun processNotifyResult(response: APIResult<NotifyPositiveResponse>, positive: Positive): ValueWrapper<NotifyPositiveResponse> {
+        return when(response) {
             is APIResult.Success -> {
                 // Establecer ID y almacenar en la base de datos local.
-                positive.positiveCode = result.value.positiveCode
+                positive.positiveCode = response.value.positiveCode
                 positiveRepository.insertPositive(positive)
-                ValueWrapper.Success(result.value)
+                ValueWrapper.Success(response.value)
             }
             is APIResult.NetworkError -> {
                 ValueWrapper.Fail(Error.TIMEOUT)

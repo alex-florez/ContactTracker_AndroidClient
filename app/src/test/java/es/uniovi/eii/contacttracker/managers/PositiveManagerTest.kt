@@ -1,19 +1,17 @@
 package es.uniovi.eii.contacttracker.managers
 
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.ASYMPTOMATIC_QUESTION
-import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.NotifyQuestionsDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED_QUESTION
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.model.ResponseError
-import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResponse
 import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -61,7 +59,7 @@ class PositiveManagerTest {
     private val notifiedPositive1 = Positive(1, "positivo1", df.parse("27/09/2021 11:16:10")!!)
     private val notifiedPositive2 = Positive(2, "positivo2", df.parse("26/09/2021 12:21:51")!!)
     private val notifiedPositive3 = Positive(3, "positivo3", df.parse("26/09/2021 11:05:00")!!)
-    private val notifyResult = NotifyPositiveResult("código de positivo", 20)
+    private val notifyResult = NotifyPositiveResponse("código de positivo", 20)
 
     @Before
     fun setUp() = runBlockingTest {

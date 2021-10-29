@@ -13,30 +13,21 @@ import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.VACCINATED
 import es.uniovi.eii.contacttracker.getOrAwaitValue
 import es.uniovi.eii.contacttracker.model.*
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
-import es.uniovi.eii.contacttracker.network.apiCall
-import es.uniovi.eii.contacttracker.network.model.APIResult
-import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResponse
 import es.uniovi.eii.contacttracker.positive.PositiveManager
 import es.uniovi.eii.contacttracker.repositories.ConfigRepository
 import es.uniovi.eii.contacttracker.repositories.LocationRepository
 import es.uniovi.eii.contacttracker.repositories.PersonalDataRepository
 import es.uniovi.eii.contacttracker.repositories.PositiveRepository
 import es.uniovi.eii.contacttracker.room.AppDatabase
-import es.uniovi.eii.contacttracker.util.ValueWrapper
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.*
@@ -98,7 +89,7 @@ class NotifyPositiveViewModelTest {
         "71987655H", "Alex", "Flórez",
         "695 82 28 79", "Avilés", "33400")
     /* Respuesta a la notificación con éxito */
-    private val notifyResponse = NotifyPositiveResult("AFsEwtu7SD", 10)
+    private val notifyResponse = NotifyPositiveResponse("AFsEwtu7SD", 10)
     /* Localizaciones a subir */
     private val locations = listOf(
         UserLocation(1,Point(86.0, 120.0, df.parse("19/09/2021 12:54:45")!!), 0.0, ""),

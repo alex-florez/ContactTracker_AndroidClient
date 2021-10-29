@@ -1,6 +1,6 @@
 package es.uniovi.eii.contacttracker.network.api
 
-import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResponse
 import es.uniovi.eii.contacttracker.model.Positive
 import retrofit2.http.*
 
@@ -12,7 +12,7 @@ interface PositiveAPI {
 
     @Headers("Content-Type: application/json")
     @POST("/positive/notifyPositive")
-    suspend fun notifyPositive(@Body positive: Positive): NotifyPositiveResult
+    suspend fun notifyPositive(@Body positive: Positive): NotifyPositiveResponse
 
     @GET("/positive/getPositives/{targetDateMillis}/{lastDays}")
     suspend fun getPositives(@Path("targetDateMillis") targetDateMillis: Long,

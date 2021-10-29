@@ -4,7 +4,7 @@ import es.uniovi.eii.contacttracker.di.IoDispatcher
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import es.uniovi.eii.contacttracker.network.model.APIResult
 import es.uniovi.eii.contacttracker.network.apiCall
-import es.uniovi.eii.contacttracker.positive.NotifyPositiveResult
+import es.uniovi.eii.contacttracker.network.model.NotifyPositiveResponse
 import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.room.mappers.toPositive
 import es.uniovi.eii.contacttracker.room.daos.PositiveDao
@@ -36,7 +36,7 @@ class PositiveRepository @Inject constructor(
      * @param positive datos del positivo.
      * @return result wrapper con los datos del servidor.
      */
-    suspend fun notifyPositive(positive: Positive): APIResult<NotifyPositiveResult> {
+    suspend fun notifyPositive(positive: Positive): APIResult<NotifyPositiveResponse> {
         return apiCall(dispatcher) {
             positiveAPI.notifyPositive(positive)
         }
