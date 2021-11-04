@@ -36,7 +36,11 @@ class RegisterLocationCallback @Inject constructor(
     override fun onLocationUpdate(location: Location) {
         // Insertar localización en ROOM
         // -----------------------------
-        insertIntoDB(location)
+        insertIntoDB(location) { userLocation ->
+            // Enviar BROADCAST
+            // ----------------
+            sendBroadcast(userLocation)
+        }
     }
 
     override fun onLocationStop() {
@@ -47,7 +51,7 @@ class RegisterLocationCallback @Inject constructor(
     /**
      * Envía un BROADCAST con la nueva localización para que
      * sea recibido por todos los BroadcastReceivers que estén
-     * interesados en esta acción.
+     * interesados en esta acción de obtener la nueva localización.
      */
     private fun sendBroadcast(userLocation: UserLocation){
         val intent = Intent()
@@ -57,19 +61,18 @@ class RegisterLocationCallback @Inject constructor(
     }
 
     /**
-     * Utiliza una corrutina de Kotlin para insertar la
-     * nueva localización en la base de datos ROOM local de la App
-     * y enviar un broadcast con la nueva localización obtenida.
+     * Utiliza una corrutina de Kotlin para insertar la nueva localización
+     * en la base de datos ROOM local de la App. Una vez insertada la localización,
+     * se invoca al callback de éxito con la localización de usuario recién insertada.
+     *
+     * @param success Callback de éxito invocado una vez insertada la localización
      */
-    private fun insertIntoDB(location: Location){
+    private fun insertIntoDB(location: Location, success: (location: UserLocation) -> Unit) {
         job = scope.launch {
             val userLocation = (LocationUtils.parse(location))
             val id = locationRepository.insertUserLocation(LocationUtils.parse(location))
-            // Enviar BROADCAST
-            // ----------------
             userLocation.userlocationID = id
-            sendBroadcast(userLocation)
+            success(userLocation)
         }
     }
-
 }

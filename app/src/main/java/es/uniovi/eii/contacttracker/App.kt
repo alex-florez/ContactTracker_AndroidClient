@@ -21,8 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.Date
 
-// TAG de la aplicación
-private const val TAG = "ContactTrackerApp"
+
 
 /**
  * Clase App que extiende de Application y que engloba
@@ -32,6 +31,8 @@ private const val TAG = "ContactTrackerApp"
 class App : Application() {
 
     companion object {
+        /* TAG de la aplicación */
+        private const val TAG = "ContactTrackerApp"
         /* CANALES PARA LAS NOTIFICACIONES */
         const val CHANNEL_ID_LOCATION_FOREGROUND_SERVICE = "LocationForegroundServiceChannel"
         const val CHANNEL_ID_RISK_CONTACT_RESULT = "RiskContactResultChannel"

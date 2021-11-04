@@ -1,9 +1,6 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.R
@@ -76,8 +73,15 @@ class RiskContactViewModel @Inject constructor(
     /**
      * Etiqueta utilizada cuando no hay alarmas de comprobación.
      */
-    private val _emptyAlarms = MutableLiveData(true)
-    val emptyAlarms: LiveData<Boolean> = _emptyAlarms
+    private val _emptyAlarms = MediatorLiveData<Boolean>()
+    val emptyAlarms: MediatorLiveData<Boolean> = _emptyAlarms
+
+    // Constructor
+    init {
+        emptyAlarms.addSource(alarms) {
+            _emptyAlarms.value = it.isEmpty()
+        }
+    }
 
     /**
      * Hace uso del manager de contactos de riesgo para
@@ -88,7 +92,6 @@ class RiskContactViewModel @Inject constructor(
    fun startChecking(date: Date) {
        viewModelScope.launch(dispatcher) {
            _isChecking.postValue(true)
-//           delay(2000)
            riskContactManager.checkRiskContacts(date)
            _isChecking.postValue(false)
        }
@@ -162,7 +165,6 @@ class RiskContactViewModel @Inject constructor(
         }
     }
 
-
     /**
      * Carga inicialmente todas las alarmas de comprobación
      * almacenadas en la base de datos.
@@ -170,7 +172,6 @@ class RiskContactViewModel @Inject constructor(
     fun loadAlarms() {
         viewModelScope.launch {
             _alarms.value = riskContactAlarmManager.getAllAlarms()
-            _emptyAlarms.value = _alarms.value?.isEmpty() ?: true
         }
     }
 

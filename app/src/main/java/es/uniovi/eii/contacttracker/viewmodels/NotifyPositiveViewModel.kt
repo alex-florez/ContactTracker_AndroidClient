@@ -20,8 +20,8 @@ import javax.inject.Inject
 import java.util.Date
 
 /**
- * ViewModel para el Fragmento de Notificar un positivo
- * y subir las coordenadas.
+ * ViewModel para el Fragmento de Notificar un positivo y
+ * subir las coordenadas registradas en la base de datos local.
  */
 @HiltViewModel
 class NotifyPositiveViewModel @Inject constructor(
@@ -81,8 +81,7 @@ class NotifyPositiveViewModel @Inject constructor(
             _isLoading.postValue(true)
             // Datos personales
             val personalData = if(addPersonalData) getPersonalData() else null
-            val result = positiveManager.notifyPositive(personalData, answers, date)
-            when(result) {
+            when(val result = positiveManager.notifyPositive(personalData, answers, date)) {
                 is ValueWrapper.Success -> {
                     _notifySuccess.postValue(Pair(
                         R.string.notifyPositiveResultText, // Código del String

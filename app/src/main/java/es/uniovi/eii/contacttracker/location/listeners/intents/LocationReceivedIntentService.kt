@@ -14,7 +14,7 @@ class LocationReceivedIntentService : IntentService("LocationReceivedIntentServi
 
     override fun onHandleIntent(intent: Intent?) {
         val locationResult = LocationResult.extractResult(intent)
-        locationResult?.let {
+        locationResult.let {
             val location = it.lastLocation
             Log.d(TAG, LocationUtils.format(location))
         }

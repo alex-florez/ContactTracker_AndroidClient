@@ -134,12 +134,7 @@ class LocationAlarmsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Devuelve un LiveData con la lista de todas las alarmas de localización
-     * existentes.
-     */
-    fun getAllAlarms(): LiveData<List<LocationAlarm>> = locationAlarmManager.getAllAlarms()
-
+    // Constructor
     init {
         // Agregar fuente al LiveData para la lista de alarmas vacía
         noAlarms.addSource(alarms) {

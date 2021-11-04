@@ -39,6 +39,4 @@ interface UserLocationDao {
 
     @Query("SELECT * FROM user_locations WHERE date(timestamp) >= :startDate AND date(timestamp) <= :endDate ORDER BY timestamp ASC")
     suspend fun getLocationsBetween(startDate: String, endDate: String): List<UserLocation>
-
-
 }

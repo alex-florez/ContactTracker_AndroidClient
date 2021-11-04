@@ -319,7 +319,7 @@ class TrackerMapFragment : Fragment(), OnMapReadyCallback {
         val newMarker = map.addMarker(MarkerOptions()
             .title(location.timestamp().toString())
             .position(latLng)
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
             .visible(markersEnabled))
         // Dibujar línea
         if(markers.isNotEmpty()){
@@ -362,20 +362,5 @@ class TrackerMapFragment : Fragment(), OnMapReadyCallback {
          */
         private const val LOCATIONS = "userLocations"
 
-        /**
-         * FactoryMethod para crear el fragment.
-         *
-         * @param userLocations lista con las localizaciones del usuario.
-         */
-        @JvmStatic
-        fun newInstance(userLocations: List<UserLocation>) =
-            TrackerMapFragment().apply {
-                val list = arrayListOf<UserLocation>()
-                list.addAll(userLocations)
-                arguments = Bundle().apply {
-                    putParcelableArrayList(LOCATIONS, list)
-                }
-            }
     }
-
 }

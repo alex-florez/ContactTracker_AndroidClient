@@ -35,7 +35,6 @@ interface LocationAlarmDao {
     @Query("DELETE FROM location_alarms WHERE id = :id")
     suspend fun deleteById(id: Long): Int
 
-
     @Query("SELECT * FROM location_alarms WHERE (time(startDate) >= time(:newStartDate) AND time(startDate) <= time(:newEndDate)) OR (time(endDate) >= time(:newStartDate) AND time(endDate) <= time(:newEndDate) OR (time(startDate) < time(:newStartDate) AND time(endDate) > time(:newEndDate)))")
     suspend fun getCollisions(newStartDate: String, newEndDate: String): List<LocationAlarm>
 }

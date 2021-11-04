@@ -11,7 +11,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.activities.MainActivity
 
 /**
- * Servicio para recibir los mensajes de Firebase Cloud Messaging.
+ * Servicio para recibir los mensajes PUSH de Firebase Cloud Messaging.
  */
 class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
 

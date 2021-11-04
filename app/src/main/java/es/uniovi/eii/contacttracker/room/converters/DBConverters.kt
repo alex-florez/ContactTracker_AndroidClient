@@ -12,6 +12,7 @@ import java.util.*
  */
 class DBConverters {
 
+    /* Formato String de las fechas que se almacenan en la base de datos */
     private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     /* FECHAS */
@@ -31,6 +32,7 @@ class DBConverters {
         return ""
     }
 
+    /* Enumerado del NIVEL DE RIESGO */
     @TypeConverter
     fun toRiskLevel(riskLevel: String): RiskLevel {
         return enumValueOf(riskLevel)
@@ -40,6 +42,4 @@ class DBConverters {
     fun fromRiskLevel(riskLevel: RiskLevel): String {
         return riskLevel.name
     }
-
-
 }

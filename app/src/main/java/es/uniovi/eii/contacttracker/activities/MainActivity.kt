@@ -1,35 +1,20 @@
 package es.uniovi.eii.contacttracker.activities
 
-import android.content.Intent
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
-import es.uniovi.eii.contacttracker.Constants
 import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.ActivityMainBinding
-import es.uniovi.eii.contacttracker.fragments.DefaultBlankFragment
-import es.uniovi.eii.contacttracker.fragments.history.LocationHistoryFragment
-import es.uniovi.eii.contacttracker.fragments.notifypositive.NotifyPositiveFragment
-import es.uniovi.eii.contacttracker.fragments.riskcontacts.ResultDetailsFragment
-import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactFragment
-import es.uniovi.eii.contacttracker.fragments.riskcontacts.RiskContactTabsFragment
-import es.uniovi.eii.contacttracker.fragments.settings.SettingsFragment
-import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFragment
-import es.uniovi.eii.contacttracker.model.RiskContactResult
 
 /**
  * Actividad principal de la aplicación Contact Tracker.

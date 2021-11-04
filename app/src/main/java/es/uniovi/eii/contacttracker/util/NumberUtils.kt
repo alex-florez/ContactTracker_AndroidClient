@@ -3,6 +3,9 @@ package es.uniovi.eii.contacttracker.util
 import kotlin.math.pow
 import kotlin.math.roundToLong
 
+/**
+ * Clase de utilidades para trabajar con números.
+ */
 object NumberUtils {
 
     /**

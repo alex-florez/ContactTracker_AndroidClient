@@ -5,9 +5,6 @@ import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.DateUtils
 import javax.inject.Inject
 
-/* Formato estándar para las fechas utilizadas en el algoritmo de comprobación. */
-private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
-
 /**
  * Clase que implementa la interfaz que define el Detector de
  * Contactos de Riesgo y que contiene el algoritmo para hacer

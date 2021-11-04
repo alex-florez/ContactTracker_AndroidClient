@@ -1,18 +1,19 @@
 package es.uniovi.eii.contacttracker.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.repositories.RiskContactRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel para el fragmento del listado de resultados de
+ * las comprobaciones de contactos ejecutadas.
+ */
 @HiltViewModel
 class RiskContactResultViewModel @Inject constructor (
-    private val riskContactRepository: RiskContactRepository
+    riskContactRepository: RiskContactRepository
 ) : ViewModel(){
 
     /**
@@ -26,14 +27,16 @@ class RiskContactResultViewModel @Inject constructor (
      * LiveData que indica si la lista de resultados
      * está vacía.
      */
-    private val _isEmpty = MutableLiveData<Boolean>()
-    val isEmpty : LiveData<Boolean> = _isEmpty
+    private val _isEmpty = MediatorLiveData<Boolean>()
+    val isEmpty : MediatorLiveData<Boolean> = _isEmpty
 
-    /**
-     * Devuelve un LiveData con todos los resultados de las
-     * comprobaciones realizadas.
-     */
-    fun getAllRiskContactResults():LiveData<List<RiskContactResult>> {
-       return riskContactRepository.getAll()
+    /* LiveData para el listado de resultados de comprobación */
+    val results : LiveData<List<RiskContactResult>> = riskContactRepository.getAll()
+
+    // Constructor
+    init {
+        isEmpty.addSource(results) {
+            _isEmpty.value = it.isEmpty()
+        }
     }
 }

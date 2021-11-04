@@ -25,7 +25,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun riskContactDao(): RiskContactDao
     abstract fun positiveDao(): PositiveDao
     abstract fun riskContactAlarmDao(): RiskContactAlarmDao
+
     companion object {
+        /* Nombre de la base de datos local */
         const val DB_NAME = "contacttracker.db"
     }
 }

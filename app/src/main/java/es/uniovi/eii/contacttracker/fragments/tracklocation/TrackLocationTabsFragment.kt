@@ -15,9 +15,8 @@ import es.uniovi.eii.contacttracker.databinding.FragmentTrackLocationTabsBinding
 
 
 /**
- * Fragmento contenedor para albergar al
- * TabLayout que contiene los diferentes tabs para la
- * opción de Menú del rastreador de ubicación.
+ * Fragmento contenedor para albergar al TabLayout que contiene los
+ * diferentes tabs para la opción de Menú del rastreador de ubicación.
  */
 @AndroidEntryPoint
 class TrackLocationTabsFragment : Fragment() {
@@ -28,17 +27,9 @@ class TrackLocationTabsFragment : Fragment() {
     private lateinit var binding: FragmentTrackLocationTabsBinding
 
     /**
-     * View Pager 2
+     * View Pager 2 para las pestañas del tracker.
      */
     private lateinit var viewPager: ViewPager2
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,36 +55,5 @@ class TrackLocationTabsFragment : Fragment() {
         val tabLayout = binding.trackLocationTabLayout
 
         TabLayoutMediator(tabLayout, viewPager) {tab, position -> tab.text = tabTitles[position]}.attach()
-    }
-
-    /**
-     * Método encargado de establecer los iconos a las
-     * distintas Tabs del TabLayout.
-     * distintas Tabs del TabLayout.
-     */
-    private fun setTabIcons(){
-        val tabView = layoutInflater.inflate(R.layout.tab_item, null)
-        tabView.findViewById<ImageView>(R.id.tab_icon).setBackgroundResource(R.drawable.ic_launcher_foreground)
-        binding.trackLocationTabLayout.getTabAt(0)?.customView = tabView
-
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TrackLocationTabsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TrackLocationTabsFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
     }
 }

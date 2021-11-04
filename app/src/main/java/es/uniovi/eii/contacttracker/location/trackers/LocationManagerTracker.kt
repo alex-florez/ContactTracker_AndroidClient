@@ -12,8 +12,10 @@ import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateC
 import javax.inject.Inject
 
 /**
- * Implementación concreta de rastreador de ubicación, que utiliza la
- * API nativa de Android LocationManager.
+ * Implementación concreta de la interfaz del rastreador de ubicación.
+ *
+ * Utiliza la API nativa de Android (LocationManager) para consumir los
+ * servicios de geolocalización.
  */
 class LocationManagerTracker @Inject constructor(
     @ApplicationContext private val ctx: Context

@@ -33,14 +33,6 @@ class LocationRepository @Inject constructor(
     }
 
     /**
-     *  Devuelve todas las localizaciones del usuario
-     *  registradas hasta la fecha.
-     */
-    fun getAllUserLocations(): LiveData<List<UserLocation>>{
-        return userLocationDao.getAll()
-    }
-
-    /**
      * Recibe como parámetro una fecha en formato YYYY-MM-DD y devuelve
      * todas las localizaciones del usuario que hayan sido registradas
      * en esa fecha.
@@ -51,14 +43,6 @@ class LocationRepository @Inject constructor(
     fun getAllUserLocationsByDate(dateString: String): LiveData<List<UserLocation>> {
         return userLocationDao.getAllByDateString(dateString)
     }
-
-    /**
-     * Devuelve una lista con todas las localizaciones de usuario registradas en
-     * la base de datos.
-     *
-     * @return Listado de localizaciones de usuario.
-     */
-    fun getAllUserLocationsList(): List<UserLocation> = userLocationDao.getAllList()
 
     /**
      * Elimina todas las localizaciones de usuario cuya fecha coincide
@@ -135,10 +119,6 @@ class LocationRepository @Inject constructor(
      */
     suspend fun deleteAlarmByID(id: Long) {
         locationAlarmDao.deleteById(id)
-    }
-
-    suspend fun deleteAllLocations() {
-        userLocationDao.deleteAll()
     }
 
     /**

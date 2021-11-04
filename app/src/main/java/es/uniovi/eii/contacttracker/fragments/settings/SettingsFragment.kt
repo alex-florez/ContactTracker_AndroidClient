@@ -46,27 +46,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<CheckBoxPreference>(getString(R.string.shared_prefs_positives_notifications))
             ?.setOnPreferenceChangeListener { _, newValue ->
                 inAppNotificationManager.togglePositivesNotifications(newValue as Boolean)
-//                if(enable) {
-//                    // Subscribirse al Topic de FCM 'positives'
-//                    Firebase.messaging.subscribeToTopic("positives")
-//                        .addOnCompleteListener {
-//                            var msg = "Cliente Android subscrito al topic 'positives'"
-//                            if(!it.isSuccessful){
-//                                msg = "Error al subscribirse al Topic 'positives' de FCM"
-//                            }
-//                            Log.d(TAG, msg)
-//                        }
-//                } else {
-//                    // Desubscribirse del Topic de FCM 'positives'
-//                    Firebase.messaging.unsubscribeFromTopic("positives")
-//                        .addOnCompleteListener {
-//                            var msg = "Cliente Android desubscrito del topic 'positives'"
-//                            if(!it.isSuccessful){
-//                                msg = "Error al desubscribirse del Topic 'positives' de FCM"
-//                            }
-//                            Log.d(TAG, msg)
-//                        }
-//                }
                 true
             }
     }

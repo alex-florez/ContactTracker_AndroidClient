@@ -201,7 +201,7 @@
         <item quantity="one">Contacto con %1$d positivo</item>
         <item quantity="other">Contacto con %2$d positivos</item>
     </plurals>
-    <string name="emptyResultsLabel">No hay resultados</string>
+    <string name="emptyResultsLabel">Aún no hay resultados. Inicia una nueva comprobación para detectar contactos de riesgo.</string>
 
     <!-- Fragment: Detalles de un resultado de la comprobación -->
     <string name="riskiestContact">Contacto de mayor riesgo</string>
@@ -232,9 +232,8 @@
     <string name="checkAlarmErrorCollision">Ya existen alarmas de comprobación programadas para esa hora.</string>
     <string name="checkAlarmErrorCountLimit">No puedes programar más de %d alarmas de comprobación.</string>
     <string name="addRiskContactAlarmBtnDescription">Añadir alarma de comprobación.</string>
-
-
-    <!-- Fragment: Política de Privacidad -->
+    <string name="tabCheck">Comprobar</string>
+    <string name="tabResults">Resultados</string>
 
     <!-- Notificaciones: Resultados de la Comprobación de Contactos de Riesgo -->
     <string name="resultNotificationTitle">Resultados de la comprobación</string>

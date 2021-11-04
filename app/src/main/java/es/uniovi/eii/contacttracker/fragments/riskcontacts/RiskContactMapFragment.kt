@@ -19,11 +19,6 @@ import es.uniovi.eii.contacttracker.model.RiskContact
 import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
- * Contacto de Riesgo.
- */
-private const val ARG_RISK_CONTACT = "argRiskContact"
-
-/**
  * Fragmento con un mapa de Google Maps que refleja los
  * Tramos de Contactos de Riesgo obtenidos mediante la comprobación.
  */
@@ -147,19 +142,5 @@ class RiskContactMapFragment : Fragment(), OnMapReadyCallback {
                 .position(points.last())
                 .icon(icon))
         }
-    }
-
-    companion object {
-        /**
-         * Método estático empleado como Factory Method para construir una
-         * instancia de este fragment indicando los parámetros adecuados.
-         */
-        @JvmStatic
-        fun newInstance(riskContact: RiskContact) =
-            RiskContactMapFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_RISK_CONTACT, riskContact)
-                }
-            }
     }
 }

@@ -32,8 +32,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 /**
- * Servicio Foreground en 1er Plano que realiza el rastreo de ubicación,
- * haciendo uso de uno de los trackers de localización.
+ * Servicio Android en 1er Plano (Foreground) que ejecuta el rastreo de ubicación,
+ * haciendo uso de uno de los trackers de localización para recuperar las coordenadas.
  */
 @AndroidEntryPoint
 class LocationForegroundService : Service(){
@@ -60,7 +60,6 @@ class LocationForegroundService : Service(){
      * Repositorio de configuración.
      */
     @Inject lateinit var configRepository: ConfigRepository
-
 
     /**
      * Manager para las ALARMAS DE LOCALIZACIÓN.

@@ -30,7 +30,7 @@ import java.util.*
 
 
 /**
- * Fragment que representa la opción del RASTREADOR DE UBICACIÓN.
+ * Fragment que representa la opción de menú del RASTREADOR DE UBICACIÓN.
  *
  * Contiene la funcionalidad para iniciar y pausar el rastreo de ubicación
  * de manera manual, así como visualizar información del rastreo de ubicación
@@ -89,7 +89,6 @@ class TrackerFragment : Fragment() {
                 }
             }
         }
-
     }
 
     /**
@@ -241,7 +240,7 @@ class TrackerFragment : Fragment() {
      * ejecutado en segundo plano y hará uso del Tracker de ubicación.
      * Recibe como parámetro la acción a realizar: START / STOP
      *
-     * @param acción a realizar por el servicio (START/STOP)
+     * @param action Acción a realizar por el servicio (START/STOP)
      */
     private fun sendCommandToLocationService(action: String){
         Intent(requireContext(), LocationForegroundService::class.java).let {
@@ -349,27 +348,13 @@ class TrackerFragment : Fragment() {
 
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FirstItemFragment.
-         */
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TrackerFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
 
         /**
          * Id de la solicitud de permisos para la localización.
          */
         private const val LOCATION_PERMISSION_REQUEST_ID: Int = 100
 
-        // TAG
+        /* TAG del fragmento */
         private const val TAG: String = "TrackLocationFragment"
 
         // Broadcast Receiver

@@ -19,11 +19,6 @@ import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.util.DateUtils
 import es.uniovi.eii.contacttracker.viewmodels.RiskContactResultViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * Fragmento para mostrar los diferentes resultados de las comprobaciones
  * de contactos de riesgo. Muestra las comprobaciones realizadas
@@ -31,9 +26,6 @@ private const val ARG_PARAM2 = "param2"
  */
 @AndroidEntryPoint
 class RiskContactResultsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     /**
      * View Binding
@@ -49,14 +41,6 @@ class RiskContactResultsFragment : Fragment() {
      * Adapter para los objetos RiskContactResult.
      */
     private lateinit var riskContactResultAdapter: RiskContactResultAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +61,7 @@ class RiskContactResultsFragment : Fragment() {
     private fun setObservers(){
         viewModel.apply {
             /* Resultados de la comprobación */
-            getAllRiskContactResults().observe(viewLifecycleOwner) {
+            results.observe(viewLifecycleOwner) {
                 fillAdapter(it)
                 binding.txtLabelEmpty.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
             }
@@ -133,6 +117,7 @@ class RiskContactResultsFragment : Fragment() {
         val dates = results.map {
             DateUtils.formatDate(it.timestamp, df)
         }.distinct()
+        // Agrupar los resultados por fechas de ejecución
         dates.forEach { date ->
             val filteredResults = results.filter {
                 DateUtils.formatDate(it.timestamp, df) == date
@@ -162,23 +147,4 @@ class RiskContactResultsFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RiskContactResultsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RiskContactResultsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

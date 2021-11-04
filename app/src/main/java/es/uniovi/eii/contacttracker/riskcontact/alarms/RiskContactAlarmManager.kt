@@ -52,16 +52,6 @@ class RiskContactAlarmManager @Inject constructor(
                 } else {
                     ValueWrapper.Success(riskContactAlarm)
                 }
-//                insertedAlarm?.let {
-//                    riskContactAlarm.id = alarmID
-////                    // Crear PendingIntent
-////                    val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
-////                    i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, AndroidUtils.toByteArray(riskContactAlarm))
-////                    val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
-////                    // Configurar alarma de Android
-////                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
-//                }
-//                ValueWrapper.Success(riskContactAlarm)
             } else {
                 ValueWrapper.Fail(Error.RISK_CONTACT_ALARM_COUNT_LIMIT_EXCEEDED)
             }
@@ -81,10 +71,6 @@ class RiskContactAlarmManager @Inject constructor(
         riskContactRepository.removeAlarm(alarmID)
         // Eliminar alarma del AlarmManager de Android
         alarmHelper.cancelRiskContactCheckAlarm(alarmID)
-
-//        val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
-//        val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
-//        alarmManager.cancel(pendingIntent)
     }
 
     /**
@@ -110,17 +96,6 @@ class RiskContactAlarmManager @Inject constructor(
                 alarmHelper.setRiskContactCheckAlarm(alarm)
             else if (alarm.id != null)
                 alarmHelper.cancelRiskContactCheckAlarm(alarm.id!!)
-
-//            alarm.id?.let { alarmID ->
-//                val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
-//                i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, alarm)
-//                val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
-//                if(activate) {
-//                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.startDate.time, pendingIntent)
-//                } else {
-//                    alarmManager.cancel(pendingIntent)
-//                }
-//            }
         }
     }
 
@@ -149,10 +124,6 @@ class RiskContactAlarmManager @Inject constructor(
             riskContactRepository.updateAlarms(listOf(riskContactAlarm))
             // Programar una nueva alarma de Android
             alarmHelper.setRiskContactCheckAlarm(riskContactAlarm)
-//            val i = Intent(ctx, StartRiskContactCheckReceiver::class.java)
-//            i.putExtra(Constants.EXTRA_RISK_CONTACT_ALARM, riskContactAlarm)
-//            val pendingIntent = PendingIntent.getBroadcast(ctx, alarmID.toInt(), i, 0)
-//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, riskContactAlarm.startDate.time, pendingIntent)
         }
     }
 

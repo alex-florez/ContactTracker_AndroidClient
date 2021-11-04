@@ -16,7 +16,7 @@ import javax.inject.Inject
 import java.util.Date
 
 /**
- * Repositorio de Positivos en COVID-19.
+ * Repositorio de Positivos de COVID-19.
  *
  * Se encarga de notificar y registrar positivos a partir
  * del cliente de la API Rest del Backend.
@@ -89,18 +89,6 @@ class PositiveRepository @Inject constructor(
      */
     suspend fun getAllLocalPositiveCodes(): List<String> {
         return positiveDao.getAllPositiveCodes()
-    }
-
-    /**
-     * Consulta el número de positivos que fueron notificados en
-     * la fecha pasada como parámetro.
-     *
-     * @param date Fecha por la que filtrar.
-     * @return Número de positivos notificados en la fecha indicada.
-     */
-    suspend fun getNumberOfLocalPositivesNotifiedAt(date: Date): Int {
-        val formattedDate = DateUtils.formatDate(date, "yyyy-MM-dd")
-        return positiveDao.getNumberOfNotifiedPositivesAt(formattedDate)
     }
 
     /**

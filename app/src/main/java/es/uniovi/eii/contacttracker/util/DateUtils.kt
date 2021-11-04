@@ -9,7 +9,7 @@ import java.util.*
 import kotlin.math.abs
 
 /**
- * Clase de utilidades generales
+ * Clase de utilidades para trabajar con fechas.
  */
 object DateUtils {
 

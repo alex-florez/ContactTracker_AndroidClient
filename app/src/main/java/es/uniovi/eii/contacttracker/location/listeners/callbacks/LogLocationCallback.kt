@@ -7,7 +7,8 @@ import es.uniovi.eii.contacttracker.util.LocationUtils
 /**
  * Implementación de la interfaz LocationUpdateCallback para
  * redefinir el comportamiento al recibir actualizaciones de localización.
- * En este caso, se recibe una localización y se imprime mediante Logs.
+ *
+ * En este caso, se recibe una localización y se imprime sus datos en el Log.
  */
 class LogLocationCallback : LocationUpdateCallback {
 

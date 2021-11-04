@@ -10,7 +10,8 @@ import es.uniovi.eii.contacttracker.location.listeners.callbacks.LocationUpdateC
 import javax.inject.Inject
 
 /**
- * Implementación concreta de la interfaz LcoationTracker.
+ * Implementación concreta de la interfaz LocationTracker.
+ *
  * Representa un rastreador de ubicación basado en los servicios de GooglePlay
  * que utiliza un Fused Provider.
  */
@@ -77,7 +78,6 @@ class FusedLocationTracker @Inject constructor(
         return when(mode){
             LocationUpdateMode.CALLBACK_MODE -> {
                 fusedLocationProvider.removeLocationUpdates(locationCallback)
-//                locationCallback.stop()
                 true
             }
             LocationUpdateMode.PENDING_INTENT_MODE -> {

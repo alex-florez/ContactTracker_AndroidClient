@@ -17,12 +17,10 @@ import es.uniovi.eii.contacttracker.model.RiskContactResult
 import es.uniovi.eii.contacttracker.util.DateUtils
 
 /**
- * Fragment que muestra los detalles de un resultado de
- * comprobación de contactos de riesgo.
+ * Fragment que muestra los detalles de un resultado de comprobación de contactos de riesgo.
  */
 @AndroidEntryPoint
 class ResultDetailsFragment : Fragment() {
-
 
     /**
      * View Binding.

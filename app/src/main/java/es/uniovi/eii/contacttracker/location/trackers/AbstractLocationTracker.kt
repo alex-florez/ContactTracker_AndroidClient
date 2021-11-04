@@ -13,7 +13,7 @@ import es.uniovi.eii.contacttracker.util.AndroidUtils
 
 /**
  * Clase abstracta que agrupa el código común de los distintos tipos
- * de rastreadores de ubicación.
+ * de rastreadores de ubicación. Se utiliza para evitar la duplicación de código.
  */
 abstract class AbstractLocationTracker(private val ctx: Context) : LocationTracker {
 

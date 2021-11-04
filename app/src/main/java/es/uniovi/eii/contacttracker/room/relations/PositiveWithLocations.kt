@@ -7,7 +7,7 @@ import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.model.UserLocation
 
 /**
- * Clase de apoyo que representa una relación 1 a n
+ * Clase de apoyo que representa una relación N a N
  * entre un objeto Positive y una lista de localizciones de usuario.
  */
 data class PositiveWithLocations (
