@@ -1,6 +1,6 @@
 package es.uniovi.eii.contacttracker.adapters.results
 
-
+// Tipos posibles del item
 const val TYPE_DATE = 0
 const val TYPE_OBJECT = 1
 

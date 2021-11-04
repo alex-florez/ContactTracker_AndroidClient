@@ -32,7 +32,7 @@ import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackLocationTabsFra
 import es.uniovi.eii.contacttracker.model.RiskContactResult
 
 /**
- * Actividad principal de la aplicación.
+ * Actividad principal de la aplicación Contact Tracker.
  */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -55,26 +55,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initNavController() // Referencia al NavController
+        initNavController() // Inicializar Nav Controller
         setUpAppBar() // Configurar App Bar
         setUpBottomNavigation() // Configurar Bottom Navigation
-
-        processIntent(intent)
     }
 
     /* Redefine el comportamiento al pulsar sobre la flecha de atrás. */
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    /**
-     * Callback de llamada cuando la Aplicación recibe un nuevo Intent.
-     */
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.let{
-//            processIntent(it)
-        }
     }
 
     /**
@@ -127,34 +115,4 @@ class MainActivity : AppCompatActivity() {
         // Vincular BottomNavigationView + NavController
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
     }
-
-    /**
-     * Se encarga de procesar el intent recibido por la Activity.
-     */
-    private fun processIntent(intent: Intent) {
-        val action = intent.action
-        val extras = intent.extras
-        if(action != null && extras != null){
-            when(action){
-                // Mostrar detalles del resultado de una comprobación
-                Constants.ACTION_SHOW_RISK_CONTACT_RESULT -> {
-                    showRiskContactResult(extras)
-                }
-            }
-        }
-    }
-
-    /**
-     * Muestra los resultados del contacto de riesgo recibido en el Intent,
-     * mediante un nuevo fragment.
-     */
-    private fun showRiskContactResult(extras: Bundle) {
-        val riskContactResult = extras.getParcelable<RiskContactResult>(Constants.EXTRA_RISK_CONTACT_RESULT)
-//        if(riskContactResult != null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.main_fragment_container, ResultDetailsFragment.newInstance(riskContactResult))
-//                .commit()
-//        }
-    }
-
 }

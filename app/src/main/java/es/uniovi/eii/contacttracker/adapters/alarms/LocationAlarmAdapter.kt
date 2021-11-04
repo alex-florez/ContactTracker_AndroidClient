@@ -33,7 +33,7 @@ class LocationAlarmDiffCallback : DiffUtil.ItemCallback<LocationAlarm>() {
 private val DIFF_CALLBACK = LocationAlarmDiffCallback()
 
 /**
- * Adapter de tipo lista para las alarmas de localización.
+ * Adapter de lista para las alarmas de localización.
  */
 class LocationAlarmAdapter(
         private val onRemoveListener: OnRemoveAlarmClickListener,
@@ -41,16 +41,14 @@ class LocationAlarmAdapter(
 ) : ListAdapter<LocationAlarm, LocationAlarmAdapter.LocationAlarmViewHolder>(DIFF_CALLBACK) {
 
     /**
-     * Listener para el botón de eliminar una
-     * Alarma de localización.
+     * Interfaz Listener para eliminar una Alarma de localización.
      */
     interface OnRemoveAlarmClickListener {
         fun onRemove(locationAlarm: LocationAlarm)
     }
 
     /**
-     * Interfaz Listener para el cambio de estado de
-     * la alarma de localización.
+     * Interfaz Listener para el cambio de estado de la alarma de localización.
      */
     interface OnAlarmStateChangedListener {
         fun onChanged(locationAlarm: LocationAlarm, isChecked: Boolean)

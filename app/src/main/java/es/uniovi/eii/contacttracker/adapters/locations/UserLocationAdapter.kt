@@ -34,16 +34,15 @@ class UserLocationDiffCallback : DiffUtil.ItemCallback<UserLocation>() {
 private val DIFF_CALLBACK = UserLocationDiffCallback()
 
 /**
- * Adapter para los objetos UserLocation que almacenan
- * información sobre la localización del usuario.
+ * Adapter para los objetos UserLocation que almacenan información sobre
+ * la localización del usuario.
  */
 class UserLocationAdapter(
    private val onClickListener: OnUserLocationItemClick
 ): ListAdapter<UserLocation, UserLocationAdapter.UserLocationViewHolder>(DIFF_CALLBACK){
 
     /**
-     * Declaración interna de la interfaz para los eventos
-     * de click de los items del adapter.
+     * Interfaz Listener para los eventos de click de los items del adapter.
      */
     interface OnUserLocationItemClick {
         fun onClick(userLocation: UserLocation)
@@ -84,7 +83,7 @@ class UserLocationAdapter(
 
     /**
      * Método que añade una nueva localización de usuario
-     * en la lista interna del adapter.
+     * en la lista interna del adapter, en la posición 0.
      *
      * @param location Localización del usuario a insertar.
      * @param callback Callback a invocar una vez se inserta la localización.
@@ -97,16 +96,14 @@ class UserLocationAdapter(
         }
     }
     /**
-     * Cuando es invocado, limpia toda
-     * la lista de localizaciones de Usuario.
+     * Cuando es invocado, limpia toda la lista de localizaciones de Usuario.
      */
     fun clearLocations(){
         submitList(null)
     }
 
     /**
-     * Devuelve true si existen localizaciones en la
-     * lista.
+     * Devuelve true si existen localizaciones en la lista.
      */
     fun areLocationsAvailable(): Boolean {
         return currentList.isNotEmpty()

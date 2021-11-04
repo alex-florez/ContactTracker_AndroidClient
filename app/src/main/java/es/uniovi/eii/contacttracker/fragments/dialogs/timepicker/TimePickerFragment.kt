@@ -9,7 +9,8 @@ import androidx.fragment.app.DialogFragment
 import java.util.*
 
 /**
- * Fragment que muestra al usuario un TimePricker que permite seleccionar una hora.
+ * Fragment que muestra al usuario un TimePicker que permite
+ * seleccionar una hora del día.
  */
 class TimePickerFragment(
     private val listener: OnTimeSetListener,

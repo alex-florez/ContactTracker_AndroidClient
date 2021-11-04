@@ -15,7 +15,7 @@ import es.uniovi.eii.contacttracker.util.AndroidUtils
 import javax.inject.Inject
 
 /**
- * Clase de ayuda para gestionar alarmas de Android.
+ * Clase auxiliar para gestionar alarmas de Android a través del AlarmManager.
  */
 class AlarmHelper @Inject constructor(
     @ApplicationContext private val ctx: Context,

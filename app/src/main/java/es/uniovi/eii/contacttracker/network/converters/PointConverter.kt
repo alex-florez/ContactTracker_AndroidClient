@@ -14,8 +14,7 @@ const val TIMESTAMP = "locationTimestamp"
 
 
 /**
- * Custom Converter para serializar/deserializar objetos
- * de tipo Point.
+ * Custom Converter para serializar/deserializar objetos de tipo Point.
  */
 class PointConverter : JsonSerializer<Point>, JsonDeserializer<Point> {
 

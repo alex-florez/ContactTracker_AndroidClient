@@ -21,7 +21,6 @@ class PersonalDataConsentDialog(
      * de consentimiento del interesado.
      */
     interface PrivacyPolicyListener {
-
         /**
          * Callaback de Aceptación de política.
          */
@@ -48,7 +47,6 @@ class PersonalDataConsentDialog(
         return builder.create()
     }
 
-
     /**
      * Establece los listeners de click para los botones de
      * aceptar o rechazar la política de privacidad.
@@ -65,5 +63,4 @@ class PersonalDataConsentDialog(
             }
         }
     }
-
 }

@@ -11,6 +11,9 @@ import es.uniovi.eii.contacttracker.fragments.tracklocation.TrackerFragment
 
 private const val NUM_PAGES = 2
 
+/**
+ * Page Adapter para las pestañas del TabLayout de la vista de contactos de riesgo.
+ */
 class RiskContactTabsPageAdapter(
     fa: FragmentActivity
 ) : FragmentStateAdapter(fa) {

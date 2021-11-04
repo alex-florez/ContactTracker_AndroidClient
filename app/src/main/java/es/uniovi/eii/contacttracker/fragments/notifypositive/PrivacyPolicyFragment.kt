@@ -10,7 +10,7 @@ import es.uniovi.eii.contacttracker.R
 import es.uniovi.eii.contacttracker.databinding.FragmentPrivacyPolicyBinding
 
 /**
- * Fragmento que muestra la Política de Privacidad de la app.
+ * Fragmento que muestra la Política de Privacidad de la aplicación.
  */
 @AndroidEntryPoint
 class PrivacyPolicyFragment : Fragment() {

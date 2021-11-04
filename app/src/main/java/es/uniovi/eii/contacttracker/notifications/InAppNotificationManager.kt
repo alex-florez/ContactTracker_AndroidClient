@@ -5,11 +5,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.uniovi.eii.contacttracker.App
 import es.uniovi.eii.contacttracker.R
@@ -19,6 +22,9 @@ import javax.inject.Inject
 
 /* IDs para las notificaciones */
 private const val RESULT_NOTIFICATION_ID = 1
+
+/* Topics de FCM */
+private const val POSITIVES_TOPIC = "positives"
 
 /**
  * Manager que gestiona todas las notificaciones que se generan
@@ -49,6 +55,31 @@ class InAppNotificationManager @Inject constructor(
     fun showRiskContactCheckErrorNotification() {
         with(NotificationManagerCompat.from(ctx)) {
             notify(RESULT_NOTIFICATION_ID, createRiskContactCheckErrorNotification())
+        }
+    }
+
+    /**
+     * Habilita o deshabilita el envío de notificaciones push FCM a este dispositivo
+     * relativas al número de positivos notificados en el día actual.
+     *
+     * @param activate Flag para activar o desactivar estas notificaciones.
+     */
+    fun togglePositivesNotifications(activate: Boolean) {
+        var msg: String
+        if(activate) {
+            Firebase.messaging.subscribeToTopic(POSITIVES_TOPIC)
+                .addOnCompleteListener {
+                    msg = if(it.isSuccessful) ctx.getString(R.string.fcm_subscribe_success, POSITIVES_TOPIC)
+                                else ctx.getString(R.string.fcm_subscribe_fail, POSITIVES_TOPIC)
+                    Log.d(TAG, msg)
+                }
+        } else {
+            Firebase.messaging.unsubscribeFromTopic(POSITIVES_TOPIC)
+                .addOnCompleteListener {
+                    msg = if(it.isSuccessful) ctx.getString(R.string.fcm_unsubscribe_success, POSITIVES_TOPIC)
+                            else ctx.getString(R.string.fcm_unsubscribe_fail, POSITIVES_TOPIC)
+                    Log.d(TAG, msg)
+                }
         }
     }
 
@@ -157,5 +188,10 @@ class InAppNotificationManager @Inject constructor(
         drawable.setBounds(0,0, canvas.width, canvas.height)
         drawable.draw(canvas)
         return bitmap
+    }
+
+    companion object {
+        /* TAG del manager de notificaciones internas */
+        private const val TAG = "InAppNotificationManager"
     }
 }

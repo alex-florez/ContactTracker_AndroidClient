@@ -12,7 +12,6 @@ import es.uniovi.eii.contacttracker.util.DateUtils
  * Funciones Adapter para personalizar los atributos de los componentes de los layouts XML.
  */
 
-
 /**
  * Alterna la visibilidad de la vista especificada.
  */
@@ -23,7 +22,6 @@ fun setVisibility(view: View, visibility: Boolean) {
     else
         view.visibility = View.GONE
 }
-
 
 /**
  * Establece el color de fondo y el color de texto de la

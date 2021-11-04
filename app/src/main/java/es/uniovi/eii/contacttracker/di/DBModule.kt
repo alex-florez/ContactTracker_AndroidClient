@@ -90,6 +90,4 @@ object DBModule {
                                     positiveDao: PositiveDao): PositiveRepository {
         return PositiveRepository(positiveAPI, positiveDao)
     }
-
-
 }

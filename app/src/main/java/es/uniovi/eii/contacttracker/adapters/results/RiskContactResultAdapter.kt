@@ -48,8 +48,7 @@ class RiskContactResultDiffCallback : DiffUtil.ItemCallback<RecycleItem>() {
 private val DIFF_CALLBACK = RiskContactResultDiffCallback()
 
 /**
- * Adapter para los items que representan el Resultado
- * de los Contactos de Riesgo.
+ * Adapter para los items que representan el Resultado de los Contactos de Riesgo.
  */
 class RiskContactResultAdapter(
     private val onRiskContactResultClick: OnRiskContactResultClick
@@ -75,16 +74,6 @@ class RiskContactResultAdapter(
         fun bindRiskContactResult(riskContactResult: RiskContactResult, onRiskContactResultClick: OnRiskContactResultClick) {
             binding.result = riskContactResult
             binding.du = DateUtils
-//            binding.apply {
-//                txtResultDate.text = DateUtils.formatDate(riskContactResult.timestamp, "dd/MM/yyyy")
-//                txtResultHour.text = DateUtils.formatDate(riskContactResult.timestamp, "HH:mm")
-//                txtNumberOfPositives.text = binding.root.context.resources
-//                    .getQuantityString(R.plurals.positivesText, riskContactResult.numberOfPositives,
-//                        riskContactResult.numberOfPositives)
-//                // Porcentaje de riesgo más alto
-//                txtHighestRiskPercent.text = binding.root.context
-//                    .getString(R.string.percentText, riskContactResult.getHighestRiskContact().riskPercent)
-//            }
             // Listener de Click.
             itemView.setOnClickListener{
                 onRiskContactResultClick.onClick(riskContactResult)

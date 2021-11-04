@@ -285,6 +285,12 @@
     <!-- Canales de notificaciones (Android Oreo +) -->
     <string name="fcm_channel_id">FcmNotificationChannel</string>
 
+    <!-- Mensajes Debug para la subscripción de Topics de FCM -->
+    <string name="fcm_subscribe_success">Cliente Android suscrito al Topic [%s]</string>
+    <string name="fcm_subscribe_fail">Error al suscribirse al Topic [%s]</string>
+    <string name="fcm_unsubscribe_success">Cliente Android desuscrito del Topic [%s]</string>
+    <string name="fcm_unsubscribe_fail">Error al desuscribirse del Topic [%s]</string>
+
     <!-- Política de Privacidad -->
     <string name="appOwner">Dueño de la aplicación</string>
     <string name="appOwnerText">El dueño y responsable de la aplicación Contact Tracker es Alejandro Flórez Muñiz, en el cual reside total responsabilidad sobre el tratamiento de los datos de los interesados.El dueño y responsable de la aplicación Contact Tracker es Alejandro Flórez Muñiz, en el cual reside total responsabilidad sobre el tratamiento de los datos de los interesados.</string>

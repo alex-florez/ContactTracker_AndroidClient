@@ -364,28 +364,4 @@ class HistoryMapFragment : Fragment(), OnMapReadyCallback {
     private fun unregisterReceiver(){
         requireActivity().unregisterReceiver(newLocationBroadcastReceiver)
     }
-
-    companion object {
-
-        /**
-         * Extra con las localizaciones.
-         */
-        private const val LOCATIONS = "userLocations"
-
-        /**
-         * FactoryMethod para crear el fragment.
-         *
-         * @param userLocations lista con las localizaciones del usuario.
-         */
-        @JvmStatic
-        fun newInstance(userLocations: List<UserLocation>) =
-            HistoryMapFragment().apply {
-                val list = arrayListOf<UserLocation>()
-                list.addAll(userLocations)
-                arguments = Bundle().apply {
-                    putParcelableArrayList(LOCATIONS, list)
-                }
-            }
-    }
-
 }

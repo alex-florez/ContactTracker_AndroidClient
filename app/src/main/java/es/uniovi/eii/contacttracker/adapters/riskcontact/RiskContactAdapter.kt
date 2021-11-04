@@ -33,7 +33,6 @@ class RiskContactDiffCallback : DiffUtil.ItemCallback<RiskContact>() {
 }
 
 /* Constantes */
-private const val DEFAULT_HOUR = "##:##:##" // Hora por defecto
 private val DIFF_CALLBACK = RiskContactDiffCallback() // Instancia del DIFF Callback
 
 /**
@@ -45,8 +44,7 @@ class RiskContactAdapter(
 ) : ListAdapter<RiskContact, RiskContactAdapter.RiskContactViewHolder>(DIFF_CALLBACK) {
 
     /**
-     * Interfaz listener del Click sobre el botón
-     * de mostrar el contacto de riesgo en el mapa.
+     * Interfaz Listener de Click para mostrar el contacto de riesgo en el mapa.
      */
     interface OnShowInMapClick {
         fun onClick(riskContact: RiskContact)

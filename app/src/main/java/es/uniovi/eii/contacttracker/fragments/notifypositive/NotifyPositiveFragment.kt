@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -16,10 +14,8 @@ import es.uniovi.eii.contacttracker.databinding.FragmentNotifyPositiveBinding
 import es.uniovi.eii.contacttracker.fragments.dialogs.notifyquestions.NotifyQuestionsDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataConsentDialog
 import es.uniovi.eii.contacttracker.fragments.dialogs.personaldata.PersonalDataDialog
-import es.uniovi.eii.contacttracker.model.Error
 import es.uniovi.eii.contacttracker.model.PersonalData
 import es.uniovi.eii.contacttracker.util.AndroidUtils
-import es.uniovi.eii.contacttracker.util.ValueWrapper
 import es.uniovi.eii.contacttracker.viewmodels.NotifyPositiveViewModel
 import java.util.Date
 
@@ -43,12 +39,6 @@ class NotifyPositiveFragment : Fragment() {
      */
     private val viewModel: NotifyPositiveViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -74,7 +64,7 @@ class NotifyPositiveFragment : Fragment() {
         binding.apply {
             // Botón de notificar un positivo
             btnNotifyPositive.setOnClickListener{
-                notifyPositiveClick()
+                onNotifyPositive()
             }
             // Botón para consultar la política de privacidad
             btnPrivacyPolicy.setOnClickListener {
@@ -84,8 +74,7 @@ class NotifyPositiveFragment : Fragment() {
     }
 
     /**
-     * Configura los observers para los datos
-     * del View Model.
+     * Configura los observers para los LiveData del View Model.
      */
     private fun setObservers(){
         viewModel.apply {
@@ -109,7 +98,7 @@ class NotifyPositiveFragment : Fragment() {
      * Método invocado cuando se pulsa sobre el botón
      * de notificar un positivo.
      */
-    private fun notifyPositiveClick(){
+    private fun onNotifyPositive(){
         if(binding.checkBoxAddPersonalData.isChecked){ // Agregar datos personales
             notifyPositiveWithPersonalData()
         } else {  // Notificar sin aportar datos personales
@@ -191,25 +180,5 @@ class NotifyPositiveFragment : Fragment() {
     private fun showPrivacyPolicy() {
         val action = NotifyPositiveFragmentDirections.showPrivacyPolicy()
         findNavController().navigate(action)
-    }
-
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NotifyPositiveFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                NotifyPositiveFragment().apply {
-                    arguments = Bundle().apply {
-
-                    }
-                }
     }
 }
