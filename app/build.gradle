@@ -8,6 +8,9 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.gms.google-services'
 }
+// Local Properties
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     compileSdkVersion 30
@@ -21,7 +24,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        testInstrumentationRunner "es.uniovi.eii.contacttracker.HiltTestRunner"
     }
 
     buildTypes {
@@ -35,19 +37,19 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:8080\""
+            buildConfigField "String", "BASE_URL", "\"" + localProperties['localUrl'] + "\""
         }
 
         // Variante DEBUG con las peticiones de red realizadas al servidor local.
         debugLocalhost {
             initWith debug
-            buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:8080\""
+            buildConfigField "String", "BASE_URL", "\"" + localProperties['localUrl'] + "\""
         }
 
         // Variante DEBUG con las peticiones de red realizadas al servidor DESPLEGADO en remoto.
         debugDeploy {
             initWith debug
-            buildConfigField "String", "BASE_URL", "\"https://contacttrackerbackend.azurewebsites.net\""
+            buildConfigField "String", "BASE_URL", "\"" + localProperties['productionUrl'] + "\""
         }
     }
     compileOptions {

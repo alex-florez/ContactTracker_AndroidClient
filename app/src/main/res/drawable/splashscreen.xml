@@ -2,10 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Fondo de color -->
-    <item android:drawable="@color/ic_launcher_background"/>
+    <item android:drawable="@color/contact_tracker_logo_background"/>
     <!-- Icono de Contact Tracker -->
     <item>
-        <bitmap android:src="@mipmap/contacttrackersplash"
+        <bitmap android:src="@mipmap/contacttrackersplash_white"
             android:gravity="center"/>
     </item>
 </layer-list>

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="es.uniovi.eii.contacttracker">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <!-- PERMISOS -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -31,7 +29,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -68,7 +67,7 @@
         <!-- Icono por defecto de de las notificaciones FCM -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher_foreground" />
+            android:resource="@mipmap/contact_tracker_logo_foreground" />
 
         <!-- Color por defecto de las notificaciones FCM -->
         <meta-data
@@ -80,5 +79,4 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/fcm_channel_id"/>
     </application>
-
 </manifest>

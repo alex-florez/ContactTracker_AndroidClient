@@ -32,4 +32,9 @@
     <color name="yellowWarning">#E6DC1D</color>
     <color name="orangeWarning">#F36200</color>
     <color name="redDanger">#EA1A1A</color>
+
+    <!-- Color de fondo para el logo -->
+    <color name="contact_tracker_logo_background">#68A9FF</color>
+    <!-- Color de fondo para el launcher -->
+    <color name="contact_tracker_logo_launcher_background">#FFFFFF</color>
 </resources>
