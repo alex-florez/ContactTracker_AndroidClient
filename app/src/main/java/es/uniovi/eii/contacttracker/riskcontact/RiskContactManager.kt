@@ -68,7 +68,7 @@ class RiskContactManager @Inject constructor(
      *
      * Al finalizar almacena en la base de datos local los resultados obtenidos.
      *
-     * @param date Fecha objetivo en la que se realiza la comprobación.
+     * @param date Fecha de referencia en la que se realiza la comprobación.
      */
     suspend fun checkRiskContacts(date: Date) {
         // Resultado de la comprobación

@@ -127,7 +127,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="start"
-                            android:textColor="@color/orange3"
+                            android:textColor="@color/deepGreen"
                             android:textStyle="bold"
                             android:textSize="20sp"
                             app:time="@{rc.exposeTime}"/>
@@ -150,7 +150,7 @@
                             android:layout_height="wrap_content"
                             android:text="@{@string/m(rc.meanProximity)}"
                             android:gravity="start"
-                            android:textColor="@color/deepGreen"
+                            android:textColor="@color/deepBlue"
                             android:textStyle="bold"
                             android:textSize="20sp"/>
                     </LinearLayout>
