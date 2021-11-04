@@ -281,7 +281,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultado
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(0, results[0].numberOfPositives)
         assertEquals(0, results[0].riskContacts.size)
@@ -302,7 +302,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultados almacenados en la base de datos
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(0, results[0].riskContacts.size)
         assertEquals(0, results[0].numberOfPositives)
@@ -326,7 +326,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultados almacenados en la base de datos
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(0, results[0].riskContacts.size)
         assertEquals(0, results[0].numberOfPositives)
@@ -351,7 +351,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultados almacenados en la base de datos
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(2, results[0].riskContacts.size)
         assertEquals(1, results[0].numberOfPositives)
@@ -418,7 +418,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultados almacenados en la base de datos
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(2, results[0].riskContacts.size)
         assertEquals(1, results[0].numberOfPositives)
@@ -483,7 +483,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultados almacenados en la base de datos
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(2, results[0].riskContacts.size)
         assertEquals(1, results[0].numberOfPositives)
@@ -551,7 +551,7 @@ class RiskContactViewModelTest {
         verify(statisticsRepository).registerRiskContactResult(capture(checkResultCaptor))
 
         // Comprobar resultados almacenados en la base de datos
-        val results = resultsVm.getAllRiskContactResults().getOrAwaitValue()
+        val results = resultsVm.results.getOrAwaitValue()
         assertEquals(1, results.size)
         assertEquals(4, results[0].riskContacts.size)
         assertEquals(3, results[0].numberOfPositives)

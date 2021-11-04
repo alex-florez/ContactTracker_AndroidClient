@@ -7,6 +7,12 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
+/**
+ * Regla para los tests unitarios que sustituye el Dispatcher de Main
+ * por un Dispatcher de Test de Corrutinas. De este modo, se pueden
+ * utilizar las corrutinas en los tests y se pueden probar los métodos
+ * que contienen corrutinas.
+ */
 @ExperimentalCoroutinesApi
 class TestCoroutineRule : TestRule {
 

@@ -3,6 +3,7 @@ package es.uniovi.eii.contacttracker.managers
 import android.app.AlarmManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import es.uniovi.eii.contacttracker.alarms.AlarmHelper
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarm
 import es.uniovi.eii.contacttracker.location.alarms.LocationAlarmManager
 import es.uniovi.eii.contacttracker.model.Error
@@ -36,7 +37,7 @@ class LocationAlarmManagerTest {
     private lateinit var manager: LocationAlarmManager
     /* Mocks */
     @Mock
-    lateinit var alarmManager: AlarmManager
+    lateinit var alarmHelper: AlarmHelper
     @Mock
     lateinit var locationRepository: LocationRepository
     @Mock
@@ -56,7 +57,7 @@ class LocationAlarmManagerTest {
     @Before
     fun setUp() {
         manager = LocationAlarmManager(
-            alarmManager,
+            alarmHelper,
             locationRepository,
             ctx)
     }

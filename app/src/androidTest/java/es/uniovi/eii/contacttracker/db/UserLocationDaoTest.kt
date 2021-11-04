@@ -208,9 +208,9 @@ class UserLocationDaoTest {
         val end = "2021-09-20"
         val locations = userLocationDao.getLocationsBetween(start, end)
         assertEquals(3, locations.size)
-        assertEquals(3L, locations[0].userlocationID)
+        assertEquals(1L, locations[0].userlocationID)
         assertEquals(2L, locations[1].userlocationID)
-        assertEquals(1L, locations[2].userlocationID)
+        assertEquals(3L, locations[2].userlocationID)
     }
 
     /* Código: ULDAO12 */
@@ -220,10 +220,10 @@ class UserLocationDaoTest {
         val end = "2021-09-20"
         val locations = userLocationDao.getLocationsBetween(start, end)
         assertEquals(4, locations.size)
-        assertEquals(3L, locations[0].userlocationID)
-        assertEquals(2L, locations[1].userlocationID)
-        assertEquals(1L, locations[2].userlocationID)
-        assertEquals(5L, locations[3].userlocationID)
+        assertEquals(5L, locations[0].userlocationID)
+        assertEquals(1L, locations[1].userlocationID)
+        assertEquals(2L, locations[2].userlocationID)
+        assertEquals(3L, locations[3].userlocationID)
     }
 
     /* Código: ULDAO13 */
@@ -243,7 +243,7 @@ class UserLocationDaoTest {
         val end = "2021-09-17"
         val locations = userLocationDao.getLocationsBetween(start, end)
         assertEquals(2, locations.size)
-        assertEquals(5L, locations[0].userlocationID)
-        assertEquals(4L, locations[1].userlocationID)
+        assertEquals(4L, locations[0].userlocationID)
+        assertEquals(5L, locations[1].userlocationID)
     }
 }
