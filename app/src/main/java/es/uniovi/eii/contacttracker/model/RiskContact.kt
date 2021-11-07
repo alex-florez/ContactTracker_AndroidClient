@@ -35,8 +35,10 @@ class RiskContact(
         var startDate: Date? = null, /* Fecha de inicio del contacto. (Aproximada) */
         var endDate: Date? = null, /* Fecha de fin de contacto. (Aproximada) */
         var positiveLabel: String = "", /* Etiqueta del positivo con el que se tuvo el contacto de riesgo. */
+        var timeIntersection: Boolean = true, /* Flag que indica si hay intersección temporal entre el tramo del usuario y el del positivo */
         @Ignore var config: RiskContactConfig = RiskContactConfig() /* Configuración de la comprobación */
 ) : Parcelable {
+
 
     /**
      * Añade el par de localizaciones correspondiente al usuario del móvil
@@ -186,17 +188,25 @@ class RiskContact(
     /**
      * Calcula y devuelve el par de fechas que definen la intersección entre cuatro
      * fechas que se corresponden a cuatro localizaciones, 2 de un positivo, y 2 del
-     * propio usuario.
+     * propio usuario. Si no hay intersección, se devuelve un par con la misma fecha date11.
+     *
+     * @param date11 Fecha 1 del punto 1.
+     * @param date12 Fecha 2 del punto 1.
+     * @param date21 Fecha 1 del punto 2.
+     * @param date22 Fecha 2 del punto 2.
+     * @return Par con las dos fechas que representan la intersección temporal.
      */
     private fun getIntersection(date11: Date, date12: Date, date21: Date, date22: Date): Pair<Date?, Date?>{
         // Casos en los que no hay intersección.
         if(date22.before(date11) || date21.after(date12) || date22 == date11 || date21 == date12){
-            return Pair(null, null)
+            timeIntersection = false
+            return Pair(date11, date11)
         }
         // Límite superior
         val superior: Date = if(date22.after(date12)) date12 else  date22
         // Límite inferior
         val inferior: Date = if(date21.before(date11)) date11 else date21
+        timeIntersection = true
         return Pair(inferior, superior)
     }
 

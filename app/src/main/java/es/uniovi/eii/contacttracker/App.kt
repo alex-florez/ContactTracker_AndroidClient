@@ -62,7 +62,7 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate(simulationFilename, Triple(2021, 10, 1))
+        simulate(simulationFilename, Triple(2021, 10, 5))
         registerInstall()
     }
 

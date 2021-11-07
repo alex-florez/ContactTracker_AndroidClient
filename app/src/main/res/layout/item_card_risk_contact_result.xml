@@ -83,7 +83,7 @@
                 <!-- Estadísticas generales -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.7"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginStart="12dp"
@@ -98,6 +98,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:text="@string/positives"
                             android:textStyle="bold"/>
 
@@ -105,8 +106,8 @@
                             android:id="@+id/numberOfContactPositives"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
                             android:text="@{String.valueOf(result.numberOfPositives)}"
+                            android:layout_gravity="center"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             android:textSize="40sp"
                             android:textColor="@color/redDanger"/>
@@ -121,13 +122,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
+                            android:layout_gravity="center"
                             android:text="@string/riskContacts"/>
 
                         <TextView
                             android:id="@+id/numberOfContacts"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
+                            android:layout_gravity="center"
                             android:text="@{String.valueOf(result.riskContacts.size())}"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             android:textSize="40sp"

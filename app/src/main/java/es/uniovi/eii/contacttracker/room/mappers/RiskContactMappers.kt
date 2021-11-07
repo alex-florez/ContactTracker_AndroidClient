@@ -47,6 +47,7 @@ fun toRiskContact(riskContactWithLocations: RiskContactWithLocations): RiskConta
     riskContact.endDate = rc.endDate
     riskContact.contactLocations = riskContactWithLocations.riskContactLocations.toMutableList()
     riskContact.positiveLabel = rc.positiveLabel
+    riskContact.timeIntersection = rc.timeIntersection
     riskContact.config = rc.config
     return riskContact
 }
