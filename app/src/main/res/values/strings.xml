@@ -208,7 +208,7 @@
     <string name="riskPercent">Riesgo</string>
     <string name="startHour">Inicio</string>
     <string name="endHour">Fin</string>
-    <string name="exposeTime">Tiempo de exposición</string>
+    <string name="exposeTime">T. de exposición</string>
     <string name="meanProximity">Proximidad media</string>
     <string name="riskContacts">Contactos de riesgo</string>
     <string name="numberPositives">Número de positivos</string>

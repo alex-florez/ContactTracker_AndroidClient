@@ -113,15 +113,17 @@
                     <!-- Tiempo de exposición -->
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.82"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/exposeTimeRiskContactCardTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/exposeTime"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/txtContactExposeTime"
                             android:layout_width="match_parent"
@@ -129,13 +131,13 @@
                             android:gravity="start"
                             android:textColor="@color/deepGreen"
                             android:textStyle="bold"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             app:time="@{rc.exposeTime}"/>
                     </LinearLayout>
                     <!-- Proximidad media -->
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.7"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
@@ -152,7 +154,7 @@
                             android:gravity="start"
                             android:textColor="@color/deepBlue"
                             android:textStyle="bold"
-                            android:textSize="20sp"/>
+                            android:textSize="18sp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
