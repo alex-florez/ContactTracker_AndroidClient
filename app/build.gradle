@@ -46,11 +46,17 @@ android {
             buildConfigField "String", "BASE_URL", "\"" + localProperties['localUrl'] + "\""
         }
 
-        // Variante DEBUG con las peticiones de red realizadas al servidor DESPLEGADO en remoto.
-        debugDeploy {
+        // Variante DEBUG con las peticiones de red realizadas al servidor DESPLEGADO en remoto en Azure.
+        debugAzure {
             initWith debug
-            buildConfigField "String", "BASE_URL", "\"" + localProperties['productionUrl'] + "\""
+            buildConfigField "String", "BASE_URL", "\"" + localProperties['azureProductionUrl'] + "\""
         }
+        // Variante DEBUG con las peticiones de red realizadas al servidor de HEROKU.
+        debugHeroku {
+            initWith debug
+            buildConfigField "String", "BASE_URL", "\"" + localProperties['herokuProductionUrl'] + "\""
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

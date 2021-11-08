@@ -1,14 +1,12 @@
 package es.uniovi.eii.contacttracker.notifications
 
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import es.uniovi.eii.contacttracker.R
-import es.uniovi.eii.contacttracker.activities.MainActivity
 
 /**
  * Servicio para recibir los mensajes PUSH de Firebase Cloud Messaging.
@@ -50,8 +48,12 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
      */
     private fun showNotification(msg: RemoteMessage) {
         val channelId = getString(R.string.fcm_channel_id)
-        val intent = Intent(this, MainActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        // Pending Intent para ir a la pantalla de comprobaciones.
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.riskContacts)
+            .createPendingIntent()
+
         Log.d(TAG, msg.notification?.title.toString())
         // Crear notificación
         val notification = NotificationCompat.Builder(this, channelId)
@@ -59,7 +61,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
             .setContentTitle(msg.notification?.title)
             .setContentText(msg.notification?.body)
             .setAutoCancel(true)
-            .setContentIntent(pi)
+            .setContentIntent(pendingIntent)
             .setStyle(NotificationCompat.BigTextStyle().bigText(msg.notification?.body))
             .build()
 

@@ -38,7 +38,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/addNewAlarm"
+                android:text="@string/addNewAlarmExplanation"
+                android:textAppearance="?attr/textAppearanceBody2"
                 android:paddingTop="4dp"
                 android:paddingBottom="6dp"/>
 

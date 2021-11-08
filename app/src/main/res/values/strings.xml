@@ -130,7 +130,7 @@
     <string name="placeholderEnd">16:00</string>
     <string name="contentDescriptionBtnRemoveAlarm">Eliminar alarma de localización</string>
     <string name="contentDescriptionBtnAddAlarm">Añadir alarma de localización</string>
-    <string name="addNewAlarm">Agregar una nueva alarma de localización</string>
+    <string name="addNewAlarmExplanation">Programa una alarma para iniciar y detener el rastreo de tu ubicación a una hora de inicio y de fin determinadas.</string>
 
     <!-- Fragment: Configuración del Tracker -->
     <string name="minIntervalHint">Intervalo de tiempo</string>
@@ -328,5 +328,5 @@
     <string name="rightsItem1">•	Derecho de acceso: consiste en el derecho del usuario para solicitar el acceso a sus datos personales que están siendo tratados. En el caso de que sus localizaciones hayan sido subidas a la nube de forma anónima sin ser asociadas a sus datos personales este derecho no será aplicable dada la anonimidad de los datos.</string>
     <string name="rightsItem2">•	Derecho de rectificación: derecho del usuario para rectificar sus datos, es decir, para contactar con el responsable del tratamiento de forma que este corrija sus datos personales en caso de que no sean correctos o estén desactualizados.</string>
     <string name="rightsItem3">•	Derecho de cancelación: se refiere al derecho del usuario para eliminar sus datos personales del sistema.</string>
-    <string name="location_tracker_explanation">Activa o desactiva el registro automático de tus ubicaciones de forma periódica. Puedes cerrar la aplicación mientras el rastreo esté activo.</string>
+    <string name="location_tracker_explanation">Activa o desactiva el rastreo de tu ubicación. Al activarlo, se registrarán tus coordenadas periódicamente. Puedes cerrar la aplicación mientras el rastreo esté activo.</string>
 </resources>
