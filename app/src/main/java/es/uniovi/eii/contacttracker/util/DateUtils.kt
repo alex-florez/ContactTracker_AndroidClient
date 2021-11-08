@@ -1,5 +1,6 @@
 package es.uniovi.eii.contacttracker.util
 
+import android.os.Build
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.Instant
@@ -50,10 +51,14 @@ object DateUtils {
      * @return Objeto Date correspondiente.
      */
     fun millisToDate(millis: Long): Date {
-        val time = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(millis), ZoneId.systemDefault() // Zona horaria del dispositivo.
-        )
-        return Date.from(time.atZone(ZoneId.systemDefault()).toInstant())
+        return if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            val time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(millis), ZoneId.systemDefault() // Zona horaria del dispositivo.
+            )
+            Date.from(time.atZone(ZoneId.systemDefault()).toInstant())
+        } else {
+            Date(millis)
+        }
     }
 
     /**

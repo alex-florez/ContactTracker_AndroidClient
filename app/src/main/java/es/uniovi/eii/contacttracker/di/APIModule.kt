@@ -6,18 +6,18 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.uniovi.eii.contacttracker.BuildConfig
-import es.uniovi.eii.contacttracker.Constants
-import es.uniovi.eii.contacttracker.model.Point
+import es.uniovi.eii.contacttracker.model.Positive
 import es.uniovi.eii.contacttracker.network.api.ConfigAPI
 import es.uniovi.eii.contacttracker.network.api.PositiveAPI
 import es.uniovi.eii.contacttracker.network.api.StatisticsAPI
-import es.uniovi.eii.contacttracker.network.converters.PointConverter
+import es.uniovi.eii.contacttracker.network.converters.PositiveConverter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /* Formato String de las fechas */
 const val DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss"
+const val DATE_STRING_ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
 
 /**
  * Modulo de dependencias Network, que contiene todas las
@@ -33,8 +33,8 @@ object APIModule {
     fun providePositiveAPI(): PositiveAPI {
         /* Custom GSON Serializer/Deserializer */
         val gson = GsonBuilder()
-            .registerTypeAdapter(Point::class.java, PointConverter())
-            .setDateFormat(DATE_STRING_FORMAT)
+            .registerTypeAdapter(Positive::class.java, PositiveConverter())
+            .setDateFormat(DATE_STRING_ISO_FORMAT)
             .create()
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
