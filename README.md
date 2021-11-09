@@ -1,5 +1,5 @@
 # Proyecto TFG - Contact Tracker Android Client
-Cliente móvil para Android de la aplicación Contact Tracker. Permite llevar a cabo:
+Cliente móvil para Android de la aplicación Contact Tracker, escrito en Kotlin. Permite llevar a cabo:
 
  1. Rastreo de la ubicación de los usuarios en tiempo real.
  2. Comprobación de si se ha estado en contacto cercano (contacto de riesgo) con algún positivo.
