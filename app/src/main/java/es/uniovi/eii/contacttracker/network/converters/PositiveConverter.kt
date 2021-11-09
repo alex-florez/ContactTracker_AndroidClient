@@ -13,7 +13,7 @@ import java.lang.reflect.Type
 const val POSITIVE_CODE = "positiveCode"
 const val NOTIFY_TIMESTAMP = "timestamp"
 const val LOCATIONS = "locations"
-const val PERSONAL_DATA = "personlData"
+const val PERSONAL_DATA = "personalData"
 const val ASYMPTOMATIC = "asymptomatic"
 const val VACCINATED = "vaccinated"
 
