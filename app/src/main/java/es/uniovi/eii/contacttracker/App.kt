@@ -62,7 +62,7 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate(simulationFilename, Triple(2021, 10, 5))
+        simulate(simulationFilename, Triple(2021, 10, 8))
         registerInstall()
     }
 
@@ -125,6 +125,10 @@ class App : Application() {
             /* Alcance de la comprobación */
             if(!sharedPrefs.contains(getString(R.string.shared_prefs_risk_contact_check_scope))){
                 putInt(getString(R.string.shared_prefs_risk_contact_check_scope), 3)
+            }
+            /* Recibir notificacaiones de positivos */
+            if(!sharedPrefs.contains(getString(R.string.shared_prefs_positives_notifications))) {
+                putBoolean(getString(R.string.shared_prefs_positives_notifications), true)
             }
             /* Flag de 1a vez iniciada la aplicación */
             if(!sharedPrefs.contains(getString(R.string.shared_prefs_new_install))) {
