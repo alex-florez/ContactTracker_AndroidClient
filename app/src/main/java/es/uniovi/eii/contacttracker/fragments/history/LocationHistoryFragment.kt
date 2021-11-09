@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,6 +53,9 @@ class LocationHistoryFragment : Fragment() {
     private val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
     private lateinit var datePicker: MaterialDatePicker<*>
 
+    /* Flag que indica si el scroll del recycler view está en la posición 0 */
+    private var isRecycleViewScrollAtStart: Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Adapter
@@ -94,6 +98,25 @@ class LocationHistoryFragment : Fragment() {
     private fun initRecyclerView(){
         binding.recyclerViewUserLocations.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewUserLocations.adapter = userLocationAdapter
+        // Listener de Scroll
+        binding.recyclerViewUserLocations.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                isRecycleViewScrollAtStart = when(newState) {
+                    RecyclerView.SCROLL_STATE_DRAGGING -> {
+                        false
+                    }
+                    RecyclerView.SCROLL_STATE_IDLE -> {
+                        val layoutManager = binding.recyclerViewUserLocations.layoutManager as LinearLayoutManager
+                        val currentPosition = layoutManager.findFirstVisibleItemPosition()
+                        currentPosition == 0
+                    }
+                    else -> {
+                        true
+                    }
+                }
+            }
+        })
     }
 
     /**
@@ -125,9 +148,11 @@ class LocationHistoryFragment : Fragment() {
     private fun setObservers() {
         viewModel.apply {
             locations.observe(viewLifecycleOwner) { locationList ->
-                // Comprobar el scroll
                 userLocationAdapter.submitList(locationList) {
-                    binding.recyclerViewUserLocations.scrollToPosition(0)
+                    if(isRecycleViewScrollAtStart) {
+                        // Hacer scroll solo si se está en la posición 0
+                        binding.recyclerViewUserLocations.scrollToPosition(0)
+                    }
                 }
             }
 

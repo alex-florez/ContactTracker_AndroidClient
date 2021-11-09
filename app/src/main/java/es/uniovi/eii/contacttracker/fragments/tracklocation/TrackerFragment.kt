@@ -68,6 +68,9 @@ class TrackerFragment : Fragment() {
     /* Flag que indica si se resume el fragmento desde la solicitud de permisos. */
     private var fromPermissionRequest: Boolean = false
 
+    /* Flag que indica si el scroll del recycler view de coordenadas está situado al inicio */
+    private var isRecyclerViewScrollAtStart: Boolean = true
+
     // BROADCAST RECEIVERS
     /**
      * Clase interna privada que representa el BroadCast receiver que
@@ -104,7 +107,9 @@ class TrackerFragment : Fragment() {
             location?.let {
                 Log.d(TAG, LocationUtils.format(it))
                 userLocationAdapter.addUserLocation(location) {
-                    binding.recyclerViewTrackLocationInfo.scrollToPosition(0)
+                    // Comprobar Scroll
+                    if(isRecyclerViewScrollAtStart)
+                        binding.recyclerViewTrackLocationInfo.scrollToPosition(0)
                 }
                 viewModel.setAreLocationsAvailable(userLocationAdapter.areLocationsAvailable())
             }
@@ -143,6 +148,7 @@ class TrackerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         createLocationsAdapter()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -334,6 +340,23 @@ class TrackerFragment : Fragment() {
         binding.apply {
             this.recyclerViewTrackLocationInfo.layoutManager = manager
             this.recyclerViewTrackLocationInfo.adapter = userLocationAdapter
+            this.recyclerViewTrackLocationInfo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    isRecyclerViewScrollAtStart = when(newState) {
+                        RecyclerView.SCROLL_STATE_DRAGGING -> {
+                            false
+                        }
+                        RecyclerView.SCROLL_STATE_IDLE -> {
+                            val currentPosition = (manager as LinearLayoutManager).findFirstVisibleItemPosition()
+                            currentPosition == 0
+                        }
+                        else -> {
+                            true
+                        }
+                    }
+                }
+            })
         }
     }
 
