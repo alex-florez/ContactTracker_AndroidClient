@@ -149,10 +149,12 @@ class LocationAlarmsFragment : Fragment() {
         binding.apply {
             // TextFields para las horas de Inicio y de Fin.
             layoutCardLocationAlarm.txtStartAutoTracking.setOnClickListener{
-                startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
+                if(!startTimePicker.isAdded)
+                    startTimePicker.show(requireActivity().supportFragmentManager, "StartTime")
             }
             layoutCardLocationAlarm.txtEndAutoTracking.setOnClickListener{
-                endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
+                if(!endTimePicker.isAdded)
+                    endTimePicker.show(requireActivity().supportFragmentManager, "EndTime")
             }
             // Botón para añadir una nueva alarma
             layoutCardLocationAlarm.btnAddLocationAlarm.setOnClickListener{

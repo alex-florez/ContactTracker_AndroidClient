@@ -88,7 +88,7 @@ class NotifyPositiveFragment : Fragment() {
                     Snackbar.LENGTH_LONG, binding.root, requireActivity())
             }
             notifyError.observe(viewLifecycleOwner) {
-                AndroidUtils.snackbar(getString(it), Snackbar.LENGTH_LONG,
+                AndroidUtils.snackbar(getString(it.first, it.second), Snackbar.LENGTH_LONG,
                     binding.root, requireActivity())
             }
         }

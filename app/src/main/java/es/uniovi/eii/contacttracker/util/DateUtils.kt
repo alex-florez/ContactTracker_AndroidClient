@@ -7,6 +7,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 /**
@@ -162,6 +163,15 @@ object DateUtils {
      * @param date2 Fecha 2.
      */
     fun getDaysBetweenDates(date1: Date, date2: Date): Long {
-        return abs(Duration.between(date1.toInstant(), date2.toInstant()).toDays())
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            abs(Duration.between(date1.toInstant(), date2.toInstant()).toDays())
+        } else {
+            val c1 = Calendar.getInstance()
+            val c2 = Calendar.getInstance()
+            c1.time = date1
+            c2.time = date2
+            val millisDiff = abs(c1.timeInMillis - c2.timeInMillis)
+            TimeUnit.MILLISECONDS.toDays(millisDiff)
+        }
     }
 }
