@@ -55,8 +55,9 @@ class LocationRepository @Inject constructor(
     }
 
     /**
-     * Devuelve las localizaciones del usuario registradas desde la fecha pasada
-     * como parámetro hasta el día de hoy.
+     * Devuelve las localizaciones del usuario registradas en los últimos
+     * días indicados por el n.º de días pasado como parámetro tomando
+     * como referencia la fecha pasada como parámetro.
      *
      * @param lastDays N.º de días atrás para consultar las localizaciones.
      * @param date Fecha de referencia.

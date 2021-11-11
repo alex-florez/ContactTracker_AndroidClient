@@ -46,10 +46,11 @@ class NotifyPositiveViewModel @Inject constructor(
 
     /**
      * LiveData con el código del String que representa un error determinado
-     * en la notificación del positivo.
+     * en la notificación del positivo. Es un Par de tipo Int por si en algún
+     * error es necsario mostrar algún valor.
      */
-    private val _notifyError = SingleLiveEvent<Int>()
-    val notifyError: LiveData<Int> = _notifyError
+    private val _notifyError = SingleLiveEvent<Pair<Int, Int?>>()
+    val notifyError: LiveData<Pair<Int, Int?>> = _notifyError
 
     /**
      * LiveData para el icono de Carga.
@@ -137,15 +138,17 @@ class NotifyPositiveViewModel @Inject constructor(
 
     /**
      * Procesa el error de notificación de positivo devolviendo el código
-     * del string correspondiente al error.
+     * del string correspondiente al error y un valor Int si es aplicable.
      */
-    private fun processError(error: Error): Int {
+    private suspend fun processError(error: Error): Pair<Int, Int?> {
+        // Recuperar la configuración de notificación
+        val config = configRepository.getNotifyPositiveConfig()
         return when(error) {
-            Error.TIMEOUT -> R.string.network_error
-            Error.CANNOT_NOTIFY -> R.string.genericErrorNotifyPositive
-            Error.NOTIFICATION_LIMIT_EXCEEDED -> R.string.errorNotifyLimitExceeded
-            Error.NO_LOCATIONS_TO_NOTIFY -> R.string.errorNotifyNoLocations
-            else -> R.string.genericError
+            Error.TIMEOUT -> Pair(R.string.network_error, null)
+            Error.CANNOT_NOTIFY -> Pair(R.string.genericErrorNotifyPositive, null)
+            Error.NOTIFICATION_LIMIT_EXCEEDED -> Pair(R.string.errorNotifyLimitExceeded, config.notifyWaitTime)
+            Error.NO_LOCATIONS_TO_NOTIFY -> Pair(R.string.errorNotifyNoLocations, null)
+            else -> Pair(R.string.genericError, null)
         }
     }
 }
