@@ -100,7 +100,8 @@ class RiskContactFragment : Fragment() {
 
             /* EditText para la hora de la comprobación */
             txtCheckHour.setOnClickListener {
-                checkHourTimePicker.show(requireActivity().supportFragmentManager, "CheckHour")
+                if(!checkHourTimePicker.isAdded)
+                    checkHourTimePicker.show(requireActivity().supportFragmentManager, "CheckHour")
             }
 
             /* Botón para añadir una alarma de comprobación */
