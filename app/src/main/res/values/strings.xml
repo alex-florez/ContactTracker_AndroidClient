@@ -225,7 +225,7 @@
     <string name="checkRiskContacts">Comprobar contactos de riesgo</string>
     <string name="scheduledAlarms">Alarmas programadas</string>
     <string name="manualCheckExplanation">Inicia una comprobación manualmente para detectar posibles contactos de riesgo con otros positivos.</string>
-    <string name="periodicCheckExplanation">Programa horas concretas del día para realizar la comprobación de contactos de riesgo. Esta comprobación se repetirá todos los días a la horas indicadas.</string>
+    <string name="periodicCheckExplanation">Programa horas concretas del día para realizar la comprobación de contactos de riesgo. Esta comprobación se repetirá todos los días a las horas indicadas.</string>
     <string name="checkHour">Hora de la comprobación</string>
     <string name="riskContactCheckingPlaceholder">Comparando tus localizaciones con las de otros positivos...</string>
     <string name="checkAlarmSetSnackbar">Alarma de comprobación programada correctamente.</string>
