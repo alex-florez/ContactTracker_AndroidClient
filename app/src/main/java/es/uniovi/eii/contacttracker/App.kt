@@ -46,7 +46,7 @@ class App : Application() {
     lateinit var locationRepository: LocationRepository
 
     /* Nombre del fichero desde el que se cargan las localizaciones de la simulación */
-    private val simulationFilename = "user.txt"
+    private val simulationFilename = "Positivo-1.txt"
 
     /**
      * Referencia a las Shared Preferences.
@@ -62,7 +62,11 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate(simulationFilename, Triple(2021, 10, 11))
+        simulate(simulationFilename, arrayOf(
+            Triple(2021, 10, 10),
+            Triple(2021, 10, 11),
+            Triple(2021, 10, 13)
+        ))
         registerInstall()
     }
 
@@ -180,12 +184,12 @@ class App : Application() {
      * se comprueba a través de un flag almacenado en las SharedPreferences.
      *
      * @param filename Nombre del fichero.
-     * @param date Fecha con el año, mes (0-11) y día de las localizaciones.
+     * @param dates Fechas con el año, mes (0-11) y día de las localizaciones.
      */
-    private fun simulate(filename: String, date: Triple<Int, Int, Int>? = null) {
+    private fun simulate(filename: String, dates: Array<Triple<Int, Int, Int>>? = null) {
         // Comprobar el flag de las shared preferences
         if(!sharedPrefs.getBoolean(Constants.SIMULATION_LOCATIONS_LOADED, false)) {
-            val locations = LocationUtils.parseLocationsFile(filename, this, date)
+            val locations = LocationUtils.parseLocationsFile(filename, this, dates)
             scope.launch {
                 locations.forEach {
                     locationRepository.insertUserLocation(it)

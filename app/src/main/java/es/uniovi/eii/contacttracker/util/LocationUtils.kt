@@ -319,21 +319,36 @@ object LocationUtils {
      * establecerán como fecha de las localizaciones parseadas.
      *
      * @param filename Nombre del fichero de texto.
-     * @param date Día, mes y año de simulación para establecer en las localizaciones.
+     * @param dates Array de tripletas <Día, mes, año> de simulación para establecer en las localizaciones.
      * @return Lista con las localizaciones parseadas.
      */
-    fun parseLocationsFile(filename: String, ctx: Context, date: Triple<Int, Int, Int>? = null): List<UserLocation>{
+    fun parseLocationsFile(filename: String, ctx: Context, dates: Array<Triple<Int, Int, Int>>? = null): List<UserLocation>{
         val lines = FileUtils.readFile(ctx, filename)
         val locations = mutableListOf<UserLocation>()
         var counter = 0
+        var dateIndex = 0
+        var actualDay: Int = -1
         lines.forEach {
             val data = it.split(",")
             val lat = data[1].toDouble()
             val lng = data[0].toDouble()
             var timestamp = DateUtils.toDate(data[2], "dd/MM/yyyy HH:mm:ss") ?: Date()
-            // Fecha modificada si se pasa una tripleta
-            if(date != null) {
-               timestamp = DateUtils.modifyDate(timestamp, date.first, date.second, date.third)
+            // Modificar la fecha si el array de tripletas no es nulo
+            if(dates != null) {
+                val calendar = Calendar.getInstance()
+                calendar.time = timestamp
+                val day = calendar.get(Calendar.DAY_OF_MONTH)
+                if(actualDay == -1) { // Primera iteración
+                    actualDay = day
+                }
+                if(day != actualDay) { // Si ha cambiado el día, cambiar a la siguiente fecha.
+                    actualDay = day
+                    dateIndex++
+                }
+                if(dates.size > dateIndex) {
+                    val nextDate = dates[dateIndex] // Año, mes y día a asignar.
+                    timestamp = DateUtils.modifyDate(timestamp, nextDate.first, nextDate.second, nextDate.third)
+                }
             }
             locations.add(
                 UserLocation(
