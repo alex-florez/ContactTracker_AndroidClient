@@ -46,7 +46,7 @@ class App : Application() {
     lateinit var locationRepository: LocationRepository
 
     /* Nombre del fichero desde el que se cargan las localizaciones de la simulación */
-    private val simulationFilename = "Positivo-1.txt"
+    private val simulationFilename = "Usuario.txt"
 
     /**
      * Referencia a las Shared Preferences.
@@ -63,10 +63,11 @@ class App : Application() {
         initSharedPrefs()
         subscribeToTopics()
         simulate(simulationFilename, arrayOf(
-            Triple(2021, 10, 10),
             Triple(2021, 10, 11),
-            Triple(2021, 10, 13)
-        ))
+            Triple(2021, 10, 12),
+            Triple(2021, 10, 13),
+            Triple(2021, 10, 14),
+            ))
         registerInstall()
     }
 

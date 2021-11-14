@@ -179,8 +179,8 @@ class RiskContact(
      */
     private fun getRiskLevel(riskPercent: Double): RiskLevel {
         return when {
-            riskPercent <= 25 -> RiskLevel.AMARILLO
-            riskPercent <= 75 -> RiskLevel.NARANJA
+            riskPercent <= 35 -> RiskLevel.AMARILLO
+            riskPercent <= 70 -> RiskLevel.NARANJA
             else -> RiskLevel.ROJO
         }
     }
