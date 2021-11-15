@@ -21,9 +21,11 @@ interface RiskContactDao {
     @Insert
     suspend fun insert(riskContactResult: RiskContactResult): Long
 
+    @Transaction
     @Insert
     suspend fun insertRiskContact(riskContact: RiskContact): Long
 
+    @Transaction
     @Insert
     suspend fun insertRiskContactLocations(riskContactLocations: List<RiskContactLocation>)
 

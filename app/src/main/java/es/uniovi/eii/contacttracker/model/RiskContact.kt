@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import es.uniovi.eii.contacttracker.adapters.riskcontact.RiskContactDiffCallback
+import es.uniovi.eii.contacttracker.room.converters.RiskContactDateConverter
 import es.uniovi.eii.contacttracker.util.LocationUtils
 import es.uniovi.eii.contacttracker.util.NumberUtils.round
 import kotlinx.parcelize.Parcelize
@@ -31,8 +33,9 @@ class RiskContact(
         var exposeTime: Long = 0L, /* Tiempo de exposición total en formato de milisegundos */
         var meanProximity: Double = 0.0, /* Proximidad media (metros) */
         var meanTimeInterval: Long = 0L, /* Intervalo de tiempo medio (milisegundos) */
-
+        @field:TypeConverters(RiskContactDateConverter::class)
         var startDate: Date? = null, /* Fecha de inicio del contacto. (Aproximada) */
+        @field:TypeConverters(RiskContactDateConverter::class)
         var endDate: Date? = null, /* Fecha de fin de contacto. (Aproximada) */
         var positiveLabel: String = "", /* Etiqueta del positivo con el que se tuvo el contacto de riesgo. */
         var timeIntersection: Boolean = true, /* Flag que indica si hay intersección temporal entre el tramo del usuario y el del positivo */
