@@ -6,11 +6,11 @@ import es.uniovi.eii.contacttracker.Constants
 
 /* Valores por defecto */
 const val DEFAULT_MIN_INTERVAL = 3000L
-const val DEFAULT_SMALLEST_DISPLACEMENT = 0f
+const val DEFAULT_SMALLEST_DISPLACEMENT = 0
 
 /* Claves de las Shared Preferences */
 const val TRACKER_MIN_INTERVAL_KEY = "TrackerConfigMinInterval"
-const val TRACKER_SMALLEST_DISPLACEMENT_KEY = "TrackerConfigSmallestDisplacementKey"
+const val TRACKER_SMALLEST_DISPLACEMENT_KEY = "TrackerConfigSmallestDisplacement"
 
 /**
  * Representa los parámetros de configuración del rastreo de ubicación.
@@ -20,5 +20,5 @@ data class TrackerConfig(
         val minInterval: Long = DEFAULT_MIN_INTERVAL,
 
         /* Desplazamiento mínimo requerido para recibir una nueva actualización de ubicación */
-        val smallestDisplacement: Float = DEFAULT_SMALLEST_DISPLACEMENT
+        val smallestDisplacement: Int = DEFAULT_SMALLEST_DISPLACEMENT
 )

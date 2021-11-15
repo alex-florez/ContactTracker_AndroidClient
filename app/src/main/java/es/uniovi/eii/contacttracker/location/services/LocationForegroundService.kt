@@ -219,7 +219,7 @@ class LocationForegroundService : Service(){
         return LocationTrackRequest(
                 minInterval = config.minInterval,
                 fastestInterval = config.minInterval,
-                smallestDisplacement = config.smallestDisplacement)
+                smallestDisplacement = config.smallestDisplacement.toFloat())
     }
 
     /**

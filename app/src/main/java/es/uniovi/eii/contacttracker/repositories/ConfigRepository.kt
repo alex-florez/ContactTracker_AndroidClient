@@ -31,7 +31,7 @@ class ConfigRepository @Inject constructor(
     fun getTrackerConfig(): TrackerConfig {
         return TrackerConfig(
             sharedPrefs.getLong(TRACKER_MIN_INTERVAL_KEY, DEFAULT_MIN_INTERVAL),
-            sharedPrefs.getFloat(TRACKER_SMALLEST_DISPLACEMENT_KEY, DEFAULT_SMALLEST_DISPLACEMENT)
+            sharedPrefs.getInt(TRACKER_SMALLEST_DISPLACEMENT_KEY, DEFAULT_SMALLEST_DISPLACEMENT)
         )
     }
 
