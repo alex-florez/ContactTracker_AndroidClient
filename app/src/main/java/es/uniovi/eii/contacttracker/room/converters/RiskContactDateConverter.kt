@@ -6,6 +6,10 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Convertidor de fechas a timestamps en milisegunos para las
+ * fechas de inicio y de fin de los contactos de riesgo.
+ */
 class RiskContactDateConverter {
 
     @TypeConverter
