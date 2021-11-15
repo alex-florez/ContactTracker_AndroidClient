@@ -2,6 +2,7 @@ package es.uniovi.eii.contacttracker.repositories
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -36,12 +37,19 @@ class RiskContactRepository @Inject constructor(
      * @return ID del Resultado de la comprobación.
      */
     suspend fun insert(riskContactResult: RiskContactResult): Long {
+        // Borrar luego
+//        riskContactResult.riskContacts.forEach {
+//            Log.d("BUGJevi", " ${it.startDate} - ${it.endDate} [${it.exposeTime}]")
+//        }
+
+        //
         val wrapper = toResultWithRiskContacts(riskContactResult)
         // Insertar Resultado
         val resultId = riskContactDao.insert(wrapper.riskContactResult)
         // Insertar Contactos de Riesgo
         wrapper.riskContacts.forEach {
             it.riskContact.riskContactResultId = resultId // ID del resultado
+            Log.d("BUGJevi", "BD: ${it.riskContact.startDate} - ${it.riskContact.endDate} [${it.riskContact.exposeTime}]")
             val riskContactId = riskContactDao.insertRiskContact(it.riskContact) // Insertar contacto de riesgo.
             // Insertar localizaciones de contacto
             it.riskContactLocations.forEach { riskContactLocation ->

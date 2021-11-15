@@ -21,7 +21,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.Date
 
-
+/* Nombre del fichero desde el que se cargan las localizaciones de la simulación */
+private const val USER = "Usuario.txt"
+private const val POSITIVE1 = "Positivo-1.txt"
+private const val POSITIVE2 = "Positivo-2.txt"
 
 /**
  * Clase App que extiende de Application y que engloba
@@ -45,8 +48,24 @@ class App : Application() {
     @Inject
     lateinit var locationRepository: LocationRepository
 
-    /* Nombre del fichero desde el que se cargan las localizaciones de la simulación */
-    private val simulationFilename = "Usuario.txt"
+    /* Tripleta de fechas de simulación del Usuario */
+    private val userDates = arrayOf(
+        Triple(2021, 10, 11),
+        Triple(2021, 10, 12),
+        Triple(2021, 10, 13),
+        Triple(2021, 10, 14)
+    )
+    /* Tripleta de fechas de simulación del Positivo 1 */
+    private val p1Dates = arrayOf(
+        Triple(2021, 10, 10),
+        Triple(2021, 10, 11),
+        Triple(2021, 10, 13)
+    )
+    /* Tripleta de fechas de simulación del Positivo 2 */
+    private val p2Dates = arrayOf(
+        Triple(2021, 10, 13),
+        Triple(2021, 10, 14)
+    )
 
     /**
      * Referencia a las Shared Preferences.
@@ -62,12 +81,7 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate(simulationFilename, arrayOf(
-            Triple(2021, 10, 11),
-            Triple(2021, 10, 12),
-            Triple(2021, 10, 13),
-            Triple(2021, 10, 14),
-            ))
+        simulate(POSITIVE2, p2Dates)
         registerInstall()
     }
 

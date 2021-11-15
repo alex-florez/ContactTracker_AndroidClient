@@ -384,14 +384,19 @@ class RiskContactViewModelTest {
         assertEquals("14", rc2.contactLocations[0].userContactPointName)
         assertEquals("10", rc2.contactLocations[0].positiveContactPointName)
         // Fechas de inicio y de fin
-        assertNull(rc2.startDate)
-        assertNull(rc2.endDate)
+        assertNotNull(rc2.startDate)
+        assertNotNull(rc2.endDate)
+        val start = rc2.startDate!!
+        val end = rc2.endDate!!
+        assertEquals("21/06/2021 09:21:22", df.format(start))
+        assertEquals("21/06/2021 09:21:22", df.format(end))
+        assertFalse(rc2.timeIntersection)
         // Datos del contacto
         assertEquals(0L, rc2.exposeTime)
         assertEquals(0.8879, rc2.meanProximity, 0.001)
         assertEquals(0L, rc2.meanTimeInterval)
         assertEquals(0.3408, rc2.riskScore, 0.0001)
-        assertEquals(RiskLevel.NARANJA, rc2.riskLevel)
+        assertEquals(RiskLevel.AMARILLO, rc2.riskLevel)
 
         // Comprobar resultado que se envía a la nube
         assertEquals(43.855, checkResultCaptor.value.riskPercent, 0.001)
@@ -451,14 +456,18 @@ class RiskContactViewModelTest {
         assertEquals("14", rc2.contactLocations[0].userContactPointName)
         assertEquals("10", rc2.contactLocations[0].positiveContactPointName)
         // Fechas de inicio y de fin
-        assertNull(rc2.startDate)
-        assertNull(rc2.endDate)
+        assertNotNull(rc2.startDate)
+        assertNotNull(rc2.endDate)
+        val start = rc2.startDate!!
+        val end = rc2.endDate!!
+        assertEquals("21/06/2021 09:21:22", df.format(start))
+        assertEquals("21/06/2021 09:21:22", df.format(end))
         // Datos del contacto
         assertEquals(0L, rc2.exposeTime)
         assertEquals(0.8879, rc2.meanProximity, 0.001)
         assertEquals(0L, rc2.meanTimeInterval)
         assertEquals(0.3408, rc2.riskScore, 0.0001)
-        assertEquals(RiskLevel.NARANJA, rc2.riskLevel)
+        assertEquals(RiskLevel.AMARILLO, rc2.riskLevel)
 
         // Comprobar resultado que se envía a la nube
         assertEquals(43.855, checkResultCaptor.value.riskPercent, 0.001)
@@ -519,14 +528,19 @@ class RiskContactViewModelTest {
         assertEquals("14", rc2.contactLocations[0].userContactPointName)
         assertEquals("10", rc2.contactLocations[0].positiveContactPointName)
         // Fechas de inicio y de fin
-        assertNull(rc2.startDate)
-        assertNull(rc2.endDate)
+        assertNotNull(rc2.startDate)
+        assertNotNull(rc2.endDate)
+        val start = rc2.startDate!!
+        val end = rc2.endDate!!
+        assertEquals("21/06/2021 09:21:22", df.format(start))
+        assertEquals("21/06/2021 09:21:22", df.format(end))
+        assertFalse(rc2.timeIntersection)
         // Datos del contacto
         assertEquals(0L, rc2.exposeTime)
         assertEquals(0.8879, rc2.meanProximity, 0.001)
         assertEquals(0L, rc2.meanTimeInterval)
         assertEquals(0.3408, rc2.riskScore, 0.0001)
-        assertEquals(RiskLevel.NARANJA, rc2.riskLevel)
+        assertEquals(RiskLevel.AMARILLO, rc2.riskLevel)
 
         // Comprobar resultado que se envía a la nube
         assertEquals(43.855, checkResultCaptor.value.riskPercent, 0.001)
@@ -616,14 +630,20 @@ class RiskContactViewModelTest {
         assertEquals("14", rc3.contactLocations[0].userContactPointName)
         assertEquals("10", rc3.contactLocations[0].positiveContactPointName)
         // Fechas de inicio y de fin
-        assertNull(rc3.startDate)
-        assertNull(rc3.endDate)
+        assertNotNull(rc3.startDate)
+        assertNotNull(rc3.endDate)
+        val start = rc3.startDate!!
+        val end = rc3.endDate!!
+        assertEquals("21/06/2021 09:21:22", df.format(start))
+        assertEquals("21/06/2021 09:21:22", df.format(end))
+        assertFalse(rc3.timeIntersection)
+
         // Datos del contacto
         assertEquals(0L, rc3.exposeTime)
         assertEquals(0.8879, rc3.meanProximity, 0.001)
         assertEquals(0L, rc3.meanTimeInterval)
         assertEquals(0.3408, rc3.riskScore, 0.0001)
-        assertEquals(RiskLevel.NARANJA, rc3.riskLevel)
+        assertEquals(RiskLevel.AMARILLO, rc3.riskLevel)
 
         // Contacto de riesgo 4
         // Puntos de contacto

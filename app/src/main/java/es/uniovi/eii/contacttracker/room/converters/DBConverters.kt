@@ -1,19 +1,19 @@
 package es.uniovi.eii.contacttracker.room.converters
 
+import android.util.Log
 import androidx.room.TypeConverter
 import es.uniovi.eii.contacttracker.model.RiskLevel
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
+private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
 /**
  * Clase de apoyo a ROOM para convertir y parsear datos
  * entre la App y la base de datos SQLite.
  */
 class DBConverters {
-
-    /* Formato String de las fechas que se almacenan en la base de datos */
-    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     /* FECHAS */
     @TypeConverter
@@ -27,8 +27,11 @@ class DBConverters {
 
     @TypeConverter
     fun dateToString(date: Date?): String {
-        if(date != null)
-            return df.format(date)
+        if(date != null){
+            val dateString = df.format(date)
+            Log.d("BUGJevi", "Fecha: $date Converter: $dateString")
+            return dateString
+        }
         return ""
     }
 

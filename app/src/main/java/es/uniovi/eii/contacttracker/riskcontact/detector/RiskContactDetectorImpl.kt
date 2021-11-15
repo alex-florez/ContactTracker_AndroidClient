@@ -43,7 +43,9 @@ class RiskContactDetectorImpl @Inject constructor() : RiskContactDetector {
                         riskContact = RiskContact(config = riskContactConfig, positiveLabel = positive.label) // Iniciar nuevo Tramo de contacto.
                     }
                     /* Actualizar Contacto de Riesgo */
-                    riskContact?.let { update(it,userLocation, closestLocation) }
+                    riskContact?.let {rc ->
+                        update(rc, userLocation, closestLocation)
+                    }
                 } else {
                     /* Comprobar si existe un contacto de riesgo abierto */
                     riskContact?.let {

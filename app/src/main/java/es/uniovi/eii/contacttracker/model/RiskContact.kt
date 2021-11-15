@@ -72,7 +72,7 @@ class RiskContact(
             // Últimas localizaciones
             val lastUserLocation = contactLocations[contactLocations.size-1].userContactPoint
             val lastPositiveLocation = contactLocations[contactLocations.size-1].positiveContactPoint
-            // Calcular el límite superior en inferior de la intersección.
+            // Calcular el límite superior e inferior de la intersección.
             val (inferior, superior) = getIntersection(firstUserLocation.timestamp, lastUserLocation.timestamp,
                     firstPositiveLocation.timestamp, lastPositiveLocation.timestamp)
             // Asignar fechas de inicio y fin de contacto.

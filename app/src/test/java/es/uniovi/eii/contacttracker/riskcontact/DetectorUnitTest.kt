@@ -154,14 +154,19 @@ class DetectorUnitTest {
         assertEquals("7", contacts[0].userContactPointName)
         assertEquals("5", contacts[0].positiveContactPointName)
         // Fechas de inicio y de fin
-        assertNull(rc.startDate)
-        assertNull(rc.endDate)
+        assertNotNull(rc.startDate)
+        assertNotNull(rc.endDate)
+        val start = rc.startDate!!
+        val end = rc.endDate!!
+        assertEquals("20/06/2021 10:00:30", df.format(start))
+        assertEquals("20/06/2021 10:00:30", df.format(end))
+
         // Datos del contacto
         assertEquals(0L, rc.exposeTime)
         assertEquals(0.7655, rc.meanProximity, 0.001)
         assertEquals(0L, rc.meanTimeInterval)
         assertEquals(0.3489, rc.riskScore, 0.0001)
-        assertEquals(RiskLevel.NARANJA, rc.riskLevel)
+        assertEquals(RiskLevel.AMARILLO, rc.riskLevel)
     }
 
     /* Código: D11 */
@@ -269,8 +274,12 @@ class DetectorUnitTest {
         assertEquals("5", contacts1[0].userContactPointName)
         assertEquals("4", contacts1[0].positiveContactPointName)
         // Fechas de inicio y de fin
-        assertNull(rc1.startDate)
-        assertNull(rc1.endDate)
+        assertNotNull(rc1.startDate)
+        assertNotNull(rc1.endDate)
+        val start = rc1.startDate!!
+        val end = rc1.endDate!!
+        assertEquals("20/06/2021 15:00:20", df.format(start))
+        assertEquals("20/06/2021 15:00:20", df.format(end))
         // Datos del contacto
         assertEquals(0L, rc1.exposeTime)
         assertEquals(0.5223, rc1.meanProximity, 0.001)

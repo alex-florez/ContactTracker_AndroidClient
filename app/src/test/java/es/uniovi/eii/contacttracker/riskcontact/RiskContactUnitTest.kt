@@ -32,8 +32,14 @@ class RiskContactUnitTest {
             UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
             UserLocation(12, Point(43.531776, -5.911465, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        assertNull(riskContact.startDate)
-        assertNull(riskContact.endDate)
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:00", df.format(end))
+        assertFalse(riskContact.timeIntersection)
+
         assertEquals(0L, riskContact.exposeTime)
         assertEquals(4.12, riskContact.meanProximity, 0.01)
         assertEquals(0L, riskContact.meanTimeInterval)
@@ -49,14 +55,20 @@ class RiskContactUnitTest {
             UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
             UserLocation(12, Point(43.531774, -5.911489, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        assertNull(riskContact.startDate)
-        assertNull(riskContact.endDate)
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:00", df.format(end))
+        assertFalse(riskContact.timeIntersection)
+
         assertEquals(0L, riskContact.exposeTime)
         assertEquals(2.24, riskContact.meanProximity, 0.01)
         assertEquals(0L, riskContact.meanTimeInterval)
         assertEquals(0.25, riskContact.riskScore, 0.01)
         assertEquals(25.02, riskContact.riskPercent, 0.01)
-        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+        assertEquals(RiskLevel.AMARILLO, riskContact.riskLevel)
     }
 
     /* Código: RC3 */
@@ -70,8 +82,14 @@ class RiskContactUnitTest {
             UserLocation(11, Point(43.531779, -5.911516, df.parse("26/09/2021 12:00:00")!!), 0.0, ""),
             UserLocation(12, Point(43.531777, -5.911506, df.parse("26/09/2021 12:00:03")!!), 0.0,"")
         )
-        assertNull(riskContact.startDate)
-        assertNull(riskContact.endDate)
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:00", df.format(end))
+        assertFalse(riskContact.timeIntersection)
+
         assertEquals(0L, riskContact.exposeTime)
         assertEquals(0.83, riskContact.meanProximity, 0.01)
         assertEquals(0L, riskContact.meanTimeInterval)
@@ -228,8 +246,13 @@ class RiskContactUnitTest {
             UserLocation(22, Point(43.531746, -5.911533, df.parse("26/09/2021 11:59:55")!!), 0.0,"")
         )
         // Comprobar inicio y fin del contacto de riesgo.
-        assertNull(riskContact.startDate)
-        assertNull(riskContact.endDate)
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:00", df.format(end))
+        assertFalse(riskContact.timeIntersection)
 
         assertEquals(0L, riskContact.exposeTime)
         assertEquals(1.15, riskContact.meanProximity, 0.01)
@@ -268,7 +291,7 @@ class RiskContactUnitTest {
         assertEquals(417750L, riskContact.meanTimeInterval)
         assertEquals(0.7436, riskContact.riskScore, 0.01)
         assertEquals(74.36, riskContact.riskPercent, 0.1)
-        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+        assertEquals(RiskLevel.ROJO, riskContact.riskLevel)
     }
 
     /* Código: RC11 */
@@ -300,7 +323,7 @@ class RiskContactUnitTest {
         assertEquals(423500L, riskContact.meanTimeInterval)
         assertEquals(0.7457, riskContact.riskScore, 0.01)
         assertEquals(74.57, riskContact.riskPercent, 0.1)
-        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+        assertEquals(RiskLevel.ROJO, riskContact.riskLevel)
     }
 
     /* Código: RC12 */
@@ -332,7 +355,7 @@ class RiskContactUnitTest {
         assertEquals(421500L, riskContact.meanTimeInterval)
         assertEquals(0.7442, riskContact.riskScore, 0.01)
         assertEquals(74.42, riskContact.riskPercent, 0.1)
-        assertEquals(RiskLevel.NARANJA, riskContact.riskLevel)
+        assertEquals(RiskLevel.ROJO, riskContact.riskLevel)
     }
 
     /* Código: RC13 */
@@ -351,8 +374,13 @@ class RiskContactUnitTest {
             UserLocation(32, Point(43.531726, -5.911549, df.parse("26/09/2021 12:17:10")!!), 0.0,"")
         )
         // Comprobar inicio y fin del contacto de riesgo.
-        assertNull(riskContact.startDate)
-        assertNull(riskContact.endDate)
+        assertNotNull(riskContact.startDate)
+        assertNotNull(riskContact.endDate)
+        val start = riskContact.startDate!!
+        val end = riskContact.endDate!!
+        assertEquals("26/09/2021 12:00:00", df.format(start))
+        assertEquals("26/09/2021 12:00:00", df.format(end))
+        assertFalse(riskContact.timeIntersection)
 
         assertEquals(0L, riskContact.exposeTime)
         assertEquals(1.296, riskContact.meanProximity, 0.01)

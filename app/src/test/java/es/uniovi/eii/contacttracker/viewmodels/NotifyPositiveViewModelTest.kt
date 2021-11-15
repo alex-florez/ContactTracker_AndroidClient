@@ -165,7 +165,7 @@ class NotifyPositiveViewModelTest {
         // Intentar notificar un nuevo positivo
         vm.notifyPositive(false, answers, now)
         val result2 = vm.notifyError.getOrAwaitValue()
-        assertEquals(R.string.errorNotifyLimitExceeded, result2)
+        assertEquals(Pair(R.string.errorNotifyLimitExceeded, 2), result2)
 
         // Actualizar fecha del positivo
         positives[0].timestamp = df.parse("18/09/2021 10:00:30")!!
@@ -189,7 +189,7 @@ class NotifyPositiveViewModelTest {
     fun `notificar positivo sin existir localizaciones`() = testCoroutineRule.runBlockingTest {
         vm.notifyPositive(false, answers, Date())
         val result = vm.notifyError.getOrAwaitValue()
-        assertEquals(R.string.errorNotifyNoLocations, result)
+        assertEquals(Pair(R.string.errorNotifyNoLocations, null), result)
 
         // Comprobar positivos en local
         vm.getLocalPositives()
