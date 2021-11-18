@@ -68,8 +68,8 @@ class NotifyQuestionsDialog(
         val selectedAnswer1 = binding.question1.checkedChipId
         val selectedAnswer2 = binding.question2.checkedChipId
         val a1 = when(selectedAnswer1) {
-            R.id.q1Yes -> true
-            R.id.q1No -> false
+            R.id.q1Yes -> false
+            R.id.q1No -> true
             else -> false
         }
         val a2 = when(selectedAnswer2) {

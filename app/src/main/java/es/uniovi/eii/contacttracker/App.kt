@@ -50,21 +50,21 @@ class App : Application() {
 
     /* Tripleta de fechas de simulación del Usuario */
     private val userDates = arrayOf(
-        Triple(2021, 10, 11),
-        Triple(2021, 10, 12),
-        Triple(2021, 10, 13),
-        Triple(2021, 10, 14)
+        Triple(2021, 10, 14),
+        Triple(2021, 10, 15),
+        Triple(2021, 10, 16),
+        Triple(2021, 10, 17)
     )
     /* Tripleta de fechas de simulación del Positivo 1 */
     private val p1Dates = arrayOf(
-        Triple(2021, 10, 10),
-        Triple(2021, 10, 11),
-        Triple(2021, 10, 13)
+        Triple(2021, 10, 13),
+        Triple(2021, 10, 14),
+        Triple(2021, 10, 16)
     )
     /* Tripleta de fechas de simulación del Positivo 2 */
     private val p2Dates = arrayOf(
-        Triple(2021, 10, 13),
-        Triple(2021, 10, 14)
+        Triple(2021, 10, 16),
+        Triple(2021, 10, 17)
     )
 
     /**
