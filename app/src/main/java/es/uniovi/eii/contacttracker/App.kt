@@ -81,7 +81,7 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate(POSITIVE2, p2Dates)
+        simulate(USER, userDates)
         registerInstall()
     }
 
