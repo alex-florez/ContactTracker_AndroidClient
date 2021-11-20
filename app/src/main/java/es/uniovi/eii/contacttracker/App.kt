@@ -50,21 +50,21 @@ class App : Application() {
 
     /* Tripleta de fechas de simulación del Usuario */
     private val userDates = arrayOf(
-        Triple(2021, 10, 14),
-        Triple(2021, 10, 15),
         Triple(2021, 10, 16),
-        Triple(2021, 10, 17)
+        Triple(2021, 10, 17),
+        Triple(2021, 10, 18),
+        Triple(2021, 10, 19)
     )
     /* Tripleta de fechas de simulación del Positivo 1 */
     private val p1Dates = arrayOf(
-        Triple(2021, 10, 13),
-        Triple(2021, 10, 14),
-        Triple(2021, 10, 16)
+        Triple(2021, 10, 15),
+        Triple(2021, 10, 16),
+        Triple(2021, 10, 18)
     )
     /* Tripleta de fechas de simulación del Positivo 2 */
     private val p2Dates = arrayOf(
-        Triple(2021, 10, 16),
-        Triple(2021, 10, 17)
+        Triple(2021, 10, 18),
+        Triple(2021, 10, 19)
     )
 
     /**
@@ -81,7 +81,7 @@ class App : Application() {
         createNotificationChannels()
         initSharedPrefs()
         subscribeToTopics()
-        simulate(USER, userDates)
+        simulate(POSITIVE2, p2Dates)
         registerInstall()
     }
 
